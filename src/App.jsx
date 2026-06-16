@@ -1,122 +1,99 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { AuthProvider, useAuth } from './hooks/useAuth'
+import { T } from './styles/tokens'
 
-function App() {
-  const [count, setCount] = useState(0)
+import LoginPage from './pages/auth/LoginPage'
+
+import HomePage from './pages/cliente/HomePage'
+import ExplorePage from './pages/cliente/ExplorePage'
+import ApptsPage from './pages/cliente/ApptsPage'
+import ProfilePage from './pages/cliente/ProfilePage'
+import ProProfilePage from './pages/cliente/ProProfilePage'
+import BookingPage from './pages/cliente/BookingPage'
+
+import AgendaPage from './pages/pro/AgendaPage'
+import ClientiPage from './pages/pro/ClientiPage'
+import ClienteDetailPage from './pages/pro/ClienteDetailPage'
+import ServiziPage from './pages/pro/ServiziPage'
+import StatsPage from './pages/pro/StatsPage'
+import PianiPage, { BetaBanner, BetaWelcome } from './pages/pro/PianiPage'
+
+import BottomNavCl from './components/layout/BottomNavCl'
+import BottomNavPro from './components/layout/BottomNavPro'
+
+function AppInner() {
+  const { user, loading } = useAuth()
+  const [demoUser, setDemoUser] = useState(null)
+  const [screen, setScreen] = useState('login')
+  const [navData, setNavData] = useState(null)
+  const [showBetaWelcome, setShowBetaWelcome] = useState(false)
+
+  const activeUser = user
+    ? { name: user.user_metadata?.name || user.email, type: user.user_metadata?.type || 'cliente', email: user.email }
+    : demoUser
+
+  const onNav = (id, data = null) => {
+    setScreen(id)
+    setNavData(data)
+  }
+
+  const handleDemoAuth = (u) => {
+    setDemoUser(u)
+    setShowBetaWelcome(u.type === 'pro')
+    setScreen(u.type === 'pro' ? 'pro_agenda' : 'cl_home')
+  }
+
+  if (loading) return (
+    <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: T.white }}>
+      <p style={{ fontSize: 13, color: T.inkSoft }}>Caricamento…</p>
+    </div>
+  )
+
+  if (!activeUser || screen === 'login') {
+    return <LoginPage onDemoAuth={handleDemoAuth} />
+  }
+
+  const isPro = activeUser.type === 'pro'
+
+  const renderPage = () => {
+    switch (screen) {
+      case 'cl_home': return <HomePage onNav={onNav} user={activeUser} />
+      case 'cl_explore': return <ExplorePage onNav={onNav} />
+      case 'cl_appts': return <ApptsPage onNav={onNav} />
+      case 'cl_profilo': return <ProfilePage onNav={onNav} user={activeUser} />
+      case 'cl_pro': return <ProProfilePage pro={navData} onNav={onNav} />
+      case 'cl_prenota': return <BookingPage data={navData || {}} onNav={onNav} />
+      case 'pro_agenda': return (
+        <div>
+          <BetaBanner onNav={onNav} />
+          <AgendaPage onNav={onNav} />
+        </div>
+      )
+      case 'pro_clienti': return <ClientiPage onNav={onNav} />
+      case 'pro_cliente': return <ClienteDetailPage client={navData} onNav={onNav} />
+      case 'pro_servizi': return <ServiziPage onNav={onNav} />
+      case 'pro_stats': return <StatsPage onNav={onNav} />
+      case 'pro_piani': return <PianiPage onNav={onNav} />
+      default: return isPro ? <AgendaPage onNav={onNav} /> : <HomePage onNav={onNav} user={activeUser} />
+    }
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <div style={{ maxWidth: 430, margin: '0 auto', minHeight: '100dvh', position: 'relative', background: T.white }}>
+      {renderPage()}
+      {isPro
+        ? <BottomNavPro active={screen} onNav={onNav} />
+        : <BottomNavCl active={screen} onNav={onNav} />
+      }
+      {showBetaWelcome && <BetaWelcome onClose={() => setShowBetaWelcome(false)} />}
+    </div>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppInner />
+    </AuthProvider>
+  )
+}
