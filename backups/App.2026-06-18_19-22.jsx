@@ -108,18 +108,21 @@ const injectFont = () => {
   document.head.appendChild(s);
 };
 
-/* PALETTE "Violet & Gold" — viola profondo + oro caldo, claymorphismo */
+/* PALETTE "Beauty Star" — 2 colori: navy #1E2158 (dominante) + salmone #F09590 (accento) */
 const T = {
-  ink:"#1E1040",inkMid:"#6B5FA8",inkSoft:"#B0A8D0",
-  line:"#EAE8F5",surface:"#F2F0FA",white:"#FFFFFF",
-  paper:"#FAF9FE",
-  brand:"#5B21B6",brandDeep:"#4C1D95",brandBg:"#EDE9FF",
-  gold:"#F59E0B",goldBg:"#FEF3C7",
-  green:"#059669",greenBg:"#D1FAE5",
-  blue:"#3B82F6",blueBg:"#DBEAFE",
-  red:"#EF4444",redBg:"#FEE2E2",
-  amber:"#F59E0B",amberBg:"#FEF3C7",
-  purple:"#5B21B6",purpleBg:"#EDE9FF",
+  ink:"#1E2158",inkMid:"#5A5D8A",inkSoft:"#A8AACB",
+  line:"#E8E8F2",surface:"#F4F4FA",white:"#FFFFFF",
+  paper:"#FAFAFA",
+  /* navy dominante — header, bottoni CTA, nav attiva, logo */
+  brand:"#1E2158",brandDeep:"#13174A",brandBg:"#EAEBF7",
+  /* salmone accento — banner, badge, highlights, icone categorie */
+  salmon:"#F09590",salmonDeep:"#E07870",salmonBg:"#FEF0EF",
+  gold:"#F09590",goldBg:"#FEF0EF",
+  green:"#4CAF7D",greenBg:"#E4F5EC",
+  blue:"#1E2158",blueBg:"#EAEBF7",
+  red:"#F09590",redBg:"#FEF0EF",
+  amber:"#F0A888",amberBg:"#FEF3EE",
+  purple:"#9090D8",purpleBg:"#EEEEF8",
 };
 
 const ST = {
@@ -202,15 +205,15 @@ const MY_APPTS0 = [
 const ALL_CITIES = ["Imperia","Milano","Roma","Torino","Bologna","Genova","Sanremo","Savona"];
 
 const CAT_LIST = [
-  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#5B21B6"},
-  {id:"parrucchiere",emoji:"💇",label:"Parrucchiere",color:"#7C3AED"},
-  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#F59E0B"},
-  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#059669"},
-  {id:"laser",       emoji:"✨",label:"Laser",       color:"#3B82F6"},
-  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#1E1040"},
-  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#DB2777"},
-  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#F59E0B"},
-  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#059669"},
+  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#1E2158"},
+  {id:"parrucchiere",emoji:"💇",label:"Parrucchiere",color:"#F09590"},
+  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#1E2158"},
+  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#F09590"},
+  {id:"laser",       emoji:"✨",label:"Laser",       color:"#1E2158"},
+  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#F09590"},
+  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#1E2158"},
+  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#F09590"},
+  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#1E2158"},
 ];
 
 const FEED = [
@@ -552,16 +555,16 @@ function NavBar({items,s,nav,labelSize=10}) {
   return (
     <div ref={ref} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
       style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",
-        width:"calc(100% - 24px)",maxWidth:406,background:"#5B21B6",borderRadius:26,
+        width:"calc(100% - 24px)",maxWidth:406,background:"#1E2158",borderRadius:26,
         display:"flex",zIndex:100,padding:"6px 4px",touchAction:"none",userSelect:"none",
-        boxShadow:"0 8px 28px rgba(91,33,182,.35)",
-        boxShadow:"0 4px 24px rgba(91,33,182,.14)",
+        boxShadow:"0 8px 28px rgba(30,33,88,.35)",
+        boxShadow:"0 4px 24px rgba(30,33,88,.14)",
         position:"fixed"}}>
       {/* Pillola scorrevole — salmone su navy */}
       <div style={{
         position:"absolute", top:6, height:"calc(100% - 12px)",
         left:pillLeft, width:pillW,
-        background:"#F59E0B", borderRadius:18,
+        background:"#F09590", borderRadius:18,
         transition:live?"none":"left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1)",
         pointerEvents:"none", zIndex:0,
       }}/>
@@ -577,7 +580,7 @@ function NavBar({items,s,nav,labelSize=10}) {
               <I a={active}/>
             </div>
             <span style={{fontSize:labelSize,fontWeight:active?800:600,
-              color:active?"#5B21B6":"rgba(255,255,255,.6)",pointerEvents:"none",
+              color:active?"#1E2158":"rgba(255,255,255,.6)",pointerEvents:"none",
               transition:"color .22s ease"}}>{l}</span>
           </div>
         );
@@ -609,10 +612,10 @@ function LoginScreen({onAuth}) {
   return (
     <div style={{minHeight:"100dvh",background:T.white,display:"flex",flexDirection:"column"}}>
       {/* Top salmone con logo */}
-      <div style={{background:"#F59E0B",padding:"64px 26px 36px",display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
-        <div className="ba-rise" style={{width:56,height:56,borderRadius:18,background:"#5B21B6",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20,boxShadow:"0 8px 20px rgba(91,33,182,.30)"}}><LogoMark size={28}/></div>
-        <h1 className="ba-rise" style={{fontSize:38,fontWeight:900,color:"#5B21B6",lineHeight:1.05,margin:"0 0 8px",animationDelay:".06s"}}>BeautyApp</h1>
-        <p className="ba-rise" style={{fontSize:15,color:"rgba(30,16,64,.75)",margin:0,animationDelay:".12s",fontWeight:600}}>La bellezza, a portata di mano.</p>
+      <div style={{background:"#F09590",padding:"64px 26px 36px",display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
+        <div className="ba-rise" style={{width:56,height:56,borderRadius:18,background:"#1E2158",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20,boxShadow:"0 8px 20px rgba(30,33,88,.3)"}}><LogoMark size={28}/></div>
+        <h1 className="ba-rise" style={{fontSize:38,fontWeight:900,color:"#1E2158",lineHeight:1.05,margin:"0 0 8px",animationDelay:".06s"}}>BeautyApp</h1>
+        <p className="ba-rise" style={{fontSize:15,color:"rgba(30,33,88,.75)",margin:0,animationDelay:".12s",fontWeight:600}}>La bellezza, a portata di mano.</p>
       </div>
       {/* Card scelta */}
       <div style={{flex:1,padding:"28px 26px 40px",display:"flex",flexDirection:"column",gap:14}}>
@@ -623,13 +626,13 @@ function LoginScreen({onAuth}) {
         ].map((opt,oi) => (
           <div key={opt.id} onClick={()=>setTp(opt.id)} className="ba-rise ba-lift"
             style={{borderRadius:20,padding:"18px",cursor:"pointer",
-              background:tp===opt.id?"#5B21B6":T.white,
-              boxShadow:tp===opt.id?"0 8px 24px rgba(91,33,182,.30)":"0 2px 12px rgba(0,0,0,.07)",
+              background:tp===opt.id?"#1E2158":T.white,
+              boxShadow:tp===opt.id?"0 8px 24px rgba(30,33,88,.3)":"0 2px 12px rgba(0,0,0,.07)",
               border:tp===opt.id?"none":`1.5px solid ${T.line}`,
               animationDelay:`${.16+oi*.07}s`,transition:"all .2s ease"}}>
             <div style={{display:"flex",gap:14,alignItems:"center"}}>
               <div style={{width:48,height:48,borderRadius:14,
-                background:tp===opt.id?"rgba(255,255,255,.15)":"#F59E0B",
+                background:tp===opt.id?"rgba(255,255,255,.15)":"#F09590",
                 display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{opt.emoji}</div>
               <div>
                 <p style={{fontSize:16,fontWeight:800,color:tp===opt.id?"#fff":T.ink,margin:"0 0 3px"}}>{opt.title}</p>
@@ -641,9 +644,9 @@ function LoginScreen({onAuth}) {
         <div style={{marginTop:8}}>
           <button disabled={!tp} onClick={()=>onAuth({name:tp==="pro"?"Salon Elite":"Alessio",type:tp})}
             style={{width:"100%",padding:"17px 0",borderRadius:18,border:"none",
-              background:tp?"#F59E0B":"#E0E0E0",color:tp?"#5B21B6":"#aaa",
+              background:tp?"#F09590":"#E0E0E0",color:tp?"#1E2158":"#aaa",
               fontSize:16,fontWeight:900,cursor:tp?"pointer":"default",fontFamily:"inherit",
-              boxShadow:tp?"0 8px 22px rgba(91,33,182,.30)":"none",transition:"all .2s ease"}}>
+              boxShadow:tp?"0 8px 22px rgba(240,149,144,.45)":"none",transition:"all .2s ease"}}>
             Entra nell'app
           </button>
         </div>
@@ -756,7 +759,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
     <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
 
       {/* Header salmone — come Beauty Star: sfondo rosa-salmone in cima */}
-      <div style={{background:"#F59E0B",paddingTop:52,paddingBottom:24,paddingLeft:20,paddingRight:20}}>
+      <div style={{background:"#F09590",paddingTop:52,paddingBottom:24,paddingLeft:20,paddingRight:20}}>
         {/* Logo + cuore */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
           <div style={{display:"flex",alignItems:"center",gap:9}}>
@@ -770,7 +773,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
 
         {/* Saluto + ricerca */}
         <p style={{fontSize:13,fontWeight:700,color:T.brand,margin:"0 0 12px",opacity:.85}}>Ciao, cosa vuoi fare oggi? 👋</p>
-        <div style={{display:"flex",alignItems:"center",gap:10,background:"#fff",borderRadius:16,padding:"13px 16px",boxShadow:"0 4px 16px rgba(91,33,182,.12)"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,background:"#fff",borderRadius:16,padding:"13px 16px",boxShadow:"0 4px 16px rgba(30,33,88,.12)"}}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}>
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
@@ -784,14 +787,14 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
         {!(searching && q.length >= 2) && banner && (
           <div className="ba-rise ba-lift" onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})}
             style={{display:"flex",alignItems:"center",gap:14,padding:"16px 18px",borderRadius:20,cursor:"pointer",
-              background:T.white,marginTop:16,boxShadow:"0 6px 20px rgba(91,33,182,.14)",animationDelay:".05s"}}>
+              background:T.white,marginTop:16,boxShadow:"0 6px 20px rgba(30,33,88,.14)",animationDelay:".05s"}}>
             <div style={{width:46,height:46,borderRadius:13,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 {nextAppt?<><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></>:<><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>}
               </svg>
             </div>
             <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:10,fontWeight:700,color:"#F59E0B",margin:"0 0 2px",textTransform:"uppercase",letterSpacing:1.1}}>
+              <p style={{fontSize:10,fontWeight:700,color:"#F09590",margin:"0 0 2px",textTransform:"uppercase",letterSpacing:1.1}}>
                 {nextAppt?"Il tuo appuntamento":"Ultimo appuntamento"}
               </p>
               <p style={{fontSize:16,fontWeight:900,color:T.ink,margin:"0 0 1px",lineHeight:1.2}}>{banner.service}</p>
@@ -824,7 +827,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                   <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} - {pro.city}</p>
                   <span style={{color:T.gold,fontSize:12}}>{"★".repeat(Math.floor(pro.rating))}</span>
                 </div>
-                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:"#F59E0B",color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:"#F09590",color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
               </div>
               {i < searchResults.length-1 && <Div/>}
             </div>
@@ -885,7 +888,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                               <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 4px"}}>{pro.cat} · {pro.city} · {pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</p>
                               <span style={{color:T.gold,fontSize:12,fontWeight:700}}>★ {pro.rating} <span style={{color:T.inkSoft,fontWeight:500}}>({pro.reviews})</span></span>
                             </div>
-                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"10px 15px",borderRadius:12,border:"none",background:"#F59E0B",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"10px 15px",borderRadius:12,border:"none",background:"#F09590",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
                           </div>
                         );
                       })}
@@ -1104,9 +1107,9 @@ function ClPreferiti({nav,favorites,setFavorites}) {
   const favPros = ALL_PROS.filter(p=>favorites.has(p.id));
   return (
     <div style={{paddingBottom:90,background:T.white,minHeight:"100dvh"}}>
-      <div style={{padding:"52px 20px 20px",background:"#F59E0B"}}>
-        <h1 style={{fontSize:24,fontWeight:900,color:"#5B21B6",margin:"0 0 4px"}}>Preferiti</h1>
-        <p style={{fontSize:13,color:"rgba(30,16,64,.70)",margin:0,fontWeight:600}}>I tuoi professionisti salvati</p>
+      <div style={{padding:"52px 20px 20px",background:"#F09590"}}>
+        <h1 style={{fontSize:24,fontWeight:900,color:"#1E2158",margin:"0 0 4px"}}>Preferiti</h1>
+        <p style={{fontSize:13,color:"rgba(30,33,88,.7)",margin:0,fontWeight:600}}>I tuoi professionisti salvati</p>
       </div>
       {favPros.length === 0 ? (
         <div style={{textAlign:"center",padding:"80px 30px"}}>
@@ -1425,8 +1428,8 @@ function ClAppts({nav,allAppts,setAllAppts}) {
 
   return (
     <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
-      <div style={{background:"#F59E0B",padding:"52px 18px 16px"}}>
-        <h1 style={{fontSize:24,fontWeight:900,color:"#5B21B6",margin:"0 0 12px"}}>Appuntamenti</h1>
+      <div style={{background:"#F09590",padding:"52px 18px 16px"}}>
+        <h1 style={{fontSize:24,fontWeight:900,color:"#1E2158",margin:"0 0 12px"}}>Appuntamenti</h1>
         <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:16,padding:4,gap:2,marginBottom:10}}>
           {[["lista","Lista"],["calendario","Calendario"]].map(([v,l]) => (
             <button key={v} onClick={()=>setView(v)} className={view===v?"clay-soft":""} style={{flex:1,padding:"9px 0",borderRadius:12,border:"none",cursor:"pointer",fontSize:12,fontWeight:view===v?800:600,background:view===v?T.white:"transparent",color:view===v?T.brand:T.inkSoft,fontFamily:"inherit"}}>{l}</button>
@@ -1574,12 +1577,12 @@ function ClProfilo({user,onSwitch}) {
 
   return (
     <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
-      <div style={{background:"#F59E0B",padding:"50px 18px 18px"}}>
+      <div style={{background:"#F09590",padding:"50px 18px 18px"}}>
         <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
-          <div style={{width:56,height:56,borderRadius:"50%",background:"#5B21B6",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,fontWeight:900,color:"#fff",flexShrink:0}}>{info.name[0]}</div>
+          <div style={{width:56,height:56,borderRadius:"50%",background:"#1E2158",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,fontWeight:900,color:"#fff",flexShrink:0}}>{info.name[0]}</div>
           <div>
-            <h1 style={{fontSize:20,fontWeight:900,color:"#5B21B6",margin:"0 0 2px"}}>{info.name}</h1>
-            <p style={{fontSize:12,color:"rgba(30,16,64,.75)",margin:0,fontWeight:600}}>{info.city}</p>
+            <h1 style={{fontSize:20,fontWeight:900,color:"#1E2158",margin:"0 0 2px"}}>{info.name}</h1>
+            <p style={{fontSize:12,color:"rgba(30,33,88,.75)",margin:0,fontWeight:600}}>{info.city}</p>
           </div>
         </div>
         <div style={{display:"flex"}}>
