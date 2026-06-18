@@ -1,0 +1,24 @@
+# Dipendenze
+node_modules/
+
+# Build
+dist/
+build/
+
+# macOS
+.DS_Store
+
+# Backup/checkpoint locali (non vanno nel repo)
+.checkpoints/
+
+# Config/skill locali (path specifici della macchina, codice di terze parti)
+.claude/
+
+# Script env-specifici
+run-dev.sh
+
+# Log
+*.log
+
+# Copie/backup locali del sorgente
+src/App.*_*.jsx
