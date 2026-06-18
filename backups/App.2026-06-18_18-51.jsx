@@ -108,19 +108,19 @@ const injectFont = () => {
   document.head.appendChild(s);
 };
 
-/* PALETTE "Beauty Star" — navy scuro + bianco + corallo/pesca/oro caldi (da riferimento) */
+/* PALETTE "Indigo Pro" — blu indaco come brand, bianco caldo, accenti vivaci ma usati piccoli */
 const T = {
-  ink:"#1C1C2E",inkMid:"#5C5C7A",inkSoft:"#AEAEC0",
-  line:"#EAEAF0",surface:"#F4F4F8",white:"#FFFFFF",
+  ink:"#1A1A2E",inkMid:"#5C5C7A",inkSoft:"#A8A8C0",
+  line:"#E8E8F0",surface:"#F4F4F9",white:"#FFFFFF",
   paper:"#FAFAFA",
-  brand:"#E8756A",brandDeep:"#D45F53",brandBg:"#FDEEED",
-  yellow:"#F5C060",yellowDeep:"#E8A840",yellowBg:"#FEF5E2",
-  gold:"#F5C060",goldBg:"#FEF5E2",
-  green:"#4CAF7D",greenBg:"#E4F5EC",
-  blue:"#6A8AE8",blueBg:"#EEF2FE",
-  red:"#E8756A",redBg:"#FDEEED",
-  amber:"#F0A070",amberBg:"#FEF2E8",
-  purple:"#A87AE8",purpleBg:"#F2EEFE",
+  brand:"#3B5BDB",brandDeep:"#2C46C2",brandBg:"#E8EDFF",
+  yellow:"#FFC300",yellowDeep:"#E6AE00",yellowBg:"#FFF6D6",
+  gold:"#FFC300",goldBg:"#FFF6D6",
+  green:"#16A34A",greenBg:"#DCFCE7",
+  blue:"#3B5BDB",blueBg:"#E8EDFF",
+  red:"#E8544A",redBg:"#FEF0EF",
+  amber:"#F59E0B",amberBg:"#FEF3C7",
+  purple:"#7C3AED",purpleBg:"#EDE9FE",
 };
 
 const ST = {
@@ -203,15 +203,15 @@ const MY_APPTS0 = [
 const ALL_CITIES = ["Imperia","Milano","Roma","Torino","Bologna","Genova","Sanremo","Savona"];
 
 const CAT_LIST = [
-  {id:"barbiere",   emoji:"💈",label:"Barbiere",   color:"#E8756A"},
-  {id:"parrucchiere",emoji:"💇",label:"Parrucchiere",color:"#D45F53"},
-  {id:"nail_artist",emoji:"💅",label:"Unghie",    color:"#A87AE8"},
-  {id:"estetista",  emoji:"🧖",label:"Estetica",  color:"#F0A070"},
-  {id:"laser",      emoji:"✨",label:"Laser",     color:"#6A8AE8"},
-  {id:"tatuatore",  emoji:"🖋",label:"Tattoo",    color:"#1C1C2E"},
-  {id:"ciglia",     emoji:"👁",label:"Ciglia",    color:"#E8A0B0"},
-  {id:"makeup",     emoji:"💄",label:"Make-up",   color:"#E8756A"},
-  {id:"massaggio",  emoji:"💆",label:"Massaggi",  color:"#F5C060"},
+  {id:"barbiere",emoji:"💈",label:"Barbiere",color:"#0EA5A0"},
+  {id:"parrucchiere",emoji:"💇",label:"Parrucchiere",color:"#FF7A00"},
+  {id:"nail_artist",emoji:"💅",label:"Unghie",color:"#FF2D78"},
+  {id:"estetista",emoji:"🧖",label:"Estetica",color:"#12B764"},
+  {id:"laser",emoji:"✨",label:"Laser",color:"#8B3DFF"},
+  {id:"tatuatore",emoji:"🖋",label:"Tattoo",color:"#2D6FF0"},
+  {id:"ciglia",emoji:"👁",label:"Ciglia",color:"#E2231A"},
+  {id:"makeup",emoji:"💄",label:"Make-up",color:"#FF1493"},
+  {id:"massaggio",emoji:"💆",label:"Massaggi",color:"#FFB300"},
 ];
 
 const FEED = [
@@ -770,28 +770,28 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
       {/* Banner prossimo/ultimo appuntamento */}
       {!(searching && q.length >= 2) && banner && (
         <div style={{padding:"18px 20px 0"}}>
-          <div className="ba-rise ba-lift" onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})}
-            style={{display:"flex",alignItems:"center",gap:16,padding:"20px 20px",borderRadius:24,cursor:"pointer",
-              background:"linear-gradient(120deg,#E8756A,#F0A070,#F5C060)",
-              boxShadow:"0 8px 24px rgba(232,117,106,.32)",animationDelay:".05s"}}>
-            <div style={{width:50,height:50,borderRadius:14,background:"rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          {/* Bordo arcobaleno sottile: wrapper gradient + inner bianco */}
+          <div className="ba-rise" style={{background:"linear-gradient(90deg,#FF6B6B,#FF8E53,#FFD93D,#6BCB77,#4D96FF,#C77DFF,#FF6B6B)",borderRadius:24,padding:"2px",animationDelay:".05s"}}>
+          <div onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})} className="ba-lift" style={{display:"flex",alignItems:"center",gap:16,padding:"17px 17px",borderRadius:22,cursor:"pointer",background:T.white}}>
+            <div style={{width:50,height:50,borderRadius:14,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 {nextAppt
                   ? <><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></>
                   : <><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>}
               </svg>
             </div>
             <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.8)",margin:"0 0 3px",textTransform:"uppercase",letterSpacing:1.2}}>
+              <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,margin:"0 0 3px",textTransform:"uppercase",letterSpacing:1.2}}>
                 {nextAppt?"Il tuo appuntamento":"Ultimo appuntamento"}
               </p>
-              <p style={{fontSize:18,fontWeight:900,color:"#fff",margin:"0 0 2px",lineHeight:1.2}}>{banner.service}</p>
-              <p style={{fontSize:13,fontWeight:500,color:"rgba(255,255,255,.85)",margin:0}}>
+              <p style={{fontSize:17,fontWeight:900,color:T.ink,margin:"0 0 2px",lineHeight:1.2}}>{banner.service}</p>
+              <p style={{fontSize:13,fontWeight:500,color:T.inkMid,margin:0}}>
                 {banner.pro} · {nextAppt ? `${banner.date}, ${banner.time}` : `${banner.date}`}
               </p>
             </div>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
+          </div>{/* fine wrapper arcobaleno */}
         </div>
       )}
 
