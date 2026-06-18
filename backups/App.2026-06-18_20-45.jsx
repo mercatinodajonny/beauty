@@ -215,15 +215,15 @@ const MY_APPTS0 = [
 const ALL_CITIES = ["Imperia","Milano","Roma","Torino","Bologna","Genova","Sanremo","Savona"];
 
 const CAT_LIST = [
-  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#E85D4A",grad:"linear-gradient(135deg,#F27B6A,#D63E2C)"},
-  {id:"parrucchiere",emoji:"💇",label:"Capelli",     color:"#9B59D6",grad:"linear-gradient(135deg,#B97FE8,#8C3EC4)"},
-  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#E8B500",grad:"linear-gradient(135deg,#FFD03C,#D4A000)"},
-  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#3FB984",grad:"linear-gradient(135deg,#5ED4A0,#2A9E6A)"},
-  {id:"laser",       emoji:"✨",label:"Laser",       color:"#4DA8DA",grad:"linear-gradient(135deg,#6EC4F0,#2F8FC4)"},
-  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#3A3A5C",grad:"linear-gradient(135deg,#5C5C84,#2A2A45)"},
-  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#E8607A",grad:"linear-gradient(135deg,#F0809A,#D0405A)"},
-  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#E8468C",grad:"linear-gradient(135deg,#F06AAC,#CC2475)"},
-  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#F07840",grad:"linear-gradient(135deg,#FFA060,#D85820)"},
+  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#4DA8DA"},
+  {id:"parrucchiere",emoji:"💇",label:"Parrucchiere",color:"#2F8FC4"},
+  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#6FBEE0"},
+  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#3FB984"},
+  {id:"laser",       emoji:"✨",label:"Laser",       color:"#5A8FD8"},
+  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#14304A"},
+  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#8AA6E8"},
+  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#4DA8DA"},
+  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#3FB984"},
 ];
 
 const FEED = [
@@ -497,8 +497,8 @@ const CAT_PATHS = {
   makeup:      <><rect x="9" y="9" width="6" height="12" rx="1.5"/><path d="M10 9V5.5a2 2 0 0 1 4 0V9"/></>,
   massaggio:   <><circle cx="12" cy="6" r="2.4"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/><path d="M3 10c1.5 1 2.5 1 4 0M17 10c1.5 1 2.5 1 4 0"/></>,
 };
-const CatIcon = ({id,size=24,color="currentColor",strokeWidth=2.2}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
+const CatIcon = ({id,size=24,color="currentColor"}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
     {CAT_PATHS[id] || <circle cx="12" cy="12" r="8"/>}
   </svg>
 );
@@ -877,15 +877,11 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
           {/* Passo 1: Categorie — chip piccole a scorrimento orizzontale */}
           {!selCat && (
             <>
-              <div style={{display:"flex",gap:12,overflowX:"auto",padding:"4px 20px 10px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}} className="ba-noscroll">
+              <div style={{display:"flex",gap:10,overflowX:"auto",padding:"4px 20px 8px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}} className="ba-noscroll">
                 {CAT_LIST.map((cat,ci) => (
-                  <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift ba-zoom" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:7,padding:"6px 0",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:68,animationDelay:`${0.03*ci+0.06}s`}}>
-                    <div style={{width:60,height:60,borderRadius:20,background:cat.grad,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 8px 22px ${cat.color}55`,position:"relative",overflow:"hidden"}}>
-                      {/* riflesso lucido */}
-                      <div style={{position:"absolute",top:0,left:0,right:0,height:"50%",background:"rgba(255,255,255,.22)",borderRadius:"20px 20px 40% 40%",pointerEvents:"none"}}/>
-                      <CatIcon id={cat.id} size={28} color="#fff" strokeWidth={2.5}/>
-                    </div>
-                    <span style={{fontSize:11,fontWeight:700,color:T.ink,textAlign:"center",lineHeight:1.2}}>{cat.label}</span>
+                  <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift ba-zoom" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,padding:"10px 4px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:66,animationDelay:`${0.03*ci+0.06}s`}}>
+                    <div style={{width:56,height:56,borderRadius:18,background:`linear-gradient(145deg,rgba(255,255,255,.95),rgba(255,255,255,.7))`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 6px 18px ${cat.color}33, inset 1px 1px 3px rgba(255,255,255,.9)`,border:`1.5px solid ${cat.color}22`}}><CatIcon id={cat.id} size={26} color={cat.color}/></div>
+                    <span style={{fontSize:11,fontWeight:700,color:T.inkMid,textAlign:"center",lineHeight:1.1}}>{cat.label}</span>
                   </button>
                 ))}
               </div>
