@@ -1205,39 +1205,31 @@ function ClExplore({nav}) {
 /* PREFERITI */
 function ClPreferiti({nav,favorites,setFavorites}) {
   const favPros = ALL_PROS.filter(p=>favorites.has(p.id));
-  const [confirmId,setConfirmId] = useState(null); // id del pro da rimuovere, null = chiuso
-  const confirmPro = ALL_PROS.find(p=>p.id===confirmId);
-
-  const doRemove = () => {
-    setFavorites(f=>{const n=new Set(f);n.delete(confirmId);return n;});
-    setConfirmId(null);
-  };
-
   return (
-    <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
-      <div style={{padding:"52px 20px 18px",background:T.paper}}>
-        <h1 className="ba-display" style={{fontSize:30,color:T.ink,margin:"0 0 4px"}}>Preferiti</h1>
-        <p style={{fontSize:14,color:T.inkMid,margin:0,fontWeight:500}}>I tuoi professionisti salvati</p>
+    <div style={{paddingBottom:90,background:T.white,minHeight:"100dvh"}}>
+      <div style={{padding:"52px 20px 18px",background:T.white}}>
+        <h1 style={{fontSize:30,fontWeight:900,color:T.ink,margin:"0 0 4px",letterSpacing:"-.02em"}}>Preferiti</h1>
+        <p style={{fontSize:14,color:T.inkMid,margin:0,fontWeight:600}}>I tuoi professionisti salvati</p>
       </div>
       {favPros.length === 0 ? (
         <div style={{textAlign:"center",padding:"80px 30px"}}>
-          <div style={{fontSize:48,marginBottom:14}}>🤍</div>
+          <p style={{fontSize:48,marginBottom:14}}>❤️</p>
           <p style={{fontSize:17,fontWeight:700,color:T.ink,marginBottom:8}}>Nessun preferito</p>
           <p style={{fontSize:14,color:T.inkSoft,marginBottom:22,lineHeight:1.6}}>Apri un profilo e tocca il cuore per salvarlo qui.</p>
-          <button onClick={()=>nav("cl_home")} style={{padding:"13px 28px",borderRadius:13,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",color:"#fff",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Cerca professionisti</button>
+          <button onClick={()=>nav("cl_home")} style={{padding:"13px 28px",borderRadius:13,border:"none",background:T.brand,color:T.white,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Cerca professionisti</button>
         </div>
       ) : (
-        <div style={{padding:"4px 20px"}}>
-          {favPros.map((pro,i) => (
-            <div key={pro.id} className="clay ba-rise ba-zoom" style={{background:T.white,borderRadius:22,marginBottom:14,overflow:"hidden",animationDelay:`${i*.06}s`}}>
+        <div style={{padding:"14px 20px"}}>
+          {favPros.map(pro => (
+            <div key={pro.id} className="clay ba-zoom" style={{background:T.white,borderRadius:22,marginBottom:16,overflow:"hidden"}}>
               <div style={{padding:"16px 16px 14px",display:"flex",alignItems:"center",gap:13,borderBottom:`1px solid ${T.line}`}}>
-                <div style={{width:52,height:52,borderRadius:16,background:"linear-gradient(145deg,#F1E9DC,#E7DCCB)",border:"2px solid #E0D3BF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{pro.emoji}</div>
+                {/* Avatar piccolo con solo colore di bordo/sfondo leggero */}
+                <div style={{width:52,height:52,borderRadius:16,background:`${pro.accent}16`,border:`2.5px solid ${pro.accent}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{pro.emoji}</div>
                 <div style={{flex:1,minWidth:0}}>
-                  <p style={{fontSize:16,fontWeight:700,color:T.ink,margin:"0 0 3px",lineHeight:1.1}}>{pro.name}</p>
-                  <p style={{fontSize:12,color:T.inkMid,margin:0,fontWeight:500}}>{pro.cat} · <span style={{color:T.brand}}>★</span> {pro.rating}</p>
+                  <p style={{fontSize:16,fontWeight:900,color:T.ink,margin:"0 0 3px",lineHeight:1.1}}>{pro.name}</p>
+                  <p style={{fontSize:12,color:T.inkMid,margin:0,fontWeight:600}}>{pro.cat} · <span style={{color:T.gold}}>★</span> {pro.rating}</p>
                 </div>
-                {/* Tasto rimuovi — apre la conferma */}
-                <button onClick={()=>setConfirmId(pro.id)} style={{background:T.surface,border:"none",borderRadius:10,width:34,height:34,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}} title="Rimuovi dai preferiti">
+                <button onClick={()=>setFavorites(f=>{const n=new Set(f);n.delete(pro.id);return n;})} style={{background:T.surface,border:"none",borderRadius:10,width:34,height:34,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                   <IHeart a={true}/>
                 </button>
               </div>
@@ -1245,52 +1237,16 @@ function ClPreferiti({nav,favorites,setFavorites}) {
                 <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 8px",fontWeight:700,textTransform:"uppercase",letterSpacing:.8}}>Disponibile oggi</p>
                 <div style={{display:"flex",gap:6,marginBottom:13,flexWrap:"wrap"}}>
                   {pro.slots.slice(0,4).map(slot => (
-                    <button key={slot} onClick={()=>nav("cl_prenota",{pro,preselSlot:slot})} style={{padding:"7px 14px",borderRadius:10,border:`1.5px solid ${T.line}`,background:T.surface,cursor:"pointer",fontSize:13,fontWeight:600,color:T.ink,fontFamily:"inherit"}}>{slot}</button>
+                    <button key={slot} onClick={()=>nav("cl_prenota",{pro,preselSlot:slot})} style={{padding:"7px 14px",borderRadius:10,border:`1.5px solid ${T.line}`,background:T.surface,cursor:"pointer",fontSize:13,fontWeight:700,color:T.ink,fontFamily:"inherit"}}>{slot}</button>
                   ))}
                 </div>
                 <div style={{display:"flex",gap:8}}>
-                  <button onClick={()=>nav("cl_pro",pro)} className="clay-soft" style={{flex:1,padding:"11px 0",borderRadius:12,border:"none",background:T.surface,cursor:"pointer",fontSize:13,fontWeight:600,color:T.inkMid,fontFamily:"inherit"}}>Profilo</button>
-                  <button onClick={()=>nav("cl_prenota",{pro})} style={{flex:2,padding:"11px 0",borderRadius:12,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",cursor:"pointer",fontSize:14,fontWeight:700,color:"#fff",fontFamily:"inherit"}}>Prenota ora</button>
+                  <button onClick={()=>nav("cl_pro",pro)} className="clay-soft" style={{flex:1,padding:"11px 0",borderRadius:12,border:"none",background:T.surface,cursor:"pointer",fontSize:13,fontWeight:700,color:T.inkMid,fontFamily:"inherit"}}>Profilo</button>
+                  <button onClick={()=>nav("cl_prenota",{pro})} style={{flex:2,padding:"11px 0",borderRadius:12,border:"none",background:T.brand,cursor:"pointer",fontSize:14,fontWeight:800,color:T.white,fontFamily:"inherit"}}>Prenota ora</button>
                 </div>
               </div>
             </div>
           ))}
-        </div>
-      )}
-
-      {/* Modal conferma rimozione */}
-      {confirmId && (
-        <div onClick={()=>setConfirmId(null)}
-          style={{position:"fixed",inset:0,background:"rgba(43,34,24,.45)",zIndex:400,display:"flex",alignItems:"flex-end",backdropFilter:"blur(4px)"}}>
-          <div onClick={e=>e.stopPropagation()}
-            style={{background:T.paper,borderRadius:"28px 28px 0 0",width:"100%",maxWidth:430,margin:"0 auto",
-              padding:"10px 24px 44px",boxShadow:"0 -8px 40px rgba(43,34,24,.18)"}}>
-            {/* Maniglia */}
-            <div style={{width:36,height:4,borderRadius:2,background:T.line,margin:"8px auto 22px"}}/>
-            {/* Icona + testo */}
-            <div style={{textAlign:"center",marginBottom:22}}>
-              <div style={{fontSize:44,marginBottom:10}}>💔</div>
-              {confirmPro && <>
-                <p style={{fontSize:18,fontWeight:700,color:T.ink,margin:"0 0 6px"}}>Rimuovere {confirmPro.name}?</p>
-                <p style={{fontSize:14,color:T.inkMid,margin:0,lineHeight:1.5}}>Non comparirà più nella tua lista preferiti.<br/>Potrai sempre ri-aggiungerlo dal suo profilo.</p>
-              </>}
-            </div>
-            {/* Bottoni */}
-            <div style={{display:"flex",flexDirection:"column",gap:10}}>
-              <button onClick={doRemove}
-                style={{width:"100%",padding:"16px",borderRadius:16,border:"none",
-                  background:"linear-gradient(135deg,#C0705A,#A0503C)",color:"#fff",
-                  fontSize:16,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
-                Sì, rimuovi
-              </button>
-              <button onClick={()=>setConfirmId(null)}
-                style={{width:"100%",padding:"16px",borderRadius:16,border:`1.5px solid ${T.line}`,
-                  background:T.white,color:T.inkMid,
-                  fontSize:16,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>
-                Annulla
-              </button>
-            </div>
-          </div>
         </div>
       )}
     </div>
