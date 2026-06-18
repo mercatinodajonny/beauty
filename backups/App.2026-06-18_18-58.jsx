@@ -554,21 +554,21 @@ function NavBar({items,s,nav,labelSize=10}) {
 
   return (
     <div ref={ref} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
-      style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",
-        width:"calc(100% - 24px)",maxWidth:406,background:"#1E2158",borderRadius:26,
+      className="clay" style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",
+        width:"calc(100% - 24px)",maxWidth:406,background:T.white,borderRadius:26,
         display:"flex",zIndex:100,padding:"6px 4px",touchAction:"none",userSelect:"none",
-        boxShadow:"0 8px 28px rgba(30,33,88,.35)",
         position:"fixed"}}>
-      {/* Pillola scorrevole — salmone su navy */}
+      {/* Pillola scorrevole */}
       <div style={{
         position:"absolute", top:6, height:"calc(100% - 12px)",
         left:pillLeft, width:pillW,
-        background:"#F09590", borderRadius:18,
+        background:T.brandBg, borderRadius:18,
         transition:live?"none":"left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1)",
         pointerEvents:"none", zIndex:0,
       }}/>
       {items.map(({id,I,l,color}) => {
         const active=s===id;
+        const accent=color||T.brand;
         return (
           <div key={id} data-navid={id} onClick={()=>nav(id)}
             style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",
@@ -579,7 +579,7 @@ function NavBar({items,s,nav,labelSize=10}) {
               <I a={active}/>
             </div>
             <span style={{fontSize:labelSize,fontWeight:active?800:600,
-              color:active?"#1E2158":"rgba(255,255,255,.55)",pointerEvents:"none",
+              color:active?accent:T.inkSoft,pointerEvents:"none",
               transition:"color .22s ease"}}>{l}</span>
           </div>
         );
@@ -737,54 +737,65 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
     : [];
 
   return (
-    <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:90,background:T.white,minHeight:"100dvh"}}>
 
-      {/* Header salmone — come Beauty Star: sfondo rosa-salmone in cima */}
-      <div style={{background:"#F09590",paddingTop:52,paddingBottom:24,paddingLeft:20,paddingRight:20}}>
-        {/* Logo + cuore */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
+      {/* Header: Logo + Ricerca + Preferiti */}
+      <div style={{padding:"52px 20px 16px",background:T.white,borderBottom:`1px solid ${T.line}`}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
           <div style={{display:"flex",alignItems:"center",gap:9}}>
-            <div style={{width:32,height:32,borderRadius:9,background:T.brand,display:"flex",alignItems:"center",justifyContent:"center"}}><LogoMark size={17}/></div>
-            <span className="ba-serif" style={{fontSize:21,fontWeight:800,color:T.brand,letterSpacing:"-.02em"}}>BeautyApp</span>
+            <div style={{width:34,height:34,borderRadius:10,background:T.brand,display:"flex",alignItems:"center",justifyContent:"center"}}><LogoMark size={19}/></div>
+            <span className="ba-serif" style={{fontSize:22,fontWeight:600,color:T.ink,letterSpacing:"-.02em"}}>BeautyApp</span>
           </div>
-          <button onClick={()=>nav("cl_preferiti")} style={{width:36,height:36,borderRadius:11,background:"rgba(255,255,255,.35)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <button onClick={()=>nav("cl_preferiti")} style={{width:38,height:38,borderRadius:12,background:T.surface,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
             <IHeart a={false}/>
           </button>
         </div>
 
-        {/* Saluto + ricerca */}
-        <p style={{fontSize:13,fontWeight:700,color:T.brand,margin:"0 0 12px",opacity:.85}}>Ciao, cosa vuoi fare oggi? 👋</p>
-        <div style={{display:"flex",alignItems:"center",gap:10,background:"#fff",borderRadius:16,padding:"13px 16px",boxShadow:"0 4px 16px rgba(30,33,88,.12)"}}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}>
+        {/* Barra di ricerca */}
+        <div className="clay-inset" style={{display:"flex",alignItems:"center",gap:10,background:T.white,borderRadius:18,padding:"14px 16px"}}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0}}>
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
-          <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
-            placeholder="Cerca parrucchiere, servizio, città..."
-            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:14,color:T.ink,fontFamily:"inherit"}}/>
-          {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:T.inkSoft,padding:0}}>×</button>}
+          <input
+            value={q}
+            onChange={e=>{setQ(e.target.value);setSearching(true);}}
+            onFocus={()=>setSearching(true)}
+            placeholder="Cerca parrucchiere, servizio, citta..."
+            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:T.ink,fontFamily:"inherit"}}
+          />
+          {q && (
+            <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:T.inkSoft,padding:0}}>x</button>
+          )}
         </div>
+      </div>
 
-        {/* Banner appuntamento — dentro il blocco salmone, card bianca */}
-        {!(searching && q.length >= 2) && banner && (
+      {/* Banner prossimo/ultimo appuntamento */}
+      {!(searching && q.length >= 2) && banner && (
+        <div style={{padding:"18px 20px 0"}}>
           <div className="ba-rise ba-lift" onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})}
-            style={{display:"flex",alignItems:"center",gap:14,padding:"16px 18px",borderRadius:20,cursor:"pointer",
-              background:T.white,marginTop:16,boxShadow:"0 6px 20px rgba(30,33,88,.14)",animationDelay:".05s"}}>
-            <div style={{width:46,height:46,borderRadius:13,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                {nextAppt?<><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></>:<><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>}
+            style={{display:"flex",alignItems:"center",gap:16,padding:"20px 20px",borderRadius:24,cursor:"pointer",
+              background:"#F09590",
+              boxShadow:"0 8px 24px rgba(240,149,144,.40)",animationDelay:".05s"}}>
+            <div style={{width:50,height:50,borderRadius:14,background:"rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                {nextAppt
+                  ? <><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></>
+                  : <><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>}
               </svg>
             </div>
             <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:10,fontWeight:700,color:"#F09590",margin:"0 0 2px",textTransform:"uppercase",letterSpacing:1.1}}>
+              <p style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.8)",margin:"0 0 3px",textTransform:"uppercase",letterSpacing:1.2}}>
                 {nextAppt?"Il tuo appuntamento":"Ultimo appuntamento"}
               </p>
-              <p style={{fontSize:16,fontWeight:900,color:T.ink,margin:"0 0 1px",lineHeight:1.2}}>{banner.service}</p>
-              <p style={{fontSize:12,color:T.inkMid,margin:0}}>{banner.pro} · {nextAppt?`${banner.date}, ${banner.time}`:banner.date}</p>
+              <p style={{fontSize:18,fontWeight:900,color:"#fff",margin:"0 0 2px",lineHeight:1.2}}>{banner.service}</p>
+              <p style={{fontSize:13,fontWeight:500,color:"rgba(255,255,255,.85)",margin:0}}>
+                {banner.pro} · {nextAppt ? `${banner.date}, ${banner.time}` : `${banner.date}`}
+              </p>
             </div>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Risultati ricerca */}
       {searching && q.length >= 2 && (
