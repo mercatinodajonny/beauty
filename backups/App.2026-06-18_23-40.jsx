@@ -1290,7 +1290,6 @@ function ClPreferiti({nav,favorites,setFavorites}) {
 function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
   const isFav = favorites?.has(pro.id)||false;
   const [confirmUnfav,setConfirmUnfav] = useState(false);
-  const [confirmUnfollow,setConfirmUnfollow] = useState(false);
   const toggleFav = () => {
     if(isFav){ setConfirmUnfav(true); return; }           // rimozione → conferma
     setFavorites&&setFavorites(f=>{const n=new Set(f);n.add(pro.id);return n;});
@@ -1298,8 +1297,7 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
   const doUnfav = () => { setFavorites&&setFavorites(f=>{const n=new Set(f);n.delete(pro.id);return n;}); setConfirmUnfav(false); };
   const isFollowing = following?.has(pro.id)||false;
   const followerCount = pro.followers + (isFollowing?1:0);
-  const doUnfollow = () => { setFollowing&&setFollowing(f=>{const n=new Set(f);n.delete(pro.id);return n;}); setConfirmUnfollow(false); };
-  const toggleFollow = () => isFollowing ? setConfirmUnfollow(true) : setFollowing&&setFollowing(f=>{const n=new Set(f);n.add(pro.id);return n;});
+  const toggleFollow = () => setFollowing&&setFollowing(f=>{const n=new Set(f);isFollowing?n.delete(pro.id):n.add(pro.id);return n;});
   const [selSvc,setSvc] = useState(null);
   const [showRev,setShowRev] = useState(false);
   const [stars,setStars] = useState(5);
@@ -1350,16 +1348,6 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
           <button onClick={()=>setShowRev(true)} style={{flex:1,padding:"11px 0",borderRadius:10,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontSize:13,fontWeight:600,color:T.inkMid,fontFamily:"inherit"}}>Recensisci</button>
         </div>
       </div>
-
-      {/* Conferma smetti di seguire */}
-      {confirmUnfollow && (
-        <ConfirmDialog
-          title={`Smettere di seguire ${pro.name}?`}
-          message="Non riceverai più aggiornamenti da questo professionista."
-          confirmLabel="Smetti" danger
-          onConfirm={doUnfollow} onCancel={()=>setConfirmUnfollow(false)}
-        />
-      )}
 
       {/* Conferma rimozione preferito — dialog minimal */}
       {confirmUnfav && (
