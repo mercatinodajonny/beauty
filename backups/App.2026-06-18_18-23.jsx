@@ -108,16 +108,16 @@ const injectFont = () => {
   document.head.appendChild(s);
 };
 
-/* PALETTE "Indigo Pro" — blu indaco come brand, bianco caldo, accenti vivaci ma usati piccoli */
+/* PALETTE "Vivid Refined" — bianco caldo, inchiostro scuro, accenti saturi usati in piccolo */
 const T = {
-  ink:"#1A1A2E",inkMid:"#5C5C7A",inkSoft:"#A8A8C0",
-  line:"#E8E8F0",surface:"#F4F4F9",white:"#FFFFFF",
-  paper:"#FAFAFA",
-  brand:"#3B5BDB",brandDeep:"#2C46C2",brandBg:"#E8EDFF",
+  ink:"#1A1A1A",inkMid:"#6B6B6B",inkSoft:"#B0B0B0",
+  line:"#EBEBEB",surface:"#F5F5F3",white:"#FFFFFF",
+  paper:"#FAFAF8",
+  brand:"#E8544A",brandDeep:"#CC3F36",brandBg:"#FEF0EF",
   yellow:"#FFC300",yellowDeep:"#E6AE00",yellowBg:"#FFF6D6",
   gold:"#FFC300",goldBg:"#FFF6D6",
   green:"#16A34A",greenBg:"#DCFCE7",
-  blue:"#3B5BDB",blueBg:"#E8EDFF",
+  blue:"#2563EB",blueBg:"#DBEAFE",
   red:"#E8544A",redBg:"#FEF0EF",
   amber:"#F59E0B",amberBg:"#FEF3C7",
   purple:"#7C3AED",purpleBg:"#EDE9FE",
