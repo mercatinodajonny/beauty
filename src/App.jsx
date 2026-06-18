@@ -1558,6 +1558,9 @@ function ClAppts({nav,allAppts,setAllAppts}) {
   const [newDate,setNewDate] = useState("");
   const [newTime,setNewTime] = useState("");
   const [view,setView] = useState("lista");
+  const [cancelId,setCancelId] = useState(null);
+  const cancelAppt = allAppts.find(a=>a.id===cancelId);
+  const doCancel = () => { setAllAppts(p=>p.map(x=>x.id===cancelId?{...x,status:"cancellato"}:x)); setCancelId(null); };
 
   const DATE_OPTS = ["Domani","Lun 22 giu","Mar 23 giu","Mer 24 giu","Gio 25 giu","Ven 26 giu","Sab 27 giu"];
   const TIME_OPTS = ["08:00","09:00","09:30","10:00","10:30","11:00","11:30","12:00","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"];
@@ -1639,7 +1642,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
                       {locked && <div style={{padding:"7px 10px",background:T.amberBg,borderRadius:7,marginBottom:8,display:"flex",gap:6,alignItems:"center"}}><span style={{fontSize:13}}>⏰</span><p style={{fontSize:11,color:T.amber,margin:0}}>Non modificabile - meno di 24 ore</p></div>}
                       <div style={{display:"flex",gap:7}}>
                         <button onClick={()=>{if(!locked){setSpostaId(a.id);setNewDate(a.date);setNewTime(a.time);}}} disabled={locked} style={{flex:1,padding:"10px 0",borderRadius:9,border:`1.5px solid ${T.line}`,background:locked?T.surface:T.white,cursor:locked?"default":"pointer",fontSize:12,fontWeight:600,color:locked?T.inkSoft:T.inkMid,fontFamily:"inherit",opacity:locked?.5:1}}>Sposta</button>
-                        <button onClick={()=>{if(!locked)setAllAppts(p=>p.map(x=>x.id===a.id?{...x,status:"cancellato"}:x));}} disabled={locked} style={{flex:1,padding:"10px 0",borderRadius:9,border:`1.5px solid ${locked?T.line:T.redBg}`,background:locked?T.surface:T.redBg,cursor:locked?"default":"pointer",fontSize:12,fontWeight:600,color:locked?T.inkSoft:T.red,fontFamily:"inherit",opacity:locked?.5:1}}>Cancella</button>
+                        <button onClick={()=>{if(!locked)setCancelId(a.id);}} disabled={locked} style={{flex:1,padding:"10px 0",borderRadius:9,border:`1.5px solid ${locked?T.line:T.redBg}`,background:locked?T.surface:T.redBg,cursor:locked?"default":"pointer",fontSize:12,fontWeight:600,color:locked?T.inkSoft:T.red,fontFamily:"inherit",opacity:locked?.5:1}}>Disdici</button>
                       </div>
                     </>
                   )}
@@ -1711,6 +1714,16 @@ function ClAppts({nav,allAppts,setAllAppts}) {
             <button onClick={confirmSposta} disabled={!newDate||!newTime} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.brand,color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",opacity:(!newDate||!newTime)?.4:1}}>Conferma</button>
           </div>
         </Modal>
+      )}
+
+      {/* Conferma disdetta appuntamento */}
+      {cancelId && cancelAppt && (
+        <ConfirmDialog
+          title="Disdire l'appuntamento?"
+          message={`${cancelAppt.service} con ${cancelAppt.pro}, ${cancelAppt.date} alle ${cancelAppt.time}. L'operazione non è reversibile.`}
+          confirmLabel="Disdici" danger
+          onConfirm={doCancel} onCancel={()=>setCancelId(null)}
+        />
       )}
     </div>
   );
