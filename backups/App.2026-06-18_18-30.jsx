@@ -723,24 +723,24 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
       {/* Banner prossimo/ultimo appuntamento */}
       {!(searching && q.length >= 2) && banner && (
         <div style={{padding:"18px 20px 0"}}>
-          <div onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})} className="ba-rise ba-lift clay" style={{display:"flex",alignItems:"center",gap:16,padding:"18px 18px",borderRadius:22,cursor:"pointer",background:T.white,animationDelay:".05s"}}>
-            <div style={{width:50,height:50,borderRadius:14,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <div onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})} className="ba-rise ba-lift" style={{display:"flex",alignItems:"center",gap:16,padding:"20px 20px",borderRadius:24,cursor:"pointer",background:nextAppt?T.yellow:T.ink,boxShadow:nextAppt?"0 10px 24px rgba(255,196,0,.45)":"0 10px 24px rgba(0,0,0,.25)",animationDelay:".05s"}}>
+            <div style={{width:54,height:54,borderRadius:16,background:nextAppt?"rgba(0,0,0,.10)":"rgba(255,255,255,.16)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={nextAppt?T.ink:T.white} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 {nextAppt
                   ? <><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></>
                   : <><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>}
               </svg>
             </div>
             <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,margin:"0 0 3px",textTransform:"uppercase",letterSpacing:1.2}}>
+              <p style={{fontSize:11,fontWeight:800,color:nextAppt?"rgba(0,0,0,.55)":"rgba(255,255,255,.7)",margin:"0 0 4px",textTransform:"uppercase",letterSpacing:1.3}}>
                 {nextAppt?"Il tuo appuntamento":"Ultimo appuntamento"}
               </p>
-              <p style={{fontSize:17,fontWeight:900,color:T.ink,margin:"0 0 2px",lineHeight:1.2}}>{banner.service}</p>
-              <p style={{fontSize:13,fontWeight:500,color:T.inkMid,margin:0}}>
+              <p style={{fontSize:19,fontWeight:900,color:nextAppt?T.ink:T.white,margin:"0 0 2px",lineHeight:1.15}}>{banner.service}</p>
+              <p style={{fontSize:13,fontWeight:600,color:nextAppt?"rgba(0,0,0,.7)":"rgba(255,255,255,.82)",margin:0}}>
                 {banner.pro} · {nextAppt ? `${banner.date}, ${banner.time}` : `${banner.date}`}
               </p>
             </div>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={nextAppt?T.ink:T.white} strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
         </div>
       )}
@@ -767,7 +767,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                   <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} - {pro.city}</p>
                   <span style={{color:T.gold,fontSize:12}}>{"★".repeat(Math.floor(pro.rating))}</span>
                 </div>
-                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:T.brandBg,color:T.brandDeep,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:T.brand,color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
               </div>
               {i < searchResults.length-1 && <Div/>}
             </div>
@@ -828,7 +828,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                               <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 4px"}}>{pro.cat} · {pro.city} · {pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</p>
                               <span style={{color:T.gold,fontSize:12,fontWeight:700}}>★ {pro.rating} <span style={{color:T.inkSoft,fontWeight:500}}>({pro.reviews})</span></span>
                             </div>
-                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"10px 15px",borderRadius:12,border:"none",background:T.brandBg,color:T.brandDeep,fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"10px 15px",borderRadius:12,border:"none",background:T.brand,color:T.white,fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
                           </div>
                         );
                       })}
