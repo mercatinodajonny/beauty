@@ -89,7 +89,7 @@ const injectFont = () => {
     /* CLAYMORPHISM — superfici "gonfie": ombra esterna morbida + highlight e ombra interne (tinta neutra warm) */
     .clay{box-shadow:7px 7px 18px rgba(120,108,86,.16), -6px -6px 14px rgba(255,255,255,.9), inset 2px 2px 4px rgba(255,255,255,.7), inset -3px -3px 7px rgba(120,108,86,.09);}
     .clay-inset{box-shadow:inset 4px 4px 9px rgba(120,108,86,.15), inset -4px -4px 9px rgba(255,255,255,.9);}
-    .clay-btn{box-shadow:0 9px 20px rgba(13,126,118,.34), inset 2px 2px 5px rgba(255,255,255,.45), inset -3px -4px 8px rgba(9,80,74,.42);}
+    .clay-btn{box-shadow:0 9px 20px rgba(249,115,22,.34), inset 2px 2px 5px rgba(255,255,255,.45), inset -3px -4px 8px rgba(180,83,9,.42);}
     .clay-soft{box-shadow:5px 5px 13px rgba(120,108,86,.13), -4px -4px 11px rgba(255,255,255,.88);}
     @keyframes baRise{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes baFade{from{opacity:0}to{opacity:1}}
@@ -113,7 +113,7 @@ const T = {
   ink:"#2C2A26",inkMid:"#6E6A62",inkSoft:"#A8A399",
   line:"#E4DFD4",surface:"#EAE4D8",white:"#FFFFFF",
   paper:"#F0ECE3",
-  brand:"#0FA399",brandDeep:"#0B7E76",brandBg:"#DCF1EF",
+  brand:"#F97316",brandDeep:"#EA6A0A",brandBg:"#FDE9D5",
   gold:"#E0A23D",goldBg:"#FAF0DD",
   green:"#0FA36B",greenBg:"#E2F4EC",
   blue:"#3E84A8",blueBg:"#E6F0F4",
@@ -225,7 +225,7 @@ const Div = () => <div style={{height:1,background:T.line}}/>;
 const DivP = () => <div style={{height:1,background:T.line,margin:"0 18px"}}/>;
 const Pill = ({label,style}) => <span style={{display:"inline-flex",alignItems:"center",padding:"3px 9px",borderRadius:99,fontSize:11,fontWeight:600,...style}}>{label}</span>;
 const BigBtn = ({label,onClick,variant="dark",disabled,style}) => (
-  <button onClick={onClick} disabled={disabled} className={disabled?"":(variant==="dark"?"clay-btn":"clay-soft")} style={{width:"100%",padding:"17px 0",borderRadius:20,border:"none",cursor:disabled?"default":"pointer",fontSize:16,fontWeight:800,background:variant==="dark"?`linear-gradient(135deg,#2DD4BF,${T.brand})`:T.white,color:variant==="dark"?T.white:T.ink,opacity:disabled?.4:1,fontFamily:"inherit",...style}}>{label}</button>
+  <button onClick={onClick} disabled={disabled} className={disabled?"":(variant==="dark"?"clay-btn":"clay-soft")} style={{width:"100%",padding:"17px 0",borderRadius:20,border:"none",cursor:disabled?"default":"pointer",fontSize:16,fontWeight:800,background:variant==="dark"?`linear-gradient(135deg,#FBA94C,${T.brand})`:T.white,color:variant==="dark"?T.white:T.ink,opacity:disabled?.4:1,fontFamily:"inherit",...style}}>{label}</button>
 );
 const Btn = ({label,onClick,style}) => (
   <button onClick={onClick} className="clay-soft" style={{padding:"9px 16px",borderRadius:15,border:"none",background:T.white,cursor:"pointer",fontSize:13,fontWeight:700,color:T.inkMid,fontFamily:"inherit",...style}}>{label}</button>
@@ -250,7 +250,7 @@ const Modal = ({title,onClose,children}) => (
 const Photo = ({src,style}) => {
   const [e,sE] = useState(false);
   return e||!src
-    ? <div style={{background:`linear-gradient(145deg,#2DD4BF,${T.purple})`,display:"flex",alignItems:"center",justifyContent:"center",...style}}><LogoMark size={32} color="rgba(255,255,255,.95)"/></div>
+    ? <div style={{background:`linear-gradient(145deg,#FBA94C,${T.purple})`,display:"flex",alignItems:"center",justifyContent:"center",...style}}><LogoMark size={32} color="rgba(255,255,255,.95)"/></div>
     : <img src={src} onError={()=>sE(true)} style={{objectFit:"cover",display:"block",...style}} alt=""/>;
 };
 const Av = ({pro,size=40,fs=18}) => (
@@ -413,7 +413,7 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
                 </div>
                 <p style={{fontSize:11,color:T.inkSoft,margin:0}}>Prima disp. {pro.slots[0]} · Da {Math.min(...pro.services.map(s=>s.price))}€</p>
               </div>
-              <button onClick={e=>{e.stopPropagation();onBook(pro);}} className="clay-btn" style={{padding:"10px 15px",borderRadius:15,border:"none",background:`linear-gradient(135deg,#2DD4BF,${T.brand})`,color:T.white,fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+              <button onClick={e=>{e.stopPropagation();onBook(pro);}} className="clay-btn" style={{padding:"10px 15px",borderRadius:15,border:"none",background:`linear-gradient(135deg,#FBA94C,${T.brand})`,color:T.white,fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
             </div>
           ))}
         </div>
@@ -532,7 +532,7 @@ function LoginScreen({onAuth}) {
   const [tp,setTp] = useState(null);
   return (
     <div style={{minHeight:"100dvh",padding:"52px 26px 40px",background:T.paper,display:"flex",flexDirection:"column"}}>
-      <div className="ba-rise clay-btn" style={{width:60,height:60,borderRadius:20,background:`linear-gradient(135deg,#2DD4BF,${T.brand})`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:22}}><LogoMark size={30}/></div>
+      <div className="ba-rise clay-btn" style={{width:60,height:60,borderRadius:20,background:`linear-gradient(135deg,#FBA94C,${T.brand})`,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:22}}><LogoMark size={30}/></div>
       <h1 className="ba-rise" style={{fontSize:42,fontWeight:900,color:T.ink,lineHeight:1,marginBottom:8,animationDelay:".06s"}}>BeautyApp</h1>
       <p className="ba-rise" style={{fontSize:15,color:T.inkMid,marginBottom:28,animationDelay:".12s",fontWeight:600}}>La bellezza, a portata di mano.</p>
       <div style={{flex:1,display:"flex",flexDirection:"column",gap:14}}>
@@ -694,7 +694,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
       {/* Banner prossimo/ultimo appuntamento */}
       {!(searching && q.length >= 2) && banner && (
         <div style={{padding:"18px 20px 0"}}>
-          <div onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})} className="ba-rise ba-lift" style={{display:"flex",alignItems:"center",gap:18,padding:"22px 22px",borderRadius:28,cursor:"pointer",background:nextAppt?`linear-gradient(135deg,#2DD4BF,${T.brand})`:`linear-gradient(135deg,#8C8473,#6E6A62)`,position:"relative",overflow:"hidden",boxShadow:nextAppt?"0 14px 30px rgba(13,126,118,.4), inset 2px 2px 6px rgba(255,255,255,.35), inset -3px -4px 9px rgba(9,80,74,.35)":"0 14px 30px rgba(110,106,98,.4), inset 2px 2px 6px rgba(255,255,255,.35), inset -3px -4px 9px rgba(70,66,58,.35)",animationDelay:".05s"}}>
+          <div onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})} className="ba-rise ba-lift" style={{display:"flex",alignItems:"center",gap:18,padding:"22px 22px",borderRadius:28,cursor:"pointer",background:nextAppt?`linear-gradient(135deg,#FBA94C,${T.brand})`:`linear-gradient(135deg,#8C8473,#6E6A62)`,position:"relative",overflow:"hidden",boxShadow:nextAppt?"0 14px 30px rgba(249,115,22,.4), inset 2px 2px 6px rgba(255,255,255,.35), inset -3px -4px 9px rgba(180,83,9,.35)":"0 14px 30px rgba(110,106,98,.4), inset 2px 2px 6px rgba(255,255,255,.35), inset -3px -4px 9px rgba(70,66,58,.35)",animationDelay:".05s"}}>
             <div style={{width:60,height:60,borderRadius:20,background:"rgba(255,255,255,.2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,position:"relative",boxShadow:"inset 2px 2px 5px rgba(255,255,255,.4), inset -2px -3px 6px rgba(0,0,0,.12)"}}>
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={T.white} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 {nextAppt
@@ -1311,12 +1311,12 @@ function ClAppts({nav,allAppts,setAllAppts}) {
   const [selCalDay,setSelCalDay] = useState(CAL_DAYS[0]);
 
   return (
-    <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
       <div style={{background:T.white,padding:"52px 18px 0",borderBottom:`1px solid ${T.line}`}}>
         <h1 style={{fontSize:22,fontWeight:700,color:T.ink,margin:"0 0 12px"}}>Appuntamenti</h1>
-        <div style={{display:"flex",background:T.surface,borderRadius:10,padding:3,gap:2,marginBottom:10}}>
+        <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:16,padding:4,gap:2,marginBottom:10}}>
           {[["lista","Lista"],["calendario","Calendario"]].map(([v,l]) => (
-            <button key={v} onClick={()=>setView(v)} style={{flex:1,padding:"7px 0",borderRadius:8,border:"none",cursor:"pointer",fontSize:12,fontWeight:view===v?700:400,background:view===v?T.white:T.surface,color:view===v?T.ink:T.inkSoft,fontFamily:"inherit"}}>{l}</button>
+            <button key={v} onClick={()=>setView(v)} className={view===v?"clay-soft":""} style={{flex:1,padding:"9px 0",borderRadius:12,border:"none",cursor:"pointer",fontSize:12,fontWeight:view===v?800:600,background:view===v?T.white:"transparent",color:view===v?T.brand:T.inkSoft,fontFamily:"inherit"}}>{l}</button>
           ))}
         </div>
         {view==="lista" && (
@@ -1346,8 +1346,8 @@ function ClAppts({nav,allAppts,setAllAppts}) {
             const isPast = a.status==="completato";
             const isCancelled = a.status==="cancellato";
             return (
-              <div key={a.id} style={{background:T.white,borderRadius:14,marginBottom:9,overflow:"hidden",border:`1px solid ${T.line}`}}>
-                <div style={{height:4,background:ST[a.status]?.bar||T.line}}/>
+              <div key={a.id} className="clay" style={{background:T.white,borderRadius:20,marginBottom:11,overflow:"hidden"}}>
+                <div style={{height:5,background:ST[a.status]?.bar||T.line}}/>
                 <div style={{padding:"14px"}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:9}}>
                     <div><p style={{fontSize:15,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>{a.service}</p><p style={{fontSize:12,color:T.inkSoft,margin:0}}>{a.pro}</p></div>
@@ -1384,15 +1384,15 @@ function ClAppts({nav,allAppts,setAllAppts}) {
         <div style={{padding:"12px 14px"}}>
           <div style={{display:"flex",gap:5,marginBottom:12}}>
             {CAL_DAYS.map(d => (
-              <button key={d.label} onClick={()=>setSelCalDay(d)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",padding:"8px 2px",borderRadius:10,border:`1.5px solid ${selCalDay.label===d.label?T.ink:T.line}`,background:selCalDay.label===d.label?T.ink:T.white,cursor:"pointer",fontFamily:"inherit"}}>
-                <span style={{fontSize:8,color:selCalDay.label===d.label?T.gold:T.inkSoft,fontWeight:600,marginBottom:2}}>{d.name}</span>
-                <span style={{fontSize:15,fontWeight:700,color:selCalDay.label===d.label?T.white:T.ink}}>{d.day}</span>
-                {d.appts.length>0 && <div style={{width:4,height:4,borderRadius:2,background:selCalDay.label===d.label?T.gold:T.green,marginTop:2}}/>}
+              <button key={d.label} onClick={()=>setSelCalDay(d)} className={selCalDay.label===d.label?"clay-btn":"clay-soft"} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",padding:"9px 2px",borderRadius:15,border:"none",background:selCalDay.label===d.label?`linear-gradient(135deg,#FBA94C,${T.brand})`:T.white,cursor:"pointer",fontFamily:"inherit"}}>
+                <span style={{fontSize:8,color:selCalDay.label===d.label?"rgba(255,255,255,.85)":T.inkSoft,fontWeight:700,marginBottom:2}}>{d.name}</span>
+                <span style={{fontSize:15,fontWeight:800,color:selCalDay.label===d.label?T.white:T.ink}}>{d.day}</span>
+                {d.appts.length>0 && <div style={{width:4,height:4,borderRadius:2,background:selCalDay.label===d.label?T.white:T.brand,marginTop:2}}/>}
               </button>
             ))}
           </div>
-          <div style={{background:T.white,borderRadius:12,overflow:"hidden",border:`1px solid ${T.line}`}}>
-            <div style={{padding:"10px 14px",borderBottom:`1px solid ${T.line}`,background:T.surface}}>
+          <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden"}}>
+            <div style={{padding:"12px 16px",borderBottom:`1px solid ${T.line}`}}>
               <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:0}}>{selCalDay.label}</p>
               <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{selCalDay.appts.length>0?`${selCalDay.appts.length} appuntamento`:"Nessun appuntamento"}</p>
             </div>
@@ -1460,10 +1460,10 @@ function ClProfilo({user,onSwitch}) {
   const PROS_LIST = ["Salon Elite","BarberKing","Nails by Sofia","Armonia Spa"];
 
   return (
-    <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
       <div style={{background:T.white,padding:"50px 18px 0",borderBottom:`1px solid ${T.line}`}}>
         <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
-          <div style={{width:56,height:56,borderRadius:"50%",background:T.ink,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontWeight:700,color:T.white,flexShrink:0}}>{info.name[0]}</div>
+          <div style={{width:56,height:56,borderRadius:"50%",background:`linear-gradient(135deg,#FBA94C,${T.brand})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontWeight:800,color:T.white,flexShrink:0,boxShadow:"inset 2px 2px 4px rgba(255,255,255,.35), inset -2px -3px 5px rgba(180,83,9,.35)"}}>{info.name[0]}</div>
           <div>
             <h1 style={{fontSize:18,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>{info.name}</h1>
             <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{info.city}</p>
@@ -1478,9 +1478,9 @@ function ClProfilo({user,onSwitch}) {
 
       {tab==="profilo" && (
         <div style={{padding:"12px 16px"}}>
-          <div style={{background:T.white,borderRadius:13,overflow:"hidden",marginBottom:10}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 14px",borderBottom:`1px solid ${T.line}`}}>
-              <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:0}}>Informazioni</p>
+          <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"13px 16px",borderBottom:`1px solid ${T.line}`}}>
+              <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:0}}>Informazioni</p>
               {editInfo
                 ? <div style={{display:"flex",gap:6}}><Btn label="Annulla" onClick={()=>{setEditInfo(false);setTmp(info);}} style={{fontSize:11,padding:"4px 10px"}}/><button onClick={()=>{setInfo(tmp);setEditInfo(false);}} style={{padding:"4px 10px",borderRadius:8,border:"none",background:T.brand,color:T.white,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Salva</button></div>
                 : <Btn label="Modifica" onClick={()=>{setEditInfo(true);setTmp(info);}} style={{fontSize:11,padding:"4px 10px"}}/>
@@ -1503,8 +1503,8 @@ function ClProfilo({user,onSwitch}) {
               </div>
             )}
           </div>
-          <div style={{padding:"13px",borderRadius:12,border:`1.5px solid ${T.line}`,background:T.white}}>
-            <p style={{fontSize:13,fontWeight:600,color:T.ink,margin:"0 0 3px"}}>Sei anche un professionista?</p>
+          <div className="clay" style={{padding:"15px",borderRadius:20,background:T.white}}>
+            <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:"0 0 3px"}}>Sei anche un professionista?</p>
             <p style={{fontSize:12,color:T.inkMid,margin:"0 0 11px"}}>Passa alla modalita Pro.</p>
             <BigBtn label="Passa a modalita Pro" onClick={onSwitch} variant="ghost" style={{fontSize:13,padding:"10px 0"}}/>
           </div>
@@ -1513,9 +1513,9 @@ function ClProfilo({user,onSwitch}) {
 
       {tab==="recensioni" && (
         <div style={{padding:"12px 16px"}}>
-          <button onClick={()=>setShowAddRev(true)} style={{width:"100%",padding:"12px 0",borderRadius:11,border:`1.5px dashed ${T.line}`,background:T.white,color:T.inkMid,fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"inherit",marginBottom:12}}>+ Scrivi una recensione</button>
+          <button onClick={()=>setShowAddRev(true)} className="clay-soft" style={{width:"100%",padding:"13px 0",borderRadius:16,border:"none",background:T.white,color:T.brand,fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",marginBottom:12}}>+ Scrivi una recensione</button>
           {reviews.map((r,i) => (
-            <div key={r.id} style={{background:T.white,borderRadius:12,padding:"13px 14px",marginBottom:8}}>
+            <div key={r.id} className="clay" style={{background:T.white,borderRadius:18,padding:"14px 16px",marginBottom:10}}>
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
                 <p style={{fontSize:14,fontWeight:700,color:T.ink,margin:0}}>{r.pro}</p>
                 <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{r.date}</p>
@@ -1641,7 +1641,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours}) {
   };
 
   return (
-    <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
       <div style={{background:T.white,padding:"50px 16px 0",borderBottom:`1px solid ${T.line}`,position:"sticky",top:0,zIndex:30}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:9}}>
           <div><p style={{fontSize:11,color:T.inkSoft,margin:"0 0 1px"}}>Salon Elite</p><h1 style={{fontSize:20,fontWeight:700,color:T.ink,margin:0}}>Agenda</h1></div>
@@ -1792,7 +1792,7 @@ function ProClienti({clients,setClients,appts,services,nav}) {
   const [q,setQ] = useState("");
   const list = clients.filter(c=>c.name.toLowerCase().includes(q.toLowerCase())||c.phone?.includes(q));
   return (
-    <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
       <div style={{background:T.white,padding:"50px 16px 12px",borderBottom:`1px solid ${T.line}`,position:"sticky",top:0,zIndex:20}}>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:10}}>
           <h1 style={{fontSize:20,fontWeight:700,color:T.ink,margin:0}}>Clienti</h1>
@@ -1806,7 +1806,7 @@ function ProClienti({clients,setClients,appts,services,nav}) {
       <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:10}}>
         {list.map(c => (
           <div key={c.id} onClick={()=>nav("pro_cliente",c)} className="clay ba-lift" style={{background:T.white,borderRadius:20,padding:"13px 15px",display:"flex",alignItems:"center",gap:12,cursor:"pointer"}}>
-            <div style={{width:44,height:44,borderRadius:"50%",background:`linear-gradient(135deg,#2DD4BF,${T.brand})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:800,color:T.white,flexShrink:0,boxShadow:"inset 2px 2px 4px rgba(255,255,255,.35), inset -2px -3px 5px rgba(9,80,74,.35)"}}>{c.name[0]}</div>
+            <div style={{width:44,height:44,borderRadius:"50%",background:`linear-gradient(135deg,#FBA94C,${T.brand})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:800,color:T.white,flexShrink:0,boxShadow:"inset 2px 2px 4px rgba(255,255,255,.35), inset -2px -3px 5px rgba(180,83,9,.35)"}}>{c.name[0]}</div>
             <div style={{flex:1,minWidth:0}}>
               <p style={{fontSize:14,fontWeight:600,color:T.ink,margin:"0 0 2px"}}>{c.name}</p>
               <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 4px"}}>{c.phone||"No telefono"} - {c.lastVisit}</p>
@@ -1828,11 +1828,11 @@ function ProCliente({client,setClients,appts,services,nav}) {
   const cAppts = appts.filter(a=>a.clientId===client.id).slice(-8).reverse();
   const saveNote = () => {setClients(p=>p.map(c=>c.id===client.id?{...c,note}:c));setEditing(false);};
   return (
-    <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
       <div style={{background:T.white,padding:"48px 16px 14px",borderBottom:`1px solid ${T.line}`}}>
         <BackBtn onClick={()=>nav("pro_clienti")}/>
         <div style={{display:"flex",alignItems:"center",gap:12,marginTop:10}}>
-          <div style={{width:54,height:54,borderRadius:"50%",background:`linear-gradient(135deg,#2DD4BF,${T.brand})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontWeight:800,color:T.white,boxShadow:"inset 2px 2px 4px rgba(255,255,255,.35), inset -2px -3px 5px rgba(9,80,74,.35)"}}>{client.name[0]}</div>
+          <div style={{width:54,height:54,borderRadius:"50%",background:`linear-gradient(135deg,#FBA94C,${T.brand})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontWeight:800,color:T.white,boxShadow:"inset 2px 2px 4px rgba(255,255,255,.35), inset -2px -3px 5px rgba(180,83,9,.35)"}}>{client.name[0]}</div>
           <div><h1 style={{fontSize:19,fontWeight:900,color:T.ink,margin:"0 0 2px"}}>{client.name}</h1><p style={{fontSize:12,color:T.inkSoft,margin:0}}>{client.phone||"Nessun telefono"}</p></div>
         </div>
       </div>
@@ -1863,7 +1863,7 @@ function ProCliente({client,setClients,appts,services,nav}) {
           : <p style={{fontSize:13,color:T.inkSoft,padding:"13px 14px",margin:0}}>Nessun appuntamento.</p>}
       </div>
       <div style={{padding:"0 14px",display:"flex",gap:7}}>
-        <button onClick={()=>nav("pro_agenda")} className="clay-btn" style={{flex:1,padding:"14px 0",borderRadius:18,border:"none",background:`linear-gradient(135deg,#2DD4BF,${T.brand})`,color:T.white,fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>+ Prenota</button>
+        <button onClick={()=>nav("pro_agenda")} className="clay-btn" style={{flex:1,padding:"14px 0",borderRadius:18,border:"none",background:`linear-gradient(135deg,#FBA94C,${T.brand})`,color:T.white,fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>+ Prenota</button>
       </div>
     </div>
   );
@@ -1879,7 +1879,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
   const startEdit = s => {setEditSvc(s.id);setEditVals({name:s.name,price:String(s.price),min:String(s.min)});};
   const saveEdit = s => {setServices(p=>p.map(x=>x.id===s.id?{...x,name:editVals.name,price:parseInt(editVals.price)||0,min:parseInt(editVals.min)||0}:x));setEditSvc(null);};
   return (
-    <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
       <div style={{background:T.white,padding:"50px 16px 12px",borderBottom:`1px solid ${T.line}`,position:"sticky",top:0,zIndex:20}}>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:11}}>
           <h1 style={{fontSize:20,fontWeight:700,color:T.ink,margin:0}}>Gestione</h1>
@@ -1995,7 +1995,7 @@ function ProStats({appts,clients,services,staff,onSwitch,nav}) {
   const svcRanked = Object.entries(svcCount).map(([id,n])=>({svc:getSvc(parseInt(id)),n})).sort((a,b)=>b.n-a.n).slice(0,5);
   const maxN = svcRanked[0]?.n||1;
   return (
-    <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
       <div style={{background:T.white,padding:"50px 16px 14px",borderBottom:`1px solid ${T.line}`}}>
         <h1 style={{fontSize:20,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>Statistiche</h1>
         <p style={{fontSize:11,color:T.inkSoft,margin:0}}>Salon Elite - giugno 2026</p>
@@ -2027,7 +2027,7 @@ function ProStats({appts,clients,services,staff,onSwitch,nav}) {
             </div>
           ))}
         </div>
-        <div onClick={()=>nav("pro_piani")} className="clay-btn" style={{padding:"15px",borderRadius:20,background:`linear-gradient(135deg,#2DD4BF,${T.brand})`,cursor:"pointer",display:"flex",alignItems:"center",gap:12}}>
+        <div onClick={()=>nav("pro_piani")} className="clay-btn" style={{padding:"15px",borderRadius:20,background:`linear-gradient(135deg,#FBA94C,${T.brand})`,cursor:"pointer",display:"flex",alignItems:"center",gap:12}}>
           <div style={{flex:1}}>
             <p style={{color:"rgba(255,255,255,.85)",fontSize:10,fontWeight:800,textTransform:"uppercase",letterSpacing:.8,margin:"0 0 2px"}}>Beta gratuita</p>
             <p style={{color:T.white,fontSize:14,fontWeight:800,margin:0}}>{BETA_DAYS} giorni rimasti - Vedi i piani</p>
@@ -2070,7 +2070,7 @@ function PianiScreen({nav}) {
     {id:"premium",name:"Premium",price:"59",color:T.purple,textColor:T.white,tag:"Prossimamente",desc:"Massima visibilita",features:["Tutto di Pro","Posizione prioritaria","Pagamenti online","Supporto prioritario"],locked:["Pagamenti online","Posizione prioritaria"]},
   ];
   return (
-    <div style={{paddingBottom:40,background:T.surface,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:40,background:T.paper,minHeight:"100dvh"}}>
       <div style={{background:T.ink,padding:"50px 18px 24px"}}>
         <button onClick={()=>nav("pro_stats")} style={{background:"none",border:"none",cursor:"pointer",color:"rgba(255,255,255,.6)",fontSize:13,padding:"0 0 14px 0",fontFamily:"inherit"}}>Indietro</button>
         <div style={{textAlign:"center"}}>
