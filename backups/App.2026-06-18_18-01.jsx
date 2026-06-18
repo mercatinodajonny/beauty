@@ -795,7 +795,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
               <div style={{display:"flex",gap:10,overflowX:"auto",padding:"2px 20px 6px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}} className="ba-noscroll">
                 {CAT_LIST.map((cat,ci) => (
                   <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,padding:"10px 4px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:66,animationDelay:`${0.03*ci+0.06}s`}}>
-                    <div style={{width:56,height:56,borderRadius:18,background:T.white,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 6px 16px rgba(0,0,0,.12), inset 1px 1px 3px rgba(255,255,255,.9)`}}><CatIcon id={cat.id} size={26} color={cat.color}/></div>
+                    <div style={{width:56,height:56,borderRadius:18,background:cat.color,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 6px 14px ${cat.color}55`}}><CatIcon id={cat.id} size={25} color="#FFFFFF"/></div>
                     <span style={{fontSize:11,fontWeight:600,color:T.inkMid,textAlign:"center",lineHeight:1.1}}>{cat.label}</span>
                   </button>
                 ))}
@@ -818,8 +818,8 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                       {list.map((pro,i) => {
                         const b = badgeFor(pro);
                         return (
-                          <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise clay" style={{display:"flex",gap:13,padding:"14px",cursor:"pointer",alignItems:"center",background:T.white,borderRadius:20,animationDelay:`${0.03*i+0.1}s`}}>
-                            <div style={{width:56,height:56,borderRadius:15,background:pro.accent,display:"flex",alignItems:"center",justifyContent:"center",fontSize:27,flexShrink:0,boxShadow:`0 6px 14px ${pro.accent}66`}}>{pro.emoji}</div>
+                          <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise" style={{display:"flex",gap:13,padding:"13px",cursor:"pointer",alignItems:"center",background:T.white,border:`1px solid ${T.line}`,borderRadius:18,animationDelay:`${0.03*i+0.1}s`}}>
+                            <div style={{width:56,height:56,borderRadius:15,background:`${pro.accent}1F`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:27,flexShrink:0}}>{pro.emoji}</div>
                             <div style={{flex:1,minWidth:0}}>
                               <div style={{display:"flex",alignItems:"center",gap:7,margin:"0 0 3px"}}>
                                 <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
@@ -1061,29 +1061,27 @@ function ClPreferiti({nav,favorites,setFavorites}) {
       ) : (
         <div style={{padding:"14px 20px"}}>
           {favPros.map(pro => (
-            <div key={pro.id} className="clay" style={{background:T.white,borderRadius:22,marginBottom:16,overflow:"hidden"}}>
-              {/* Header colorato pieno */}
-              <div style={{background:pro.accent,padding:"14px 16px",display:"flex",alignItems:"center",gap:12}}>
-                <div style={{width:48,height:48,borderRadius:14,background:"rgba(255,255,255,.22)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{pro.emoji}</div>
-                <div style={{flex:1,minWidth:0}}>
-                  <p style={{fontSize:15,fontWeight:900,color:T.white,margin:"0 0 2px",lineHeight:1.1}}>{pro.name}</p>
-                  <p style={{fontSize:12,color:"rgba(255,255,255,.82)",margin:0,fontWeight:600}}>{pro.cat} · ★ {pro.rating}</p>
+            <div key={pro.id} style={{background:T.white,borderRadius:16,marginBottom:10,border:`1.5px solid ${T.line}`,overflow:"hidden"}}>
+              <div style={{height:54,background:`${pro.accent}26`,display:"flex",alignItems:"center",padding:"0 16px",gap:10}}>
+                <span style={{fontSize:22}}>{pro.emoji}</span>
+                <div style={{flex:1}}>
+                  <p style={{fontSize:14,fontWeight:700,color:T.ink,margin:0}}>{pro.name}</p>
+                  <p style={{fontSize:11,color:T.inkMid,margin:0}}>{pro.cat} - {"★".repeat(Math.floor(pro.rating))}</p>
                 </div>
-                <button onClick={()=>setFavorites(f=>{const n=new Set(f);n.delete(pro.id);return n;})} style={{background:"rgba(255,255,255,.22)",border:"none",borderRadius:10,width:34,height:34,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <button onClick={()=>setFavorites(f=>{const n=new Set(f);n.delete(pro.id);return n;})} style={{background:"none",border:"none",cursor:"pointer",padding:4}}>
                   <IHeart a={true}/>
                 </button>
               </div>
-              {/* Body */}
-              <div style={{padding:"14px 16px"}}>
-                <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 8px",fontWeight:700,textTransform:"uppercase",letterSpacing:.8}}>Disponibile oggi</p>
-                <div style={{display:"flex",gap:6,marginBottom:14,flexWrap:"wrap"}}>
+              <div style={{padding:"12px 14px"}}>
+                <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 8px",fontWeight:600,textTransform:"uppercase",letterSpacing:.6}}>Disponibile oggi</p>
+                <div style={{display:"flex",gap:6,marginBottom:12,flexWrap:"wrap"}}>
                   {pro.slots.slice(0,4).map(slot => (
-                    <button key={slot} onClick={()=>nav("cl_prenota",{pro,preselSlot:slot})} style={{padding:"7px 14px",borderRadius:10,border:"none",background:T.surface,cursor:"pointer",fontSize:13,fontWeight:700,color:T.ink,fontFamily:"inherit"}}>{slot}</button>
+                    <button key={slot} onClick={()=>nav("cl_prenota",{pro,preselSlot:slot})} style={{padding:"7px 12px",borderRadius:8,border:`1.5px solid ${T.ink}`,background:T.white,cursor:"pointer",fontSize:13,fontWeight:700,color:T.ink,fontFamily:"inherit"}}>{slot}</button>
                   ))}
                 </div>
                 <div style={{display:"flex",gap:8}}>
-                  <button onClick={()=>nav("cl_pro",pro)} className="clay-soft" style={{flex:1,padding:"11px 0",borderRadius:12,border:"none",background:T.white,cursor:"pointer",fontSize:13,fontWeight:700,color:T.inkMid,fontFamily:"inherit"}}>Profilo</button>
-                  <button onClick={()=>nav("cl_prenota",{pro})} style={{flex:2,padding:"11px 0",borderRadius:12,border:"none",background:pro.accent,cursor:"pointer",fontSize:14,fontWeight:800,color:T.white,fontFamily:"inherit",boxShadow:`0 6px 16px ${pro.accent}55`}}>Prenota ora</button>
+                  <button onClick={()=>nav("cl_pro",pro)} style={{flex:1,padding:"10px 0",borderRadius:9,border:`1.5px solid ${T.line}`,background:T.surface,cursor:"pointer",fontSize:13,fontWeight:600,color:T.inkMid,fontFamily:"inherit"}}>Profilo</button>
+                  <button onClick={()=>nav("cl_prenota",{pro})} style={{flex:2,padding:"10px 0",borderRadius:9,border:"none",background:T.brand,cursor:"pointer",fontSize:14,fontWeight:700,color:T.white,fontFamily:"inherit"}}>Prenota ora</button>
                 </div>
               </div>
             </div>
