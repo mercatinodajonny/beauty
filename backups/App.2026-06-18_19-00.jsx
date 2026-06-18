@@ -808,7 +808,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                   <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} - {pro.city}</p>
                   <span style={{color:T.gold,fontSize:12}}>{"★".repeat(Math.floor(pro.rating))}</span>
                 </div>
-                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:"#F09590",color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:T.brandBg,color:T.brandDeep,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
               </div>
               {i < searchResults.length-1 && <Div/>}
             </div>
@@ -869,7 +869,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                               <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 4px"}}>{pro.cat} · {pro.city} · {pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</p>
                               <span style={{color:T.gold,fontSize:12,fontWeight:700}}>★ {pro.rating} <span style={{color:T.inkSoft,fontWeight:500}}>({pro.reviews})</span></span>
                             </div>
-                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"10px 15px",borderRadius:12,border:"none",background:"#F09590",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"10px 15px",borderRadius:12,border:"none",background:T.brandBg,color:T.brandDeep,fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
                           </div>
                         );
                       })}
