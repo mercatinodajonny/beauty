@@ -487,81 +487,15 @@ const LogoMark = ({size=22,color="#fff"}) => (
 
 /* ICONE CATEGORIA — line-art SVG custom per ciascun servizio */
 const CAT_PATHS = {
-  // Barbiere: rasoio a mano libera stilizzato
-  barbiere: <>
-    <path d="M5 4h9a2 2 0 0 1 2 2v.5a2 2 0 0 1-2 2H5V4z"/>
-    <path d="M5 8.5V20"/>
-    <path d="M16 6.5l2.5 2L16 11"/>
-  </>,
-  // Parrucchiere: forbici moderne aperte
-  parrucchiere: <>
-    <circle cx="6" cy="7" r="2.2"/>
-    <circle cx="6" cy="17" r="2.2"/>
-    <path d="M8 8.5L20 19"/>
-    <path d="M8 15.5L20 5"/>
-  </>,
-  // Unghie: mano con unghia stilizzata
-  nail_artist: <>
-    <rect x="7" y="2" width="10" height="13" rx="5"/>
-    <path d="M7 11h10"/>
-    <path d="M9 15v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-5"/>
-  </>,
-  // Estetica: fiore / viso con foglie
-  estetista: <>
-    <circle cx="12" cy="12" r="3"/>
-    <path d="M12 2C10 5 10 7 12 9"/>
-    <path d="M12 15c-2 3-2 5 0 7"/>
-    <path d="M2 12c3-2 5-2 7 0"/>
-    <path d="M15 12c3-2 5-2 7 0"/>
-    <path d="M5 5c2 1 3 3 2 5"/>
-    <path d="M17 19c-2-1-3-3-2-5"/>
-    <path d="M19 5c-2 1-3 3-2 5"/>
-    <path d="M5 19c2-1 3-3 2-5"/>
-  </>,
-  // Laser: raggio + stelle scintilla
-  laser: <>
-    <path d="M3 12h5"/>
-    <path d="M16 12h5"/>
-    <path d="M12 3v5"/>
-    <path d="M12 16v5"/>
-    <circle cx="12" cy="12" r="3"/>
-    <path d="M6.3 6.3l2.1 2.1"/>
-    <path d="M15.6 15.6l2.1 2.1"/>
-    <path d="M17.7 6.3l-2.1 2.1"/>
-    <path d="M8.4 15.6L6.3 17.7"/>
-  </>,
-  // Tattoo: ago con inchiostro a goccia
-  tatuatore: <>
-    <path d="M3 21l5-2 9-9-3-3-9 9z"/>
-    <path d="M14.5 6.5l3 3"/>
-    <path d="M17 3l1 1a2 2 0 0 1 0 3l-1 1"/>
-    <circle cx="19" cy="19" r="1.5" fill="currentColor" stroke="none"/>
-  </>,
-  // Ciglia: occhio grande con ciglia
-  ciglia: <>
-    <path d="M2 12s4-7 10-7 10 7 10 7"/>
-    <path d="M2 12s4 7 10 7 10-7 10-7"/>
-    <circle cx="12" cy="12" r="2.8"/>
-    <path d="M8.5 5.5L7 3"/>
-    <path d="M12 5V2"/>
-    <path d="M15.5 5.5L17 3"/>
-  </>,
-  // Makeup: rossetto elegante
-  makeup: <>
-    <rect x="9" y="11" width="6" height="9" rx="1.5"/>
-    <path d="M9 14h6"/>
-    <path d="M10 11V7.5C10 6 11 4 12 4s2 1 2 3.5V11"/>
-    <path d="M11 4.5c0-1 .5-1.5 1-1.5"/>
-  </>,
-  // Massaggio: mani che massaggiano
-  massaggio: <>
-    <path d="M6 10c0-2.2 1.8-4 4-4h4c2.2 0 4 1.8 4 4v1c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1v-1z"/>
-    <path d="M9 11v3c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2v-3"/>
-    <path d="M12 16v2"/>
-    <path d="M9 18h6"/>
-    <path d="M5 8c-.5-1-1-3 .5-4"/>
-    <path d="M19 8c.5-1 1-3-.5-4"/>
-  </>,
+  barbiere:    <><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M8 8l8-3M8 13l8-3M8 18l8-3"/></>,
+  parrucchiere:<><circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><line x1="20" y1="4" x2="8.4" y2="15.6"/><line x1="14.6" y1="14.6" x2="20" y2="20"/><line x1="8.4" y1="8.4" x2="12" y2="12"/></>,
+  nail_artist: <><path d="M10 3h4v10a2 2 0 0 1-4 0z"/><path d="M9 13h6v6a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/></>,
+  estetista:   <><path d="M12 21c-4-2-7-5-7-9 2 0 4 .8 5 2 .2-2 1-4 2-6 1 2 1.8 4 2 6 1-1.2 3-2 5-2 0 4-3 7-7 9z"/></>,
+  laser:       <><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18"/><circle cx="12" cy="12" r="2.2"/></>,
+  tatuatore:   <><path d="M14 4l6 6-9 9-4 1 1-4z"/><line x1="13" y1="5" x2="19" y2="11"/></>,
+  ciglia:      <><path d="M3 12s3.5-6 9-6 9 6 9 6"/><path d="M12 6v-3M6.5 7L5 4.5M17.5 7L19 4.5"/><circle cx="12" cy="12" r="2.4"/></>,
+  makeup:      <><rect x="9" y="9" width="6" height="12" rx="1.5"/><path d="M10 9V5.5a2 2 0 0 1 4 0V9"/></>,
+  massaggio:   <><circle cx="12" cy="6" r="2.4"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/><path d="M3 10c1.5 1 2.5 1 4 0M17 10c1.5 1 2.5 1 4 0"/></>,
 };
 const CatIcon = ({id,size=24,color="currentColor",strokeWidth=2.2}) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
