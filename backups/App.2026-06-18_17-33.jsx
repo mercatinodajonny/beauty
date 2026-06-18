@@ -108,18 +108,18 @@ const injectFont = () => {
   document.head.appendChild(s);
 };
 
-/* PALETTE "Minimal Pro" — bianco puro, inchiostro quasi-nero, accento caldo unico */
+/* PALETTE "Clay Neutral" — claymorphism: base sabbia/oat neutra + accento teal unisex, superfici morbide */
 const T = {
-  ink:"#1C1C1E",inkMid:"#636366",inkSoft:"#AEAEB2",
-  line:"#E5E5EA",surface:"#F2F2F7",white:"#FFFFFF",
-  paper:"#FAFAFA",
-  brand:"#1C1C1E",brandDeep:"#000000",brandBg:"#F2F2F7",
-  gold:"#C9923A",goldBg:"#FBF3E4",
-  green:"#3A9E72",greenBg:"#E6F5EE",
-  blue:"#4A6FD4",blueBg:"#EDF1FB",
-  red:"#E04040",redBg:"#FCEAEA",
-  amber:"#C9923A",amberBg:"#FBF3E4",
-  purple:"#7B6FE0",purpleBg:"#EDEAFB",
+  ink:"#15252B",inkMid:"#5A6B72",inkSoft:"#9AAAB0",
+  line:"#E6EDEF",surface:"#F1F6F7",white:"#FFFFFF",
+  paper:"#FBFDFD",
+  brand:"#13A89A",brandDeep:"#0E8F84",brandBg:"#DBF3F0",
+  gold:"#E0A23D",goldBg:"#FAF0DD",
+  green:"#13A89A",greenBg:"#DBF3F0",
+  blue:"#5B7CDB",blueBg:"#EAEFFB",
+  red:"#E8615A",redBg:"#FCEAE9",
+  amber:"#D99A3C",amberBg:"#FBF1DE",
+  purple:"#8B7FE8",purpleBg:"#EEEBFB",
 };
 
 const ST = {
@@ -722,24 +722,24 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
       {/* Banner prossimo/ultimo appuntamento */}
       {!(searching && q.length >= 2) && banner && (
         <div style={{padding:"18px 20px 0"}}>
-          <div onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})} className="ba-rise ba-lift" style={{display:"flex",alignItems:"center",gap:16,padding:"18px 18px",borderRadius:20,cursor:"pointer",background:T.white,border:`1px solid ${T.line}`,boxShadow:"0 2px 12px rgba(0,0,0,0.06)",animationDelay:".05s"}}>
-            <div style={{width:52,height:52,borderRadius:16,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <div onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})} className="ba-rise ba-lift" style={{display:"flex",alignItems:"center",gap:18,padding:"22px 22px",borderRadius:28,cursor:"pointer",background:nextAppt?`linear-gradient(135deg,#2DD4BF,${T.brand})`:`linear-gradient(135deg,#8C8473,#6E6A62)`,position:"relative",overflow:"hidden",boxShadow:nextAppt?"0 14px 30px rgba(249,115,22,.4), inset 2px 2px 6px rgba(255,255,255,.35), inset -3px -4px 9px rgba(180,83,9,.35)":"0 14px 30px rgba(110,106,98,.4), inset 2px 2px 6px rgba(255,255,255,.35), inset -3px -4px 9px rgba(70,66,58,.35)",animationDelay:".05s"}}>
+            <div style={{width:60,height:60,borderRadius:20,background:"rgba(255,255,255,.2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,position:"relative",boxShadow:"inset 2px 2px 5px rgba(255,255,255,.4), inset -2px -3px 6px rgba(0,0,0,.12)"}}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={T.white} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 {nextAppt
                   ? <><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></>
                   : <><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>}
               </svg>
             </div>
-            <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:11,fontWeight:600,color:T.inkSoft,margin:"0 0 3px",textTransform:"uppercase",letterSpacing:1.2}}>
+            <div style={{flex:1,minWidth:0,position:"relative"}}>
+              <p style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.7)",margin:"0 0 5px",textTransform:"uppercase",letterSpacing:1.4}}>
                 {nextAppt?"Prossimo appuntamento":"Ultimo appuntamento"}
               </p>
-              <p style={{fontSize:17,fontWeight:700,color:T.ink,margin:"0 0 2px",lineHeight:1.2}}>{banner.service}</p>
-              <p style={{fontSize:13,color:T.inkMid,margin:0}}>
-                {banner.pro} · {nextAppt ? `${banner.date}, ${banner.time}` : `${banner.date}`}
+              <p className="ba-serif" style={{fontSize:21,fontWeight:600,color:T.white,margin:"0 0 3px",lineHeight:1.1}}>{banner.service}</p>
+              <p style={{fontSize:13,color:"rgba(255,255,255,.82)",margin:0,fontWeight:500}}>
+                {banner.pro} · {nextAppt ? `${banner.date}, ${banner.time}` : `${banner.date} — prenota di nuovo`}
               </p>
             </div>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" strokeWidth="2.2" strokeLinecap="round" style={{position:"relative",flexShrink:0}}><path d="M9 18l6-6-6-6"/></svg>
           </div>
         </div>
       )}
