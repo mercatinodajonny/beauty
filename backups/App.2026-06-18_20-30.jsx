@@ -101,17 +101,13 @@ const injectFont = () => {
     .ba-lift{transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease}
     .ba-lift:active{transform:scale(.94)}
     /* Zoom card: ingrandimento morbido al passaggio del mouse / tocco */
-    .ba-zoom{transition:transform .32s cubic-bezier(.34,1.56,.64,1),box-shadow .32s ease;will-change:transform}
+    .ba-zoom{transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s ease;will-change:transform}
     @media (hover:hover){
-      .ba-zoom:hover{transform:translateY(-5px) scale(1.04);box-shadow:0 20px 40px rgba(20,48,74,.18), -6px -6px 14px rgba(255,255,255,.9);z-index:2}
+      .ba-zoom:hover{transform:translateY(-4px) scale(1.035);box-shadow:0 16px 34px rgba(20,48,74,.16), -6px -6px 14px rgba(255,255,255,.9);z-index:2}
     }
-    .ba-zoom:active{transform:scale(.93)!important;transition:transform .12s cubic-bezier(.34,1.56,.64,1)!important}
-    /* Bounce sui pulsanti Prenota */
-    @keyframes baBounce{0%{transform:scale(1)}40%{transform:scale(.88)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
-    .ba-btn-bounce{transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .18s ease}
-    .ba-btn-bounce:active{animation:baBounce .38s cubic-bezier(.34,1.56,.64,1)}
+    .ba-zoom:active{transform:scale(.97)}
     button{transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-    button:active{transform:scale(.92)}
+    button:active{transform:scale(.95)}
     @media (prefers-reduced-motion: reduce){
       .ba-rise,.ba-fade{animation:none;opacity:1}
       .ba-lift,.ba-zoom,button{transition:none}
@@ -772,28 +768,22 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
   return (
     <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
 
-      {/* Header con gradient top + decorazioni */}
-      <div style={{background:"linear-gradient(165deg,#DFF4FD 0%,#EEF7FB 45%,#F7FBFE 100%)",paddingTop:52,paddingBottom:18,paddingLeft:20,paddingRight:20,position:"relative",overflow:"hidden"}}>
-        {/* Blob decorativi sfondo */}
-        <div style={{position:"absolute",top:-30,right:-40,width:180,height:180,borderRadius:"50%",background:"radial-gradient(circle,rgba(77,168,218,.18) 0%,rgba(77,168,218,0) 70%)",pointerEvents:"none"}}/>
-        <div style={{position:"absolute",top:60,left:-50,width:140,height:140,borderRadius:"50%",background:"radial-gradient(circle,rgba(63,185,132,.12) 0%,rgba(63,185,132,0) 70%)",pointerEvents:"none"}}/>
-        <div style={{position:"absolute",bottom:-20,right:60,width:100,height:100,borderRadius:"50%",background:"radial-gradient(circle,rgba(90,143,216,.14) 0%,rgba(90,143,216,0) 70%)",pointerEvents:"none"}}/>
+      {/* Header salmone — come Beauty Star: sfondo rosa-salmone in cima */}
+      <div style={{background:T.white,paddingTop:52,paddingBottom:18,paddingLeft:20,paddingRight:20}}>
         {/* Logo + cuore */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16,position:"relative"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <div className="clay-btn" style={{width:38,height:38,borderRadius:13,background:"linear-gradient(135deg,#5FB8E6,#2F8FC4)",display:"flex",alignItems:"center",justifyContent:"center"}}><LogoMark size={20}/></div>
             <span className="ba-serif" style={{fontSize:22,fontWeight:900,color:T.ink,letterSpacing:"-.02em"}}>BeautyApp</span>
           </div>
-          <button onClick={()=>nav("cl_preferiti")} className="ba-lift" style={{width:40,height:40,borderRadius:14,background:"rgba(255,255,255,.7)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(8px)"}}>
+          <button onClick={()=>nav("cl_preferiti")} className="ba-lift" style={{width:40,height:40,borderRadius:14,background:T.brandBg,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
             <IHeart a={false}/>
           </button>
         </div>
 
         {/* Saluto grande stile Apple */}
-        <div style={{position:"relative"}}>
-          <h1 style={{fontSize:28,fontWeight:900,color:T.ink,margin:"0 0 4px",letterSpacing:"-.02em",lineHeight:1.1}}>Ciao! 👋</h1>
-          <p style={{fontSize:15,fontWeight:600,color:T.inkMid,margin:"0 0 14px"}}>Cosa vuoi fare oggi?</p>
-        </div>
+        <h1 style={{fontSize:28,fontWeight:900,color:T.ink,margin:"0 0 4px",letterSpacing:"-.02em",lineHeight:1.1}}>Ciao! 👋</h1>
+        <p style={{fontSize:15,fontWeight:600,color:T.inkMid,margin:"0 0 14px"}}>Cosa vuoi fare oggi?</p>
 
         {/* Ricerca */}
         <div className="clay-inset" style={{display:"flex",alignItems:"center",gap:10,background:T.surface,borderRadius:16,padding:"14px 16px"}}>
@@ -860,43 +850,37 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
 
       {/* Contenuto principale */}
       {!(searching && q.length >= 2) && (
-        <div style={{background:"linear-gradient(180deg,#F0F8FE 0%,#F7FBFE 100%)"}}>
+        <div>
           {/* Posizione */}
           <div style={{padding:"18px 20px 10px"}}>
-            <button onClick={()=>setShowCity(true)} style={{display:"flex",alignItems:"center",gap:6,background:"rgba(255,255,255,.7)",border:"none",cursor:"pointer",padding:"6px 12px 6px 8px",fontFamily:"inherit",marginBottom:14,borderRadius:20,backdropFilter:"blur(6px)"}}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.2" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span style={{fontSize:14,fontWeight:700,color:T.ink}}>{city}</span>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+            <button onClick={()=>setShowCity(true)} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",cursor:"pointer",padding:0,fontFamily:"inherit",marginBottom:14}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2.2" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span style={{fontSize:16,fontWeight:700,color:T.ink}}>{city}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
-            <div style={{display:"flex",alignItems:"center",gap:8}}>
-              <div style={{width:4,height:22,borderRadius:3,background:"linear-gradient(180deg,#5FB8E6,#2F8FC4)"}}/>
-              <h2 style={{fontSize:20,fontWeight:900,color:T.ink,margin:"0",letterSpacing:"-.02em"}}>Categorie</h2>
-            </div>
+            <h2 style={{fontSize:19,fontWeight:900,color:T.ink,margin:"0",letterSpacing:"-.01em"}}>Categorie</h2>
           </div>
 
           {/* Passo 1: Categorie — chip piccole a scorrimento orizzontale */}
           {!selCat && (
             <>
-              <div style={{display:"flex",gap:10,overflowX:"auto",padding:"4px 20px 8px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}} className="ba-noscroll">
+              <div style={{display:"flex",gap:10,overflowX:"auto",padding:"2px 20px 6px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}} className="ba-noscroll">
                 {CAT_LIST.map((cat,ci) => (
-                  <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift ba-zoom" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,padding:"10px 4px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:66,animationDelay:`${0.03*ci+0.06}s`}}>
-                    <div style={{width:56,height:56,borderRadius:18,background:`linear-gradient(145deg,rgba(255,255,255,.95),rgba(255,255,255,.7))`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 6px 18px ${cat.color}33, inset 1px 1px 3px rgba(255,255,255,.9)`,border:`1.5px solid ${cat.color}22`}}><CatIcon id={cat.id} size={26} color={cat.color}/></div>
-                    <span style={{fontSize:11,fontWeight:700,color:T.inkMid,textAlign:"center",lineHeight:1.1}}>{cat.label}</span>
+                  <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,padding:"10px 4px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:66,animationDelay:`${0.03*ci+0.06}s`}}>
+                    <div className="ba-zoom" style={{width:56,height:56,borderRadius:18,background:T.white,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 6px 16px rgba(0,0,0,.12), inset 1px 1px 3px rgba(255,255,255,.9)`}}><CatIcon id={cat.id} size={26} color={cat.color}/></div>
+                    <span style={{fontSize:11,fontWeight:600,color:T.inkMid,textAlign:"center",lineHeight:1.1}}>{cat.label}</span>
                   </button>
                 ))}
               </div>
 
               {/* Professionisti nella tua zona */}
               <div style={{padding:"16px 20px 0"}}>
-                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
-                  <div style={{width:4,height:22,borderRadius:3,background:"linear-gradient(180deg,#3FB984,#2F8FC4)"}}/>
-                  <h2 style={{fontSize:20,fontWeight:900,color:T.ink,margin:"0",letterSpacing:"-.02em"}}>Vicino a te</h2>
-                </div>
+                <h2 style={{fontSize:18,fontWeight:800,color:T.ink,margin:"0 0 12px",letterSpacing:-0.3}}>Professionisti vicino a te</h2>
                 {(() => {
                   const list = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm);
                   if (list.length === 0) return <p style={{fontSize:14,color:T.inkSoft,padding:"20px 0"}}>Nessun professionista trovato in zona.</p>;
                   const badgeFor = (pro) => {
-                    if (pro.rating >= 4.9) return {l:"Top",bg:"#FFF3D0",c:"#B8860B"};
+                    if (pro.rating >= 4.9) return {l:"Top",bg:T.amberBg,c:T.amber};
                     if (pro.reviews >= 150) return {l:"Popolare",bg:T.purpleBg,c:T.purple};
                     if (pro.verified) return {l:"Verificato",bg:T.brandBg,c:T.brandDeep};
                     return null;
@@ -907,16 +891,16 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                         const b = badgeFor(pro);
                         return (
                           <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise clay ba-zoom" style={{display:"flex",gap:13,padding:"14px",cursor:"pointer",alignItems:"center",background:T.white,borderRadius:20,animationDelay:`${0.03*i+0.1}s`}}>
-                            <div style={{width:56,height:56,borderRadius:16,background:`linear-gradient(145deg,${pro.accent}22,${pro.accent}11)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,border:`2px solid ${pro.accent}44`,boxShadow:`0 4px 12px ${pro.accent}22`}}>{pro.emoji}</div>
+                            <div style={{width:54,height:54,borderRadius:15,background:`${pro.accent}18`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,border:`2px solid ${pro.accent}33`}}>{pro.emoji}</div>
                             <div style={{flex:1,minWidth:0}}>
                               <div style={{display:"flex",alignItems:"center",gap:7,margin:"0 0 3px"}}>
                                 <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
                                 {b && <span style={{fontSize:10,fontWeight:800,color:b.c,background:b.bg,padding:"2px 8px",borderRadius:99,flexShrink:0,letterSpacing:.2}}>{b.l}</span>}
                               </div>
                               <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 4px"}}>{pro.cat} · {pro.city} · {pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</p>
-                              <span style={{color:"#E8A200",fontSize:12,fontWeight:700}}>★ {pro.rating} <span style={{color:T.inkSoft,fontWeight:500}}>({pro.reviews})</span></span>
+                              <span style={{color:T.gold,fontSize:12,fontWeight:700}}>★ {pro.rating} <span style={{color:T.inkSoft,fontWeight:500}}>({pro.reviews})</span></span>
                             </div>
-                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} className="ba-btn-bounce" style={{padding:"10px 16px",borderRadius:12,border:"none",background:"linear-gradient(135deg,#5FB8E6,#2F8FC4)",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0,boxShadow:"0 4px 14px rgba(47,143,196,.4)"}}>Prenota</button>
+                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"10px 15px",borderRadius:12,border:"none",background:"#2F8FC4",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
                           </div>
                         );
                       })}
