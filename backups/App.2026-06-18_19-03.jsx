@@ -555,11 +555,9 @@ function NavBar({items,s,nav,labelSize=10}) {
   return (
     <div ref={ref} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
       style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",
-        width:"calc(100% - 24px)",maxWidth:406,
-        background:"rgba(255,255,255,.82)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
-        borderRadius:26,border:"1px solid rgba(255,255,255,.6)",
+        width:"calc(100% - 24px)",maxWidth:406,background:"#1E2158",borderRadius:26,
         display:"flex",zIndex:100,padding:"6px 4px",touchAction:"none",userSelect:"none",
-        boxShadow:"0 4px 24px rgba(30,33,88,.14)",
+        boxShadow:"0 8px 28px rgba(30,33,88,.35)",
         position:"fixed"}}>
       {/* Pillola scorrevole — salmone su navy */}
       <div style={{
@@ -581,7 +579,7 @@ function NavBar({items,s,nav,labelSize=10}) {
               <I a={active}/>
             </div>
             <span style={{fontSize:labelSize,fontWeight:active?800:600,
-              color:active?"#1E2158":T.inkSoft,pointerEvents:"none",
+              color:active?"#1E2158":"rgba(255,255,255,.55)",pointerEvents:"none",
               transition:"color .22s ease"}}>{l}</span>
           </div>
         );
@@ -1090,7 +1088,7 @@ function ClPreferiti({nav,favorites,setFavorites}) {
   const favPros = ALL_PROS.filter(p=>favorites.has(p.id));
   return (
     <div style={{paddingBottom:90,background:T.white,minHeight:"100dvh"}}>
-      <div style={{padding:"52px 20px 16px",borderBottom:`1px solid ${T.line}`,borderTop:"4px solid #F09590",background:T.white}}>
+      <div style={{padding:"52px 20px 16px",borderBottom:`1px solid ${T.line}`}}>
         <h1 style={{fontSize:22,fontWeight:700,color:T.ink,margin:"0 0 4px"}}>Preferiti</h1>
         <p style={{fontSize:13,color:T.inkSoft,margin:0}}>I tuoi professionisti salvati</p>
       </div>
@@ -1411,7 +1409,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
 
   return (
     <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
-      <div style={{background:T.white,padding:"52px 18px 0",borderBottom:`1px solid ${T.line}`,borderTop:"4px solid #F09590"}}>
+      <div style={{background:T.white,padding:"52px 18px 0",borderBottom:`1px solid ${T.line}`}}>
         <h1 style={{fontSize:22,fontWeight:700,color:T.ink,margin:"0 0 12px"}}>Appuntamenti</h1>
         <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:16,padding:4,gap:2,marginBottom:10}}>
           {[["lista","Lista"],["calendario","Calendario"]].map(([v,l]) => (
@@ -1560,7 +1558,7 @@ function ClProfilo({user,onSwitch}) {
 
   return (
     <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
-      <div style={{background:T.white,padding:"50px 18px 0",borderBottom:`1px solid ${T.line}`,borderTop:"4px solid #F09590"}}>
+      <div style={{background:T.white,padding:"50px 18px 0",borderBottom:`1px solid ${T.line}`}}>
         <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
           <div style={{width:56,height:56,borderRadius:"50%",background:T.brand,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontWeight:800,color:T.white,flexShrink:0,boxShadow:"inset 2px 2px 4px rgba(255,255,255,.35), inset -2px -3px 5px rgba(180,83,9,.35)"}}>{info.name[0]}</div>
           <div>
