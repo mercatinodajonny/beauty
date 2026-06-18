@@ -93,8 +93,6 @@ const injectFont = () => {
     /* GLASSMORPHISM — vetro smerigliato caldo */
     .glass{background:rgba(255,253,248,.5)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,253,248,.65);box-shadow:0 8px 32px rgba(150,124,92,.16);}
     .glass-dark{background:rgba(168,144,107,.2)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,253,248,.35);box-shadow:0 8px 32px rgba(140,115,83,.22);}
-    @keyframes baPop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
-    .ba-pop{animation:baPop .22s cubic-bezier(.34,1.56,.64,1)}
     @keyframes baRise{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes baFade{from{opacity:0}to{opacity:1}}
     .ba-rise{opacity:0;animation:baRise .55s cubic-bezier(.34,1.56,.64,1) forwards}
@@ -258,19 +256,6 @@ const Modal = ({title,onClose,children}) => (
         <button onClick={onClose} className="clay-soft" style={{background:T.white,border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",fontSize:15,color:T.inkMid}}>x</button>
       </div>
       {children}
-    </div>
-  </div>
-);
-/* Dialog di conferma compatto e minimal — centrato */
-const ConfirmDialog = ({title,message,confirmLabel="Conferma",cancelLabel="Annulla",danger=false,onConfirm,onCancel}) => (
-  <div onClick={onCancel} style={{position:"fixed",inset:0,background:"rgba(43,34,24,.4)",zIndex:500,display:"flex",alignItems:"center",justifyContent:"center",padding:24,backdropFilter:"blur(3px)"}}>
-    <div onClick={e=>e.stopPropagation()} className="ba-pop" style={{background:T.paper,borderRadius:22,width:"100%",maxWidth:300,padding:"22px 20px 16px",boxShadow:"0 20px 50px rgba(43,34,24,.25)",textAlign:"center"}}>
-      <p style={{fontSize:16,fontWeight:700,color:T.ink,margin:"0 0 6px"}}>{title}</p>
-      {message && <p style={{fontSize:13,color:T.inkMid,margin:"0 0 18px",lineHeight:1.45}}>{message}</p>}
-      <div style={{display:"flex",gap:8}}>
-        <button onClick={onCancel} style={{flex:1,padding:"11px 0",borderRadius:13,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{cancelLabel}</button>
-        <button onClick={onConfirm} style={{flex:1,padding:"11px 0",borderRadius:13,border:"none",color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit",background:danger?"linear-gradient(135deg,#C0705A,#A0503C)":"linear-gradient(135deg,#BFA67E,#897153)"}}>{confirmLabel}</button>
-      </div>
     </div>
   </div>
 );
@@ -1273,31 +1258,49 @@ function ClPreferiti({nav,favorites,setFavorites}) {
         </div>
       )}
 
-      {/* Conferma rimozione — dialog minimal */}
-      {confirmId && confirmPro && (
-        <ConfirmDialog
-          title={`Rimuovere ${confirmPro.name}?`}
-          message="Non comparirà più nei preferiti. Potrai sempre ri-aggiungerlo."
-          confirmLabel="Rimuovi" danger
-          onConfirm={doRemove} onCancel={()=>setConfirmId(null)}
-        />
+      {/* Modal conferma rimozione */}
+      {confirmId && (
+        <div onClick={()=>setConfirmId(null)}
+          style={{position:"fixed",inset:0,background:"rgba(43,34,24,.45)",zIndex:400,display:"flex",alignItems:"flex-end",backdropFilter:"blur(4px)"}}>
+          <div onClick={e=>e.stopPropagation()}
+            style={{background:T.paper,borderRadius:"28px 28px 0 0",width:"100%",maxWidth:430,margin:"0 auto",
+              padding:"10px 24px 44px",boxShadow:"0 -8px 40px rgba(43,34,24,.18)"}}>
+            {/* Maniglia */}
+            <div style={{width:36,height:4,borderRadius:2,background:T.line,margin:"8px auto 22px"}}/>
+            {/* Icona + testo */}
+            <div style={{textAlign:"center",marginBottom:22}}>
+              <div style={{fontSize:44,marginBottom:10}}>💔</div>
+              {confirmPro && <>
+                <p style={{fontSize:18,fontWeight:700,color:T.ink,margin:"0 0 6px"}}>Rimuovere {confirmPro.name}?</p>
+                <p style={{fontSize:14,color:T.inkMid,margin:0,lineHeight:1.5}}>Non comparirà più nella tua lista preferiti.<br/>Potrai sempre ri-aggiungerlo dal suo profilo.</p>
+              </>}
+            </div>
+            {/* Bottoni */}
+            <div style={{display:"flex",flexDirection:"column",gap:10}}>
+              <button onClick={doRemove}
+                style={{width:"100%",padding:"16px",borderRadius:16,border:"none",
+                  background:"linear-gradient(135deg,#C0705A,#A0503C)",color:"#fff",
+                  fontSize:16,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>
+                Sì, rimuovi
+              </button>
+              <button onClick={()=>setConfirmId(null)}
+                style={{width:"100%",padding:"16px",borderRadius:16,border:`1.5px solid ${T.line}`,
+                  background:T.white,color:T.inkMid,
+                  fontSize:16,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>
+                Annulla
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
 }
 
 /* PROFILO PRO */
-function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
+function ClPro({pro,nav,favorites,setFavorites}) {
   const isFav = favorites?.has(pro.id)||false;
-  const [confirmUnfav,setConfirmUnfav] = useState(false);
-  const toggleFav = () => {
-    if(isFav){ setConfirmUnfav(true); return; }           // rimozione → conferma
-    setFavorites&&setFavorites(f=>{const n=new Set(f);n.add(pro.id);return n;});
-  };
-  const doUnfav = () => { setFavorites&&setFavorites(f=>{const n=new Set(f);n.delete(pro.id);return n;}); setConfirmUnfav(false); };
-  const isFollowing = following?.has(pro.id)||false;
-  const followerCount = pro.followers + (isFollowing?1:0);
-  const toggleFollow = () => setFollowing&&setFollowing(f=>{const n=new Set(f);isFollowing?n.delete(pro.id):n.add(pro.id);return n;});
+  const toggleFav = () => setFavorites&&setFavorites(f=>{const n=new Set(f);isFav?n.delete(pro.id):n.add(pro.id);return n;});
   const [selSvc,setSvc] = useState(null);
   const [showRev,setShowRev] = useState(false);
   const [stars,setStars] = useState(5);
@@ -1331,7 +1334,7 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
         </div>
         <p style={{fontSize:13,color:T.inkMid,lineHeight:1.6,margin:"0 0 10px"}}>{pro.bio}</p>
         <div style={{display:"flex",borderTop:`1px solid ${T.line}`,borderBottom:`1px solid ${T.line}`,padding:"10px 0",marginBottom:11}}>
-          {[[proPosts.length,"post"],[followerCount,"follower"],[pro.reviews,"rec."],[pro.rating,""]].map(([v,l],i,arr) => (
+          {[[proPosts.length,"post"],[pro.followers,"follower"],[pro.reviews,"rec."],[pro.rating,""]].map(([v,l],i,arr) => (
             <div key={l+i} style={{flex:1,textAlign:"center",borderRight:i<arr.length-1?`1px solid ${T.line}`:"none"}}>
               <p style={{fontSize:15,fontWeight:700,color:T.ink,margin:0}}>{i===3?"★":""}{v}</p>
               <p style={{fontSize:10,color:T.inkSoft,margin:0}}>{l}</p>
@@ -1339,25 +1342,9 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
           ))}
         </div>
         <div style={{display:"flex",gap:9}}>
-          <button onClick={toggleFollow} style={{flex:2,padding:"11px 0",borderRadius:10,border:"none",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:"inherit",
-            background:isFollowing?T.surface:"linear-gradient(135deg,#BFA67E,#897153)",
-            color:isFollowing?T.inkMid:"#fff",
-            boxShadow:isFollowing?"none":"0 4px 14px rgba(140,115,83,.3)"}}>
-            {isFollowing?"✓ Segui già":"+ Segui"}
-          </button>
-          <button onClick={()=>setShowRev(true)} style={{flex:1,padding:"11px 0",borderRadius:10,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontSize:13,fontWeight:600,color:T.inkMid,fontFamily:"inherit"}}>Recensisci</button>
+          <button onClick={()=>setShowRev(true)} style={{flex:1,padding:"11px 0",borderRadius:10,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontSize:13,fontWeight:500,color:T.inkMid,fontFamily:"inherit"}}>Recensisci</button>
         </div>
       </div>
-
-      {/* Conferma rimozione preferito — dialog minimal */}
-      {confirmUnfav && (
-        <ConfirmDialog
-          title={`Rimuovere ${pro.name}?`}
-          message="Non comparirà più nei preferiti. Potrai sempre ri-aggiungerlo."
-          confirmLabel="Rimuovi" danger
-          onConfirm={doUnfav} onCancel={()=>setConfirmUnfav(false)}
-        />
-      )}
 
       {/* Foto griglia */}
       {proPosts.length > 0 && (
@@ -1716,14 +1703,12 @@ function ClAppts({nav,allAppts,setAllAppts}) {
   );
 }
 
-/* PROFILO CLIENTE — stile Instagram */
-function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout}) {
-  const [tab,setTab] = useState("griglia"); // griglia | recensioni | impostazioni
-  const [info,setInfo] = useState({name:user.name,handle:(user.name||"utente").toLowerCase().replace(/\s+/g,"_"),email:"alessio@email.it",city:"Dolcedo, Liguria",phone:""});
+/* PROFILO CLIENTE */
+function ClProfilo({user,onSwitch}) {
+  const [tab,setTab] = useState("profilo");
+  const [info,setInfo] = useState({name:user.name,email:"alessio@email.it",city:"Dolcedo, Liguria",phone:""});
   const [editInfo,setEditInfo] = useState(false);
   const [tmp,setTmp] = useState(info);
-  const [notif,setNotif] = useState(true);
-  const [privato,setPrivato] = useState(false);
   const [reviews,setReviews] = useState([
     {id:1,pro:"Salon Elite",stars:5,text:"Professionale e puntuale!",date:"10 giu 2026"},
     {id:2,pro:"Nails by Sofia",stars:5,text:"Sofia e fantastica.",date:"28 mag 2026"},
@@ -1732,170 +1717,45 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
   const [newRevPro,setNewRevPro] = useState("");
   const [newRevStars,setNewRevStars] = useState(5);
   const [newRevText,setNewRevText] = useState("");
-  const [confirm,setConfirm] = useState(null); // {title,message,confirmLabel,danger,onYes}
   const PROS_LIST = ["Salon Elite","BarberKing","Nails by Sofia","Armonia Spa"];
-
-  const fav = favorites||new Set(), foll = following||new Set(), liked = likedPosts||new Set();
-  const savedPros = ALL_PROS.filter(p=>fav.has(p.id));
-  const likedFeed = FEED.filter(p=>liked.has(p.id));
-  // Suggerimenti "IA": professionisti non ancora seguiti, ordinati per popolarità
-  const suggested = ALL_PROS.filter(p=>!foll.has(p.id)).sort((a,b)=>b.followers-a.followers).slice(0,6);
-
-  const unlikePost = (id) => setConfirm({title:"Togliere il like?",message:"Il post verrà rimosso dai tuoi “Mi piace”.",confirmLabel:"Togli",danger:true,onYes:()=>{setLikedPosts(s=>{const n=new Set(s);n.delete(id);return n;});}});
-  const doFollow = (id) => setFollowing(s=>{const n=new Set(s);n.add(id);return n;});
-  const askLogout = () => setConfirm({title:"Uscire dall'account?",message:"Dovrai effettuare di nuovo l'accesso.",confirmLabel:"Esci",danger:true,onYes:onLogout});
-  const askSwitch = () => setConfirm({title:"Passare a modalità Pro?",message:"Gestirai agenda, clienti e servizi.",confirmLabel:"Passa a Pro",onYes:onSwitch});
-
-  const TABS = [
-    {id:"griglia", icon:<><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></>},
-    {id:"recensioni", icon:<path d="M12 2l2.9 6.3 6.6.6-5 4.4 1.5 6.5L12 17l-5.9 3.3 1.5-6.5-5-4.4 6.6-.6z"/>},
-    {id:"impostazioni", icon:<><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></>},
-  ];
-
-  const Toggle = ({on,onClick}) => (
-    <button onClick={onClick} style={{width:46,height:27,borderRadius:99,border:"none",cursor:"pointer",padding:3,background:on?"linear-gradient(135deg,#BFA67E,#897153)":"#D8CEBF",transition:"background .2s ease",display:"flex",justifyContent:on?"flex-end":"flex-start"}}>
-      <span style={{width:21,height:21,borderRadius:"50%",background:"#fff",boxShadow:"0 1px 3px rgba(0,0,0,.2)",transition:"all .2s ease"}}/>
-    </button>
-  );
 
   return (
     <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
-      {/* Header profilo */}
-      <div style={{background:"linear-gradient(170deg,#EFE6D8 0%,#F4EFE8 100%)",padding:"50px 18px 16px"}}>
-        <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
-          <div className="clay-btn" style={{width:74,height:74,borderRadius:"50%",background:"linear-gradient(135deg,#BFA67E,#897153)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,fontWeight:700,color:"#fff",flexShrink:0,fontFamily:"'Fraunces',serif"}}>{info.name[0]}</div>
-          <div style={{flex:1,display:"flex",justifyContent:"space-around",textAlign:"center"}}>
-            {[[savedPros.length,"Salvati"],[likedFeed.length,"Mi piace"],[foll.size,"Seguiti"]].map(([v,l])=>(
-              <div key={l}><p style={{fontSize:18,fontWeight:700,color:T.ink,margin:0}}>{v}</p><p style={{fontSize:11,color:T.inkMid,margin:0}}>{l}</p></div>
-            ))}
+      <div style={{background:T.white,padding:"50px 18px 14px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:13,marginBottom:16}}>
+          <div className="clay-btn" style={{width:60,height:60,borderRadius:"50%",background:"linear-gradient(135deg,#BFA67E,#897153)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,fontWeight:900,color:"#fff",flexShrink:0}}>{info.name[0]}</div>
+          <div>
+            <h1 style={{fontSize:22,fontWeight:900,color:T.ink,margin:"0 0 2px",letterSpacing:"-.01em"}}>{info.name}</h1>
+            <p style={{fontSize:13,color:T.inkMid,margin:0,fontWeight:600}}>{info.city}</p>
           </div>
         </div>
-        <h1 style={{fontSize:19,fontWeight:700,color:T.ink,margin:"0 0 1px"}}>{info.name}</h1>
-        <p style={{fontSize:13,color:T.inkMid,margin:"0 0 12px"}}>@{info.handle} · {info.city}</p>
-        <div style={{display:"flex",gap:8}}>
-          <button onClick={()=>{setTab("impostazioni");setEditInfo(true);setTmp(info);}} style={{flex:1,padding:"9px 0",borderRadius:11,border:"none",background:T.white,cursor:"pointer",fontSize:13,fontWeight:700,color:T.ink,fontFamily:"inherit",boxShadow:"0 2px 8px rgba(140,115,83,.12)"}}>Modifica profilo</button>
-          <button onClick={()=>setTab("impostazioni")} style={{width:42,borderRadius:11,border:"none",background:T.white,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(140,115,83,.12)"}}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{TABS[2].icon}</svg>
-          </button>
-        </div>
-      </div>
-
-      {/* Persone che potresti conoscere — IA */}
-      {suggested.length>0 && (
-        <div style={{padding:"16px 0 8px"}}>
-          <div style={{display:"flex",alignItems:"center",gap:7,padding:"0 18px 10px"}}>
-            <span style={{fontSize:15}}>✨</span>
-            <div>
-              <p style={{fontSize:14,fontWeight:700,color:T.ink,margin:0}}>Persone che potresti conoscere</p>
-              <p style={{fontSize:11,color:T.inkSoft,margin:0}}>Suggeriti dall'IA · in base alla tua zona e ai tuoi gusti</p>
-            </div>
-          </div>
-          <div style={{display:"flex",gap:11,overflowX:"auto",padding:"2px 18px 6px",scrollbarWidth:"none"}} className="ba-noscroll">
-            {suggested.map(pro=>(
-              <div key={pro.id} className="clay" style={{flexShrink:0,width:138,background:T.white,borderRadius:18,padding:"16px 12px",textAlign:"center"}}>
-                <div onClick={()=>nav("cl_pro",pro)} style={{cursor:"pointer"}}>
-                  <div style={{margin:"0 auto 8px",width:54,height:54,borderRadius:"50%",background:"linear-gradient(145deg,#F1E9DC,#E7DCCB)",border:"2px solid #E0D3BF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>
-                  <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:"0 0 1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
-                  <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 10px"}}>{pro.followers} follower</p>
-                </div>
-                {foll.has(pro.id)
-                  ? <button disabled style={{width:"100%",padding:"8px 0",borderRadius:10,border:`1.5px solid ${T.line}`,background:T.surface,color:T.inkMid,fontSize:12,fontWeight:700,fontFamily:"inherit"}}>✓ Seguito</button>
-                  : <button onClick={()=>doFollow(pro.id)} style={{width:"100%",padding:"8px 0",borderRadius:10,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Segui</button>}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Barra tab a icone */}
-      <div style={{display:"flex",borderTop:`1px solid ${T.line}`,borderBottom:`1px solid ${T.line}`,background:T.paper,position:"sticky",top:0,zIndex:10}}>
-        {TABS.map(t=>(
-          <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"12px 0",border:"none",background:"none",cursor:"pointer",display:"flex",justifyContent:"center",borderBottom:tab===t.id?`2px solid ${T.brandDeep}`:"2px solid transparent"}}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={tab===t.id?T.ink:T.inkSoft} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">{t.icon}</svg>
-          </button>
-        ))}
-      </div>
-
-      {/* TAB griglia: post che ti piacciono + salvati */}
-      {tab==="griglia" && (
-        <div>
-          {likedFeed.length===0 && savedPros.length===0 ? (
-            <div style={{textAlign:"center",padding:"60px 30px"}}>
-              <div style={{fontSize:40,marginBottom:10}}>🤍</div>
-              <p style={{fontSize:15,fontWeight:700,color:T.ink,marginBottom:6}}>Niente qui per ora</p>
-              <p style={{fontSize:13,color:T.inkSoft}}>Metti like ai post e salva i tuoi professionisti preferiti.</p>
-            </div>
-          ) : (
-            <>
-              {likedFeed.length>0 && (
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3,padding:3}}>
-                  {likedFeed.map(post=>(
-                    <div key={post.id} style={{position:"relative",aspectRatio:"1",overflow:"hidden",borderRadius:4}}>
-                      <Photo src={post.img} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-                      <button onClick={()=>unlikePost(post.id)} style={{position:"absolute",top:6,right:6,width:26,height:26,borderRadius:"50%",border:"none",background:"rgba(43,34,24,.45)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#E91E8C" stroke="#E91E8C" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {savedPros.length>0 && (
-                <div style={{padding:"16px 18px 4px"}}>
-                  <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:"0 0 12px"}}>Professionisti salvati</p>
-                  <div style={{display:"flex",gap:14,overflowX:"auto",scrollbarWidth:"none",paddingBottom:6}} className="ba-noscroll">
-                    {savedPros.map(pro=>(
-                      <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:66,textAlign:"center",cursor:"pointer"}}>
-                        <div style={{width:62,height:62,borderRadius:"50%",margin:"0 auto 5px",background:"linear-gradient(145deg,#F1E9DC,#E7DCCB)",border:"2px solid #D8C9B2",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>
-                        <p style={{fontSize:11,color:T.inkMid,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:600}}>{pro.name}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
-
-      {/* TAB recensioni */}
-      {tab==="recensioni" && (
-        <div style={{padding:"14px 16px"}}>
-          <button onClick={()=>setShowAddRev(true)} className="clay-soft" style={{width:"100%",padding:"13px 0",borderRadius:16,border:"none",background:T.white,color:T.brandDeep,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",marginBottom:12}}>+ Scrivi una recensione</button>
-          {reviews.map(r => (
-            <div key={r.id} className="clay" style={{background:T.white,borderRadius:18,padding:"14px 16px",marginBottom:10}}>
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
-                <p style={{fontSize:14,fontWeight:700,color:T.ink,margin:0}}>{r.pro}</p>
-                <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{r.date}</p>
-              </div>
-              <div style={{color:T.brandDeep,fontSize:13,marginBottom:4}}>{"★".repeat(r.stars)}</div>
-              <p style={{fontSize:13,color:T.inkMid,margin:0,lineHeight:1.5}}>{r.text}</p>
-            </div>
+        <div style={{display:"flex"}}>
+          {[["profilo","Profilo"],["recensioni","Recensioni"]].map(([id,l]) => (
+            <button key={id} onClick={()=>setTab(id)} style={{flex:1,padding:"9px 0",border:"none",background:"none",cursor:"pointer",fontSize:12,fontWeight:tab===id?700:400,color:tab===id?T.ink:T.inkSoft,borderBottom:tab===id?`2px solid ${T.ink}`:"2px solid transparent",fontFamily:"inherit"}}>{l}</button>
           ))}
         </div>
-      )}
+      </div>
 
-      {/* TAB impostazioni */}
-      {tab==="impostazioni" && (
-        <div style={{padding:"14px 16px"}}>
-          {/* Account */}
+      {tab==="profilo" && (
+        <div style={{padding:"12px 16px"}}>
           <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"13px 16px",borderBottom:`1px solid ${T.line}`}}>
-              <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:0}}>Account</p>
+              <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:0}}>Informazioni</p>
               {editInfo
-                ? <div style={{display:"flex",gap:6}}><Btn label="Annulla" onClick={()=>{setEditInfo(false);setTmp(info);}} style={{fontSize:11,padding:"4px 10px"}}/><button onClick={()=>{setInfo(tmp);setEditInfo(false);}} style={{padding:"4px 12px",borderRadius:8,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Salva</button></div>
+                ? <div style={{display:"flex",gap:6}}><Btn label="Annulla" onClick={()=>{setEditInfo(false);setTmp(info);}} style={{fontSize:11,padding:"4px 10px"}}/><button onClick={()=>{setInfo(tmp);setEditInfo(false);}} style={{padding:"4px 10px",borderRadius:8,border:"none",background:T.brand,color:T.white,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Salva</button></div>
                 : <Btn label="Modifica" onClick={()=>{setEditInfo(true);setTmp(info);}} style={{fontSize:11,padding:"4px 10px"}}/>
               }
             </div>
             {editInfo ? (
               <div style={{padding:"12px 14px",display:"flex",flexDirection:"column",gap:10}}>
-                {[{k:"name",l:"Nome",ph:"Il tuo nome"},{k:"handle",l:"Username",ph:"username"},{k:"email",l:"Email",t:"email",ph:"email@esempio.it"},{k:"city",l:"Città",ph:"Es. Milano"},{k:"phone",l:"Telefono",t:"tel",ph:"333 1234567"}].map(f => (
+                {[{k:"name",l:"Nome",ph:"Il tuo nome"},{k:"email",l:"Email",t:"email",ph:"email@esempio.it"},{k:"city",l:"Citta",ph:"Es. Milano"},{k:"phone",l:"Telefono",t:"tel",ph:"333 1234567"}].map(f => (
                   <div key={f.k}><label style={{fontSize:10,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:4,textTransform:"uppercase",letterSpacing:.6}}>{f.l}</label><input type={f.t||"text"} placeholder={f.ph} value={tmp[f.k]} onChange={e=>setTmp(p=>({...p,[f.k]:e.target.value}))} style={{width:"100%",padding:"9px 11px",borderRadius:8,border:`1.5px solid ${T.line}`,fontSize:14,color:T.ink,fontFamily:"inherit",outline:"none",boxSizing:"border-box"}}/></div>
                 ))}
               </div>
             ) : (
               <div>
-                {[["Email",info.email||"Non indicata"],["Città",info.city||"Non indicata"],["Telefono",info.phone||"Non indicato"]].map(([k,v]) => (
-                  <div key={k} style={{display:"flex",alignItems:"center",gap:11,padding:"11px 16px",borderBottom:`1px solid ${T.line}`}}>
+                {[["Email",info.email||"Non indicata"],["Citta",info.city||"Non indicata"],["Telefono",info.phone||"Non indicato"],["Notifiche","Attive"]].map(([k,v]) => (
+                  <div key={k} style={{display:"flex",alignItems:"center",gap:11,padding:"11px 14px",borderBottom:`1px solid ${T.line}`}}>
                     <span style={{fontSize:13,color:T.inkSoft,minWidth:70}}>{k}</span>
                     <span style={{fontSize:13,color:T.ink}}>{v}</span>
                   </div>
@@ -1903,35 +1763,28 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
               </div>
             )}
           </div>
-          {/* Preferenze */}
-          <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 16px",borderBottom:`1px solid ${T.line}`}}>
-              <div><p style={{fontSize:14,fontWeight:600,color:T.ink,margin:0}}>Notifiche</p><p style={{fontSize:11,color:T.inkSoft,margin:0}}>Promemoria e novità</p></div>
-              <Toggle on={notif} onClick={()=>setNotif(v=>!v)}/>
-            </div>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 16px"}}>
-              <div><p style={{fontSize:14,fontWeight:600,color:T.ink,margin:0}}>Account privato</p><p style={{fontSize:11,color:T.inkSoft,margin:0}}>Solo chi approvi vede i salvati</p></div>
-              <Toggle on={privato} onClick={()=>setPrivato(v=>!v)}/>
-            </div>
-          </div>
-          {/* Azioni */}
-          <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
-            <button onClick={askSwitch} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"15px 16px",border:"none",borderBottom:`1px solid ${T.line}`,background:"none",cursor:"pointer",fontFamily:"inherit"}}>
-              <span style={{fontSize:14,fontWeight:600,color:T.ink}}>Passa a modalità Pro</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-            <button onClick={askLogout} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:8,padding:"15px 16px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit"}}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B5503A" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
-              <span style={{fontSize:14,fontWeight:700,color:"#B5503A"}}>Esci dall'account</span>
-            </button>
+          <div className="clay" style={{padding:"15px",borderRadius:20,background:T.white}}>
+            <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:"0 0 3px"}}>Sei anche un professionista?</p>
+            <p style={{fontSize:12,color:T.inkMid,margin:"0 0 11px"}}>Passa alla modalita Pro.</p>
+            <BigBtn label="Passa a modalita Pro" onClick={onSwitch} variant="ghost" style={{fontSize:13,padding:"10px 0"}}/>
           </div>
         </div>
       )}
 
-      {/* Dialog di conferma generico */}
-      {confirm && (
-        <ConfirmDialog title={confirm.title} message={confirm.message} confirmLabel={confirm.confirmLabel} danger={confirm.danger}
-          onConfirm={()=>{confirm.onYes&&confirm.onYes();setConfirm(null);}} onCancel={()=>setConfirm(null)}/>
+      {tab==="recensioni" && (
+        <div style={{padding:"12px 16px"}}>
+          <button onClick={()=>setShowAddRev(true)} className="clay-soft" style={{width:"100%",padding:"13px 0",borderRadius:16,border:"none",background:T.white,color:T.brand,fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",marginBottom:12}}>+ Scrivi una recensione</button>
+          {reviews.map((r,i) => (
+            <div key={r.id} className="clay" style={{background:T.white,borderRadius:18,padding:"14px 16px",marginBottom:10}}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
+                <p style={{fontSize:14,fontWeight:700,color:T.ink,margin:0}}>{r.pro}</p>
+                <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{r.date}</p>
+              </div>
+              <div style={{color:T.gold,fontSize:13,marginBottom:4}}>{"★".repeat(r.stars)}</div>
+              <p style={{fontSize:13,color:T.inkMid,margin:0,lineHeight:1.5}}>{r.text}</p>
+            </div>
+          ))}
+        </div>
       )}
 
       {showAddRev && (
@@ -2558,8 +2411,6 @@ export default function App() {
   const [staff,setStaff] = useState(STAFF0);
   const [hours,setHours] = useState(HOURS0);
   const [favorites,setFavorites] = useState(new Set([1,3]));
-  const [following,setFollowing] = useState(new Set([3,6]));
-  const [likedPosts,setLikedPosts] = useState(new Set([1,2,4]));
   const [showBetaWelcome,setShowBetaWelcome] = useState(false);
   const [myAppts,setMyAppts] = useState(MY_APPTS0);
 
@@ -2584,10 +2435,10 @@ export default function App() {
     if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts}/>;
     if(screen==="cl_explore")    return <ClExplore nav={nav}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
-    if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing}/>;
+    if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_prenota")    return <ClPrenota data={sData} nav={nav}/>;
     if(screen==="cl_appts")      return <ClAppts nav={nav} allAppts={myAppts} setAllAppts={setMyAppts}/>;
-    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)}/>;
+    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours}/>;
     if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav}/>;
     if(screen==="pro_cliente")   return <ProCliente client={sData} setClients={setClients} appts={appts} services={services} nav={nav}/>;
