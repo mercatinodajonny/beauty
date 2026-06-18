@@ -108,21 +108,19 @@ const injectFont = () => {
   document.head.appendChild(s);
 };
 
-/* PALETTE "Beauty Star" — 2 colori: navy #1E2158 (dominante) + salmone #F09590 (accento) */
+/* PALETTE "Beauty Star" — navy scuro + bianco + corallo/pesca/oro caldi (da riferimento) */
 const T = {
-  ink:"#1E2158",inkMid:"#5A5D8A",inkSoft:"#A8AACB",
-  line:"#E8E8F2",surface:"#F4F4FA",white:"#FFFFFF",
+  ink:"#1C1C2E",inkMid:"#5C5C7A",inkSoft:"#AEAEC0",
+  line:"#EAEAF0",surface:"#F4F4F8",white:"#FFFFFF",
   paper:"#FAFAFA",
-  /* navy dominante — header, bottoni CTA, nav attiva, logo */
-  brand:"#1E2158",brandDeep:"#13174A",brandBg:"#EAEBF7",
-  /* salmone accento — banner, badge, highlights, icone categorie */
-  salmon:"#F09590",salmonDeep:"#E07870",salmonBg:"#FEF0EF",
-  gold:"#F09590",goldBg:"#FEF0EF",
+  brand:"#E8756A",brandDeep:"#D45F53",brandBg:"#FDEEED",
+  yellow:"#F5C060",yellowDeep:"#E8A840",yellowBg:"#FEF5E2",
+  gold:"#F5C060",goldBg:"#FEF5E2",
   green:"#4CAF7D",greenBg:"#E4F5EC",
-  blue:"#1E2158",blueBg:"#EAEBF7",
-  red:"#F09590",redBg:"#FEF0EF",
-  amber:"#F0A888",amberBg:"#FEF3EE",
-  purple:"#9090D8",purpleBg:"#EEEEF8",
+  blue:"#6A8AE8",blueBg:"#EEF2FE",
+  red:"#E8756A",redBg:"#FDEEED",
+  amber:"#F0A070",amberBg:"#FEF2E8",
+  purple:"#A87AE8",purpleBg:"#F2EEFE",
 };
 
 const ST = {
@@ -205,15 +203,15 @@ const MY_APPTS0 = [
 const ALL_CITIES = ["Imperia","Milano","Roma","Torino","Bologna","Genova","Sanremo","Savona"];
 
 const CAT_LIST = [
-  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#1E2158"},
-  {id:"parrucchiere",emoji:"💇",label:"Parrucchiere",color:"#F09590"},
-  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#1E2158"},
-  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#F09590"},
-  {id:"laser",       emoji:"✨",label:"Laser",       color:"#1E2158"},
-  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#F09590"},
-  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#1E2158"},
-  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#F09590"},
-  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#1E2158"},
+  {id:"barbiere",   emoji:"💈",label:"Barbiere",   color:"#E8756A"},
+  {id:"parrucchiere",emoji:"💇",label:"Parrucchiere",color:"#D45F53"},
+  {id:"nail_artist",emoji:"💅",label:"Unghie",    color:"#A87AE8"},
+  {id:"estetista",  emoji:"🧖",label:"Estetica",  color:"#F0A070"},
+  {id:"laser",      emoji:"✨",label:"Laser",     color:"#6A8AE8"},
+  {id:"tatuatore",  emoji:"🖋",label:"Tattoo",    color:"#1C1C2E"},
+  {id:"ciglia",     emoji:"👁",label:"Ciglia",    color:"#E8A0B0"},
+  {id:"makeup",     emoji:"💄",label:"Make-up",   color:"#E8756A"},
+  {id:"massaggio",  emoji:"💆",label:"Massaggi",  color:"#F5C060"},
 ];
 
 const FEED = [
@@ -774,8 +772,8 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
         <div style={{padding:"18px 20px 0"}}>
           <div className="ba-rise ba-lift" onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})}
             style={{display:"flex",alignItems:"center",gap:16,padding:"20px 20px",borderRadius:24,cursor:"pointer",
-              background:"#F09590",
-              boxShadow:"0 8px 24px rgba(240,149,144,.40)",animationDelay:".05s"}}>
+              background:"linear-gradient(120deg,#E8756A,#F0A070,#F5C060)",
+              boxShadow:"0 8px 24px rgba(232,117,106,.32)",animationDelay:".05s"}}>
             <div style={{width:50,height:50,borderRadius:14,background:"rgba(255,255,255,.25)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 {nextAppt
