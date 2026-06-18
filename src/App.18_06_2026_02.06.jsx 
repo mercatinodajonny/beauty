@@ -47,7 +47,7 @@ const proPinIcon = (L,pro) => L.divIcon({
   className:"",
   html:`<div style="position:relative;width:36px;height:44px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.35))">
     <svg viewBox="0 0 36 44" width="36" height="44" style="position:absolute;inset:0">
-      <path d="M18 0C8 0 0 8 0 18c0 12 18 26 18 26s18-14 18-26C36 8 28 0 18 0z" fill="${T.brand}"/>
+      <path d="M18 0C8 0 0 8 0 18c0 12 18 26 18 26s18-14 18-26C36 8 28 0 18 0z" fill="${T.ink}"/>
     </svg>
     <div style="position:absolute;top:5px;left:5px;width:26px;height:26px;border-radius:50%;background:${pro.accent};border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:14px;">${pro.emoji}</div>
   </div>`,
@@ -75,58 +75,29 @@ const distanceKm = (lat1,lng1,lat2,lng2) => {
 };
 
 const injectFont = () => {
-  if (document.getElementById("app-fonts")) return;
+  if (document.getElementById("dm-sans")) return;
   const l = document.createElement("link");
-  l.id = "app-fonts"; l.rel = "stylesheet";
-  // Claymorphism: Nunito (chunky rounded) per headings + body
-  l.href = "https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap";
+  l.id = "dm-sans"; l.rel = "stylesheet";
+  l.href = "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap";
   document.head.appendChild(l);
-  const s = document.createElement("style");
-  s.id = "app-style-rules";
-  s.textContent = `
-    h1,h2{font-family:'Nunito',sans-serif !important;font-weight:900;letter-spacing:-.01em}
-    .ba-serif{font-family:'Nunito',sans-serif;font-weight:800}
-    /* CLAYMORPHISM — superfici "gonfie": ombra esterna morbida + highlight e ombra interne */
-    .clay{box-shadow:7px 7px 18px rgba(124,58,237,.13), -6px -6px 14px rgba(255,255,255,.92), inset 2px 2px 4px rgba(255,255,255,.7), inset -3px -3px 7px rgba(124,58,237,.08);}
-    .clay-inset{box-shadow:inset 4px 4px 9px rgba(124,58,237,.12), inset -4px -4px 9px rgba(255,255,255,.92);}
-    .clay-btn{box-shadow:0 9px 20px rgba(124,58,237,.32), inset 2px 2px 5px rgba(255,255,255,.45), inset -3px -4px 8px rgba(76,29,149,.4);}
-    .clay-soft{box-shadow:5px 5px 13px rgba(124,58,237,.10), -4px -4px 11px rgba(255,255,255,.9);}
-    @keyframes baRise{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-    @keyframes baFade{from{opacity:0}to{opacity:1}}
-    .ba-rise{opacity:0;animation:baRise .55s cubic-bezier(.34,1.56,.64,1) forwards}
-    .ba-fade{opacity:0;animation:baFade .6s ease forwards}
-    .ba-lift{transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease}
-    .ba-lift:active{transform:scale(.94)}
-    button{transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-    button:active{transform:scale(.95)}
-    @media (prefers-reduced-motion: reduce){
-      .ba-rise,.ba-fade{animation:none;opacity:1}
-      .ba-lift,button{transition:none}
-      button:active,.ba-lift:active{transform:none}
-    }
-  `;
-  document.head.appendChild(s);
 };
 
-/* PALETTE "Clay" — claymorphism: lavanda mai-bianca + accenti viola/rosa, superfici morbide */
 const T = {
-  ink:"#332F3A",inkMid:"#635F69",inkSoft:"#9C97A6",
-  line:"#E6E0F2",surface:"#EDE8F7",white:"#FFFFFF",
-  paper:"#F4F1FA",
-  brand:"#7C3AED",brandDeep:"#6D28D9",brandBg:"#EFE7FD",
-  gold:"#E8A23D",goldBg:"#FBF1DE",
-  green:"#10B981",greenBg:"#E3F7EF",
-  blue:"#4F8DF5",blueBg:"#E8F0FE",
-  red:"#F43F6E",redBg:"#FDE6EC",
-  amber:"#F59E0B",amberBg:"#FDF1DC",
-  purple:"#DB2777",purpleBg:"#FBE5F0",
+  ink:"#0A0A0A",inkMid:"#555",inkSoft:"#999",
+  line:"#EBEBEB",surface:"#F5F5F5",white:"#FFFFFF",
+  gold:"#C9A96E",goldBg:"#FBF5EC",
+  green:"#1A9E5C",greenBg:"#E8F8F0",
+  blue:"#2563EB",blueBg:"#EFF6FF",
+  red:"#D94040",redBg:"#FEF2F2",
+  amber:"#B45309",amberBg:"#FFFBEB",
+  purple:"#7C3AED",purpleBg:"#F5F3FF",
 };
 
 const ST = {
-  confermato:{label:"Confermato",bg:"#E6F0E8",text:"#3E7C5A",bar:"#3E7C5A"},
-  "in attesa":{label:"In attesa",bg:"#F6EEDD",text:"#9A6B2F",bar:"#B68A4E"},
-  cancellato:{label:"Cancellato",bg:"#F8E8E4",text:"#B23A2E",bar:"#B23A2E"},
-  completato:{label:"Completato",bg:"#E9F0F4",text:"#3E6F8E",bar:"#3E6F8E"},
+  confermato:{label:"Confermato",bg:"#E8F8F0",text:"#1A9E5C",bar:"#1A9E5C"},
+  "in attesa":{label:"In attesa",bg:"#FBF5EC",text:"#B45309",bar:"#C9A96E"},
+  cancellato:{label:"Cancellato",bg:"#FEF2F2",text:"#D94040",bar:"#D94040"},
+  completato:{label:"Completato",bg:"#EFF6FF",text:"#2563EB",bar:"#2563EB"},
 };
 
 const U = (kw,w=800,h=1000) => `https://source.unsplash.com/${w}x${h}/?${encodeURIComponent(kw)}`;
@@ -202,15 +173,15 @@ const MY_APPTS0 = [
 const ALL_CITIES = ["Imperia","Milano","Roma","Torino","Bologna","Genova","Sanremo","Savona"];
 
 const CAT_LIST = [
-  {id:"barbiere",emoji:"💈",label:"Barbiere",color:"#3E5C5A"},
-  {id:"parrucchiere",emoji:"💇",label:"Parrucchiere",color:"#B06A3F"},
-  {id:"nail_artist",emoji:"💅",label:"Unghie",color:"#B5566E"},
-  {id:"estetista",emoji:"🧖",label:"Estetica",color:"#5E7A5A"},
-  {id:"laser",emoji:"✨",label:"Laser",color:"#7A5A86"},
-  {id:"tatuatore",emoji:"🖋",label:"Tattoo",color:"#4A4E6E"},
-  {id:"ciglia",emoji:"👁",label:"Ciglia",color:"#9A6B2F"},
-  {id:"makeup",emoji:"💄",label:"Make-up",color:"#A8456A"},
-  {id:"massaggio",emoji:"💆",label:"Massaggi",color:"#6E7A45"},
+  {id:"barbiere",emoji:"💈",label:"Barbiere",color:"#2C3E50"},
+  {id:"parrucchiere",emoji:"💇",label:"Parrucchiere",color:"#C9A96E"},
+  {id:"nail_artist",emoji:"💅",label:"Unghie",color:"#C2185B"},
+  {id:"estetista",emoji:"🧖",label:"Estetica",color:"#2E7D5E"},
+  {id:"laser",emoji:"✨",label:"Laser",color:"#7C3AED"},
+  {id:"tatuatore",emoji:"🖋",label:"Tattoo",color:"#4527A0"},
+  {id:"ciglia",emoji:"👁",label:"Ciglia",color:"#B45309"},
+  {id:"makeup",emoji:"💄",label:"Make-up",color:"#E91E8C"},
+  {id:"massaggio",emoji:"💆",label:"Massaggi",color:"#1A9E5C"},
 ];
 
 const FEED = [
@@ -225,10 +196,10 @@ const Div = () => <div style={{height:1,background:T.line}}/>;
 const DivP = () => <div style={{height:1,background:T.line,margin:"0 18px"}}/>;
 const Pill = ({label,style}) => <span style={{display:"inline-flex",alignItems:"center",padding:"3px 9px",borderRadius:99,fontSize:11,fontWeight:600,...style}}>{label}</span>;
 const BigBtn = ({label,onClick,variant="dark",disabled,style}) => (
-  <button onClick={onClick} disabled={disabled} className={disabled?"":(variant==="dark"?"clay-btn":"clay-soft")} style={{width:"100%",padding:"17px 0",borderRadius:20,border:"none",cursor:disabled?"default":"pointer",fontSize:16,fontWeight:800,background:variant==="dark"?`linear-gradient(135deg,#A78BFA,${T.brand})`:T.white,color:variant==="dark"?T.white:T.ink,opacity:disabled?.4:1,fontFamily:"inherit",...style}}>{label}</button>
+  <button onClick={onClick} disabled={disabled} style={{width:"100%",padding:"15px 0",borderRadius:13,border:"none",cursor:disabled?"default":"pointer",fontSize:15,fontWeight:600,background:variant==="dark"?T.ink:T.surface,color:variant==="dark"?T.white:T.ink,opacity:disabled?.35:1,fontFamily:"inherit",...style}}>{label}</button>
 );
 const Btn = ({label,onClick,style}) => (
-  <button onClick={onClick} className="clay-soft" style={{padding:"9px 16px",borderRadius:15,border:"none",background:T.white,cursor:"pointer",fontSize:13,fontWeight:700,color:T.inkMid,fontFamily:"inherit",...style}}>{label}</button>
+  <button onClick={onClick} style={{padding:"8px 14px",borderRadius:9,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontSize:13,fontWeight:500,color:T.inkMid,fontFamily:"inherit",...style}}>{label}</button>
 );
 const BackBtn = ({onClick}) => (
   <button onClick={onClick} style={{background:"none",border:"none",cursor:"pointer",padding:"6px 0",display:"inline-flex",alignItems:"center",gap:6,color:T.ink,fontSize:14,fontWeight:500,fontFamily:"inherit"}}>
@@ -238,10 +209,10 @@ const BackBtn = ({onClick}) => (
 );
 const Modal = ({title,onClose,children}) => (
   <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
-    <div style={{background:T.paper,borderRadius:"32px 32px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"20px 20px 44px",maxHeight:"90dvh",overflowY:"auto"}}>
+    <div style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 44px",maxHeight:"90dvh",overflowY:"auto"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-        <h2 style={{fontSize:18,fontWeight:900,color:T.ink,margin:0}}>{title}</h2>
-        <button onClick={onClose} className="clay-soft" style={{background:T.white,border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",fontSize:15,color:T.inkMid}}>x</button>
+        <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>{title}</h2>
+        <button onClick={onClose} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>x</button>
       </div>
       {children}
     </div>
@@ -250,7 +221,7 @@ const Modal = ({title,onClose,children}) => (
 const Photo = ({src,style}) => {
   const [e,sE] = useState(false);
   return e||!src
-    ? <div style={{background:`linear-gradient(145deg,#A78BFA,${T.purple})`,display:"flex",alignItems:"center",justifyContent:"center",...style}}><LogoMark size={32} color="rgba(255,255,255,.95)"/></div>
+    ? <div style={{background:"linear-gradient(160deg,#C9A96E,#8B5E3C)",display:"flex",alignItems:"center",justifyContent:"center",...style}}><span style={{fontSize:32}}>✂️</span></div>
     : <img src={src} onError={()=>sE(true)} style={{objectFit:"cover",display:"block",...style}} alt=""/>;
 };
 const Av = ({pro,size=40,fs=18}) => (
@@ -299,7 +270,7 @@ function MapView({pros,center,onSelectPro,onMapMove,dark,height=320}) {
       clusterRef.current = L.markerClusterGroup({
         maxClusterRadius:50,
         iconCreateFunction: cluster => L.divIcon({
-          html:`<div style="background:${T.brand};color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;font-family:inherit;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3)">${cluster.getChildCount()}</div>`,
+          html:`<div style="background:${T.ink};color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;font-family:inherit;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3)">${cluster.getChildCount()}</div>`,
           className:"", iconSize:[40,40],
         }),
       }).addTo(map);
@@ -355,7 +326,7 @@ function MapView({pros,center,onSelectPro,onMapMove,dark,height=320}) {
 const DIST_OPTIONS = [5,10,20,50,Infinity];
 
 /* BROWSE PROFESSIONISTI — toggle Lista/Mappa, filtro distanza, card prenotazione su marker */
-function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radius,setRadius,viewMode,setViewMode,searchCenter,onMapMove,selectedPro,setSelectedPro,darkMap,setDarkMap,onSelectPro,onBook}) {
+function BrowsePros({catId,catLabel,catEmoji,city,onBack,onChangeCity,pros,radius,setRadius,viewMode,setViewMode,searchCenter,onMapMove,selectedPro,setSelectedPro,darkMap,setDarkMap,onSelectPro,onBook}) {
   return (
     <div>
       {/* Header */}
@@ -392,28 +363,28 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
 
       {pros.length === 0 ? (
         <div style={{textAlign:"center",padding:"60px 20px"}}>
-          <div style={{width:64,height:64,borderRadius:18,background:`${catColor}1A`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px"}}><CatIcon id={catId} size={30} color={catColor}/></div>
+          <p style={{fontSize:40,marginBottom:12}}>{catEmoji}</p>
           <p style={{fontSize:17,fontWeight:700,color:T.ink,marginBottom:6}}>Nessun professionista trovato</p>
-          <button onClick={()=>setRadius(Infinity)} style={{padding:"12px 24px",borderRadius:12,border:"none",background:T.brand,color:T.white,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Rimuovi il limite di distanza</button>
+          <button onClick={()=>setRadius(Infinity)} style={{padding:"12px 24px",borderRadius:12,border:"none",background:T.ink,color:T.white,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Rimuovi il limite di distanza</button>
         </div>
       ) : viewMode==="lista" ? (
         <div style={{padding:"4px 20px 0",display:"flex",flexDirection:"column",gap:10}}>
           <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.8,margin:"6px 0 0"}}>{pros.length} risultati</p>
           {pros.map(pro => (
-            <div key={pro.id} onClick={()=>onSelectPro(pro)} className="clay ba-lift" style={{background:T.white,borderRadius:22,padding:"14px 16px",cursor:"pointer",display:"flex",alignItems:"center",gap:13}}>
-              <div style={{width:50,height:50,borderRadius:17,background:`${pro.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0,position:"relative",boxShadow:`inset 2px 2px 4px ${pro.accent}33, inset -2px -2px 4px rgba(255,255,255,.7)`}}>
+            <div key={pro.id} onClick={()=>onSelectPro(pro)} style={{background:T.white,borderRadius:14,border:`1.5px solid ${T.line}`,padding:"13px 15px",cursor:"pointer",display:"flex",alignItems:"center",gap:13}}>
+              <div style={{width:48,height:48,borderRadius:13,background:`${pro.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0,position:"relative"}}>
                 {pro.emoji}
-                {pro.verified && <div style={{position:"absolute",bottom:-2,right:-2,width:15,height:15,borderRadius:"50%",background:T.green,border:`2.5px solid ${T.white}`}}/>}
+                {pro.verified && <div style={{position:"absolute",bottom:-2,right:-2,width:14,height:14,borderRadius:"50%",background:T.green,border:`2px solid ${T.white}`}}/>}
               </div>
               <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:"0 0 2px"}}>{pro.name}</p>
+                <p style={{fontSize:14,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>{pro.name}</p>
                 <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
                   <span style={{color:T.gold,fontSize:12}}>{"★".repeat(Math.floor(pro.rating))}</span>
                   <span style={{color:T.inkSoft,fontSize:11}}>({pro.reviews}) · {pro.distKm.toFixed(1)} km</span>
                 </div>
                 <p style={{fontSize:11,color:T.inkSoft,margin:0}}>Prima disp. {pro.slots[0]} · Da {Math.min(...pro.services.map(s=>s.price))}€</p>
               </div>
-              <button onClick={e=>{e.stopPropagation();onBook(pro);}} className="clay-btn" style={{padding:"10px 15px",borderRadius:15,border:"none",background:`linear-gradient(135deg,#A78BFA,${T.brand})`,color:T.white,fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+              <button onClick={e=>{e.stopPropagation();onBook(pro);}} style={{padding:"9px 13px",borderRadius:9,border:"none",background:T.ink,color:T.white,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
             </div>
           ))}
         </div>
@@ -443,7 +414,7 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
               </div>
               <div style={{display:"flex",gap:8,marginTop:8}}>
                 <button onClick={()=>onSelectPro(selectedPro)} style={{flex:1,padding:"12px 0",borderRadius:12,border:"none",background:T.white,color:T.ink,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 4px 14px rgba(0,0,0,.15)"}}>Profilo</button>
-                <button onClick={()=>onBook(selectedPro)} style={{flex:2,padding:"12px 0",borderRadius:12,border:"none",background:T.brand,color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 4px 14px rgba(0,0,0,.25)"}}>Prenota</button>
+                <button onClick={()=>onBook(selectedPro)} style={{flex:2,padding:"12px 0",borderRadius:12,border:"none",background:T.ink,color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 4px 14px rgba(0,0,0,.25)"}}>Prenota</button>
               </div>
             </div>
           )}
@@ -464,36 +435,10 @@ const IS = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill={a?T.in
 const ICS = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.ink:T.inkSoft} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>;
 const IPlus = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>;
 
-/* LOGO — forbici (SVG custom, niente emoji) */
-const LogoMark = ({size=22,color="#fff"}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/>
-    <line x1="20" y1="4" x2="8.5" y2="15.5"/><line x1="14.5" y1="14.5" x2="20" y2="20"/><line x1="8.5" y1="8.5" x2="12" y2="12"/>
-  </svg>
-);
-
-/* ICONE CATEGORIA — line-art SVG custom per ciascun servizio */
-const CAT_PATHS = {
-  barbiere:    <><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M8 8l8-3M8 13l8-3M8 18l8-3"/></>,
-  parrucchiere:<><circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><line x1="20" y1="4" x2="8.4" y2="15.6"/><line x1="14.6" y1="14.6" x2="20" y2="20"/><line x1="8.4" y1="8.4" x2="12" y2="12"/></>,
-  nail_artist: <><path d="M10 3h4v10a2 2 0 0 1-4 0z"/><path d="M9 13h6v6a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/></>,
-  estetista:   <><path d="M12 21c-4-2-7-5-7-9 2 0 4 .8 5 2 .2-2 1-4 2-6 1 2 1.8 4 2 6 1-1.2 3-2 5-2 0 4-3 7-7 9z"/></>,
-  laser:       <><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18"/><circle cx="12" cy="12" r="2.2"/></>,
-  tatuatore:   <><path d="M14 4l6 6-9 9-4 1 1-4z"/><line x1="13" y1="5" x2="19" y2="11"/></>,
-  ciglia:      <><path d="M3 12s3.5-6 9-6 9 6 9 6"/><path d="M12 6v-3M6.5 7L5 4.5M17.5 7L19 4.5"/><circle cx="12" cy="12" r="2.4"/></>,
-  makeup:      <><rect x="9" y="9" width="6" height="12" rx="1.5"/><path d="M10 9V5.5a2 2 0 0 1 4 0V9"/></>,
-  massaggio:   <><circle cx="12" cy="6" r="2.4"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/><path d="M3 10c1.5 1 2.5 1 4 0M17 10c1.5 1 2.5 1 4 0"/></>,
-};
-const CatIcon = ({id,size=24,color="currentColor"}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-    {CAT_PATHS[id] || <circle cx="12" cy="12" r="8"/>}
-  </svg>
-);
-
 /* NAV */
 function NavCl({s,nav}) {
   return (
-    <div className="clay" style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 24px)",maxWidth:406,background:T.white,borderRadius:26,display:"flex",zIndex:100,padding:"6px 4px"}}>
+    <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:430,background:T.white,borderTop:`1px solid ${T.line}`,display:"flex",zIndex:100}}>
       {[
         {id:"cl_home",I:IH,l:"Home"},
         {id:"cl_explore",I:IC,l:"Esplora"},
@@ -501,9 +446,9 @@ function NavCl({s,nav}) {
         {id:"cl_appts",I:IK,l:"Appuntamenti"},
         {id:"cl_profilo",I:IP,l:"Profilo"},
       ].map(({id,I,l}) => (
-        <button key={id} onClick={()=>nav(id)} className={s===id?"clay-soft":""} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"9px 0 10px",border:"none",background:s===id?T.brandBg:"none",borderRadius:18,cursor:"pointer"}}>
+        <button key={id} onClick={()=>nav(id)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"10px 0 14px",border:"none",background:"none",cursor:"pointer"}}>
           <I a={s===id}/>
-          <span style={{fontSize:9,fontWeight:s===id?800:600,color:s===id?(id==="cl_preferiti"?T.purple:T.brand):T.inkSoft}}>{l}</span>
+          <span style={{fontSize:9,fontWeight:s===id?700:400,color:s===id?(id==="cl_preferiti"?"#E91E8C":T.ink):T.inkSoft}}>{l}</span>
         </button>
       ))}
     </div>
@@ -511,16 +456,16 @@ function NavCl({s,nav}) {
 }
 function NavPro({s,nav}) {
   return (
-    <div className="clay" style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 24px)",maxWidth:406,background:T.white,borderRadius:26,display:"flex",zIndex:100,padding:"6px 4px"}}>
+    <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:430,background:T.white,borderTop:`1px solid ${T.line}`,display:"flex",zIndex:100}}>
       {[
         {id:"pro_agenda",I:IK,l:"Agenda"},
         {id:"pro_clienti",I:IU,l:"Clienti"},
         {id:"pro_servizi",I:ICS,l:"Servizi"},
         {id:"pro_stats",I:IS,l:"Statistiche"},
       ].map(({id,I,l}) => (
-        <button key={id} onClick={()=>nav(id)} className={s===id?"clay-soft":""} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"9px 0 10px",border:"none",background:s===id?T.brandBg:"none",borderRadius:18,cursor:"pointer"}}>
+        <button key={id} onClick={()=>nav(id)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"10px 0 14px",border:"none",background:"none",cursor:"pointer"}}>
           <I a={s===id}/>
-          <span style={{fontSize:10,fontWeight:s===id?800:600,color:s===id?T.brand:T.inkSoft}}>{l}</span>
+          <span style={{fontSize:10,fontWeight:s===id?700:400,color:s===id?T.ink:T.inkSoft}}>{l}</span>
         </button>
       ))}
     </div>
@@ -531,10 +476,10 @@ function NavPro({s,nav}) {
 function LoginScreen({onAuth}) {
   const [tp,setTp] = useState(null);
   return (
-    <div style={{minHeight:"100dvh",padding:"52px 26px 40px",background:T.paper,display:"flex",flexDirection:"column"}}>
-      <div className="ba-rise" style={{width:56,height:56,borderRadius:16,background:T.brand,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:22,boxShadow:"0 10px 24px rgba(194,85,46,.28)"}}><LogoMark size={28}/></div>
-      <h1 className="ba-rise" style={{fontSize:40,fontWeight:600,color:T.ink,lineHeight:1,marginBottom:8,animationDelay:".06s"}}>BeautyApp</h1>
-      <p className="ba-rise" style={{fontSize:15,color:T.inkMid,marginBottom:28,animationDelay:".12s"}}>La bellezza, a portata di mano.</p>
+    <div style={{minHeight:"100dvh",padding:"52px 26px 40px",background:T.white,display:"flex",flexDirection:"column"}}>
+      <div style={{width:56,height:56,borderRadius:16,background:T.ink,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,marginBottom:22}}>✂️</div>
+      <h1 style={{fontSize:26,fontWeight:700,color:T.ink,lineHeight:1.1,marginBottom:6}}>BeautyApp</h1>
+      <p style={{fontSize:14,color:T.inkMid,marginBottom:28}}>La bellezza a portata di mano.</p>
       <div style={{flex:1,display:"flex",flexDirection:"column",gap:12}}>
         {[
           {id:"pro",emoji:"💼",title:"Professionista",desc:"Agenda, clienti, servizi, statistiche"},
@@ -665,8 +610,8 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
       <div style={{padding:"52px 20px 16px",background:T.white,borderBottom:`1px solid ${T.line}`}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
           <div style={{display:"flex",alignItems:"center",gap:9}}>
-            <div style={{width:34,height:34,borderRadius:10,background:T.brand,display:"flex",alignItems:"center",justifyContent:"center"}}><LogoMark size={19}/></div>
-            <span className="ba-serif" style={{fontSize:22,fontWeight:600,color:T.ink,letterSpacing:"-.02em"}}>BeautyApp</span>
+            <div style={{width:34,height:34,borderRadius:10,background:T.ink,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>✂️</div>
+            <span style={{fontSize:20,fontWeight:700,color:T.ink}}>BeautyApp</span>
           </div>
           <button onClick={()=>nav("cl_preferiti")} style={{width:38,height:38,borderRadius:12,background:T.surface,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
             <IHeart a={false}/>
@@ -674,7 +619,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
         </div>
 
         {/* Barra di ricerca */}
-        <div className="clay-inset" style={{display:"flex",alignItems:"center",gap:10,background:T.white,borderRadius:18,padding:"14px 16px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,background:T.surface,borderRadius:14,padding:"13px 16px",border:`1.5px solid ${searching?T.ink:T.line}`}}>
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0}}>
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
@@ -694,24 +639,20 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
       {/* Banner prossimo/ultimo appuntamento */}
       {!(searching && q.length >= 2) && banner && (
         <div style={{padding:"18px 20px 0"}}>
-          <div onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})} className="ba-rise ba-lift" style={{display:"flex",alignItems:"center",gap:18,padding:"22px 22px",borderRadius:28,cursor:"pointer",background:nextAppt?`linear-gradient(135deg,#A78BFA,${T.brand})`:`linear-gradient(135deg,${T.purple},#F472B6)`,position:"relative",overflow:"hidden",boxShadow:nextAppt?"0 14px 30px rgba(124,58,237,.4), inset 2px 2px 6px rgba(255,255,255,.35), inset -3px -4px 9px rgba(76,29,149,.35)":"0 14px 30px rgba(219,39,119,.4), inset 2px 2px 6px rgba(255,255,255,.35), inset -3px -4px 9px rgba(157,23,77,.35)",animationDelay:".05s"}}>
-            <div style={{width:60,height:60,borderRadius:20,background:"rgba(255,255,255,.2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,position:"relative",boxShadow:"inset 2px 2px 5px rgba(255,255,255,.4), inset -2px -3px 6px rgba(0,0,0,.12)"}}>
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={T.white} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                {nextAppt
-                  ? <><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></>
-                  : <><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>}
-              </svg>
+          <div onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})} style={{display:"flex",alignItems:"center",gap:18,padding:"24px 22px",borderRadius:22,cursor:"pointer",background:nextAppt?"linear-gradient(135deg,#FF5C8A,#FF8A50)":"linear-gradient(135deg,#2C3E50,#4A6FA5)",boxShadow:nextAppt?"0 10px 28px rgba(255,92,138,.35)":"0 10px 28px rgba(44,62,80,.35)"}}>
+            <div style={{width:64,height:64,borderRadius:18,background:"rgba(255,255,255,.22)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:32,flexShrink:0}}>
+              {nextAppt?"📅":"🔄"}
             </div>
-            <div style={{flex:1,minWidth:0,position:"relative"}}>
-              <p style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.7)",margin:"0 0 5px",textTransform:"uppercase",letterSpacing:1.4}}>
+            <div style={{flex:1,minWidth:0}}>
+              <p style={{fontSize:13,fontWeight:700,color:"rgba(255,255,255,.85)",margin:"0 0 4px",textTransform:"uppercase",letterSpacing:.6}}>
                 {nextAppt?"Prossimo appuntamento":"Ultimo appuntamento"}
               </p>
-              <p className="ba-serif" style={{fontSize:21,fontWeight:600,color:T.white,margin:"0 0 3px",lineHeight:1.1}}>{banner.service}</p>
-              <p style={{fontSize:13,color:"rgba(255,255,255,.82)",margin:0,fontWeight:500}}>
-                {banner.pro} · {nextAppt ? `${banner.date}, ${banner.time}` : `${banner.date} — prenota di nuovo`}
+              <p style={{fontSize:19,fontWeight:700,color:T.white,margin:"0 0 3px"}}>{banner.service} - {banner.pro}</p>
+              <p style={{fontSize:14,color:"rgba(255,255,255,.9)",margin:0,fontWeight:600}}>
+                {nextAppt ? `${banner.date} alle ${banner.time}` : `${banner.date} alle ${banner.time} - Prenota di nuovo?`}
               </p>
             </div>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" strokeWidth="2.2" strokeLinecap="round" style={{position:"relative",flexShrink:0}}><path d="M9 18l6-6-6-6"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.white} strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
         </div>
       )}
@@ -738,7 +679,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                   <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} - {pro.city}</p>
                   <span style={{color:T.gold,fontSize:12}}>{"★".repeat(Math.floor(pro.rating))}</span>
                 </div>
-                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:T.brand,color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:T.ink,color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
               </div>
               {i < searchResults.length-1 && <Div/>}
             </div>
@@ -764,11 +705,11 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
           {!selCat && (
             <div style={{padding:"0 20px"}}>
               <div style={{display:"flex",flexDirection:"column",gap:10}}>
-                {CAT_LIST.map((cat,ci) => (
-                  <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift clay" style={{display:"flex",alignItems:"center",gap:16,padding:"16px 18px",borderRadius:24,border:"none",background:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left",animationDelay:`${0.04*ci+0.08}s`}}>
-                    <div style={{width:52,height:52,borderRadius:18,background:`${cat.color}22`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`inset 2px 2px 4px ${cat.color}33, inset -2px -2px 4px rgba(255,255,255,.7)`}}><CatIcon id={cat.id} size={24} color={cat.color}/></div>
+                {CAT_LIST.map(cat => (
+                  <button key={cat.id} onClick={()=>openCategory(cat.id)} style={{display:"flex",alignItems:"center",gap:16,padding:"18px",borderRadius:16,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:"0 2px 8px rgba(0,0,0,.04)"}}>
+                    <div style={{width:50,height:50,borderRadius:13,background:`${cat.color}18`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>{cat.emoji}</div>
                     <div style={{flex:1}}>
-                      <p className="ba-serif" style={{fontSize:18,fontWeight:600,color:T.ink,margin:"0 0 2px"}}>{cat.label}</p>
+                      <p style={{fontSize:17,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>{cat.label}</p>
                       <p style={{fontSize:12,color:T.inkSoft,margin:0}}>
                         {(() => {
                           const n = prosWithDist.filter(p=>p.catId===cat.id && p.distKm<=radius).length;
@@ -792,7 +733,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
         <BrowsePros
           catId={selCat}
           catLabel={CAT_LIST.find(c=>c.id===selCat)?.label}
-          catColor={CAT_LIST.find(c=>c.id===selCat)?.color}
+          catEmoji={CAT_LIST.find(c=>c.id===selCat)?.emoji}
           city={city}
           onBack={()=>setSelCat(null)}
           onChangeCity={()=>setShowCity(true)}
@@ -972,7 +913,7 @@ function ClExplore({nav}) {
                   <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:0}}>@{pro.handle}</p>
                   <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{pro.city} - {post.cat}</p>
                 </div>
-                <button onClick={()=>nav("cl_prenota",{pro})} style={{padding:"6px 12px",borderRadius:99,border:"none",background:T.brand,cursor:"pointer",fontSize:12,fontWeight:600,color:T.white,fontFamily:"inherit"}}>Prenota</button>
+                <button onClick={()=>nav("cl_prenota",{pro})} style={{padding:"6px 12px",borderRadius:99,border:"none",background:T.ink,cursor:"pointer",fontSize:12,fontWeight:600,color:T.white,fontFamily:"inherit"}}>Prenota</button>
               </div>
               <Photo src={post.img} style={{width:"100%",aspectRatio:"4/5"}}/>
               <div style={{padding:"9px 13px 4px"}}>
@@ -1001,7 +942,7 @@ function ClPreferiti({nav,favorites,setFavorites}) {
           <p style={{fontSize:48,marginBottom:14}}>❤️</p>
           <p style={{fontSize:17,fontWeight:700,color:T.ink,marginBottom:8}}>Nessun preferito</p>
           <p style={{fontSize:14,color:T.inkSoft,marginBottom:22,lineHeight:1.6}}>Apri un profilo e tocca il cuore per salvarlo qui.</p>
-          <button onClick={()=>nav("cl_home")} style={{padding:"13px 28px",borderRadius:13,border:"none",background:T.brand,color:T.white,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Cerca professionisti</button>
+          <button onClick={()=>nav("cl_home")} style={{padding:"13px 28px",borderRadius:13,border:"none",background:T.ink,color:T.white,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Cerca professionisti</button>
         </div>
       ) : (
         <div style={{padding:"14px 20px"}}>
@@ -1026,7 +967,7 @@ function ClPreferiti({nav,favorites,setFavorites}) {
                 </div>
                 <div style={{display:"flex",gap:8}}>
                   <button onClick={()=>nav("cl_pro",pro)} style={{flex:1,padding:"10px 0",borderRadius:9,border:`1.5px solid ${T.line}`,background:T.surface,cursor:"pointer",fontSize:13,fontWeight:600,color:T.inkMid,fontFamily:"inherit"}}>Profilo</button>
-                  <button onClick={()=>nav("cl_prenota",{pro})} style={{flex:2,padding:"10px 0",borderRadius:9,border:"none",background:T.brand,cursor:"pointer",fontSize:14,fontWeight:700,color:T.white,fontFamily:"inherit"}}>Prenota ora</button>
+                  <button onClick={()=>nav("cl_prenota",{pro})} style={{flex:2,padding:"10px 0",borderRadius:9,border:"none",background:T.ink,cursor:"pointer",fontSize:14,fontWeight:700,color:T.white,fontFamily:"inherit"}}>Prenota ora</button>
                 </div>
               </div>
             </div>
@@ -1106,7 +1047,7 @@ function ClPro({pro,nav,favorites,setFavorites}) {
               </div>
               {act && (
                 <div style={{paddingBottom:10}}>
-                  <button onClick={()=>nav("cl_prenota",{pro,service:s})} style={{width:"100%",padding:"11px 0",borderRadius:10,border:"none",background:T.brand,color:T.white,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Scegli data e orario</button>
+                  <button onClick={()=>nav("cl_prenota",{pro,service:s})} style={{width:"100%",padding:"11px 0",borderRadius:10,border:"none",background:T.ink,color:T.white,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Scegli data e orario</button>
                 </div>
               )}
               {i < pro.services.length-1 && <DivP/>}
@@ -1132,7 +1073,7 @@ function ClPro({pro,nav,favorites,setFavorites}) {
 
       {/* PRENOTA ORA sticky */}
       <div style={{position:"fixed",bottom:80,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 32px)",maxWidth:398,zIndex:50}}>
-        <button onClick={()=>nav("cl_prenota",{pro})} style={{width:"100%",padding:"17px 0",borderRadius:16,border:"none",background:T.brand,color:T.white,fontSize:17,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 8px 28px rgba(0,0,0,.35)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+        <button onClick={()=>nav("cl_prenota",{pro})} style={{width:"100%",padding:"17px 0",borderRadius:16,border:"none",background:T.ink,color:T.white,fontSize:17,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 8px 28px rgba(0,0,0,.35)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
           PRENOTA ORA
         </button>
       </div>
@@ -1152,7 +1093,7 @@ function ClPro({pro,nav,favorites,setFavorites}) {
           </div>
           <div style={{display:"flex",gap:8}}>
             <Btn label="Annulla" onClick={()=>setShowRev(false)} style={{flex:1,padding:"11px 0",textAlign:"center"}}/>
-            <button onClick={()=>{if(!revText)return;const now=new Date();setReviews(p=>[{name:"Tu",text:revText,stars,date:`${now.getDate()} giu 2026`},...p]);setShowRev(false);setRevText("");}} disabled={!revText} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.brand,color:T.white,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",opacity:!revText?.4:1}}>Pubblica</button>
+            <button onClick={()=>{if(!revText)return;const now=new Date();setReviews(p=>[{name:"Tu",text:revText,stars,date:`${now.getDate()} giu 2026`},...p]);setShowRev(false);setRevText("");}} disabled={!revText} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.ink,color:T.white,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",opacity:!revText?.4:1}}>Pubblica</button>
           </div>
         </Modal>
       )}
@@ -1338,7 +1279,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
               <p style={{fontSize:15,fontWeight:700,color:T.ink,marginBottom:6}}>
                 {tab==="futuri"?"Nessun appuntamento futuro":tab==="passati"?"Nessun appuntamento passato":"Nessun appuntamento annullato"}
               </p>
-              {tab==="futuri" && <button onClick={()=>nav("cl_home")} style={{padding:"12px 24px",borderRadius:12,border:"none",background:T.brand,color:T.white,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Prenota ora</button>}
+              {tab==="futuri" && <button onClick={()=>nav("cl_home")} style={{padding:"12px 24px",borderRadius:12,border:"none",background:T.ink,color:T.white,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Prenota ora</button>}
             </div>
           )}
           {shown.map(a => {
@@ -1371,7 +1312,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
                     </>
                   )}
                   {(isPast||isCancelled) && (
-                    <button onClick={()=>a.proObj&&nav("cl_prenota",{pro:a.proObj})} style={{width:"100%",padding:"11px 0",borderRadius:9,border:"none",background:T.brand,cursor:"pointer",fontSize:13,fontWeight:700,color:T.white,fontFamily:"inherit"}}>Riprenota</button>
+                    <button onClick={()=>a.proObj&&nav("cl_prenota",{pro:a.proObj})} style={{width:"100%",padding:"11px 0",borderRadius:9,border:"none",background:T.ink,cursor:"pointer",fontSize:13,fontWeight:700,color:T.white,fontFamily:"inherit"}}>Riprenota</button>
                   )}
                 </div>
               </div>
@@ -1406,7 +1347,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
             )) : (
               <div style={{padding:"24px",textAlign:"center"}}>
                 <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 10px"}}>Nessun appuntamento</p>
-                <button onClick={()=>nav("cl_home")} style={{padding:"8px 18px",borderRadius:8,border:"none",background:T.brand,color:T.white,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Prenota</button>
+                <button onClick={()=>nav("cl_home")} style={{padding:"8px 18px",borderRadius:8,border:"none",background:T.ink,color:T.white,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Prenota</button>
               </div>
             )}
           </div>
@@ -1435,7 +1376,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
           {newDate&&newTime && <div style={{padding:"9px 11px",background:T.greenBg,borderRadius:8,marginBottom:11}}><p style={{fontSize:12,color:T.green,margin:0,fontWeight:600}}>✓ {newDate} alle {newTime}</p></div>}
           <div style={{display:"flex",gap:7}}>
             <Btn label="Annulla" onClick={()=>setSpostaId(null)} style={{flex:1,padding:"11px 0",textAlign:"center"}}/>
-            <button onClick={confirmSposta} disabled={!newDate||!newTime} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.brand,color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",opacity:(!newDate||!newTime)?.4:1}}>Conferma</button>
+            <button onClick={confirmSposta} disabled={!newDate||!newTime} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.ink,color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",opacity:(!newDate||!newTime)?.4:1}}>Conferma</button>
           </div>
         </Modal>
       )}
@@ -1482,7 +1423,7 @@ function ClProfilo({user,onSwitch}) {
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 14px",borderBottom:`1px solid ${T.line}`}}>
               <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:0}}>Informazioni</p>
               {editInfo
-                ? <div style={{display:"flex",gap:6}}><Btn label="Annulla" onClick={()=>{setEditInfo(false);setTmp(info);}} style={{fontSize:11,padding:"4px 10px"}}/><button onClick={()=>{setInfo(tmp);setEditInfo(false);}} style={{padding:"4px 10px",borderRadius:8,border:"none",background:T.brand,color:T.white,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Salva</button></div>
+                ? <div style={{display:"flex",gap:6}}><Btn label="Annulla" onClick={()=>{setEditInfo(false);setTmp(info);}} style={{fontSize:11,padding:"4px 10px"}}/><button onClick={()=>{setInfo(tmp);setEditInfo(false);}} style={{padding:"4px 10px",borderRadius:8,border:"none",background:T.ink,color:T.white,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Salva</button></div>
                 : <Btn label="Modifica" onClick={()=>{setEditInfo(true);setTmp(info);}} style={{fontSize:11,padding:"4px 10px"}}/>
               }
             </div>
@@ -1548,7 +1489,7 @@ function ClProfilo({user,onSwitch}) {
           </div>
           <div style={{display:"flex",gap:8}}>
             <Btn label="Annulla" onClick={()=>setShowAddRev(false)} style={{flex:1,padding:"11px 0",textAlign:"center"}}/>
-            <button onClick={()=>{if(!newRevPro||!newRevText)return;const now=new Date();setReviews(p=>[{id:Date.now(),pro:newRevPro,stars:newRevStars,text:newRevText,date:`${now.getDate()} giu 2026`},...p]);setNewRevPro("");setNewRevText("");setNewRevStars(5);setShowAddRev(false);}} disabled={!newRevPro||!newRevText} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.brand,color:T.white,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",opacity:(!newRevPro||!newRevText)?.4:1}}>Pubblica</button>
+            <button onClick={()=>{if(!newRevPro||!newRevText)return;const now=new Date();setReviews(p=>[{id:Date.now(),pro:newRevPro,stars:newRevStars,text:newRevText,date:`${now.getDate()} giu 2026`},...p]);setNewRevPro("");setNewRevText("");setNewRevStars(5);setShowAddRev(false);}} disabled={!newRevPro||!newRevText} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.ink,color:T.white,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit",opacity:(!newRevPro||!newRevText)?.4:1}}>Pubblica</button>
           </div>
         </Modal>
       )}
@@ -1766,7 +1707,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours}) {
             })()}
             <div style={{display:"flex",gap:7}}>
               <Btn label="Annulla" onClick={()=>{setShowAdd(false);setSuggest([]);}} style={{flex:1,padding:"11px 0",textAlign:"center"}}/>
-              <button onClick={addAppt} disabled={!newA.time||(!newA.clientId&&!newA.clientSearch)||!!checkConflict(newA.time,newA.serviceId,newA.staffId,null)} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.brand,cursor:"pointer",fontSize:14,fontWeight:600,color:T.white,fontFamily:"inherit",opacity:(!newA.time||(!newA.clientId&&!newA.clientSearch)||!!checkConflict(newA.time,newA.serviceId,newA.staffId,null))?.4:1}}>Aggiungi</button>
+              <button onClick={addAppt} disabled={!newA.time||(!newA.clientId&&!newA.clientSearch)||!!checkConflict(newA.time,newA.serviceId,newA.staffId,null)} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.ink,cursor:"pointer",fontSize:14,fontWeight:600,color:T.white,fontFamily:"inherit",opacity:(!newA.time||(!newA.clientId&&!newA.clientSearch)||!!checkConflict(newA.time,newA.serviceId,newA.staffId,null))?.4:1}}>Aggiungi</button>
             </div>
           </div>
         </Modal>
@@ -1848,7 +1789,7 @@ function ProCliente({client,setClients,appts,services,nav}) {
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
           <p style={{fontSize:12,fontWeight:700,color:T.ink,margin:0}}>Note cliente</p>
           {editing
-            ? <div style={{display:"flex",gap:5}}><Btn label="Annulla" onClick={()=>setEditing(false)} style={{fontSize:10,padding:"3px 8px"}}/><button onClick={saveNote} style={{padding:"3px 8px",borderRadius:7,border:"none",background:T.brand,color:T.white,fontSize:10,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Salva</button></div>
+            ? <div style={{display:"flex",gap:5}}><Btn label="Annulla" onClick={()=>setEditing(false)} style={{fontSize:10,padding:"3px 8px"}}/><button onClick={saveNote} style={{padding:"3px 8px",borderRadius:7,border:"none",background:T.ink,color:T.white,fontSize:10,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Salva</button></div>
             : <Btn label="Modifica" onClick={()=>setEditing(true)} style={{fontSize:10,padding:"3px 8px"}}/>
           }
         </div>
@@ -1863,7 +1804,7 @@ function ProCliente({client,setClients,appts,services,nav}) {
           : <p style={{fontSize:13,color:T.inkSoft,padding:"13px 14px",margin:0}}>Nessun appuntamento.</p>}
       </div>
       <div style={{padding:"0 14px",display:"flex",gap:7}}>
-        <button onClick={()=>nav("pro_agenda")} style={{flex:1,padding:"12px 0",borderRadius:11,border:"none",background:T.brand,color:T.white,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>+ Prenota</button>
+        <button onClick={()=>nav("pro_agenda")} style={{flex:1,padding:"12px 0",borderRadius:11,border:"none",background:T.ink,color:T.white,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>+ Prenota</button>
       </div>
     </div>
   );
@@ -1883,7 +1824,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
       <div style={{background:T.white,padding:"50px 16px 12px",borderBottom:`1px solid ${T.line}`,position:"sticky",top:0,zIndex:20}}>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:11}}>
           <h1 style={{fontSize:20,fontWeight:700,color:T.ink,margin:0}}>Gestione</h1>
-          <button onClick={()=>tab==="servizi"?setShowAddSvc(true):null} style={{display:"flex",alignItems:"center",gap:4,padding:"6px 11px",borderRadius:8,border:"none",background:T.brand,color:T.white,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><IPlus/>Aggiungi</button>
+          <button onClick={()=>tab==="servizi"?setShowAddSvc(true):null} style={{display:"flex",alignItems:"center",gap:4,padding:"6px 11px",borderRadius:8,border:"none",background:T.ink,color:T.white,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><IPlus/>Aggiungi</button>
         </div>
         <div style={{display:"flex",background:T.surface,borderRadius:8,padding:3,gap:2}}>
           {[["servizi","Servizi"],["staff","Staff"],["orari","Orari"]].map(([v,l])=><button key={v} onClick={()=>setTab(v)} style={{flex:1,padding:"6px 0",borderRadius:6,border:"none",cursor:"pointer",fontSize:11,fontWeight:tab===v?700:400,background:tab===v?T.white:T.surface,color:tab===v?T.ink:T.inkSoft,fontFamily:"inherit"}}>{l}</button>)}
@@ -1904,7 +1845,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
                     <div style={{flex:1}}><label style={{fontSize:9,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:3,textTransform:"uppercase",letterSpacing:.6}}>Prezzo</label><input value={editVals.price} onChange={e=>setEditVals(p=>({...p,price:e.target.value}))} type="number" style={{width:"100%",padding:"7px 9px",borderRadius:7,border:`1.5px solid ${T.line}`,fontSize:13,color:T.ink,fontFamily:"inherit",outline:"none",boxSizing:"border-box"}}/></div>
                     <div style={{flex:1}}><label style={{fontSize:9,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:3,textTransform:"uppercase",letterSpacing:.6}}>Durata (min)</label><input value={editVals.min} onChange={e=>setEditVals(p=>({...p,min:e.target.value}))} type="number" style={{width:"100%",padding:"7px 9px",borderRadius:7,border:`1.5px solid ${T.line}`,fontSize:13,color:T.ink,fontFamily:"inherit",outline:"none",boxSizing:"border-box"}}/></div>
                   </div>
-                  <div style={{display:"flex",gap:6}}><button onClick={()=>setEditSvc(null)} style={{flex:1,padding:"7px 0",borderRadius:7,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontSize:11,color:T.inkMid,fontFamily:"inherit"}}>Annulla</button><button onClick={()=>saveEdit(s)} style={{flex:2,padding:"7px 0",borderRadius:7,border:"none",background:T.brand,cursor:"pointer",fontSize:11,fontWeight:600,color:T.white,fontFamily:"inherit"}}>Salva</button></div>
+                  <div style={{display:"flex",gap:6}}><button onClick={()=>setEditSvc(null)} style={{flex:1,padding:"7px 0",borderRadius:7,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontSize:11,color:T.inkMid,fontFamily:"inherit"}}>Annulla</button><button onClick={()=>saveEdit(s)} style={{flex:2,padding:"7px 0",borderRadius:7,border:"none",background:T.ink,cursor:"pointer",fontSize:11,fontWeight:600,color:T.white,fontFamily:"inherit"}}>Salva</button></div>
                 </div>
               ) : (
                 <div style={{display:"flex",alignItems:"center",gap:10,padding:"12px 13px"}}>
@@ -1976,7 +1917,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
           </div>
           <div style={{display:"flex",gap:7,marginTop:12}}>
             <Btn label="Annulla" onClick={()=>setShowAddSvc(false)} style={{flex:1,padding:"11px 0",textAlign:"center"}}/>
-            <button onClick={()=>{if(!newSvc.name||!newSvc.price||!newSvc.min)return;setServices(p=>[...p,{id:Date.now(),name:newSvc.name,price:parseInt(newSvc.price),min:parseInt(newSvc.min),active:true}]);setNewSvc({name:"",price:"",min:""});setShowAddSvc(false);}} disabled={!newSvc.name||!newSvc.price||!newSvc.min} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.brand,color:T.white,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit",opacity:(!newSvc.name||!newSvc.price||!newSvc.min)?.4:1}}>Salva</button>
+            <button onClick={()=>{if(!newSvc.name||!newSvc.price||!newSvc.min)return;setServices(p=>[...p,{id:Date.now(),name:newSvc.name,price:parseInt(newSvc.price),min:parseInt(newSvc.min),active:true}]);setNewSvc({name:"",price:"",min:""});setShowAddSvc(false);}} disabled={!newSvc.name||!newSvc.price||!newSvc.min} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.ink,color:T.white,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit",opacity:(!newSvc.name||!newSvc.price||!newSvc.min)?.4:1}}>Salva</button>
           </div>
         </Modal>
       )}
@@ -2133,7 +2074,7 @@ function BetaWelcome({onClose}) {
             </div>
           ))}
         </div>
-        <button onClick={onClose} style={{width:"100%",padding:"15px 0",borderRadius:13,border:"none",background:T.brand,color:T.white,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Inizia a usare l'app</button>
+        <button onClick={onClose} style={{width:"100%",padding:"15px 0",borderRadius:13,border:"none",background:T.ink,color:T.white,fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Inizia a usare l'app</button>
       </div>
     </div>
   );
@@ -2199,5 +2140,5 @@ export default function App() {
 }
 
 function W({children}) {
-  return <div style={{maxWidth:430,margin:"0 auto",minHeight:"100dvh",background:T.paper,fontFamily:"'Nunito',-apple-system,system-ui,sans-serif",fontWeight:600,WebkitFontSmoothing:"antialiased"}}>{children}</div>;
+  return <div style={{maxWidth:430,margin:"0 auto",minHeight:"100dvh",background:T.white,fontFamily:"'DM Sans',-apple-system,system-ui,sans-serif",WebkitFontSmoothing:"antialiased"}}>{children}</div>;
 }
