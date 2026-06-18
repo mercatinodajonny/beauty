@@ -97,12 +97,18 @@ const injectFont = () => {
     .ba-fade{opacity:0;animation:baFade .6s ease forwards}
     .ba-lift{transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease}
     .ba-lift:active{transform:scale(.94)}
+    /* Zoom card: ingrandimento morbido al passaggio del mouse / tocco */
+    .ba-zoom{transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s ease;will-change:transform}
+    @media (hover:hover){
+      .ba-zoom:hover{transform:translateY(-4px) scale(1.035);box-shadow:0 16px 34px rgba(20,48,74,.16), -6px -6px 14px rgba(255,255,255,.9);z-index:2}
+    }
+    .ba-zoom:active{transform:scale(.97)}
     button{transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
     button:active{transform:scale(.95)}
     @media (prefers-reduced-motion: reduce){
       .ba-rise,.ba-fade{animation:none;opacity:1}
-      .ba-lift,button{transition:none}
-      button:active,.ba-lift:active{transform:none}
+      .ba-lift,.ba-zoom,button{transition:none}
+      button:active,.ba-lift:active,.ba-zoom:hover,.ba-zoom:active{transform:none}
     }
   `;
   document.head.appendChild(s);
@@ -852,7 +858,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
               <div style={{display:"flex",gap:10,overflowX:"auto",padding:"2px 20px 6px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}} className="ba-noscroll">
                 {CAT_LIST.map((cat,ci) => (
                   <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,padding:"10px 4px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:66,animationDelay:`${0.03*ci+0.06}s`}}>
-                    <div style={{width:56,height:56,borderRadius:18,background:T.white,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 6px 16px rgba(0,0,0,.12), inset 1px 1px 3px rgba(255,255,255,.9)`}}><CatIcon id={cat.id} size={26} color={cat.color}/></div>
+                    <div className="ba-zoom" style={{width:56,height:56,borderRadius:18,background:T.white,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 6px 16px rgba(0,0,0,.12), inset 1px 1px 3px rgba(255,255,255,.9)`}}><CatIcon id={cat.id} size={26} color={cat.color}/></div>
                     <span style={{fontSize:11,fontWeight:600,color:T.inkMid,textAlign:"center",lineHeight:1.1}}>{cat.label}</span>
                   </button>
                 ))}
@@ -875,7 +881,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                       {list.map((pro,i) => {
                         const b = badgeFor(pro);
                         return (
-                          <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise clay" style={{display:"flex",gap:13,padding:"14px",cursor:"pointer",alignItems:"center",background:T.white,borderRadius:20,animationDelay:`${0.03*i+0.1}s`}}>
+                          <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise clay ba-zoom" style={{display:"flex",gap:13,padding:"14px",cursor:"pointer",alignItems:"center",background:T.white,borderRadius:20,animationDelay:`${0.03*i+0.1}s`}}>
                             <div style={{width:54,height:54,borderRadius:15,background:`${pro.accent}18`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,border:`2px solid ${pro.accent}33`}}>{pro.emoji}</div>
                             <div style={{flex:1,minWidth:0}}>
                               <div style={{display:"flex",alignItems:"center",gap:7,margin:"0 0 3px"}}>
@@ -1118,7 +1124,7 @@ function ClPreferiti({nav,favorites,setFavorites}) {
       ) : (
         <div style={{padding:"14px 20px"}}>
           {favPros.map(pro => (
-            <div key={pro.id} className="clay" style={{background:T.white,borderRadius:22,marginBottom:16,overflow:"hidden"}}>
+            <div key={pro.id} className="clay ba-zoom" style={{background:T.white,borderRadius:22,marginBottom:16,overflow:"hidden"}}>
               <div style={{padding:"16px 16px 14px",display:"flex",alignItems:"center",gap:13,borderBottom:`1px solid ${T.line}`}}>
                 {/* Avatar piccolo con solo colore di bordo/sfondo leggero */}
                 <div style={{width:52,height:52,borderRadius:16,background:`${pro.accent}16`,border:`2.5px solid ${pro.accent}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{pro.emoji}</div>
@@ -1459,7 +1465,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
             const isPast = a.status==="completato";
             const isCancelled = a.status==="cancellato";
             return (
-              <div key={a.id} className="clay" style={{background:T.white,borderRadius:20,marginBottom:11,overflow:"hidden"}}>
+              <div key={a.id} className="clay ba-zoom" style={{background:T.white,borderRadius:20,marginBottom:11,overflow:"hidden"}}>
                 <div style={{height:5,background:ST[a.status]?.bar||T.line}}/>
                 <div style={{padding:"14px"}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:9}}>
