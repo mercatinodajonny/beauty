@@ -110,16 +110,16 @@ const injectFont = () => {
 
 /* PALETTE "Clay Neutral" — claymorphism: base sabbia/oat neutra + accento teal unisex, superfici morbide */
 const T = {
-  ink:"#2E2A28",inkMid:"#726C66",inkSoft:"#ADA79E",
-  line:"#EFE9E0",surface:"#F5F1EA",white:"#FFFFFF",
-  paper:"#FCF8F2",
-  brand:"#FB8E3C",brandDeep:"#F2792A",brandBg:"#FDEEDD",
-  gold:"#E6AC4F",goldBg:"#FBF3E4",
-  green:"#3FBE8C",greenBg:"#E9F8F1",
-  blue:"#7FB2CC",blueBg:"#EBF4F8",
-  red:"#E87A72",redBg:"#FCEEEC",
-  amber:"#D6A24A",amberBg:"#FBF3E4",
-  purple:"#D08A82",purpleBg:"#FAF0EE",
+  ink:"#2C2A26",inkMid:"#6E6A62",inkSoft:"#A8A399",
+  line:"#E4DFD4",surface:"#EAE4D8",white:"#FFFFFF",
+  paper:"#F0ECE3",
+  brand:"#F97316",brandDeep:"#EA6A0A",brandBg:"#FDE9D5",
+  gold:"#E0A23D",goldBg:"#FAF0DD",
+  green:"#0FA36B",greenBg:"#E2F4EC",
+  blue:"#3E84A8",blueBg:"#E6F0F4",
+  red:"#D9544E",redBg:"#FBEAE8",
+  amber:"#C7882F",amberBg:"#FAF0DD",
+  purple:"#C2645A",purpleBg:"#F7E9E5",
 };
 
 const ST = {
