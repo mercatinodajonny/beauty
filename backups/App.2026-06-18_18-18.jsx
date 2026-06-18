@@ -108,19 +108,19 @@ const injectFont = () => {
   document.head.appendChild(s);
 };
 
-/* PALETTE "Vivid Refined" — bianco caldo, inchiostro scuro, accenti saturi usati in piccolo */
+/* PALETTE "Pop Bright" — colori pieni e accesi, niente sfumature, niente pastelli */
 const T = {
-  ink:"#1A1A1A",inkMid:"#6B6B6B",inkSoft:"#B0B0B0",
-  line:"#EBEBEB",surface:"#F5F5F3",white:"#FFFFFF",
-  paper:"#FAFAF8",
-  brand:"#E8544A",brandDeep:"#CC3F36",brandBg:"#FEF0EF",
-  yellow:"#FFC300",yellowDeep:"#E6AE00",yellowBg:"#FFF6D6",
-  gold:"#FFC300",goldBg:"#FFF6D6",
-  green:"#16A34A",greenBg:"#DCFCE7",
-  blue:"#2563EB",blueBg:"#DBEAFE",
-  red:"#E8544A",redBg:"#FEF0EF",
-  amber:"#F59E0B",amberBg:"#FEF3C7",
-  purple:"#7C3AED",purpleBg:"#EDE9FE",
+  ink:"#1A1A1A",inkMid:"#5C5C5C",inkSoft:"#9A9A9A",
+  line:"#ECECEC",surface:"#F6F6F4",white:"#FFFFFF",
+  paper:"#FFFFFF",
+  brand:"#FF3D2E",brandDeep:"#E22817",brandBg:"#FFE6E2",
+  yellow:"#FFC400",yellowDeep:"#F0A500",yellowBg:"#FFF4D1",
+  gold:"#FFB300",goldBg:"#FFF1CC",
+  green:"#12B764",greenBg:"#D9F7E7",
+  blue:"#2D6FF0",blueBg:"#E1ECFE",
+  red:"#FF3B30",redBg:"#FFE4E2",
+  amber:"#FF9500",amberBg:"#FFEDD3",
+  purple:"#8B3DFF",purpleBg:"#EEE3FF",
 };
 
 const ST = {
@@ -819,7 +819,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                         const b = badgeFor(pro);
                         return (
                           <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise clay" style={{display:"flex",gap:13,padding:"14px",cursor:"pointer",alignItems:"center",background:T.white,borderRadius:20,animationDelay:`${0.03*i+0.1}s`}}>
-                            <div style={{width:54,height:54,borderRadius:15,background:`${pro.accent}18`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,border:`2px solid ${pro.accent}33`}}>{pro.emoji}</div>
+                            <div style={{width:56,height:56,borderRadius:15,background:pro.accent,display:"flex",alignItems:"center",justifyContent:"center",fontSize:27,flexShrink:0,boxShadow:`0 6px 14px ${pro.accent}66`}}>{pro.emoji}</div>
                             <div style={{flex:1,minWidth:0}}>
                               <div style={{display:"flex",alignItems:"center",gap:7,margin:"0 0 3px"}}>
                                 <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
@@ -1062,27 +1062,28 @@ function ClPreferiti({nav,favorites,setFavorites}) {
         <div style={{padding:"14px 20px"}}>
           {favPros.map(pro => (
             <div key={pro.id} className="clay" style={{background:T.white,borderRadius:22,marginBottom:16,overflow:"hidden"}}>
-              <div style={{padding:"16px 16px 14px",display:"flex",alignItems:"center",gap:13,borderBottom:`1px solid ${T.line}`}}>
-                {/* Avatar piccolo con solo colore di bordo/sfondo leggero */}
-                <div style={{width:52,height:52,borderRadius:16,background:`${pro.accent}16`,border:`2.5px solid ${pro.accent}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{pro.emoji}</div>
+              {/* Header colorato pieno */}
+              <div style={{background:pro.accent,padding:"14px 16px",display:"flex",alignItems:"center",gap:12}}>
+                <div style={{width:48,height:48,borderRadius:14,background:"rgba(255,255,255,.22)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{pro.emoji}</div>
                 <div style={{flex:1,minWidth:0}}>
-                  <p style={{fontSize:16,fontWeight:900,color:T.ink,margin:"0 0 3px",lineHeight:1.1}}>{pro.name}</p>
-                  <p style={{fontSize:12,color:T.inkMid,margin:0,fontWeight:600}}>{pro.cat} · <span style={{color:T.gold}}>★</span> {pro.rating}</p>
+                  <p style={{fontSize:15,fontWeight:900,color:T.white,margin:"0 0 2px",lineHeight:1.1}}>{pro.name}</p>
+                  <p style={{fontSize:12,color:"rgba(255,255,255,.82)",margin:0,fontWeight:600}}>{pro.cat} · ★ {pro.rating}</p>
                 </div>
-                <button onClick={()=>setFavorites(f=>{const n=new Set(f);n.delete(pro.id);return n;})} style={{background:T.surface,border:"none",borderRadius:10,width:34,height:34,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <button onClick={()=>setFavorites(f=>{const n=new Set(f);n.delete(pro.id);return n;})} style={{background:"rgba(255,255,255,.22)",border:"none",borderRadius:10,width:34,height:34,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                   <IHeart a={true}/>
                 </button>
               </div>
-              <div style={{padding:"13px 16px"}}>
+              {/* Body */}
+              <div style={{padding:"14px 16px"}}>
                 <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 8px",fontWeight:700,textTransform:"uppercase",letterSpacing:.8}}>Disponibile oggi</p>
-                <div style={{display:"flex",gap:6,marginBottom:13,flexWrap:"wrap"}}>
+                <div style={{display:"flex",gap:6,marginBottom:14,flexWrap:"wrap"}}>
                   {pro.slots.slice(0,4).map(slot => (
-                    <button key={slot} onClick={()=>nav("cl_prenota",{pro,preselSlot:slot})} style={{padding:"7px 14px",borderRadius:10,border:`1.5px solid ${T.line}`,background:T.surface,cursor:"pointer",fontSize:13,fontWeight:700,color:T.ink,fontFamily:"inherit"}}>{slot}</button>
+                    <button key={slot} onClick={()=>nav("cl_prenota",{pro,preselSlot:slot})} style={{padding:"7px 14px",borderRadius:10,border:"none",background:T.surface,cursor:"pointer",fontSize:13,fontWeight:700,color:T.ink,fontFamily:"inherit"}}>{slot}</button>
                   ))}
                 </div>
                 <div style={{display:"flex",gap:8}}>
-                  <button onClick={()=>nav("cl_pro",pro)} className="clay-soft" style={{flex:1,padding:"11px 0",borderRadius:12,border:"none",background:T.surface,cursor:"pointer",fontSize:13,fontWeight:700,color:T.inkMid,fontFamily:"inherit"}}>Profilo</button>
-                  <button onClick={()=>nav("cl_prenota",{pro})} style={{flex:2,padding:"11px 0",borderRadius:12,border:"none",background:T.brand,cursor:"pointer",fontSize:14,fontWeight:800,color:T.white,fontFamily:"inherit"}}>Prenota ora</button>
+                  <button onClick={()=>nav("cl_pro",pro)} className="clay-soft" style={{flex:1,padding:"11px 0",borderRadius:12,border:"none",background:T.white,cursor:"pointer",fontSize:13,fontWeight:700,color:T.inkMid,fontFamily:"inherit"}}>Profilo</button>
+                  <button onClick={()=>nav("cl_prenota",{pro})} style={{flex:2,padding:"11px 0",borderRadius:12,border:"none",background:pro.accent,cursor:"pointer",fontSize:14,fontWeight:800,color:T.white,fontFamily:"inherit",boxShadow:`0 6px 16px ${pro.accent}55`}}>Prenota ora</button>
                 </div>
               </div>
             </div>
