@@ -492,93 +492,46 @@ const CatIcon = ({id,size=24,color="currentColor"}) => (
 );
 
 /* NAV */
+// Barra con gesto a scorrimento: tieni premuto e trascina il dito sui pulsanti per cambiare sezione.
 function NavBar({items,s,nav,labelSize=10}) {
   const ref = useRef(null);
   const dragging = useRef(false);
   const lastId = useRef(null);
-  const N = items.length;
 
-  // pill: posizione frazionaria 0..(N-1) per animazione fluida
-  const [pill,setPill] = useState(() => Math.max(0,items.findIndex(it=>it.id===s)));
-  const [live,setLive] = useState(false); // true durante drag → no transition
-
-  // Sincronizza la pillola quando cambia tab dall'esterno
-  useEffect(()=>{
-    if(!dragging.current){
-      const idx=items.findIndex(it=>it.id===s);
-      if(idx>=0){setLive(false);setPill(idx);}
-    }
-  },[s]);
-
-  const fracFromX = (clientX) => {
-    if(!ref.current) return 0;
-    const {left,width}=ref.current.getBoundingClientRect();
-    const f=(clientX-left)/width*N - 0.5; // 0 = centro item 0
-    return Math.max(0,Math.min(N-1,f));
-  };
   const idAtPoint = (x,y) => {
-    const el=document.elementFromPoint(x,y);
-    const t=el&&el.closest?el.closest("[data-navid]"):null;
-    return t?t.getAttribute("data-navid"):null;
+    const el = document.elementFromPoint(x,y);
+    const target = el && el.closest ? el.closest("[data-navid]") : null;
+    return target ? target.getAttribute("data-navid") : null;
   };
-  const goTo = (id,frac) => {
-    if(frac!==undefined) setPill(Math.max(0,Math.min(N-1,frac)));
-    if(id&&id!==lastId.current){
-      lastId.current=id;
+  const goTo = (id) => {
+    if (id && id !== lastId.current) {
+      lastId.current = id;
       nav(id);
-      if(navigator.vibrate){try{navigator.vibrate(8);}catch(e){}}
+      if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e){} }
     }
   };
   const onDown = (e) => {
-    dragging.current=true; setLive(true);
-    lastId.current=s;
-    try{ref.current.setPointerCapture(e.pointerId);}catch(err){}
-    goTo(idAtPoint(e.clientX,e.clientY),fracFromX(e.clientX));
+    dragging.current = true;
+    lastId.current = s;
+    try { ref.current.setPointerCapture(e.pointerId); } catch(err){}
+    goTo(idAtPoint(e.clientX, e.clientY));
   };
   const onMove = (e) => {
-    if(!dragging.current) return;
-    goTo(idAtPoint(e.clientX,e.clientY),fracFromX(e.clientX));
+    if (!dragging.current) return;
+    goTo(idAtPoint(e.clientX, e.clientY));
   };
-  const onUp = () => {
-    dragging.current=false; setLive(false);
-    const idx=items.findIndex(it=>it.id===lastId.current);
-    if(idx>=0) setPill(idx); // snap preciso
-  };
-
-  const pct = 100/N;
-  // pillola: posizionata in base a pill frazionario
-  const pillLeft = `calc(${pill*pct}% + 3px)`;
-  const pillW = `calc(${pct}% - 6px)`;
+  const onUp = () => { dragging.current = false; };
 
   return (
     <div ref={ref} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
-      className="clay" style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",
-        width:"calc(100% - 24px)",maxWidth:406,background:T.white,borderRadius:26,
-        display:"flex",zIndex:100,padding:"6px 4px",touchAction:"none",userSelect:"none",
-        position:"fixed"}}>
-      {/* Pillola scorrevole */}
-      <div style={{
-        position:"absolute", top:6, height:"calc(100% - 12px)",
-        left:pillLeft, width:pillW,
-        background:T.brandBg, borderRadius:18,
-        transition:live?"none":"left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1)",
-        pointerEvents:"none", zIndex:0,
-      }}/>
+      className="clay" style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 24px)",maxWidth:406,background:T.white,borderRadius:26,display:"flex",zIndex:100,padding:"6px 4px",touchAction:"none",userSelect:"none"}}>
       {items.map(({id,I,l,color}) => {
-        const active=s===id;
-        const accent=color||T.brand;
+        const active = s===id;
+        const accent = color || T.brand;
         return (
-          <div key={id} data-navid={id} onClick={()=>nav(id)}
-            style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",
-              gap:3,padding:"9px 0 10px",borderRadius:18,cursor:"pointer",
-              position:"relative",zIndex:1,WebkitTapHighlightColor:"transparent"}}>
-            <div style={{pointerEvents:"none",transition:"transform .18s ease",
-              transform:active?"translateY(-1px) scale(1.08)":"none"}}>
-              <I a={active}/>
-            </div>
-            <span style={{fontSize:labelSize,fontWeight:active?800:600,
-              color:active?accent:T.inkSoft,pointerEvents:"none",
-              transition:"color .22s ease"}}>{l}</span>
+          <div key={id} data-navid={id} onClick={()=>nav(id)} className={active?"clay-soft":""} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"9px 0 10px",background:active?T.brandBg:"none",borderRadius:18,cursor:"pointer",transition:"background .18s ease",WebkitTapHighlightColor:"transparent"}}>
+            <div style={{pointerEvents:"none",transition:"transform .18s ease",transform:active?"translateY(-1px) scale(1.08)":"none"}}><I a={active}/></div>
+            <span style={{fontSize:labelSize,fontWeight:active?800:600,color:active?accent:T.inkSoft,pointerEvents:"none"}}>{l}</span>
           </div>
         );
       })}
@@ -770,9 +723,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
       {/* Banner prossimo/ultimo appuntamento */}
       {!(searching && q.length >= 2) && banner && (
         <div style={{padding:"18px 20px 0"}}>
-          {/* Bordo arcobaleno sottile: wrapper gradient + inner bianco */}
-          <div className="ba-rise" style={{background:"linear-gradient(90deg,#FF6B6B,#FF8E53,#FFD93D,#6BCB77,#4D96FF,#C77DFF,#FF6B6B)",borderRadius:24,padding:"2px",animationDelay:".05s"}}>
-          <div onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})} className="ba-lift" style={{display:"flex",alignItems:"center",gap:16,padding:"17px 17px",borderRadius:22,cursor:"pointer",background:T.white}}>
+          <div onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})} className="ba-rise ba-lift clay" style={{display:"flex",alignItems:"center",gap:16,padding:"18px 18px",borderRadius:22,cursor:"pointer",background:T.white,animationDelay:".05s"}}>
             <div style={{width:50,height:50,borderRadius:14,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 {nextAppt
@@ -791,7 +742,6 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
             </div>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
-          </div>{/* fine wrapper arcobaleno */}
         </div>
       )}
 
