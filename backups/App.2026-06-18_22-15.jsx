@@ -78,21 +78,22 @@ const injectFont = () => {
   if (document.getElementById("app-fonts")) return;
   const l = document.createElement("link");
   l.id = "app-fonts"; l.rel = "stylesheet";
-  // "Porcellana di Sabbia": Fraunces (display caratteriale) + Plus Jakarta Sans (corpo)
-  l.href = "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap";
+  // Claymorphism: Nunito (chunky rounded) per headings + body
+  l.href = "https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap";
   document.head.appendChild(l);
   const s = document.createElement("style");
   s.id = "app-style-rules";
   s.textContent = `
-    h1,h2,.ba-serif,.ba-display{font-family:'Fraunces',Georgia,serif !important;font-weight:600;letter-spacing:-.015em;font-optical-sizing:auto}
-    /* CLAYMORPHISM — ombre sabbia calde e scultoree */
-    .clay{box-shadow:8px 8px 20px rgba(150,124,92,.16), -7px -7px 16px rgba(255,253,248,.9), inset 2px 2px 4px rgba(255,253,248,.7), inset -3px -3px 7px rgba(150,124,92,.07);}
-    .clay-inset{box-shadow:inset 4px 4px 9px rgba(150,124,92,.14), inset -4px -4px 9px rgba(255,253,248,.9);}
-    .clay-btn{box-shadow:0 10px 22px rgba(140,115,83,.30), inset 2px 2px 5px rgba(255,253,248,.45), inset -3px -4px 8px rgba(140,115,83,.30);}
-    .clay-soft{box-shadow:5px 5px 14px rgba(150,124,92,.12), -4px -4px 11px rgba(255,253,248,.9);}
-    /* GLASSMORPHISM — vetro smerigliato caldo */
-    .glass{background:rgba(255,253,248,.5)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,253,248,.65);box-shadow:0 8px 32px rgba(150,124,92,.16);}
-    .glass-dark{background:rgba(168,144,107,.2)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,253,248,.35);box-shadow:0 8px 32px rgba(140,115,83,.22);}
+    h1,h2{font-family:'Nunito',sans-serif !important;font-weight:900;letter-spacing:-.01em}
+    .ba-serif{font-family:'Nunito',sans-serif;font-weight:800}
+    /* CLAYMORPHISM */
+    .clay{box-shadow:7px 7px 18px rgba(77,168,218,.13), -6px -6px 14px rgba(255,255,255,.9), inset 2px 2px 4px rgba(255,255,255,.7), inset -3px -3px 7px rgba(77,168,218,.07);}
+    .clay-inset{box-shadow:inset 4px 4px 9px rgba(77,168,218,.12), inset -4px -4px 9px rgba(255,255,255,.9);}
+    .clay-btn{box-shadow:0 9px 20px rgba(77,168,218,.34), inset 2px 2px 5px rgba(255,255,255,.45), inset -3px -4px 8px rgba(47,143,196,.42);}
+    .clay-soft{box-shadow:5px 5px 13px rgba(77,168,218,.10), -4px -4px 11px rgba(255,255,255,.88);}
+    /* GLASSMORPHISM */
+    .glass{background:rgba(255,255,255,.45)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.6);box-shadow:0 8px 32px rgba(77,168,218,.18);}
+    .glass-dark{background:rgba(77,168,218,.22)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.35);box-shadow:0 8px 32px rgba(47,143,196,.25);}
     @keyframes baRise{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes baFade{from{opacity:0}to{opacity:1}}
     .ba-rise{opacity:0;animation:baRise .55s cubic-bezier(.34,1.56,.64,1) forwards}
@@ -120,18 +121,18 @@ const injectFont = () => {
   document.head.appendChild(s);
 };
 
-/* PALETTE "Porcellana di Sabbia" — monocromia calda avorio/sabbia + accento oro-tortora */
+/* PALETTE "Sky" — azzurro chiaro fresco + accento blu, claymorphismo */
 const T = {
-  ink:"#43392E",inkMid:"#8A7C6A",inkSoft:"#BEB2A0",
-  line:"#E5DBCD",surface:"#EBE3D7",white:"#FFFFFF",
-  paper:"#F4EFE8",
-  brand:"#A8906B",brandDeep:"#897153",brandBg:"#EDE4D5",
-  gold:"#A8906B",goldBg:"#EDE4D5",
-  green:"#8AA17A",greenBg:"#E9EBDF",
-  blue:"#8FA3A8",blueBg:"#E4EAEA",
-  red:"#C58A78",redBg:"#F2E4DD",
-  amber:"#B79B6B",amberBg:"#EFE6D2",
-  purple:"#A595A8",purpleBg:"#ECE6ED",
+  ink:"#14304A",inkMid:"#5A7793",inkSoft:"#A6BBCC",
+  line:"#E3EDF5",surface:"#EFF6FB",white:"#FFFFFF",
+  paper:"#F7FBFE",
+  brand:"#4DA8DA",brandDeep:"#2F8FC4",brandBg:"#DDF0FB",
+  gold:"#2F8FC4",goldBg:"#DDF0FB",
+  green:"#3FB984",greenBg:"#DDF6EC",
+  blue:"#4DA8DA",blueBg:"#DDF0FB",
+  red:"#EF7B72",redBg:"#FDEAE8",
+  amber:"#2F8FC4",amberBg:"#DDF0FB",
+  purple:"#5A8FD8",purpleBg:"#E3ECFB",
 };
 
 const ST = {
@@ -214,15 +215,15 @@ const MY_APPTS0 = [
 const ALL_CITIES = ["Imperia","Milano","Roma","Torino","Bologna","Genova","Sanremo","Savona"];
 
 const CAT_LIST = [
-  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#B07A5E",grad:"linear-gradient(135deg,#C7977A,#A06A4E)"},
-  {id:"parrucchiere",emoji:"💇",label:"Capelli",     color:"#A38FA6",grad:"linear-gradient(135deg,#B8A4BB,#917C95)"},
-  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#C2A45E",grad:"linear-gradient(135deg,#D7BC76,#B0924C)"},
-  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#8FA079",grad:"linear-gradient(135deg,#A6B690,#7C8E66)"},
-  {id:"laser",       emoji:"✨",label:"Laser",       color:"#8DA1A6",grad:"linear-gradient(135deg,#A4B7BB,#7A8E93)"},
-  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#6B6259",grad:"linear-gradient(135deg,#857A6F,#544C44)"},
-  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#BD8C84",grad:"linear-gradient(135deg,#D0A39B,#A6746C)"},
-  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#C58A92",grad:"linear-gradient(135deg,#D7A4AB,#AB6F78)"},
-  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#C89A6E",grad:"linear-gradient(135deg,#DBB286,#B07E54)"},
+  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#E85D4A",grad:"linear-gradient(135deg,#F27B6A,#D63E2C)"},
+  {id:"parrucchiere",emoji:"💇",label:"Capelli",     color:"#9B59D6",grad:"linear-gradient(135deg,#B97FE8,#8C3EC4)"},
+  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#E8B500",grad:"linear-gradient(135deg,#FFD03C,#D4A000)"},
+  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#3FB984",grad:"linear-gradient(135deg,#5ED4A0,#2A9E6A)"},
+  {id:"laser",       emoji:"✨",label:"Laser",       color:"#4DA8DA",grad:"linear-gradient(135deg,#6EC4F0,#2F8FC4)"},
+  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#3A3A5C",grad:"linear-gradient(135deg,#5C5C84,#2A2A45)"},
+  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#E8607A",grad:"linear-gradient(135deg,#F0809A,#D0405A)"},
+  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#E8468C",grad:"linear-gradient(135deg,#F06AAC,#CC2475)"},
+  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#F07840",grad:"linear-gradient(135deg,#FFA060,#D85820)"},
 ];
 
 const FEED = [
@@ -631,18 +632,18 @@ function NavBar({items,s,nav,labelSize=10}) {
     <div ref={ref} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
       style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",
         width:"calc(100% - 24px)",maxWidth:406,
-        background:"rgba(255,253,248,.7)",
+        background:"rgba(255,255,255,.62)",
         backdropFilter:"blur(22px)",WebkitBackdropFilter:"blur(22px)",
-        border:"1px solid rgba(255,253,248,.8)",
+        border:"1px solid rgba(255,255,255,.7)",
         borderRadius:26,
         display:"flex",zIndex:100,padding:"6px 4px",touchAction:"none",userSelect:"none",
-        boxShadow:"0 8px 28px rgba(140,115,83,.18)"}}>
-      {/* Pillola scorrevole — oro-tortora tenue */}
+        boxShadow:"0 8px 28px rgba(47,143,196,.18)"}}>
+      {/* Pillola scorrevole — azzurro tenue */}
       <div style={{
         position:"absolute", top:6, height:"calc(100% - 12px)",
         left:pillLeft, width:pillW,
-        background:"rgba(168,144,107,.20)",
-        border:"1px solid rgba(168,144,107,.38)",
+        background:"rgba(77,168,218,.20)",
+        border:"1px solid rgba(77,168,218,.35)",
         borderRadius:18,
         transition:live?"none":"left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1)",
         pointerEvents:"none", zIndex:0,
@@ -691,7 +692,7 @@ function LoginScreen({onAuth}) {
   return (
     <div style={{minHeight:"100dvh",background:T.white,display:"flex",flexDirection:"column"}}>
       {/* Top azzurro con logo */}
-      <div style={{background:"linear-gradient(135deg,#BFA67E,#897153)",padding:"64px 26px 40px",display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
+      <div style={{background:"linear-gradient(135deg,#5FB8E6,#2F8FC4)",padding:"64px 26px 40px",display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
         <div className="ba-rise" style={{width:60,height:60,borderRadius:20,background:"rgba(255,255,255,.22)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",border:"1px solid rgba(255,255,255,.4)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20}}><LogoMark size={30} color="#fff"/></div>
         <h1 className="ba-rise" style={{fontSize:40,fontWeight:900,color:"#fff",lineHeight:1.05,margin:"0 0 8px",animationDelay:".06s",letterSpacing:"-.02em"}}>BeautyApp</h1>
         <p className="ba-rise" style={{fontSize:15,color:"rgba(255,255,255,.92)",margin:0,animationDelay:".12s",fontWeight:600}}>La bellezza, a portata di mano.</p>
@@ -705,13 +706,13 @@ function LoginScreen({onAuth}) {
         ].map((opt,oi) => (
           <div key={opt.id} onClick={()=>setTp(opt.id)} className="ba-rise ba-lift"
             style={{borderRadius:20,padding:"18px",cursor:"pointer",
-              background:tp===opt.id?T.brand:T.white,
-              boxShadow:tp===opt.id?"0 8px 24px rgba(140,115,83,.30)":"0 2px 12px rgba(140,115,83,.10)",
+              background:tp===opt.id?"#4DA8DA":T.white,
+              boxShadow:tp===opt.id?"0 8px 24px rgba(77,168,218,.30)":"0 2px 12px rgba(0,0,0,.07)",
               border:tp===opt.id?"none":`1.5px solid ${T.line}`,
               animationDelay:`${.16+oi*.07}s`,transition:"all .2s ease"}}>
             <div style={{display:"flex",gap:14,alignItems:"center"}}>
               <div style={{width:48,height:48,borderRadius:14,
-                background:tp===opt.id?"rgba(255,255,255,.2)":T.brandBg,
+                background:tp===opt.id?"rgba(255,255,255,.15)":"#2F8FC4",
                 display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{opt.emoji}</div>
               <div>
                 <p style={{fontSize:16,fontWeight:800,color:tp===opt.id?"#fff":T.ink,margin:"0 0 3px"}}>{opt.title}</p>
@@ -723,9 +724,9 @@ function LoginScreen({onAuth}) {
         <div style={{marginTop:8}}>
           <button disabled={!tp} onClick={()=>onAuth({name:tp==="pro"?"Salon Elite":"Alessio",type:tp})}
             style={{width:"100%",padding:"17px 0",borderRadius:18,border:"none",
-              background:tp?"linear-gradient(135deg,#BFA67E,#897153)":"#E0D8CB",color:tp?"#fff":"#b3a892",
-              fontSize:16,fontWeight:800,cursor:tp?"pointer":"default",fontFamily:"inherit",
-              boxShadow:tp?"0 8px 22px rgba(140,115,83,.30)":"none",transition:"all .2s ease"}}>
+              background:tp?"#2F8FC4":"#E0E0E0",color:tp?"#4DA8DA":"#aaa",
+              fontSize:16,fontWeight:900,cursor:tp?"pointer":"default",fontFamily:"inherit",
+              boxShadow:tp?"0 8px 22px rgba(77,168,218,.30)":"none",transition:"all .2s ease"}}>
             Entra nell'app
           </button>
         </div>
@@ -837,30 +838,27 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
   return (
     <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
 
-      {/* Header — duna di porcellana calda con bagliore oro-tortora */}
-      <div style={{background:"linear-gradient(170deg,#EFE6D8 0%,#F2EBE0 40%,#F4EFE8 100%)",paddingTop:52,paddingBottom:30,paddingLeft:20,paddingRight:20,position:"relative",overflow:"hidden"}}>
-        {/* Bagliori scultorei sabbia */}
-        <div style={{position:"absolute",top:-50,right:-50,width:220,height:220,borderRadius:"50%",background:"radial-gradient(circle,rgba(168,144,107,.22) 0%,rgba(168,144,107,0) 70%)",pointerEvents:"none"}}/>
-        <div style={{position:"absolute",top:40,left:-60,width:160,height:160,borderRadius:"50%",background:"radial-gradient(circle,rgba(190,170,140,.18) 0%,rgba(190,170,140,0) 70%)",pointerEvents:"none"}}/>
-        {/* Curva "duna" in basso che fonde nel contenuto */}
-        <svg viewBox="0 0 430 40" preserveAspectRatio="none" style={{position:"absolute",bottom:-1,left:0,width:"100%",height:40,pointerEvents:"none"}}>
-          <path d="M0 40 L0 18 Q140 0 230 14 Q340 26 430 8 L430 40 Z" fill="#F4EFE8"/>
-        </svg>
+      {/* Header con gradient top + decorazioni */}
+      <div style={{background:"linear-gradient(165deg,#DFF4FD 0%,#EEF7FB 45%,#F7FBFE 100%)",paddingTop:52,paddingBottom:18,paddingLeft:20,paddingRight:20,position:"relative",overflow:"hidden"}}>
+        {/* Blob decorativi sfondo */}
+        <div style={{position:"absolute",top:-30,right:-40,width:180,height:180,borderRadius:"50%",background:"radial-gradient(circle,rgba(77,168,218,.18) 0%,rgba(77,168,218,0) 70%)",pointerEvents:"none"}}/>
+        <div style={{position:"absolute",top:60,left:-50,width:140,height:140,borderRadius:"50%",background:"radial-gradient(circle,rgba(63,185,132,.12) 0%,rgba(63,185,132,0) 70%)",pointerEvents:"none"}}/>
+        <div style={{position:"absolute",bottom:-20,right:60,width:100,height:100,borderRadius:"50%",background:"radial-gradient(circle,rgba(90,143,216,.14) 0%,rgba(90,143,216,0) 70%)",pointerEvents:"none"}}/>
         {/* Logo + cuore */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18,position:"relative"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16,position:"relative"}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div className="clay-btn" style={{width:38,height:38,borderRadius:13,background:"linear-gradient(135deg,#BFA67E,#897153)",display:"flex",alignItems:"center",justifyContent:"center"}}><LogoMark size={20}/></div>
-            <span style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontSize:18,fontWeight:700,color:T.ink,letterSpacing:"-.01em"}}>BeautyApp</span>
+            <div className="clay-btn" style={{width:38,height:38,borderRadius:13,background:"linear-gradient(135deg,#5FB8E6,#2F8FC4)",display:"flex",alignItems:"center",justifyContent:"center"}}><LogoMark size={20}/></div>
+            <span className="ba-serif" style={{fontSize:22,fontWeight:900,color:T.ink,letterSpacing:"-.02em"}}>BeautyApp</span>
           </div>
-          <button onClick={()=>nav("cl_preferiti")} className="ba-lift glass" style={{width:40,height:40,borderRadius:14,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <button onClick={()=>nav("cl_preferiti")} className="ba-lift" style={{width:40,height:40,borderRadius:14,background:"rgba(255,255,255,.7)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(8px)"}}>
             <IHeart a={false}/>
           </button>
         </div>
 
-        {/* Saluto grande in Fraunces */}
+        {/* Saluto grande stile Apple */}
         <div style={{position:"relative"}}>
-          <p style={{fontSize:13,fontWeight:600,color:T.brandDeep,margin:"0 0 2px",textTransform:"uppercase",letterSpacing:2}}>Bentornato</p>
-          <h1 className="ba-display" style={{fontSize:34,color:T.ink,margin:"0 0 14px",lineHeight:1.05}}>Ciao, Alessio.</h1>
+          <h1 style={{fontSize:28,fontWeight:900,color:T.ink,margin:"0 0 4px",letterSpacing:"-.02em",lineHeight:1.1}}>Ciao! 👋</h1>
+          <p style={{fontSize:15,fontWeight:600,color:T.inkMid,margin:"0 0 14px"}}>Cosa vuoi fare oggi?</p>
         </div>
 
         {/* Ricerca */}
@@ -879,7 +877,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
           <div className="ba-rise ba-zoom clay" onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})}
             style={{display:"flex",alignItems:"center",gap:14,padding:"16px 18px",borderRadius:22,cursor:"pointer",
               background:T.white,marginTop:14,animationDelay:".05s"}}>
-            <div style={{width:48,height:48,borderRadius:15,background:"linear-gradient(135deg,#BFA67E,#897153)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 12px rgba(140,115,83,.35)"}}>
+            <div style={{width:48,height:48,borderRadius:15,background:"linear-gradient(135deg,#5FB8E6,#2F8FC4)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 12px rgba(47,143,196,.35)"}}>
               <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 {nextAppt?<><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></>:<><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>}
               </svg>
@@ -918,7 +916,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                   <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} - {pro.city}</p>
                   <span style={{color:T.gold,fontSize:12}}>{"★".repeat(Math.floor(pro.rating))}</span>
                 </div>
-                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:"#2F8FC4",color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
               </div>
               {i < searchResults.length-1 && <Div/>}
             </div>
@@ -928,7 +926,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
 
       {/* Contenuto principale */}
       {!(searching && q.length >= 2) && (
-        <div style={{background:T.paper}}>
+        <div style={{background:"linear-gradient(180deg,#F0F8FE 0%,#F7FBFE 100%)"}}>
           {/* Posizione */}
           <div style={{padding:"18px 20px 10px"}}>
             <button onClick={()=>setShowCity(true)} style={{display:"flex",alignItems:"center",gap:6,background:"rgba(255,255,255,.7)",border:"none",cursor:"pointer",padding:"6px 12px 6px 8px",fontFamily:"inherit",marginBottom:14,borderRadius:20,backdropFilter:"blur(6px)"}}>
@@ -937,7 +935,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
             <div style={{display:"flex",alignItems:"center",gap:8}}>
-              <div style={{width:4,height:22,borderRadius:3,background:"linear-gradient(180deg,#BFA67E,#897153)"}}/>
+              <div style={{width:4,height:22,borderRadius:3,background:"linear-gradient(180deg,#5FB8E6,#2F8FC4)"}}/>
               <h2 style={{fontSize:20,fontWeight:900,color:T.ink,margin:"0",letterSpacing:"-.02em"}}>Categorie</h2>
             </div>
           </div>
@@ -961,7 +959,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
               {/* Professionisti nella tua zona */}
               <div style={{padding:"16px 20px 0"}}>
                 <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
-                  <div style={{width:4,height:22,borderRadius:3,background:"linear-gradient(180deg,#A6B690,#897153)"}}/>
+                  <div style={{width:4,height:22,borderRadius:3,background:"linear-gradient(180deg,#3FB984,#2F8FC4)"}}/>
                   <h2 style={{fontSize:20,fontWeight:900,color:T.ink,margin:"0",letterSpacing:"-.02em"}}>Vicino a te</h2>
                 </div>
                 {(() => {
@@ -979,16 +977,16 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                         const b = badgeFor(pro);
                         return (
                           <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise clay ba-zoom" style={{display:"flex",gap:13,padding:"14px",cursor:"pointer",alignItems:"center",background:T.white,borderRadius:20,animationDelay:`${0.03*i+0.1}s`}}>
-                            <div style={{width:56,height:56,borderRadius:16,background:"linear-gradient(145deg,#F1E9DC,#E7DCCB)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,border:"2px solid #E0D3BF",boxShadow:"0 4px 12px rgba(140,115,83,.14)"}}>{pro.emoji}</div>
+                            <div style={{width:56,height:56,borderRadius:16,background:`linear-gradient(145deg,${pro.accent}22,${pro.accent}11)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,border:`2px solid ${pro.accent}44`,boxShadow:`0 4px 12px ${pro.accent}22`}}>{pro.emoji}</div>
                             <div style={{flex:1,minWidth:0}}>
                               <div style={{display:"flex",alignItems:"center",gap:7,margin:"0 0 3px"}}>
                                 <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
                                 {b && <span style={{fontSize:10,fontWeight:800,color:b.c,background:b.bg,padding:"2px 8px",borderRadius:99,flexShrink:0,letterSpacing:.2}}>{b.l}</span>}
                               </div>
                               <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 4px"}}>{pro.cat} · {pro.city} · {pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</p>
-                              <span style={{color:T.brandDeep,fontSize:12,fontWeight:700}}>★ {pro.rating} <span style={{color:T.inkSoft,fontWeight:500}}>({pro.reviews})</span></span>
+                              <span style={{color:"#E8A200",fontSize:12,fontWeight:700}}>★ {pro.rating} <span style={{color:T.inkSoft,fontWeight:500}}>({pro.reviews})</span></span>
                             </div>
-                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} className="ba-btn-bounce" style={{padding:"10px 16px",borderRadius:12,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0,boxShadow:"0 4px 14px rgba(140,115,83,.4)"}}>Prenota</button>
+                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} className="ba-btn-bounce" style={{padding:"10px 16px",borderRadius:12,border:"none",background:"linear-gradient(135deg,#5FB8E6,#2F8FC4)",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0,boxShadow:"0 4px 14px rgba(47,143,196,.4)"}}>Prenota</button>
                           </div>
                         );
                       })}
@@ -1679,7 +1677,7 @@ function ClProfilo({user,onSwitch}) {
     <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
       <div style={{background:T.white,padding:"50px 18px 14px"}}>
         <div style={{display:"flex",alignItems:"center",gap:13,marginBottom:16}}>
-          <div className="clay-btn" style={{width:60,height:60,borderRadius:"50%",background:"linear-gradient(135deg,#BFA67E,#897153)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,fontWeight:900,color:"#fff",flexShrink:0}}>{info.name[0]}</div>
+          <div className="clay-btn" style={{width:60,height:60,borderRadius:"50%",background:"linear-gradient(135deg,#5FB8E6,#2F8FC4)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,fontWeight:900,color:"#fff",flexShrink:0}}>{info.name[0]}</div>
           <div>
             <h1 style={{fontSize:22,fontWeight:900,color:T.ink,margin:"0 0 2px",letterSpacing:"-.01em"}}>{info.name}</h1>
             <p style={{fontSize:13,color:T.inkMid,margin:0,fontWeight:600}}>{info.city}</p>
@@ -2415,5 +2413,5 @@ export default function App() {
 }
 
 function W({children}) {
-  return <div style={{maxWidth:430,margin:"0 auto",minHeight:"100dvh",background:T.paper,fontFamily:"'Plus Jakarta Sans',-apple-system,system-ui,sans-serif",fontWeight:500,WebkitFontSmoothing:"antialiased"}}>{children}</div>;
+  return <div style={{maxWidth:430,margin:"0 auto",minHeight:"100dvh",background:T.paper,fontFamily:"'Nunito',-apple-system,system-ui,sans-serif",fontWeight:600,WebkitFontSmoothing:"antialiased"}}>{children}</div>;
 }
