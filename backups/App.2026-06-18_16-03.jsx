@@ -760,41 +760,28 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
             <p style={{fontSize:14,color:T.inkSoft,margin:0}}>Scegli una categoria</p>
           </div>
 
-          {/* Passo 1: Categorie — chip piccole a scorrimento orizzontale */}
+          {/* Passo 1: Categorie */}
           {!selCat && (
-            <>
-              <div style={{display:"flex",gap:10,overflowX:"auto",padding:"2px 20px 6px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}} className="ba-noscroll">
+            <div style={{padding:"0 20px"}}>
+              <div style={{display:"flex",flexDirection:"column",gap:10}}>
                 {CAT_LIST.map((cat,ci) => (
-                  <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,padding:"10px 4px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:66,animationDelay:`${0.03*ci+0.06}s`}}>
-                    <div style={{width:54,height:54,borderRadius:18,background:`${cat.color}22`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`inset 2px 2px 4px ${cat.color}33, inset -2px -2px 4px rgba(255,255,255,.7)`}}><CatIcon id={cat.id} size={24} color={cat.color}/></div>
-                    <span style={{fontSize:11,fontWeight:600,color:T.inkMid,textAlign:"center",lineHeight:1.1}}>{cat.label}</span>
+                  <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift clay" style={{display:"flex",alignItems:"center",gap:16,padding:"16px 18px",borderRadius:24,border:"none",background:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left",animationDelay:`${0.04*ci+0.08}s`}}>
+                    <div style={{width:52,height:52,borderRadius:18,background:`${cat.color}22`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`inset 2px 2px 4px ${cat.color}33, inset -2px -2px 4px rgba(255,255,255,.7)`}}><CatIcon id={cat.id} size={24} color={cat.color}/></div>
+                    <div style={{flex:1}}>
+                      <p className="ba-serif" style={{fontSize:18,fontWeight:600,color:T.ink,margin:"0 0 2px"}}>{cat.label}</p>
+                      <p style={{fontSize:12,color:T.inkSoft,margin:0}}>
+                        {(() => {
+                          const n = prosWithDist.filter(p=>p.catId===cat.id && p.distKm<=radius).length;
+                          const radiusLabel = radius===Infinity ? "" : ` nel raggio di ${radius} km`;
+                          return n > 0 ? `${n} disponibili${radiusLabel}` : `Nessuno${radiusLabel || " trovato"}`;
+                        })()}
+                      </p>
+                    </div>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.line} strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
                   </button>
                 ))}
               </div>
-
-              {/* Professionisti nella tua zona */}
-              <div style={{padding:"14px 20px 0"}}>
-                <h2 className="ba-serif" style={{fontSize:18,fontWeight:600,color:T.ink,margin:"0 0 12px"}}>Professionisti vicino a te</h2>
-                {(() => {
-                  const list = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm);
-                  if (list.length === 0) return <p style={{fontSize:14,color:T.inkSoft,padding:"20px 0"}}>Nessun professionista trovato in zona.</p>;
-                  return list.map((pro,i) => (
-                    <div key={pro.id}>
-                      <div onClick={()=>nav("cl_pro",pro)} className="ba-rise" style={{display:"flex",gap:13,padding:"13px 0",cursor:"pointer",alignItems:"center",animationDelay:`${0.03*i+0.1}s`}}>
-                        <div style={{width:54,height:54,borderRadius:16,background:`${pro.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>{pro.emoji}</div>
-                        <div style={{flex:1,minWidth:0}}>
-                          <p style={{fontSize:15,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>{pro.name}</p>
-                          <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} · {pro.city} · {pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</p>
-                          <span style={{color:T.gold,fontSize:12}}>{"★".repeat(Math.floor(pro.rating))} <span style={{color:T.inkSoft}}>{pro.rating}</span></span>
-                        </div>
-                        <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:T.brand,color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
-                      </div>
-                      {i < list.length-1 && <Div/>}
-                    </div>
-                  ));
-                })()}
-              </div>
-            </>
+            </div>
           )}
 
         </div>
