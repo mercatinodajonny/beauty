@@ -463,19 +463,19 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
 }
 
 /* ICONS */
-const IH = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill={a?T.ink:"none"} stroke={a?T.ink:T.inkSoft} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>;
-const IC = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.ink:T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z" fill={a?T.ink:"none"}/></svg>;
-const IK = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.ink:T.inkSoft} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="12" cy="16" r="1.3" fill={a?T.ink:T.inkSoft}/></svg>;
-const IP = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.ink:T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>;
-const IHeart = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill={a?"#E91E8C":"none"} stroke={a?"#E91E8C":T.inkSoft} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>;
-const IU = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.ink:T.inkSoft} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>;
-const IS = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill={a?T.ink:"none"} stroke={a?T.ink:T.inkSoft} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
-const ICS = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.ink:T.inkSoft} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>;
+const IH = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill={a?T.ink:"none"} stroke={a?T.ink:T.inkSoft} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>;
+const IC = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.ink:T.inkSoft} strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z" fill={a?T.ink:"none"}/></svg>;
+const IK = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.ink:T.inkSoft} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="12" cy="16" r="1.3" fill={a?T.ink:T.inkSoft}/></svg>;
+const IP = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.ink:T.inkSoft} strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>;
+const IHeart = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill={a?"#E91E8C":"none"} stroke={a?"#E91E8C":T.inkSoft} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>;
+const IU = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.ink:T.inkSoft} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>;
+const IS = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill={a?T.ink:"none"} stroke={a?T.ink:T.inkSoft} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
+const ICS = ({a}) => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.ink:T.inkSoft} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>;
 const IPlus = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>;
 
 /* LOGO — forbici (SVG custom, niente emoji) */
 const LogoMark = ({size=22,color="#fff"}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/>
     <line x1="20" y1="4" x2="8.5" y2="15.5"/><line x1="14.5" y1="14.5" x2="20" y2="20"/><line x1="8.5" y1="8.5" x2="12" y2="12"/>
   </svg>
@@ -621,11 +621,11 @@ function LoginScreen({onAuth}) {
   const [tp,setTp] = useState(null);
   return (
     <div style={{minHeight:"100dvh",background:T.white,display:"flex",flexDirection:"column"}}>
-      {/* Top azzurro con logo */}
-      <div style={{background:"linear-gradient(135deg,#5FB8E6,#2F8FC4)",padding:"64px 26px 40px",display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
-        <div className="ba-rise" style={{width:60,height:60,borderRadius:20,background:"rgba(255,255,255,.22)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",border:"1px solid rgba(255,255,255,.4)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20}}><LogoMark size={30} color="#fff"/></div>
-        <h1 className="ba-rise" style={{fontSize:40,fontWeight:900,color:"#fff",lineHeight:1.05,margin:"0 0 8px",animationDelay:".06s",letterSpacing:"-.02em"}}>BeautyApp</h1>
-        <p className="ba-rise" style={{fontSize:15,color:"rgba(255,255,255,.92)",margin:0,animationDelay:".12s",fontWeight:600}}>La bellezza, a portata di mano.</p>
+      {/* Top salmone con logo */}
+      <div style={{background:"#2F8FC4",padding:"64px 26px 36px",display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
+        <div className="ba-rise" style={{width:56,height:56,borderRadius:18,background:"#4DA8DA",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20,boxShadow:"0 8px 20px rgba(77,168,218,.30)"}}><LogoMark size={28}/></div>
+        <h1 className="ba-rise" style={{fontSize:38,fontWeight:900,color:"#4DA8DA",lineHeight:1.05,margin:"0 0 8px",animationDelay:".06s"}}>BeautyApp</h1>
+        <p className="ba-rise" style={{fontSize:15,color:"rgba(20,48,74,.75)",margin:0,animationDelay:".12s",fontWeight:600}}>La bellezza, a portata di mano.</p>
       </div>
       {/* Card scelta */}
       <div style={{flex:1,padding:"28px 26px 40px",display:"flex",flexDirection:"column",gap:14}}>
@@ -769,25 +769,22 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
     <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
 
       {/* Header salmone — come Beauty Star: sfondo rosa-salmone in cima */}
-      <div style={{background:T.white,paddingTop:52,paddingBottom:18,paddingLeft:20,paddingRight:20}}>
+      <div style={{background:"linear-gradient(135deg,#4DA8DA,#2F8FC4)",paddingTop:52,paddingBottom:24,paddingLeft:20,paddingRight:20}}>
         {/* Logo + cuore */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div className="clay-btn" style={{width:38,height:38,borderRadius:13,background:"linear-gradient(135deg,#5FB8E6,#2F8FC4)",display:"flex",alignItems:"center",justifyContent:"center"}}><LogoMark size={20}/></div>
-            <span className="ba-serif" style={{fontSize:22,fontWeight:900,color:T.ink,letterSpacing:"-.02em"}}>BeautyApp</span>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
+          <div style={{display:"flex",alignItems:"center",gap:9}}>
+            <div style={{width:32,height:32,borderRadius:9,background:T.brand,display:"flex",alignItems:"center",justifyContent:"center"}}><LogoMark size={17}/></div>
+            <span className="ba-serif" style={{fontSize:21,fontWeight:800,color:T.brand,letterSpacing:"-.02em"}}>BeautyApp</span>
           </div>
-          <button onClick={()=>nav("cl_preferiti")} className="ba-lift" style={{width:40,height:40,borderRadius:14,background:T.brandBg,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <button onClick={()=>nav("cl_preferiti")} style={{width:36,height:36,borderRadius:11,background:"rgba(255,255,255,.35)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
             <IHeart a={false}/>
           </button>
         </div>
 
-        {/* Saluto grande stile Apple */}
-        <h1 style={{fontSize:28,fontWeight:900,color:T.ink,margin:"0 0 4px",letterSpacing:"-.02em",lineHeight:1.1}}>Ciao! 👋</h1>
-        <p style={{fontSize:15,fontWeight:600,color:T.inkMid,margin:"0 0 14px"}}>Cosa vuoi fare oggi?</p>
-
-        {/* Ricerca */}
-        <div className="clay-inset" style={{display:"flex",alignItems:"center",gap:10,background:T.surface,borderRadius:16,padding:"14px 16px"}}>
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.4" strokeLinecap="round" style={{flexShrink:0}}>
+        {/* Saluto + ricerca */}
+        <p style={{fontSize:13,fontWeight:700,color:T.brand,margin:"0 0 12px",opacity:.85}}>Ciao, cosa vuoi fare oggi? 👋</p>
+        <div style={{display:"flex",alignItems:"center",gap:10,background:"#fff",borderRadius:16,padding:"13px 16px",boxShadow:"0 4px 16px rgba(77,168,218,.12)"}}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}>
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
           <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
@@ -796,18 +793,18 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
           {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:T.inkSoft,padding:0}}>×</button>}
         </div>
 
-        {/* Banner appuntamento — card clay bianca con accento azzurro */}
+        {/* Banner appuntamento — dentro il blocco salmone, card bianca */}
         {!(searching && q.length >= 2) && banner && (
-          <div className="ba-rise ba-zoom clay" onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})}
-            style={{display:"flex",alignItems:"center",gap:14,padding:"16px 18px",borderRadius:22,cursor:"pointer",
-              background:T.white,marginTop:14,animationDelay:".05s"}}>
-            <div style={{width:48,height:48,borderRadius:15,background:"linear-gradient(135deg,#5FB8E6,#2F8FC4)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 12px rgba(47,143,196,.35)"}}>
-              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="ba-rise ba-lift" onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})}
+            style={{display:"flex",alignItems:"center",gap:14,padding:"16px 18px",borderRadius:20,cursor:"pointer",
+              background:"rgba(255,255,255,.55)",backdropFilter:"blur(16px)",WebkitBackdropFilter:"blur(14px)",border:"1px solid rgba(255,255,255,.5)",marginTop:16,boxShadow:"0 6px 20px rgba(47,143,196,.2)",animationDelay:".05s"}}>
+            <div style={{width:46,height:46,borderRadius:13,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 {nextAppt?<><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></>:<><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>}
               </svg>
             </div>
             <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:10,fontWeight:800,color:T.brandDeep,margin:"0 0 2px",textTransform:"uppercase",letterSpacing:1.1}}>
+              <p style={{fontSize:10,fontWeight:700,color:"#2F8FC4",margin:"0 0 2px",textTransform:"uppercase",letterSpacing:1.1}}>
                 {nextAppt?"Il tuo appuntamento":"Ultimo appuntamento"}
               </p>
               <p style={{fontSize:16,fontWeight:900,color:T.ink,margin:"0 0 1px",lineHeight:1.2}}>{banner.service}</p>
@@ -858,7 +855,8 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
               <span style={{fontSize:16,fontWeight:700,color:T.ink}}>{city}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
             </button>
-            <h2 style={{fontSize:19,fontWeight:900,color:T.ink,margin:"0",letterSpacing:"-.01em"}}>Categorie</h2>
+            <h1 style={{fontSize:26,fontWeight:700,color:T.ink,margin:"0 0 4px",lineHeight:1.15}}>Cosa vuoi fare oggi?</h1>
+            <p style={{fontSize:14,color:T.inkSoft,margin:0}}>Scegli una categoria</p>
           </div>
 
           {/* Passo 1: Categorie — chip piccole a scorrimento orizzontale */}
@@ -1119,9 +1117,9 @@ function ClPreferiti({nav,favorites,setFavorites}) {
   const favPros = ALL_PROS.filter(p=>favorites.has(p.id));
   return (
     <div style={{paddingBottom:90,background:T.white,minHeight:"100dvh"}}>
-      <div style={{padding:"52px 20px 18px",background:T.white}}>
-        <h1 style={{fontSize:30,fontWeight:900,color:T.ink,margin:"0 0 4px",letterSpacing:"-.02em"}}>Preferiti</h1>
-        <p style={{fontSize:14,color:T.inkMid,margin:0,fontWeight:600}}>I tuoi professionisti salvati</p>
+      <div style={{padding:"52px 20px 20px",background:"#2F8FC4"}}>
+        <h1 style={{fontSize:24,fontWeight:900,color:"#4DA8DA",margin:"0 0 4px"}}>Preferiti</h1>
+        <p style={{fontSize:13,color:"rgba(20,48,74,.70)",margin:0,fontWeight:600}}>I tuoi professionisti salvati</p>
       </div>
       {favPros.length === 0 ? (
         <div style={{textAlign:"center",padding:"80px 30px"}}>
@@ -1440,8 +1438,8 @@ function ClAppts({nav,allAppts,setAllAppts}) {
 
   return (
     <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
-      <div style={{background:T.white,padding:"52px 18px 14px"}}>
-        <h1 style={{fontSize:30,fontWeight:900,color:T.ink,margin:"0 0 14px",letterSpacing:"-.02em"}}>Appuntamenti</h1>
+      <div style={{background:"#2F8FC4",padding:"52px 18px 16px"}}>
+        <h1 style={{fontSize:24,fontWeight:900,color:"#4DA8DA",margin:"0 0 12px"}}>Appuntamenti</h1>
         <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:16,padding:4,gap:2,marginBottom:10}}>
           {[["lista","Lista"],["calendario","Calendario"]].map(([v,l]) => (
             <button key={v} onClick={()=>setView(v)} className={view===v?"clay-soft":""} style={{flex:1,padding:"9px 0",borderRadius:12,border:"none",cursor:"pointer",fontSize:12,fontWeight:view===v?800:600,background:view===v?T.white:"transparent",color:view===v?T.brand:T.inkSoft,fontFamily:"inherit"}}>{l}</button>
@@ -1589,12 +1587,12 @@ function ClProfilo({user,onSwitch}) {
 
   return (
     <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
-      <div style={{background:T.white,padding:"50px 18px 14px"}}>
-        <div style={{display:"flex",alignItems:"center",gap:13,marginBottom:16}}>
-          <div className="clay-btn" style={{width:60,height:60,borderRadius:"50%",background:"linear-gradient(135deg,#5FB8E6,#2F8FC4)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,fontWeight:900,color:"#fff",flexShrink:0}}>{info.name[0]}</div>
+      <div style={{background:"#2F8FC4",padding:"50px 18px 18px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
+          <div style={{width:56,height:56,borderRadius:"50%",background:"#4DA8DA",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,fontWeight:900,color:"#fff",flexShrink:0}}>{info.name[0]}</div>
           <div>
-            <h1 style={{fontSize:22,fontWeight:900,color:T.ink,margin:"0 0 2px",letterSpacing:"-.01em"}}>{info.name}</h1>
-            <p style={{fontSize:13,color:T.inkMid,margin:0,fontWeight:600}}>{info.city}</p>
+            <h1 style={{fontSize:20,fontWeight:900,color:"#4DA8DA",margin:"0 0 2px"}}>{info.name}</h1>
+            <p style={{fontSize:12,color:"rgba(20,48,74,.75)",margin:0,fontWeight:600}}>{info.city}</p>
           </div>
         </div>
         <div style={{display:"flex"}}>
