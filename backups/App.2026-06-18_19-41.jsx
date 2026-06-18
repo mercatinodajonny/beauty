@@ -86,14 +86,11 @@ const injectFont = () => {
   s.textContent = `
     h1,h2{font-family:'Nunito',sans-serif !important;font-weight:900;letter-spacing:-.01em}
     .ba-serif{font-family:'Nunito',sans-serif;font-weight:800}
-    /* CLAYMORPHISM */
-    .clay{box-shadow:7px 7px 18px rgba(77,168,218,.13), -6px -6px 14px rgba(255,255,255,.9), inset 2px 2px 4px rgba(255,255,255,.7), inset -3px -3px 7px rgba(77,168,218,.07);}
-    .clay-inset{box-shadow:inset 4px 4px 9px rgba(77,168,218,.12), inset -4px -4px 9px rgba(255,255,255,.9);}
-    .clay-btn{box-shadow:0 9px 20px rgba(77,168,218,.34), inset 2px 2px 5px rgba(255,255,255,.45), inset -3px -4px 8px rgba(47,143,196,.42);}
-    .clay-soft{box-shadow:5px 5px 13px rgba(77,168,218,.10), -4px -4px 11px rgba(255,255,255,.88);}
-    /* GLASSMORPHISM */
-    .glass{background:rgba(255,255,255,.45)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.6);box-shadow:0 8px 32px rgba(77,168,218,.18);}
-    .glass-dark{background:rgba(77,168,218,.22)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.35);box-shadow:0 8px 32px rgba(47,143,196,.25);}
+    /* CLAYMORPHISM — superfici "gonfie": ombra esterna morbida + highlight e ombra interne (tinta neutra warm) */
+    .clay{box-shadow:7px 7px 18px rgba(120,108,86,.16), -6px -6px 14px rgba(255,255,255,.9), inset 2px 2px 4px rgba(255,255,255,.7), inset -3px -3px 7px rgba(120,108,86,.09);}
+    .clay-inset{box-shadow:inset 4px 4px 9px rgba(120,108,86,.15), inset -4px -4px 9px rgba(255,255,255,.9);}
+    .clay-btn{box-shadow:0 9px 20px rgba(249,115,22,.34), inset 2px 2px 5px rgba(255,255,255,.45), inset -3px -4px 8px rgba(180,83,9,.42);}
+    .clay-soft{box-shadow:5px 5px 13px rgba(120,108,86,.13), -4px -4px 11px rgba(255,255,255,.88);}
     @keyframes baRise{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes baFade{from{opacity:0}to{opacity:1}}
     .ba-rise{opacity:0;animation:baRise .55s cubic-bezier(.34,1.56,.64,1) forwards}
@@ -561,23 +558,16 @@ function NavBar({items,s,nav,labelSize=10}) {
   return (
     <div ref={ref} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
       style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",
-        width:"calc(100% - 24px)",maxWidth:406,
-        background:"rgba(77,168,218,.28)",
-        backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",
-        border:"1px solid rgba(255,255,255,.45)",
-        borderRadius:26,
+        width:"calc(100% - 24px)",maxWidth:406,background:"#4DA8DA",borderRadius:26,
         display:"flex",zIndex:100,padding:"6px 4px",touchAction:"none",userSelect:"none",
-        boxShadow:"0 8px 28px rgba(47,143,196,.22)",
+        boxShadow:"0 8px 28px rgba(77,168,218,.35)",
         boxShadow:"0 4px 24px rgba(77,168,218,.14)",
         position:"fixed"}}>
-      {/* Pillola scorrevole — glass bianca */}
+      {/* Pillola scorrevole — salmone su navy */}
       <div style={{
         position:"absolute", top:6, height:"calc(100% - 12px)",
         left:pillLeft, width:pillW,
-        background:"rgba(255,255,255,.55)",
-        backdropFilter:"blur(12px)", WebkitBackdropFilter:"blur(12px)",
-        border:"1px solid rgba(255,255,255,.7)",
-        borderRadius:18,
+        background:"#2F8FC4", borderRadius:18,
         transition:live?"none":"left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1)",
         pointerEvents:"none", zIndex:0,
       }}/>
@@ -593,7 +583,7 @@ function NavBar({items,s,nav,labelSize=10}) {
               <I a={active}/>
             </div>
             <span style={{fontSize:labelSize,fontWeight:active?800:600,
-              color:active?"#14304A":"rgba(255,255,255,.9)",pointerEvents:"none",
+              color:active?"#4DA8DA":"rgba(255,255,255,.6)",pointerEvents:"none",
               transition:"color .22s ease"}}>{l}</span>
           </div>
         );
@@ -772,7 +762,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
     <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
 
       {/* Header salmone — come Beauty Star: sfondo rosa-salmone in cima */}
-      <div style={{background:"linear-gradient(135deg,#4DA8DA,#2F8FC4)",paddingTop:52,paddingBottom:24,paddingLeft:20,paddingRight:20}}>
+      <div style={{background:"#2F8FC4",paddingTop:52,paddingBottom:24,paddingLeft:20,paddingRight:20}}>
         {/* Logo + cuore */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
           <div style={{display:"flex",alignItems:"center",gap:9}}>
@@ -800,7 +790,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
         {!(searching && q.length >= 2) && banner && (
           <div className="ba-rise ba-lift" onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})}
             style={{display:"flex",alignItems:"center",gap:14,padding:"16px 18px",borderRadius:20,cursor:"pointer",
-              background:"rgba(255,255,255,.35)",backdropFilter:"blur(14px)",WebkitBackdropFilter:"blur(14px)",border:"1px solid rgba(255,255,255,.5)",marginTop:16,boxShadow:"0 6px 20px rgba(47,143,196,.2)",animationDelay:".05s"}}>
+              background:T.white,marginTop:16,boxShadow:"0 6px 20px rgba(77,168,218,.14)",animationDelay:".05s"}}>
             <div style={{width:46,height:46,borderRadius:13,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 {nextAppt?<><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></>:<><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>}
