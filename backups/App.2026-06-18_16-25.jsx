@@ -491,68 +491,40 @@ const CatIcon = ({id,size=24,color="currentColor"}) => (
 );
 
 /* NAV */
-// Barra con gesto a scorrimento: tieni premuto e trascina il dito sui pulsanti per cambiare sezione.
-function NavBar({items,s,nav,labelSize=10}) {
-  const ref = useRef(null);
-  const dragging = useRef(false);
-  const lastId = useRef(null);
-
-  const idAtPoint = (x,y) => {
-    const el = document.elementFromPoint(x,y);
-    const target = el && el.closest ? el.closest("[data-navid]") : null;
-    return target ? target.getAttribute("data-navid") : null;
-  };
-  const goTo = (id) => {
-    if (id && id !== lastId.current) {
-      lastId.current = id;
-      nav(id);
-      if (navigator.vibrate) { try { navigator.vibrate(8); } catch(e){} }
-    }
-  };
-  const onDown = (e) => {
-    dragging.current = true;
-    lastId.current = s;
-    try { ref.current.setPointerCapture(e.pointerId); } catch(err){}
-    goTo(idAtPoint(e.clientX, e.clientY));
-  };
-  const onMove = (e) => {
-    if (!dragging.current) return;
-    goTo(idAtPoint(e.clientX, e.clientY));
-  };
-  const onUp = () => { dragging.current = false; };
-
+function NavCl({s,nav}) {
   return (
-    <div ref={ref} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
-      className="clay" style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 24px)",maxWidth:406,background:T.white,borderRadius:26,display:"flex",zIndex:100,padding:"6px 4px",touchAction:"none",userSelect:"none"}}>
-      {items.map(({id,I,l,color}) => {
-        const active = s===id;
-        const accent = color || T.brand;
-        return (
-          <div key={id} data-navid={id} onClick={()=>nav(id)} className={active?"clay-soft":""} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"9px 0 10px",background:active?T.brandBg:"none",borderRadius:18,cursor:"pointer",transition:"background .18s ease",WebkitTapHighlightColor:"transparent"}}>
-            <div style={{pointerEvents:"none",transition:"transform .18s ease",transform:active?"translateY(-1px) scale(1.08)":"none"}}><I a={active}/></div>
-            <span style={{fontSize:labelSize,fontWeight:active?800:600,color:active?accent:T.inkSoft,pointerEvents:"none"}}>{l}</span>
-          </div>
-        );
-      })}
+    <div className="clay" style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 24px)",maxWidth:406,background:T.white,borderRadius:26,display:"flex",zIndex:100,padding:"6px 4px"}}>
+      {[
+        {id:"cl_home",I:IH,l:"Home"},
+        {id:"cl_explore",I:IC,l:"Esplora"},
+        {id:"cl_preferiti",I:IHeart,l:"Preferiti"},
+        {id:"cl_appts",I:IK,l:"Appuntamenti"},
+        {id:"cl_profilo",I:IP,l:"Profilo"},
+      ].map(({id,I,l}) => (
+        <button key={id} onClick={()=>nav(id)} className={s===id?"clay-soft":""} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"9px 0 10px",border:"none",background:s===id?T.brandBg:"none",borderRadius:18,cursor:"pointer"}}>
+          <I a={s===id}/>
+          <span style={{fontSize:9,fontWeight:s===id?800:600,color:s===id?(id==="cl_preferiti"?T.purple:T.brand):T.inkSoft}}>{l}</span>
+        </button>
+      ))}
     </div>
   );
 }
-function NavCl({s,nav}) {
-  return <NavBar s={s} nav={nav} labelSize={9} items={[
-    {id:"cl_home",I:IH,l:"Home"},
-    {id:"cl_explore",I:IC,l:"Esplora"},
-    {id:"cl_preferiti",I:IHeart,l:"Preferiti",color:T.purple},
-    {id:"cl_appts",I:IK,l:"Appuntamenti"},
-    {id:"cl_profilo",I:IP,l:"Profilo"},
-  ]}/>;
-}
 function NavPro({s,nav}) {
-  return <NavBar s={s} nav={nav} labelSize={10} items={[
-    {id:"pro_agenda",I:IK,l:"Agenda"},
-    {id:"pro_clienti",I:IU,l:"Clienti"},
-    {id:"pro_servizi",I:ICS,l:"Servizi"},
-    {id:"pro_stats",I:IS,l:"Statistiche"},
-  ]}/>;
+  return (
+    <div className="clay" style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 24px)",maxWidth:406,background:T.white,borderRadius:26,display:"flex",zIndex:100,padding:"6px 4px"}}>
+      {[
+        {id:"pro_agenda",I:IK,l:"Agenda"},
+        {id:"pro_clienti",I:IU,l:"Clienti"},
+        {id:"pro_servizi",I:ICS,l:"Servizi"},
+        {id:"pro_stats",I:IS,l:"Statistiche"},
+      ].map(({id,I,l}) => (
+        <button key={id} onClick={()=>nav(id)} className={s===id?"clay-soft":""} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"9px 0 10px",border:"none",background:s===id?T.brandBg:"none",borderRadius:18,cursor:"pointer"}}>
+          <I a={s===id}/>
+          <span style={{fontSize:10,fontWeight:s===id?800:600,color:s===id?T.brand:T.inkSoft}}>{l}</span>
+        </button>
+      ))}
+    </div>
+  );
 }
 
 /* AUTH */
