@@ -1356,14 +1356,19 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
     {name:"Lucia F.",text:"Professionale e puntuale.",stars:5,date:"28 mag 2026"},
   ]);
   const proPosts = FEED.filter(p=>p.proId===pro.id);
-  const coverSeed = (PRO_PHOTO_SEEDS[pro.catId]||["beauty"])[0]+"cover"+pro.id;
-  const coverKw = coverSeed;
+  const coverPhotoId = (CAT_PHOTOS[pro.catId]||[])[0];
+  const coverSrc = coverPhotoId
+    ? `https://images.unsplash.com/photo-${coverPhotoId}?w=860&h=400&fit=crop&crop=center&auto=format&q=80`
+    : null;
 
   return (
     <div style={{paddingBottom:140}}>
       {/* Cover */}
       <div style={{position:"relative",height:170}}>
-        <Photo src={`https://picsum.photos/seed/${coverKw}/860/400`} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+        {coverSrc
+          ? <img src={coverSrc} alt="" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.currentTarget.style.display="none";}}/>
+          : <div style={{width:"100%",height:"100%",background:`${pro.accent}44`}}/>
+        }
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.5))"}}/>
         <button onClick={()=>nav("cl_home")} style={{position:"absolute",top:48,left:14,width:32,height:32,borderRadius:16,background:"rgba(0,0,0,.4)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
