@@ -86,10 +86,10 @@ const injectFont = () => {
   s.textContent = `
     h1,h2,.ba-serif,.ba-display{font-family:'Fraunces',Georgia,serif !important;font-weight:600;letter-spacing:-.015em;font-optical-sizing:auto}
     /* CLAYMORPHISM — ombre sabbia calde, gonfie e scultoree (palette Porcellana di Sabbia) */
-    .clay{box-shadow:14px 14px 30px rgba(150,124,92,.26), -12px -12px 26px rgba(255,253,248,.95), inset 3px 3px 6px rgba(255,253,248,.85), inset -5px -5px 12px rgba(150,124,92,.13);}
-    .clay-inset{box-shadow:inset 7px 7px 14px rgba(150,124,92,.22), inset -6px -6px 13px rgba(255,253,248,.95);}
-    .clay-btn{box-shadow:9px 11px 24px rgba(140,115,83,.34), -6px -7px 16px rgba(255,253,248,.5), inset 3px 3px 7px rgba(255,253,248,.4), inset -4px -5px 10px rgba(140,115,83,.34);}
-    .clay-soft{box-shadow:8px 8px 20px rgba(150,124,92,.18), -7px -7px 17px rgba(255,253,248,.95), inset 2px 2px 4px rgba(255,253,248,.7);}
+    .clay{box-shadow:14px 14px 30px rgba(70,72,84,.16), -12px -12px 26px rgba(255,255,255,.95), inset 3px 3px 6px rgba(255,255,255,.9), inset -5px -5px 12px rgba(70,72,84,.06);}
+    .clay-inset{box-shadow:inset 7px 7px 14px rgba(70,72,84,.13), inset -6px -6px 13px rgba(255,255,255,.95);}
+    .clay-btn{box-shadow:9px 11px 24px rgba(50,52,62,.24), -6px -7px 16px rgba(255,255,255,.5), inset 3px 3px 7px rgba(255,255,255,.35), inset -4px -5px 10px rgba(0,0,0,.18);}
+    .clay-soft{box-shadow:8px 8px 20px rgba(70,72,84,.11), -7px -7px 17px rgba(255,255,255,.95), inset 2px 2px 4px rgba(255,255,255,.8);}
     /* GLASSMORPHISM — vetro smerigliato caldo */
     .glass{background:rgba(255,253,248,.5)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,253,248,.65);box-shadow:0 8px 32px rgba(150,124,92,.16);}
     .glass-dark{background:rgba(168,144,107,.2)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,253,248,.35);box-shadow:0 8px 32px rgba(140,115,83,.22);}
@@ -104,7 +104,7 @@ const injectFont = () => {
     /* Zoom card: ingrandimento morbido al passaggio del mouse / tocco */
     .ba-zoom{transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s ease;will-change:transform}
     @media (hover:hover){
-      .ba-zoom:hover{transform:translateY(-5px) scale(1.04);box-shadow:18px 22px 44px rgba(150,124,92,.30), -12px -12px 26px rgba(255,253,248,.95), inset 3px 3px 6px rgba(255,253,248,.85);z-index:2}
+      .ba-zoom:hover{transform:translateY(-5px) scale(1.04);box-shadow:18px 22px 44px rgba(70,72,84,.20), -12px -12px 26px rgba(255,255,255,.95), inset 3px 3px 6px rgba(255,255,255,.9);z-index:2}
     }
     .ba-zoom:active{transform:scale(.95)!important;transition:transform .10s cubic-bezier(.34,1.56,.64,1)!important}
     /* Bounce sui pulsanti Prenota */
@@ -126,9 +126,9 @@ const injectFont = () => {
 
 /* PALETTE "Porcellana di Sabbia" — monocromia calda avorio/sabbia + accento oro-tortora */
 const T = {
-  ink:"#2C2218",inkMid:"#7A6B5A",inkSoft:"#B5A898",
-  line:"#EAE0D2",surface:"#F0E8DC",white:"#FFFFFF",
-  paper:"#FAF6F0",
+  ink:"#222226",inkMid:"#6B6B70",inkSoft:"#A6A6AC",
+  line:"#ECECEE",surface:"#F5F5F6",white:"#FFFFFF",
+  paper:"#FFFFFF",
   brand:"#9C7B52",brandDeep:"#7A5E38",brandBg:"#F0E6D4",
   gold:"#9C7B52",goldBg:"#F0E6D4",
   green:"#7A9669",greenBg:"#E4EBDA",
@@ -730,16 +730,16 @@ function NavBar({items,s,nav,labelSize=10}) {
         width:"100%",maxWidth:430,
         background:"rgba(255,255,255,.96)",
         backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
-        borderTop:"1px solid rgba(234,224,210,.8)",
+        borderTop:`1px solid ${T.line}`,
         borderRadius:0,
         display:"flex",zIndex:100,padding:"8px 4px 20px",touchAction:"none",userSelect:"none",
-        boxShadow:"0 -4px 20px rgba(44,34,24,.08)"}}>
-      {/* Pillola scorrevole — oro-tortora tenue */}
+        boxShadow:"0 -4px 20px rgba(50,52,62,.07)"}}>
+      {/* Pillola scorrevole — tinta accento */}
       <div style={{
         position:"absolute", top:6, height:"calc(100% - 28px)",
         left:pillLeft, width:pillW,
-        background:"rgba(156,123,82,.12)",
-        border:"1px solid rgba(156,123,82,.25)",
+        background:T.brandBg,
+        border:`1px solid ${T.brand}40`,
         borderRadius:14,
         transition:live?"none":"left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1)",
         pointerEvents:"none", zIndex:0,
@@ -820,9 +820,9 @@ function LoginScreen({onAuth}) {
         <div style={{marginTop:8}}>
           <button disabled={!tp} onClick={()=>onAuth({name:tp==="pro"?"Salon Elite":"Alessio",type:tp})}
             style={{width:"100%",padding:"17px 0",borderRadius:18,border:"none",
-              background:tp?T.grad:"#E0D8CB",color:tp?"#fff":"#b3a892",
+              background:tp?T.grad:T.surface,color:tp?"#fff":T.inkSoft,
               fontSize:16,fontWeight:800,cursor:tp?"pointer":"default",fontFamily:"inherit",
-              boxShadow:tp?"0 8px 22px rgba(140,115,83,.30)":"none",transition:"all .2s ease"}}>
+              boxShadow:tp?"0 8px 22px rgba(50,52,62,.22)":"none",transition:"all .2s ease"}}>
             Entra nell'app
           </button>
         </div>
@@ -980,8 +980,8 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
           <div className="ba-zoom clay" onClick={()=>nav("cl_appts")}
             style={{display:"flex",alignItems:"center",gap:13,padding:"16px 18px",borderRadius:20,cursor:"pointer",
               background:T.white}}>
-            <div style={{width:44,height:44,borderRadius:13,background:T.surface,border:`1px solid ${T.line}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <div style={{width:44,height:44,borderRadius:13,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>
               </svg>
             </div>
@@ -1944,7 +1944,7 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
   ];
 
   const Toggle = ({on,onClick}) => (
-    <button onClick={onClick} style={{width:46,height:27,borderRadius:99,border:"none",cursor:"pointer",padding:3,background:on?T.grad:"#D8CEBF",transition:"background .2s ease",display:"flex",justifyContent:on?"flex-end":"flex-start"}}>
+    <button onClick={onClick} style={{width:46,height:27,borderRadius:99,border:"none",cursor:"pointer",padding:3,background:on?T.grad:"#D8D8DC",transition:"background .2s ease",display:"flex",justifyContent:on?"flex-end":"flex-start"}}>
       <span style={{width:21,height:21,borderRadius:"50%",background:"#fff",boxShadow:"0 1px 3px rgba(0,0,0,.2)",transition:"all .2s ease"}}/>
     </button>
   );
@@ -1952,7 +1952,7 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
   return (
     <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
       {/* Header profilo */}
-      <div style={{background:"linear-gradient(170deg,#EFE6D8 0%,#F4EFE8 100%)",padding:"50px 18px 16px"}}>
+      <div style={{background:T.white,padding:"50px 18px 16px"}}>
         <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
           <div className="clay-btn" style={{width:74,height:74,borderRadius:"50%",background:T.grad,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,fontWeight:700,color:"#fff",flexShrink:0,fontFamily:"'Fraunces',serif"}}>{info.name[0]}</div>
           <div style={{flex:1,display:"flex",justifyContent:"space-around",textAlign:"center"}}>
@@ -1985,7 +1985,7 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
             {suggested.map(pro=>(
               <div key={pro.id} className="clay" style={{flexShrink:0,width:138,background:T.white,borderRadius:18,padding:"16px 12px",textAlign:"center"}}>
                 <div onClick={()=>nav("cl_pro",pro)} style={{cursor:"pointer"}}>
-                  <div style={{margin:"0 auto 8px",width:54,height:54,borderRadius:"50%",background:"linear-gradient(145deg,#F1E9DC,#E7DCCB)",border:"2px solid #E0D3BF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>
+                  <div className="clay-soft" style={{margin:"0 auto 8px",width:54,height:54,borderRadius:"50%",background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>
                   <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:"0 0 1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
                   <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 10px"}}>{pro.followers} follower</p>
                 </div>
@@ -2036,7 +2036,7 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
                   <div style={{display:"flex",gap:14,overflowX:"auto",scrollbarWidth:"none",paddingBottom:6}} className="ba-noscroll">
                     {savedPros.map(pro=>(
                       <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:66,textAlign:"center",cursor:"pointer"}}>
-                        <div style={{width:62,height:62,borderRadius:"50%",margin:"0 auto 5px",background:"linear-gradient(145deg,#F1E9DC,#E7DCCB)",border:"2px solid #D8C9B2",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>
+                        <div className="clay-soft" style={{width:62,height:62,borderRadius:"50%",margin:"0 auto 5px",background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>
                         <p style={{fontSize:11,color:T.inkMid,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:600}}>{pro.name}</p>
                       </div>
                     ))}
