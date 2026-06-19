@@ -1178,7 +1178,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
                       {list.map((pro,i) => {
                         const catDef=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];
                         const photoUrl=proImg(pro);
-                        const isFav = favorites?.includes(pro.id);
+                        const isFav = favorites?.has(pro.id);
                         return (
                           <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:148,cursor:"pointer"}}>
                             <div style={{width:148,height:168,borderRadius:20,overflow:"hidden",position:"relative",marginBottom:10,background:catDef.grad,boxShadow:"0 2px 12px rgba(0,0,0,.1)"}}>
@@ -1188,7 +1188,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
                               {photoUrl && <img src={photoUrl} alt={pro.cat} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.currentTarget.style.display="none";}}/>}
                               <div style={{position:"absolute",bottom:0,left:0,right:0,height:72,background:"linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 100%)",pointerEvents:"none"}}/>
                               {/* cuoricino */}
-                              <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>f.includes(pro.id)?f.filter(x=>x!==pro.id):[...f,pro.id]);}} style={{position:"absolute",top:10,right:10,background:"rgba(255,255,255,.88)",border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}}>
+                              <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{position:"absolute",top:10,right:10,background:"rgba(255,255,255,.88)",border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}}>
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill={isFav?"#E53935":"none"} stroke={isFav?"#E53935":T.inkMid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
                               </button>
                               {/* badge distanza */}
