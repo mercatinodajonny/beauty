@@ -243,7 +243,7 @@ const CONVERSATIONS0 = [
       {id:1, from:"client", type:"text", text:"Ciao! Avrei un colore particolare da fare, balayage + tonalizzante. Riusciamo a concordare?", time:"10:02"},
       {id:2, from:"pro", type:"text", text:"Ciao Alessio! Certo. Per quel lavoro ci vogliono circa 2 ore. Ti faccio una proposta su misura 👇", time:"10:05"},
       {id:3, from:"pro", type:"offer", time:"10:06",
-        offer:{service:"Balayage + tonalizzante", price:120, min:120, status:"pending"}},
+        offer:{service:"Balayage + tonalizzante", price:120, min:120, date:"Sab 21 giu", slot:"15:00", status:"pending"}},
     ],
   },
   {
@@ -2677,18 +2677,10 @@ function ChatList({conversations,role,nav}) {
 
 /* Card offerta dentro la chat — stile Vinted */
 function OfferCard({offer,msgFrom,role,onAccept,onDecline}) {
-  const isMine = msgFrom===role;
+  const isMine = msgFrom===role;            // l'offerta l'ho mandata io
   const st = offer.status;
   const stColor = st==="accepted"?T.green:st==="declined"?T.red:T.brand;
   const stLabel = st==="accepted"?"Accettata ✓":st==="declined"?"Rifiutata":"In attesa di risposta";
-
-  // slot picker — visibile solo al cliente dopo "Accetta e scegli orario"
-  const [picking,setPicking] = useState(false);
-  const [selDate,setSelDate] = useState("");
-  const [selSlot,setSelSlot] = useState("");
-  const DATE_OPTS = ["Oggi","Domani","Sab 21 giu","Dom 22 giu","Lun 23 giu","Mar 24 giu","Mer 25 giu"];
-  const TIME_OPTS = ["09:00","09:30","10:00","10:30","11:00","11:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"];
-
   return (
     <div style={{maxWidth:"86%",alignSelf:isMine?"flex-end":"flex-start",background:T.white,border:`1.5px solid ${stColor}55`,borderRadius:18,overflow:"hidden",boxShadow:"0 2px 10px rgba(44,34,24,.08)",margin:"2px 0"}}>
       <div style={{background:`${stColor}14`,padding:"8px 14px",display:"flex",alignItems:"center",gap:7}}>
@@ -2698,47 +2690,17 @@ function OfferCard({offer,msgFrom,role,onAccept,onDecline}) {
       <div style={{padding:"12px 14px"}}>
         <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:"0 0 8px"}}>{offer.service}</p>
         <div style={{display:"flex",gap:7,marginBottom:10}}>
-          {[["Prezzo",`${offer.price}€`],["Durata",`${offer.min} min`]].map(([k,v])=>(
+          {[["Prezzo",`${offer.price}€`],["Durata",`${offer.min} min`],["Quando",`${offer.date}`],["Ora",offer.slot]].map(([k,v])=>(
             <div key={k} style={{flex:1,background:T.surface,borderRadius:9,padding:"7px 4px",textAlign:"center"}}>
               <p style={{fontSize:8,color:T.inkSoft,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>{k}</p>
               <p style={{fontSize:11,fontWeight:800,color:T.ink,margin:0}}>{v}</p>
             </div>
           ))}
-          {offer.date && (
-            <div style={{flex:1,background:T.surface,borderRadius:9,padding:"7px 4px",textAlign:"center"}}>
-              <p style={{fontSize:8,color:T.inkSoft,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>Quando</p>
-              <p style={{fontSize:11,fontWeight:800,color:T.ink,margin:0}}>{offer.date} {offer.slot}</p>
-            </div>
-          )}
         </div>
-
-        {/* Picker slot — solo cliente, solo quando offerta pending */}
-        {picking && st==="pending" && !isMine && (
-          <div style={{marginBottom:12}}>
-            <p style={{fontSize:12,fontWeight:700,color:T.inkMid,margin:"0 0 6px"}}>Scegli il giorno</p>
-            <div style={{display:"flex",gap:6,overflowX:"auto",scrollbarWidth:"none",marginBottom:10,paddingBottom:2}}>
-              {DATE_OPTS.map(d=>(
-                <button key={d} onClick={()=>setSelDate(d)} style={{flexShrink:0,padding:"7px 12px",borderRadius:99,border:"none",cursor:"pointer",fontSize:11,fontWeight:700,background:selDate===d?T.brand:T.white,color:selDate===d?"#fff":T.inkMid,fontFamily:"inherit",boxShadow:selDate===d?"none":`0 0 0 1.5px ${T.line} inset`}}>{d}</button>
-              ))}
-            </div>
-            <p style={{fontSize:12,fontWeight:700,color:T.inkMid,margin:"0 0 6px"}}>Scegli l'orario</p>
-            <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:12}}>
-              {TIME_OPTS.map(t=>(
-                <button key={t} onClick={()=>setSelSlot(t)} style={{padding:"6px 10px",borderRadius:9,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,background:selSlot===t?T.brand:T.white,color:selSlot===t?"#fff":T.inkMid,fontFamily:"inherit",boxShadow:selSlot===t?"none":`0 0 0 1.5px ${T.line} inset`}}>{t}</button>
-              ))}
-            </div>
-            <div style={{display:"flex",gap:8}}>
-              <button onClick={()=>setPicking(false)} style={{flex:1,padding:"9px 0",borderRadius:11,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Annulla</button>
-              <button onClick={()=>{if(selDate&&selSlot)onAccept(selDate,selSlot);}} disabled={!selDate||!selSlot}
-                style={{flex:2,padding:"9px 0",borderRadius:11,border:"none",background:selDate&&selSlot?"linear-gradient(135deg,#7A9669,#5E7A4F)":T.line,color:selDate&&selSlot?"#fff":T.inkSoft,fontSize:13,fontWeight:800,cursor:selDate&&selSlot?"pointer":"default",fontFamily:"inherit"}}>Conferma prenotazione</button>
-            </div>
-          </div>
-        )}
-
-        {!picking && st==="pending" && !isMine && (
+        {st==="pending" && !isMine && (
           <div style={{display:"flex",gap:8}}>
             <button onClick={onDecline} style={{flex:1,padding:"10px 0",borderRadius:11,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Rifiuta</button>
-            <button onClick={()=>setPicking(true)} style={{flex:2,padding:"10px 0",borderRadius:11,border:"none",background:"linear-gradient(135deg,#7A9669,#5E7A4F)",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Accetta e scegli orario</button>
+            <button onClick={onAccept} style={{flex:2,padding:"10px 0",borderRadius:11,border:"none",background:"linear-gradient(135deg,#7A9669,#5E7A4F)",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Accetta e prenota</button>
           </div>
         )}
         {st==="pending" && isMine && (
@@ -2785,7 +2747,7 @@ function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onAccept,onDecline}
         {conv.messages.map(m => {
           if(m.type==="offer") return (
             <OfferCard key={m.id} offer={m.offer} msgFrom={m.from} role={role}
-              onAccept={(date,slot)=>onAccept(conv.id,m.id,date,slot)} onDecline={()=>onDecline(conv.id,m.id)}/>
+              onAccept={()=>onAccept(conv.id,m.id)} onDecline={()=>onDecline(conv.id,m.id)}/>
           );
           const mine = m.from===role;
           return (
@@ -2805,45 +2767,47 @@ function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onAccept,onDecline}
       {/* Barra invio */}
       <div style={{background:T.white,borderTop:`1px solid ${T.line}`,padding:"10px 12px 26px",flexShrink:0}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          {role==="pro" && (
-            <button onClick={()=>setShowOffer(true)} title="Proponi appuntamento" style={{width:42,height:42,borderRadius:"50%",border:"none",background:T.brandBg,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M12 12v4M10 14h4"/></svg>
-            </button>
-          )}
+          <button onClick={()=>setShowOffer(true)} title="Proponi appuntamento" style={{width:42,height:42,borderRadius:"50%",border:"none",background:T.brandBg,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M12 12v4M10 14h4"/></svg>
+          </button>
           <input value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Scrivi un messaggio…"
             style={{flex:1,border:`1px solid ${T.line}`,outline:"none",background:T.surface,borderRadius:99,padding:"11px 16px",fontSize:14,color:T.ink,fontFamily:"inherit"}}/>
           <button onClick={send} disabled={!text.trim()} style={{width:42,height:42,borderRadius:"50%",border:"none",background:text.trim()?"linear-gradient(135deg,#BFA67E,#897153)":T.line,cursor:text.trim()?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           </button>
         </div>
-        {role==="pro" && <p style={{fontSize:10,color:T.inkSoft,margin:"7px 0 0",textAlign:"center"}}>💼 Tocca la valigetta per inviare una proposta al cliente</p>}
+        <p style={{fontSize:10,color:T.inkSoft,margin:"7px 0 0",textAlign:"center"}}>💼 Tocca la valigetta per proporre un appuntamento su misura</p>
       </div>
 
-      {/* Modal crea offerta — solo pro */}
-      {showOffer && role==="pro" && <OfferModal pro={pro} onClose={()=>setShowOffer(false)}
-        onSend={(offer)=>{onSendOffer(conv.id,{from:"pro",type:"offer",offer:{...offer,status:"pending"}});setShowOffer(false);}}/>}
+      {/* Modal crea offerta */}
+      {showOffer && <OfferModal role={role} pro={pro} onClose={()=>setShowOffer(false)}
+        onSend={(offer)=>{onSendOffer(conv.id,{from:role,type:"offer",offer:{...offer,status:"pending"}});setShowOffer(false);}}/>}
     </div>
   );
 }
 
-/* Modal per comporre un'offerta — solo per il PRO */
-function OfferModal({pro,onClose,onSend}) {
+/* Modal per comporre un'offerta */
+function OfferModal({role,pro,onClose,onSend}) {
   const [service,setService] = useState("");
   const [price,setPrice] = useState("");
   const [min,setMin] = useState("60");
-  const valid = service.trim() && price && min;
+  const [date,setDate] = useState("");
+  const [slot,setSlot] = useState("");
+  const DATE_OPTS = ["Oggi","Domani","Sab 21 giu","Dom 22 giu","Lun 23 giu","Mar 24 giu","Mer 25 giu"];
+  const TIME_OPTS = ["09:00","09:30","10:00","10:30","11:00","11:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"];
+  const valid = service.trim() && price && date && slot;
   return (
     <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(43,34,24,.45)",zIndex:400,display:"flex",alignItems:"flex-end",backdropFilter:"blur(3px)"}}>
       <div onClick={e=>e.stopPropagation()} className="ba-pop" style={{background:T.paper,borderRadius:"26px 26px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 18px 32px",maxHeight:"90dvh",overflowY:"auto"}}>
         <div style={{width:40,height:4,borderRadius:99,background:T.line,margin:"0 auto 16px"}}/>
-        <h2 style={{fontSize:19,fontWeight:800,color:T.ink,margin:"0 0 4px"}}>Proponi un lavoro su misura</h2>
-        <p style={{fontSize:13,color:T.inkMid,margin:"0 0 18px"}}>Imposta servizio, prezzo e durata. Il cliente sceglierà il giorno e l'orario.</p>
+        <h2 style={{fontSize:19,fontWeight:800,color:T.ink,margin:"0 0 4px"}}>Proponi un appuntamento</h2>
+        <p style={{fontSize:13,color:T.inkMid,margin:"0 0 18px"}}>{role==="pro"?"Invia al cliente prezzo, durata e orario. Se accetta, finisce in agenda.":"Proponi prezzo e orario. Se il professionista accetta, è prenotato."}</p>
 
         <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Lavoro / servizio</label>
         <input value={service} onChange={e=>setService(e.target.value)} placeholder="Es. Balayage + tonalizzante"
           style={{width:"100%",border:`1.5px solid ${T.line}`,outline:"none",background:T.white,borderRadius:12,padding:"12px 14px",fontSize:14,color:T.ink,fontFamily:"inherit",marginBottom:14,boxSizing:"border-box"}}/>
 
-        <div style={{display:"flex",gap:10,marginBottom:22}}>
+        <div style={{display:"flex",gap:10,marginBottom:14}}>
           <div style={{flex:1}}>
             <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Prezzo (€)</label>
             <input value={price} onChange={e=>setPrice(e.target.value.replace(/[^0-9]/g,""))} inputMode="numeric" placeholder="120"
@@ -2856,10 +2820,24 @@ function OfferModal({pro,onClose,onSend}) {
           </div>
         </div>
 
-        <button onClick={()=>valid&&onSend({service:service.trim(),price:parseInt(price),min:parseInt(min)||60})} disabled={!valid}
+        <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Giorno</label>
+        <div style={{display:"flex",gap:6,overflowX:"auto",scrollbarWidth:"none",marginBottom:14,paddingBottom:2}}>
+          {DATE_OPTS.map(d=>(
+            <button key={d} onClick={()=>setDate(d)} style={{flexShrink:0,padding:"9px 14px",borderRadius:99,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,background:date===d?T.brand:T.white,color:date===d?"#fff":T.inkMid,fontFamily:"inherit",boxShadow:date===d?"none":`0 0 0 1.5px ${T.line} inset`}}>{d}</button>
+          ))}
+        </div>
+
+        <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Orario</label>
+        <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:22}}>
+          {TIME_OPTS.map(t=>(
+            <button key={t} onClick={()=>setSlot(t)} style={{padding:"8px 13px",borderRadius:10,border:"none",cursor:"pointer",fontSize:13,fontWeight:700,background:slot===t?T.brand:T.white,color:slot===t?"#fff":T.inkMid,fontFamily:"inherit",boxShadow:slot===t?"none":`0 0 0 1.5px ${T.line} inset`}}>{t}</button>
+          ))}
+        </div>
+
+        <button onClick={()=>valid&&onSend({service:service.trim(),price:parseInt(price),min:parseInt(min)||60,date,slot})} disabled={!valid}
           style={{width:"100%",padding:"15px 0",borderRadius:14,border:"none",cursor:valid?"pointer":"default",fontSize:15,fontWeight:800,fontFamily:"inherit",
             background:valid?"linear-gradient(135deg,#BFA67E,#897153)":T.line,color:valid?"#fff":T.inkSoft}}>
-          Invia proposta al cliente
+          Invia proposta
         </button>
       </div>
     </div>
@@ -2935,8 +2913,8 @@ export default function App() {
       : c));
   };
 
-  // Accetta offerta → il cliente ha scelto data+slot → crea appuntamento in entrambe le agende
-  const acceptOffer = (convId,msgId,date,slot) => {
+  // Accetta offerta → segna accettata + crea appuntamento in entrambe le agende
+  const acceptOffer = (convId,msgId) => {
     const conv = conversations.find(c=>c.id===convId);
     if(!conv) return;
     const msg = conv.messages.find(m=>m.id===msgId);
@@ -2944,17 +2922,17 @@ export default function App() {
     const o = msg.offer;
     const pro = ALL_PROS.find(p=>p.id===conv.proId)||ALL_PROS[0];
 
-    // 1) segna l'offerta accettata (salva anche data+slot scelti dal cliente)
+    // 1) segna l'offerta accettata
     setConversations(p=>p.map(c=>c.id===convId
       ? {...c,messages:[
-          ...c.messages.map(m=>m.id===msgId?{...m,offer:{...m.offer,status:"accepted",date,slot}}:m),
-          {id:Date.now(),from:"pro",type:"text",text:`Perfetto, è confermato! Ci vediamo ${date} alle ${slot} ✨`,time:nowTime()},
+          ...c.messages.map(m=>m.id===msgId?{...m,offer:{...m.offer,status:"accepted"}}:m),
+          {id:Date.now(),from:"pro",type:"text",text:`Perfetto, è confermato! Ci vediamo ${o.date} alle ${o.slot} ✨`,time:nowTime()},
         ]}
       : c));
 
     // 2) appuntamento lato CLIENTE
     setMyAppts(p=>[
-      {id:Date.now()+1,pro:pro.name,service:o.service,date,time:slot,price:o.price,status:"confermato",proObj:pro},
+      {id:Date.now()+1,pro:pro.name,service:o.service,date:o.date,time:o.slot,price:o.price,status:"confermato",proObj:pro},
       ...p,
     ]);
 
@@ -2963,7 +2941,7 @@ export default function App() {
     const newServiceId = Date.now()+3;
     setClients(p=>p.some(c=>c.name===conv.clientName)?p:[...p,{id:newClientId,name:conv.clientName,phone:"",visits:1,lastVisit:"Oggi",totalSpent:o.price,note:"Accordo da chat",rating:0}]);
     setServices(p=>[...p,{id:newServiceId,name:o.service,price:o.price,min:o.min,active:true}]);
-    setAppts(p=>[...p,{id:Date.now()+4,staffId:1,date,time:slot,clientId:newClientId,serviceId:newServiceId,status:"confermato",source:"app",note:"Accordo su misura via chat"}]);
+    setAppts(p=>[...p,{id:Date.now()+4,staffId:1,date:o.date,time:o.slot,clientId:newClientId,serviceId:newServiceId,status:"confermato",source:"app",note:"Accordo su misura via chat"}]);
   };
 
   const handleAuth = ({name,type}) => {
