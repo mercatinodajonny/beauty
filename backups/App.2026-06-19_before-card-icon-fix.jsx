@@ -236,15 +236,15 @@ const MY_APPTS0 = [
 const ALL_CITIES = ["Imperia","Milano","Roma","Torino","Bologna","Genova","Sanremo","Savona"];
 
 const CAT_LIST = [
-  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#8B6348",grad:"linear-gradient(145deg,#B07A5E,#7A4E35)"},
-  {id:"parrucchiere",emoji:"💇",label:"Capelli",     color:"#6B5B8A",grad:"linear-gradient(145deg,#9B8BBE,#6B5B8A)"},
-  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#B8860B",grad:"linear-gradient(145deg,#E8B84B,#B8860B)"},
-  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#4A7C59",grad:"linear-gradient(145deg,#7CB99A,#4A7C59)"},
-  {id:"laser",       emoji:"✨",label:"Laser",       color:"#2C7BB6",grad:"linear-gradient(145deg,#5BA3D9,#2C6FA0)"},
-  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#3D3D3D",grad:"linear-gradient(145deg,#6B6B6B,#3D3D3D)"},
-  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#A0405A",grad:"linear-gradient(145deg,#D4748C,#A0405A)"},
-  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#B03060",grad:"linear-gradient(145deg,#E06090,#B03060)"},
-  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#7B5E3A",grad:"linear-gradient(145deg,#C4956A,#7B5E3A)"},
+  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#B07A5E",grad:"linear-gradient(135deg,#C7977A,#A06A4E)"},
+  {id:"parrucchiere",emoji:"💇",label:"Capelli",     color:"#A38FA6",grad:"linear-gradient(135deg,#B8A4BB,#917C95)"},
+  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#C2A45E",grad:"linear-gradient(135deg,#D7BC76,#B0924C)"},
+  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#8FA079",grad:"linear-gradient(135deg,#A6B690,#7C8E66)"},
+  {id:"laser",       emoji:"✨",label:"Laser",       color:"#8DA1A6",grad:"linear-gradient(135deg,#A4B7BB,#7A8E93)"},
+  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#6B6259",grad:"linear-gradient(135deg,#857A6F,#544C44)"},
+  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#BD8C84",grad:"linear-gradient(135deg,#D0A39B,#A6746C)"},
+  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#C58A92",grad:"linear-gradient(135deg,#D7A4AB,#AB6F78)"},
+  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#C89A6E",grad:"linear-gradient(135deg,#DBB286,#B07E54)"},
 ];
 
 const FEED = [
@@ -521,76 +521,82 @@ const LogoMark = ({size=22,color="#fff"}) => (
   </svg>
 );
 
-/* ICONE CATEGORIA — SVG line-art professionale */
+/* ICONE CATEGORIA — line-art SVG custom per ciascun servizio */
 const CAT_PATHS = {
-  // Barbiere: rasoio a mano libera classico
+  // Barbiere: rasoio a mano libera stilizzato
   barbiere: <>
-    <path d="M7 3h8l2 3H5L7 3z"/>
-    <rect x="5" y="6" width="14" height="2.5" rx="1.2"/>
-    <path d="M12 8.5V19"/>
-    <path d="M9 19h6"/>
-    <path d="M19 6.5c1 .8 1.5 1.8 1.5 3s-.5 2.2-1.5 3"/>
+    <path d="M5 4h9a2 2 0 0 1 2 2v.5a2 2 0 0 1-2 2H5V4z"/>
+    <path d="M5 8.5V20"/>
+    <path d="M16 6.5l2.5 2L16 11"/>
   </>,
-  // Parrucchiere: forbici professionali
+  // Parrucchiere: forbici moderne aperte
   parrucchiere: <>
-    <circle cx="5.5" cy="6" r="2.2"/>
-    <circle cx="5.5" cy="18" r="2.2"/>
-    <path d="M7.5 7.2L20 17"/>
-    <path d="M7.5 16.8L20 7"/>
-    <line x1="14" y1="12" x2="16" y2="12" strokeWidth="2.5"/>
+    <circle cx="6" cy="7" r="2.2"/>
+    <circle cx="6" cy="17" r="2.2"/>
+    <path d="M8 8.5L20 19"/>
+    <path d="M8 15.5L20 5"/>
   </>,
-  // Unghie: dito con smalto
+  // Unghie: mano con unghia stilizzata
   nail_artist: <>
-    <path d="M9 14V9a3 3 0 016 0v5"/>
-    <rect x="7" y="14" width="10" height="6" rx="2"/>
-    <path d="M9 17h6"/>
-    <path d="M12 3v2"/>
-    <path d="M9.5 4l1 1.5"/>
-    <path d="M14.5 4l-1 1.5"/>
+    <rect x="7" y="2" width="10" height="13" rx="5"/>
+    <path d="M7 11h10"/>
+    <path d="M9 15v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-5"/>
   </>,
-  // Estetica: viso con foglia / lotus
+  // Estetica: fiore / viso con foglie
   estetista: <>
-    <circle cx="12" cy="10" r="3.5"/>
-    <path d="M12 13.5c0 3-2 5.5-2 5.5s-3-2.5-3-6c0-1.5.5-2.5 1.5-3"/>
-    <path d="M12 13.5c0 3 2 5.5 2 5.5s3-2.5 3-6c0-1.5-.5-2.5-1.5-3"/>
-    <path d="M12 3c-1.5 2-1.5 4.5 0 6.5"/>
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M12 2C10 5 10 7 12 9"/>
+    <path d="M12 15c-2 3-2 5 0 7"/>
+    <path d="M2 12c3-2 5-2 7 0"/>
+    <path d="M15 12c3-2 5-2 7 0"/>
+    <path d="M5 5c2 1 3 3 2 5"/>
+    <path d="M17 19c-2-1-3-3-2-5"/>
+    <path d="M19 5c-2 1-3 3-2 5"/>
+    <path d="M5 19c2-1 3-3 2-5"/>
   </>,
-  // Laser: flash / energia
+  // Laser: raggio + stelle scintilla
   laser: <>
-    <path d="M13 2L4.5 13.5H11L9 22l10.5-12H13.5L13 2z"/>
+    <path d="M3 12h5"/>
+    <path d="M16 12h5"/>
+    <path d="M12 3v5"/>
+    <path d="M12 16v5"/>
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M6.3 6.3l2.1 2.1"/>
+    <path d="M15.6 15.6l2.1 2.1"/>
+    <path d="M17.7 6.3l-2.1 2.1"/>
+    <path d="M8.4 15.6L6.3 17.7"/>
   </>,
-  // Tattoo: ago macchina
+  // Tattoo: ago con inchiostro a goccia
   tatuatore: <>
-    <path d="M15 3h3a1 1 0 011 1v2a1 1 0 01-1 1h-3"/>
-    <path d="M15 4.5H8a1 1 0 00-1 1v3a1 1 0 001 1h7"/>
-    <path d="M10 9.5v8"/>
-    <path d="M10 17.5l-1.5 1.5a1 1 0 000 1.4l.6.6"/>
-    <circle cx="18" cy="18" r="1.5"/>
-    <path d="M10.5 18.5l6 0"/>
+    <path d="M3 21l5-2 9-9-3-3-9 9z"/>
+    <path d="M14.5 6.5l3 3"/>
+    <path d="M17 3l1 1a2 2 0 0 1 0 3l-1 1"/>
+    <circle cx="19" cy="19" r="1.5" fill="currentColor" stroke="none"/>
   </>,
-  // Ciglia: occhio stilizzato con ciglia
+  // Ciglia: occhio grande con ciglia
   ciglia: <>
-    <path d="M3 12c2.5-4.5 5-7 9-7s6.5 2.5 9 7"/>
-    <path d="M3 12c2.5 4.5 5 7 9 7s6.5-2.5 9-7"/>
-    <circle cx="12" cy="12" r="2.5"/>
-    <line x1="8" y1="6" x2="7" y2="3.5"/>
-    <line x1="11.5" y1="5.2" x2="11" y2="2.5"/>
-    <line x1="15" y1="6" x2="16" y2="3.5"/>
+    <path d="M2 12s4-7 10-7 10 7 10 7"/>
+    <path d="M2 12s4 7 10 7 10-7 10-7"/>
+    <circle cx="12" cy="12" r="2.8"/>
+    <path d="M8.5 5.5L7 3"/>
+    <path d="M12 5V2"/>
+    <path d="M15.5 5.5L17 3"/>
   </>,
-  // Makeup: rossetto con rifinitura
+  // Makeup: rossetto elegante
   makeup: <>
-    <rect x="9.5" y="12" width="5" height="8" rx="1.5"/>
-    <path d="M9.5 15h5"/>
-    <path d="M10.5 12V9c0-1.5.7-3 1.5-3s1.5 1.5 1.5 3v3"/>
-    <path d="M9.5 8h5"/>
+    <rect x="9" y="11" width="6" height="9" rx="1.5"/>
+    <path d="M9 14h6"/>
+    <path d="M10 11V7.5C10 6 11 4 12 4s2 1 2 3.5V11"/>
+    <path d="M11 4.5c0-1 .5-1.5 1-1.5"/>
   </>,
-  // Massaggio: mani aperte / palme
+  // Massaggio: mani che massaggiano
   massaggio: <>
-    <path d="M8 12V8a1 1 0 012 0v4"/>
-    <path d="M10 10V7a1 1 0 012 0v3"/>
-    <path d="M12 10V7a1 1 0 012 0v3"/>
-    <path d="M14 11V9a1 1 0 012 0v3"/>
-    <path d="M8 12c0 3 1 5 4 6 3-1 4-3 4-6"/>
+    <path d="M6 10c0-2.2 1.8-4 4-4h4c2.2 0 4 1.8 4 4v1c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1v-1z"/>
+    <path d="M9 11v3c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2v-3"/>
+    <path d="M12 16v2"/>
+    <path d="M9 18h6"/>
+    <path d="M5 8c-.5-1-1-3 .5-4"/>
+    <path d="M19 8c.5-1 1-3-.5-4"/>
   </>,
 };
 const CatIcon = ({id,size=24,color="currentColor",strokeWidth=2.2}) => (
@@ -967,9 +973,9 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
               <div style={{background:T.white,padding:"16px 0 14px"}}>
                 <div style={{display:"flex",gap:16,overflowX:"auto",padding:"0 20px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {CAT_LIST.map((cat,ci) => (
-                    <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:7,padding:0,border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:58,animationDelay:`${0.04*ci+0.04}s`}}>
+                    <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,padding:0,border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:56,animationDelay:`${0.04*ci+0.04}s`}}>
                       <div style={{width:52,height:52,borderRadius:"50%",background:cat.grad,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                        <CatIcon id={cat.id} size={22} color="#fff" strokeWidth={2}/>
+                        <CatIcon id={cat.id} size={24} color="#fff" strokeWidth={2.5}/>
                       </div>
                       <span style={{fontSize:10,fontWeight:600,color:T.inkMid,textAlign:"center",lineHeight:1.2,whiteSpace:"nowrap"}}>{cat.label}</span>
                     </button>
@@ -997,20 +1003,17 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                     <div style={{display:"flex",gap:14,overflowX:"auto",padding:"4px 20px 24px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                       {list.map((pro,i) => (
                         <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise" style={{flexShrink:0,width:155,cursor:"pointer",animationDelay:`${0.06*i+0.06}s`}}>
-                          {/* Card: sfondo gradiente categoria + icona SVG */}
-                          {(()=>{const catDef=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0]; return (
-                          <div style={{width:155,height:155,borderRadius:18,overflow:"hidden",position:"relative",marginBottom:10,background:catDef.grad}}>
-                            <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:5}}>
-                              <CatIcon id={pro.catId} size={50} color="rgba(255,255,255,.88)" strokeWidth={1.7}/>
-                              <span style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.78)",textTransform:"uppercase",letterSpacing:1}}>{pro.cat}</span>
-                            </div>
+                          {/* Foto con badge distanza */}
+                          <div style={{width:155,height:155,borderRadius:18,overflow:"hidden",background:T.surface,position:"relative",marginBottom:10,boxShadow:"0 4px 16px rgba(44,34,24,.12)"}}>
+                            <img src={proImg(pro,310,310)} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.target.style.display="none";}}/>
+                            {/* Overlay gradiente bottom */}
+                            <div style={{position:"absolute",bottom:0,left:0,right:0,height:60,background:"linear-gradient(to top,rgba(0,0,0,.5),transparent)",pointerEvents:"none"}}/>
                             {/* Badge distanza */}
-                            <div style={{position:"absolute",bottom:8,left:8,display:"flex",alignItems:"center",gap:3,background:"rgba(0,0,0,.38)",borderRadius:99,padding:"3px 7px"}}>
+                            <div style={{position:"absolute",bottom:8,left:8,display:"flex",alignItems:"center",gap:3,background:"rgba(0,0,0,.45)",borderRadius:99,padding:"3px 7px"}}>
                               <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
                               <span style={{fontSize:10,fontWeight:700,color:"#fff"}}>{pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</span>
                             </div>
                           </div>
-                          );})()}
                           {/* Nome + info */}
                           <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
                           <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 8px"}}>{pro.cat} · ★ {pro.rating}</p>
