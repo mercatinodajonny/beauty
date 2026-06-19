@@ -238,15 +238,15 @@ const MY_APPTS0 = [
 const ALL_CITIES = ["Imperia","Milano","Roma","Torino","Bologna","Genova","Sanremo","Savona"];
 
 const CAT_LIST = [
-  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"parrucchiere",emoji:"💇",label:"Capelli",     color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"laser",       emoji:"✨",label:"Laser",       color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
+  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#8B6348",grad:"linear-gradient(145deg,#B07A5E,#7A4E35)"},
+  {id:"parrucchiere",emoji:"💇",label:"Capelli",     color:"#6B5B8A",grad:"linear-gradient(145deg,#9B8BBE,#6B5B8A)"},
+  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#B8860B",grad:"linear-gradient(145deg,#E8B84B,#B8860B)"},
+  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#4A7C59",grad:"linear-gradient(145deg,#7CB99A,#4A7C59)"},
+  {id:"laser",       emoji:"✨",label:"Laser",       color:"#2C7BB6",grad:"linear-gradient(145deg,#5BA3D9,#2C6FA0)"},
+  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#3D3D3D",grad:"linear-gradient(145deg,#6B6B6B,#3D3D3D)"},
+  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#A0405A",grad:"linear-gradient(145deg,#D4748C,#A0405A)"},
+  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#B03060",grad:"linear-gradient(145deg,#E06090,#B03060)"},
+  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#7B5E3A",grad:"linear-gradient(145deg,#C4956A,#7B5E3A)"},
 ];
 
 const FEED = [
@@ -971,9 +971,9 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
               <div style={{background:T.white,padding:"16px 0 14px"}}>
                 <div style={{display:"flex",gap:16,overflowX:"auto",padding:"0 20px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {CAT_LIST.map((cat,ci) => (
-                    <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,padding:0,border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:58,animationDelay:`${0.04*ci+0.04}s`}}>
-                      <div style={{width:52,height:52,borderRadius:"50%",background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                        <CatIcon id={cat.id} size={22} color={cat.color} strokeWidth={2}/>
+                    <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:7,padding:0,border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:58,animationDelay:`${0.04*ci+0.04}s`}}>
+                      <div style={{width:52,height:52,borderRadius:"50%",background:cat.grad,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        <CatIcon id={cat.id} size={22} color="#fff" strokeWidth={2}/>
                       </div>
                       <span style={{fontSize:10,fontWeight:600,color:T.inkMid,textAlign:"center",lineHeight:1.2,whiteSpace:"nowrap"}}>{cat.label}</span>
                     </button>
