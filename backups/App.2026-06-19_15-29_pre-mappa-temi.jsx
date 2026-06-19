@@ -86,10 +86,10 @@ const injectFont = () => {
   s.textContent = `
     h1,h2,.ba-serif,.ba-display{font-family:'Fraunces',Georgia,serif !important;font-weight:600;letter-spacing:-.015em;font-optical-sizing:auto}
     /* CLAYMORPHISM — ombre sabbia calde, gonfie e scultoree (palette Porcellana di Sabbia) */
-    .clay{box-shadow:14px 14px 30px rgba(70,72,84,.16), -12px -12px 26px rgba(255,255,255,.95), inset 3px 3px 6px rgba(255,255,255,.9), inset -5px -5px 12px rgba(70,72,84,.06);}
-    .clay-inset{box-shadow:inset 7px 7px 14px rgba(70,72,84,.13), inset -6px -6px 13px rgba(255,255,255,.95);}
-    .clay-btn{box-shadow:9px 11px 24px rgba(50,52,62,.24), -6px -7px 16px rgba(255,255,255,.5), inset 3px 3px 7px rgba(255,255,255,.35), inset -4px -5px 10px rgba(0,0,0,.18);}
-    .clay-soft{box-shadow:8px 8px 20px rgba(70,72,84,.11), -7px -7px 17px rgba(255,255,255,.95), inset 2px 2px 4px rgba(255,255,255,.8);}
+    .clay{box-shadow:14px 14px 30px rgba(150,124,92,.26), -12px -12px 26px rgba(255,253,248,.95), inset 3px 3px 6px rgba(255,253,248,.85), inset -5px -5px 12px rgba(150,124,92,.13);}
+    .clay-inset{box-shadow:inset 7px 7px 14px rgba(150,124,92,.22), inset -6px -6px 13px rgba(255,253,248,.95);}
+    .clay-btn{box-shadow:9px 11px 24px rgba(140,115,83,.34), -6px -7px 16px rgba(255,253,248,.5), inset 3px 3px 7px rgba(255,253,248,.4), inset -4px -5px 10px rgba(140,115,83,.34);}
+    .clay-soft{box-shadow:8px 8px 20px rgba(150,124,92,.18), -7px -7px 17px rgba(255,253,248,.95), inset 2px 2px 4px rgba(255,253,248,.7);}
     /* GLASSMORPHISM — vetro smerigliato caldo */
     .glass{background:rgba(255,253,248,.5)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,253,248,.65);box-shadow:0 8px 32px rgba(150,124,92,.16);}
     .glass-dark{background:rgba(168,144,107,.2)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,253,248,.35);box-shadow:0 8px 32px rgba(140,115,83,.22);}
@@ -104,7 +104,7 @@ const injectFont = () => {
     /* Zoom card: ingrandimento morbido al passaggio del mouse / tocco */
     .ba-zoom{transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s ease;will-change:transform}
     @media (hover:hover){
-      .ba-zoom:hover{transform:translateY(-5px) scale(1.04);box-shadow:18px 22px 44px rgba(70,72,84,.20), -12px -12px 26px rgba(255,255,255,.95), inset 3px 3px 6px rgba(255,255,255,.9);z-index:2}
+      .ba-zoom:hover{transform:translateY(-5px) scale(1.04);box-shadow:18px 22px 44px rgba(150,124,92,.30), -12px -12px 26px rgba(255,253,248,.95), inset 3px 3px 6px rgba(255,253,248,.85);z-index:2}
     }
     .ba-zoom:active{transform:scale(.95)!important;transition:transform .10s cubic-bezier(.34,1.56,.64,1)!important}
     /* Bounce sui pulsanti Prenota */
@@ -126,9 +126,9 @@ const injectFont = () => {
 
 /* PALETTE "Porcellana di Sabbia" — monocromia calda avorio/sabbia + accento oro-tortora */
 const T = {
-  ink:"#222226",inkMid:"#6B6B70",inkSoft:"#A6A6AC",
-  line:"#ECECEE",surface:"#F5F5F6",white:"#FFFFFF",
-  paper:"#FFFFFF",
+  ink:"#2C2218",inkMid:"#7A6B5A",inkSoft:"#B5A898",
+  line:"#EAE0D2",surface:"#F0E8DC",white:"#FFFFFF",
+  paper:"#FAF6F0",
   brand:"#9C7B52",brandDeep:"#7A5E38",brandBg:"#F0E6D4",
   gold:"#9C7B52",goldBg:"#F0E6D4",
   green:"#7A9669",greenBg:"#E4EBDA",
@@ -137,48 +137,7 @@ const T = {
   amber:"#A88B58",amberBg:"#EDE0C8",
   purple:"#9485A0",purpleBg:"#E8E0EE",
   rose:"#C47E72",roseBg:"#F5E4E0",
-  grad:"linear-gradient(135deg,#B08A5C,#7A5E38)",
 };
-
-/* ===== TEMA — accento variabile in-app (sfondi invariati) ===== */
-const _hx = h => { h=h.replace("#",""); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; };
-const _rgb = a => "#"+a.map(x=>Math.max(0,Math.min(255,Math.round(x))).toString(16).padStart(2,"0")).join("");
-const lighten = (hex,amt)=>{const[r,g,b]=_hx(hex);return _rgb([r+(255-r)*amt,g+(255-g)*amt,b+(255-b)*amt]);};
-const darken  = (hex,amt)=>{const[r,g,b]=_hx(hex);return _rgb([r*(1-amt),g*(1-amt),b*(1-amt)]);};
-
-const ACCENTS = {
-  nero:     {label:"Nero",          base:"#2B2B2B"},
-  oro:      {label:"Oro",           base:"#9C7B52"},
-  rosa:     {label:"Rosa",          base:"#D26A92"},
-  arancione:{label:"Arancione",     base:"#DC7A2E"},
-  blu:      {label:"Blu",           base:"#3A6DD0"},
-  verde:    {label:"Verde",         base:"#4E9E5C"},
-  petronas: {label:"Verde Petronas",base:"#1C7D7A"},
-  rosso:    {label:"Rosso",         base:"#CE4438"},
-  giallo:   {label:"Giallo",        base:"#C99A1E"},
-  viola:    {label:"Viola",         base:"#7E4FC4"},
-  grigio:   {label:"Grigio",        base:"#6E6E6E"},
-  azzurro:  {label:"Azzurro",       base:"#3FA3D8"},
-  lilla:    {label:"Lilla",         base:"#A877D0"},
-};
-const ACCENT_ORDER = ["nero","oro","rosa","arancione","blu","verde","petronas","rosso","giallo","viola","grigio","azzurro","lilla"];
-
-function applyAccent(name){
-  const a = ACCENTS[name] || ACCENTS.oro;
-  const base = a.base, deep = darken(base,0.20), bg = lighten(base,0.82);
-  T.brand=base; T.brandDeep=deep; T.brandBg=bg; T.gold=base; T.goldBg=bg;
-  T.grad=`linear-gradient(135deg,${lighten(base,0.10)},${deep})`;
-  // varianti tonali (badge/card) come sfumature dell'accento
-  T.amber=lighten(base,0.06); T.amberBg=lighten(base,0.84);
-  T.green=darken(base,0.08);  T.greenBg=lighten(base,0.80);
-  T.blue =lighten(base,0.16); T.blueBg =lighten(base,0.86);
-  T.purple=darken(base,0.04); T.purpleBg=lighten(base,0.82);
-  T.red  =base;               T.redBg  =lighten(base,0.80);
-  T.rose =lighten(base,0.12); T.roseBg =lighten(base,0.85);
-  // categorie come sfumature dell'accento
-  if (typeof CAT_LIST !== "undefined") CAT_LIST.forEach((c,i)=>{ const l=0.86-i*0.015; c.color=deep; c.bg=lighten(base,l); c.grad=`linear-gradient(145deg,${lighten(base,l)},${lighten(base,l-0.08)})`; });
-  T.accent=name;
-}
 
 const ST = {
   confermato:{label:"Confermato",bg:"#E6F0E8",text:"#3E7C5A",bar:"#3E7C5A"},
@@ -308,9 +267,6 @@ const CAT_LIST = [
   {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
 ];
 
-/* applica l'accento salvato (o "oro") già al primo render */
-try { applyAccent((typeof localStorage!=="undefined" && localStorage.getItem("ba-accent")) || "oro"); } catch(e){ applyAccent("oro"); }
-
 const FEED = [
   {id:1,proId:3,cat:"Nail Art",img:U("nail art manicure"),caption:"Nail art floreale 🌸",tags:["#nailart"],likes:312},
   {id:2,proId:1,cat:"Capelli",img:U("balayage hair color salon"),caption:"Balayage dorato ✨",tags:["#balayage"],likes:387},
@@ -353,7 +309,7 @@ const ConfirmDialog = ({title,message,confirmLabel="Conferma",cancelLabel="Annul
       {message && <p style={{fontSize:13,color:T.inkMid,margin:"0 0 18px",lineHeight:1.45}}>{message}</p>}
       <div style={{display:"flex",gap:8}}>
         <button onClick={onCancel} style={{flex:1,padding:"11px 0",borderRadius:13,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{cancelLabel}</button>
-        <button onClick={onConfirm} style={{flex:1,padding:"11px 0",borderRadius:13,border:"none",color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit",background:danger?"linear-gradient(135deg,#C0705A,#A0503C)":T.grad}}>{confirmLabel}</button>
+        <button onClick={onConfirm} style={{flex:1,padding:"11px 0",borderRadius:13,border:"none",color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit",background:danger?"linear-gradient(135deg,#C0705A,#A0503C)":"linear-gradient(135deg,#BFA67E,#897153)"}}>{confirmLabel}</button>
       </div>
     </div>
   </div>
@@ -730,16 +686,16 @@ function NavBar({items,s,nav,labelSize=10}) {
         width:"100%",maxWidth:430,
         background:"rgba(255,255,255,.96)",
         backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
-        borderTop:`1px solid ${T.line}`,
+        borderTop:"1px solid rgba(234,224,210,.8)",
         borderRadius:0,
         display:"flex",zIndex:100,padding:"8px 4px 20px",touchAction:"none",userSelect:"none",
-        boxShadow:"0 -4px 20px rgba(50,52,62,.07)"}}>
-      {/* Pillola scorrevole — tinta accento */}
+        boxShadow:"0 -4px 20px rgba(44,34,24,.08)"}}>
+      {/* Pillola scorrevole — oro-tortora tenue */}
       <div style={{
         position:"absolute", top:6, height:"calc(100% - 28px)",
         left:pillLeft, width:pillW,
-        background:T.brandBg,
-        border:`1px solid ${T.brand}40`,
+        background:"rgba(156,123,82,.12)",
+        border:"1px solid rgba(156,123,82,.25)",
         borderRadius:14,
         transition:live?"none":"left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1)",
         pointerEvents:"none", zIndex:0,
@@ -788,7 +744,7 @@ function LoginScreen({onAuth}) {
   return (
     <div style={{minHeight:"100dvh",background:T.white,display:"flex",flexDirection:"column"}}>
       {/* Top azzurro con logo */}
-      <div style={{background:T.grad,padding:"64px 26px 40px",display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
+      <div style={{background:"linear-gradient(135deg,#BFA67E,#897153)",padding:"64px 26px 40px",display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
         <div className="ba-rise" style={{width:60,height:60,borderRadius:20,background:"rgba(255,255,255,.22)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",border:"1px solid rgba(255,255,255,.4)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20}}><LogoMark size={30} color="#fff"/></div>
         <h1 className="ba-rise" style={{fontSize:40,fontWeight:900,color:"#fff",lineHeight:1.05,margin:"0 0 8px",animationDelay:".06s",letterSpacing:"-.02em"}}>BeautyApp</h1>
         <p className="ba-rise" style={{fontSize:15,color:"rgba(255,255,255,.92)",margin:0,animationDelay:".12s",fontWeight:600}}>La bellezza, a portata di mano.</p>
@@ -820,9 +776,9 @@ function LoginScreen({onAuth}) {
         <div style={{marginTop:8}}>
           <button disabled={!tp} onClick={()=>onAuth({name:tp==="pro"?"Salon Elite":"Alessio",type:tp})}
             style={{width:"100%",padding:"17px 0",borderRadius:18,border:"none",
-              background:tp?T.grad:T.surface,color:tp?"#fff":T.inkSoft,
+              background:tp?"linear-gradient(135deg,#BFA67E,#897153)":"#E0D8CB",color:tp?"#fff":"#b3a892",
               fontSize:16,fontWeight:800,cursor:tp?"pointer":"default",fontFamily:"inherit",
-              boxShadow:tp?"0 8px 22px rgba(50,52,62,.22)":"none",transition:"all .2s ease"}}>
+              boxShadow:tp?"0 8px 22px rgba(140,115,83,.30)":"none",transition:"all .2s ease"}}>
             Entra nell'app
           </button>
         </div>
@@ -853,7 +809,6 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
   const [searchCenter,setSearchCenter] = useState(DEFAULT_COORDS);
   const [selectedPro,setSelectedPro] = useState(null);
   const [darkMap,setDarkMap] = useState(false);
-  const [showMap,setShowMap] = useState(false);
 
   // Solo professionisti registrati e abbonati alla piattaforma: nessun dato esterno o da Google
   const platformPros = useMemo(() => ALL_PROS.filter(p=>p.subscribed), []);
@@ -980,8 +935,8 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
           <div className="ba-zoom clay" onClick={()=>nav("cl_appts")}
             style={{display:"flex",alignItems:"center",gap:13,padding:"16px 18px",borderRadius:20,cursor:"pointer",
               background:T.white}}>
-            <div style={{width:44,height:44,borderRadius:13,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <div style={{width:44,height:44,borderRadius:13,background:T.surface,border:`1px solid ${T.line}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>
               </svg>
             </div>
@@ -1020,7 +975,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                   <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} - {pro.city}</p>
                   <span style={{color:T.gold,fontSize:12}}>{"★".repeat(Math.floor(pro.rating))}</span>
                 </div>
-                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:T.grad,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+                <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 14px",borderRadius:10,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
               </div>
               {i < searchResults.length-1 && <Div/>}
             </div>
@@ -1055,7 +1010,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
               <div style={{padding:"22px 0 0"}}>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 20px",marginBottom:14}}>
                   <p style={{fontSize:16,fontWeight:800,color:T.ink,margin:0}}>Professionisti vicino a te</p>
-                  <button onClick={()=>{setSelectedPro(null);setShowMap(true);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,fontWeight:600,color:T.brand,fontFamily:"inherit",display:"flex",alignItems:"center",gap:3}}>
+                  <button onClick={()=>setSelCat(null)||setViewMode("mappa")} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,fontWeight:600,color:T.brand,fontFamily:"inherit",display:"flex",alignItems:"center",gap:3}}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
                     Vedi mappa
                   </button>
@@ -1155,48 +1110,6 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
           onBook={pro=>nav("cl_prenota",{pro})}
         />
       )}
-
-      {/* Mappa a tutto schermo — "Vedi mappa" dalla home */}
-      {showMap && (()=>{
-        const mapPros = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm);
-        return (
-          <div style={{position:"fixed",inset:0,zIndex:400,background:T.paper,display:"flex",flexDirection:"column"}}>
-            <div style={{padding:"50px 14px 12px",background:T.white,borderBottom:`1px solid ${T.line}`,display:"flex",alignItems:"center",gap:11,flexShrink:0}}>
-              <button onClick={()=>{setShowMap(false);setSelectedPro(null);}} className="clay-soft" style={{width:36,height:36,borderRadius:"50%",background:T.white,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-              </button>
-              <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:16,fontWeight:800,color:T.ink,margin:0}}>Professionisti in mappa</p>
-                <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{mapPros.length} vicino a te · {city}</p>
-              </div>
-              <button onClick={()=>setDarkMap(d=>!d)} className="clay-soft" style={{width:36,height:36,borderRadius:"50%",background:T.white,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,flexShrink:0}}>{darkMap?"☀️":"🌙"}</button>
-            </div>
-            <div style={{flex:1,position:"relative"}}>
-              <MapView pros={mapPros} center={searchCenter} onSelectPro={setSelectedPro} onMapMove={setSearchCenter} dark={darkMap} height="100%"/>
-              {selectedPro && (
-                <div style={{position:"absolute",left:12,right:12,bottom:18,zIndex:10}}>
-                  <div className="clay" style={{background:T.white,borderRadius:20,padding:"16px",display:"flex",gap:13,alignItems:"center",position:"relative"}}>
-                    <div className="clay-soft" style={{width:58,height:58,borderRadius:16,background:`${selectedPro.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0}}>{selectedPro.emoji}</div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:"0 0 2px"}}>{selectedPro.name}</p>
-                      <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:2}}>
-                        <span style={{color:T.gold,fontSize:12}}>{"★".repeat(Math.floor(selectedPro.rating))}</span>
-                        <span style={{color:T.inkSoft,fontSize:11}}>({selectedPro.reviews}) · {selectedPro.distKm.toFixed(1)} km</span>
-                      </div>
-                      <p style={{fontSize:11,color:T.inkSoft,margin:0}}>Prima disponibilità: {selectedPro.slots[0]}</p>
-                    </div>
-                    <button onClick={()=>setSelectedPro(null)} style={{position:"absolute",top:8,right:8,background:T.surface,border:"none",borderRadius:"50%",width:24,height:24,cursor:"pointer",fontSize:12,color:T.inkMid}}>×</button>
-                  </div>
-                  <div style={{display:"flex",gap:8,marginTop:8}}>
-                    <button onClick={()=>{setShowMap(false);nav("cl_pro",selectedPro);}} className="clay-soft" style={{flex:1,padding:"12px 0",borderRadius:14,border:"none",background:T.white,color:T.ink,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Profilo</button>
-                    <button onClick={()=>{setShowMap(false);nav("cl_prenota",{pro:selectedPro});}} className="clay-btn ba-btn-bounce" style={{flex:2,padding:"12px 0",borderRadius:14,border:"none",background:T.brand,color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Prenota</button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      })()}
 
       {/* Modal scelta posizione */}
       {showCity && (
@@ -1505,7 +1418,7 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing,onMessage}
         </div>
         <div style={{display:"flex",gap:9}}>
           <button onClick={toggleFollow} style={{flex:2,padding:"11px 0",borderRadius:10,border:"none",cursor:"pointer",fontSize:13,fontWeight:700,fontFamily:"inherit",
-            background:isFollowing?T.surface:T.grad,
+            background:isFollowing?T.surface:"linear-gradient(135deg,#BFA67E,#897153)",
             color:isFollowing?T.inkMid:"#fff",
             boxShadow:isFollowing?"none":"0 4px 14px rgba(140,115,83,.3)"}}>
             {isFollowing?"✓ Segui già":"+ Segui"}
@@ -1908,7 +1821,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
 }
 
 /* PROFILO CLIENTE — stile Instagram */
-function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent}) {
+function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout}) {
   const [tab,setTab] = useState("griglia"); // griglia | recensioni | impostazioni
   const [info,setInfo] = useState({name:user.name,handle:(user.name||"utente").toLowerCase().replace(/\s+/g,"_"),email:"alessio@email.it",city:"Dolcedo, Liguria",phone:""});
   const [editInfo,setEditInfo] = useState(false);
@@ -1944,7 +1857,7 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
   ];
 
   const Toggle = ({on,onClick}) => (
-    <button onClick={onClick} style={{width:46,height:27,borderRadius:99,border:"none",cursor:"pointer",padding:3,background:on?T.grad:"#D8D8DC",transition:"background .2s ease",display:"flex",justifyContent:on?"flex-end":"flex-start"}}>
+    <button onClick={onClick} style={{width:46,height:27,borderRadius:99,border:"none",cursor:"pointer",padding:3,background:on?"linear-gradient(135deg,#BFA67E,#897153)":"#D8CEBF",transition:"background .2s ease",display:"flex",justifyContent:on?"flex-end":"flex-start"}}>
       <span style={{width:21,height:21,borderRadius:"50%",background:"#fff",boxShadow:"0 1px 3px rgba(0,0,0,.2)",transition:"all .2s ease"}}/>
     </button>
   );
@@ -1952,9 +1865,9 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
   return (
     <div style={{paddingBottom:90,background:T.paper,minHeight:"100dvh"}}>
       {/* Header profilo */}
-      <div style={{background:T.white,padding:"50px 18px 16px"}}>
+      <div style={{background:"linear-gradient(170deg,#EFE6D8 0%,#F4EFE8 100%)",padding:"50px 18px 16px"}}>
         <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
-          <div className="clay-btn" style={{width:74,height:74,borderRadius:"50%",background:T.grad,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,fontWeight:700,color:"#fff",flexShrink:0,fontFamily:"'Fraunces',serif"}}>{info.name[0]}</div>
+          <div className="clay-btn" style={{width:74,height:74,borderRadius:"50%",background:"linear-gradient(135deg,#BFA67E,#897153)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,fontWeight:700,color:"#fff",flexShrink:0,fontFamily:"'Fraunces',serif"}}>{info.name[0]}</div>
           <div style={{flex:1,display:"flex",justifyContent:"space-around",textAlign:"center"}}>
             {[[savedPros.length,"Salvati"],[likedFeed.length,"Mi piace"],[foll.size,"Seguiti"]].map(([v,l])=>(
               <div key={l}><p style={{fontSize:18,fontWeight:700,color:T.ink,margin:0}}>{v}</p><p style={{fontSize:11,color:T.inkMid,margin:0}}>{l}</p></div>
@@ -1985,13 +1898,13 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
             {suggested.map(pro=>(
               <div key={pro.id} className="clay" style={{flexShrink:0,width:138,background:T.white,borderRadius:18,padding:"16px 12px",textAlign:"center"}}>
                 <div onClick={()=>nav("cl_pro",pro)} style={{cursor:"pointer"}}>
-                  <div className="clay-soft" style={{margin:"0 auto 8px",width:54,height:54,borderRadius:"50%",background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>
+                  <div style={{margin:"0 auto 8px",width:54,height:54,borderRadius:"50%",background:"linear-gradient(145deg,#F1E9DC,#E7DCCB)",border:"2px solid #E0D3BF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>
                   <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:"0 0 1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
                   <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 10px"}}>{pro.followers} follower</p>
                 </div>
                 {foll.has(pro.id)
                   ? <button disabled style={{width:"100%",padding:"8px 0",borderRadius:10,border:`1.5px solid ${T.line}`,background:T.surface,color:T.inkMid,fontSize:12,fontWeight:700,fontFamily:"inherit"}}>✓ Seguito</button>
-                  : <button onClick={()=>doFollow(pro.id)} style={{width:"100%",padding:"8px 0",borderRadius:10,border:"none",background:T.grad,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Segui</button>}
+                  : <button onClick={()=>doFollow(pro.id)} style={{width:"100%",padding:"8px 0",borderRadius:10,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Segui</button>}
               </div>
             ))}
           </div>
@@ -2036,7 +1949,7 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
                   <div style={{display:"flex",gap:14,overflowX:"auto",scrollbarWidth:"none",paddingBottom:6}} className="ba-noscroll">
                     {savedPros.map(pro=>(
                       <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:66,textAlign:"center",cursor:"pointer"}}>
-                        <div className="clay-soft" style={{width:62,height:62,borderRadius:"50%",margin:"0 auto 5px",background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>
+                        <div style={{width:62,height:62,borderRadius:"50%",margin:"0 auto 5px",background:"linear-gradient(145deg,#F1E9DC,#E7DCCB)",border:"2px solid #D8C9B2",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>
                         <p style={{fontSize:11,color:T.inkMid,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:600}}>{pro.name}</p>
                       </div>
                     ))}
@@ -2068,33 +1981,12 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
       {/* TAB impostazioni */}
       {tab==="impostazioni" && (
         <div style={{padding:"14px 16px"}}>
-          {/* Tema / colore app */}
-          <div className="clay" style={{background:T.white,borderRadius:20,padding:"15px 16px",marginBottom:12}}>
-            <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:"0 0 3px"}}>Colore dell'app</p>
-            <p style={{fontSize:11,color:T.inkMid,margin:"0 0 13px"}}>Scegli l'accento: card, pulsanti e dettagli si adattano da soli.</p>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:11}}>
-              {ACCENT_ORDER.map(name=>{
-                const sel = accent===name, base = ACCENTS[name].base;
-                return (
-                  <button key={name} onClick={()=>setAccent(name)} title={ACCENTS[name].label}
-                    className={sel?"clay-btn":"clay-soft"}
-                    style={{width:"100%",aspectRatio:"1",borderRadius:"50%",border:"none",cursor:"pointer",
-                      background:`linear-gradient(135deg,${lighten(base,0.1)},${darken(base,0.2)})`,
-                      outline:sel?`2.5px solid ${T.ink}`:"none",outlineOffset:2,
-                      display:"flex",alignItems:"center",justifyContent:"center"}}>
-                    {sel && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>}
-                  </button>
-                );
-              })}
-            </div>
-            <p style={{fontSize:12,fontWeight:700,color:T.brandDeep,margin:"12px 0 0",textAlign:"center"}}>{ACCENTS[accent]?.label}</p>
-          </div>
           {/* Account */}
           <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"13px 16px",borderBottom:`1px solid ${T.line}`}}>
               <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:0}}>Account</p>
               {editInfo
-                ? <div style={{display:"flex",gap:6}}><Btn label="Annulla" onClick={()=>{setEditInfo(false);setTmp(info);}} style={{fontSize:11,padding:"4px 10px"}}/><button onClick={()=>{setInfo(tmp);setEditInfo(false);}} style={{padding:"4px 12px",borderRadius:8,border:"none",background:T.grad,color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Salva</button></div>
+                ? <div style={{display:"flex",gap:6}}><Btn label="Annulla" onClick={()=>{setEditInfo(false);setTmp(info);}} style={{fontSize:11,padding:"4px 10px"}}/><button onClick={()=>{setInfo(tmp);setEditInfo(false);}} style={{padding:"4px 12px",borderRadius:8,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Salva</button></div>
                 : <Btn label="Modifica" onClick={()=>{setEditInfo(true);setTmp(info);}} style={{fontSize:11,padding:"4px 10px"}}/>
               }
             </div>
@@ -2814,7 +2706,7 @@ function OfferCard({offer,msgFrom,role,onPick,onDecline}) {
         {st==="pending" && !isMine && (
           <div style={{display:"flex",gap:8}}>
             <button onClick={onDecline} style={{flex:1,padding:"10px 0",borderRadius:11,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Rifiuta</button>
-            <button onClick={onPick} style={{flex:2,padding:"11px 0",borderRadius:11,border:"none",background:"linear-gradient(135deg,#7A9669,#5E7A4F)",color:"#fff",fontSize:16,fontWeight:800,cursor:"pointer",fontFamily:"inherit",touchAction:"manipulation"}}>Accetta e scegli orario</button>
+            <button onClick={onPick} style={{flex:2,padding:"10px 0",borderRadius:11,border:"none",background:"linear-gradient(135deg,#7A9669,#5E7A4F)",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Accetta e scegli orario</button>
           </div>
         )}
         {st==="pending" && isMine && (
@@ -2845,19 +2737,19 @@ function SlotPickerModal({offer,onClose,onConfirm}) {
         <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:8}}>Giorno</label>
         <div style={{display:"flex",gap:6,overflowX:"auto",scrollbarWidth:"none",marginBottom:18,paddingBottom:2}}>
           {DATE_OPTS.map(d=>(
-            <button key={d} onClick={()=>setSelDate(d)} style={{flexShrink:0,padding:"10px 16px",borderRadius:99,border:"none",cursor:"pointer",fontSize:16,fontWeight:700,background:selDate===d?T.brand:T.white,color:selDate===d?"#fff":T.inkMid,fontFamily:"inherit",touchAction:"manipulation",boxShadow:selDate===d?"none":`0 0 0 1.5px ${T.line} inset`}}>{d}</button>
+            <button key={d} onClick={()=>setSelDate(d)} style={{flexShrink:0,padding:"9px 14px",borderRadius:99,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,background:selDate===d?T.brand:T.white,color:selDate===d?"#fff":T.inkMid,fontFamily:"inherit",boxShadow:selDate===d?"none":`0 0 0 1.5px ${T.line} inset`}}>{d}</button>
           ))}
         </div>
 
         <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:8}}>Orario</label>
-        <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:24}}>
+        <div style={{display:"flex",gap:7,flexWrap:"wrap",marginBottom:24}}>
           {TIME_OPTS.map(t=>(
-            <button key={t} onClick={()=>setSelSlot(t)} style={{padding:"11px 16px",borderRadius:12,border:"none",cursor:"pointer",fontSize:16,fontWeight:700,background:selSlot===t?T.brand:T.white,color:selSlot===t?"#fff":T.inkMid,fontFamily:"inherit",touchAction:"manipulation",boxShadow:selSlot===t?"none":`0 0 0 1.5px ${T.line} inset`}}>{t}</button>
+            <button key={t} onClick={()=>setSelSlot(t)} style={{padding:"9px 14px",borderRadius:10,border:"none",cursor:"pointer",fontSize:13,fontWeight:700,background:selSlot===t?T.brand:T.white,color:selSlot===t?"#fff":T.inkMid,fontFamily:"inherit",boxShadow:selSlot===t?"none":`0 0 0 1.5px ${T.line} inset`}}>{t}</button>
           ))}
         </div>
 
         <button onClick={()=>valid&&onConfirm(selDate,selSlot)} disabled={!valid}
-          style={{width:"100%",padding:"15px 0",borderRadius:14,border:"none",cursor:valid?"pointer":"default",fontSize:16,fontWeight:800,fontFamily:"inherit",touchAction:"manipulation",
+          style={{width:"100%",padding:"15px 0",borderRadius:14,border:"none",cursor:valid?"pointer":"default",fontSize:15,fontWeight:800,fontFamily:"inherit",
             background:valid?"linear-gradient(135deg,#7A9669,#5E7A4F)":T.line,color:valid?"#fff":T.inkSoft}}>
           Conferma prenotazione
         </button>
@@ -2876,7 +2768,7 @@ function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onAccept,onDecline}
   useEffect(()=>{ if(scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; },[conv.messages.length]);
 
   const otherName = role==="client"?pro.name:conv.clientName;
-  const send = () => { if(!text.trim()) return; const t=text.trim(); setText(""); onSendMessage(conv.id,{from:role,type:"text",text:t,_dedup:Date.now()+""+Math.random()}); };
+  const send = () => { if(!text.trim()) return; onSendMessage(conv.id,{from:role,type:"text",text:text.trim()}); setText(""); };
 
   return (
     <div style={{display:"flex",flexDirection:"column",height:"100dvh",background:T.paper}}>
@@ -2935,7 +2827,7 @@ function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onAccept,onDecline}
 
       {/* Modal crea offerta — solo pro */}
       {showOffer && role==="pro" && <OfferModal pro={pro} onClose={()=>setShowOffer(false)}
-        onSend={(offer)=>{const dedup=Date.now()+""+Math.random();onSendOffer(conv.id,{from:"pro",type:"offer",_dedup:dedup,offer:{...offer,status:"pending"}});setShowOffer(false);}}/>}
+        onSend={(offer)=>{onSendOffer(conv.id,{from:"pro",type:"offer",offer:{...offer,status:"pending"}});setShowOffer(false);}}/>}
 
       {/* Bottom-sheet scelta slot — solo cliente */}
       {pickMsg && <SlotPickerModal offer={pickMsg.offer} onClose={()=>setPickMsg(null)}
@@ -2976,7 +2868,7 @@ function OfferModal({pro,onClose,onSend}) {
 
         <button onClick={()=>valid&&onSend({service:service.trim(),price:parseInt(price),min:parseInt(min)||60})} disabled={!valid}
           style={{width:"100%",padding:"15px 0",borderRadius:14,border:"none",cursor:valid?"pointer":"default",fontSize:15,fontWeight:800,fontFamily:"inherit",
-            background:valid?T.grad:T.line,color:valid?"#fff":T.inkSoft}}>
+            background:valid?"linear-gradient(135deg,#BFA67E,#897153)":T.line,color:valid?"#fff":T.inkSoft}}>
           Invia proposta al cliente
         </button>
       </div>
@@ -3008,9 +2900,6 @@ function BetaWelcome({onClose}) {
 /* ROOT */
 export default function App() {
   const [user,setUser] = useState(null);
-  const [accent,setAccentState] = useState(()=>{ try{return localStorage.getItem("ba-accent")||"oro";}catch(e){return "oro";} });
-  applyAccent(accent); // garantisce che T sia coerente ad ogni render
-  const setAccent = (name)=>{ applyAccent(name); try{localStorage.setItem("ba-accent",name);}catch(e){} setAccentState(name); };
   const [mode,setMode] = useState("cliente");
   const [screen,setScreen] = useState("cl_home");
   const [sData,setSD] = useState(null);
@@ -3044,13 +2933,9 @@ export default function App() {
   };
 
   const sendMessage = (convId,msg) => {
-    const msgId = Date.now() + Math.floor(Math.random()*1000);
-    setConversations(p=>p.map(c=>{
-      if(c.id!==convId) return c;
-      // evita duplicati se la funzione viene chiamata due volte in rapida successione
-      if(msg._dedup && c.messages.some(m=>m._dedup===msg._dedup)) return c;
-      return {...c,messages:[...c.messages,{id:msgId,time:nowTime(),...msg}]};
-    }));
+    setConversations(p=>p.map(c=>c.id===convId
+      ? {...c,messages:[...c.messages,{id:Date.now(),time:nowTime(),...msg}]}
+      : c));
   };
   const sendOffer = (convId,msg) => sendMessage(convId,msg);
 
@@ -3119,7 +3004,7 @@ export default function App() {
       return <ChatScreen conv={conv} role={sData?.role||"client"} nav={nav}
         onSendMessage={sendMessage} onSendOffer={sendOffer} onAccept={acceptOffer} onDecline={declineOffer}/>;
     }
-    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)} accent={accent} setAccent={setAccent}/>;
+    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav}/>;
     if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav}/>;
     if(screen==="pro_cliente")   return <ProCliente client={sData} setClients={setClients} appts={appts} services={services} nav={nav}/>;
