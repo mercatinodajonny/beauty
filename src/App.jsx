@@ -423,7 +423,7 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
         </div>
 
         {/* Toggle Lista / Mappa */}
-        <div style={{display:"flex",background:T.surface,borderRadius:12,padding:3,gap:2,marginBottom:12}}>
+        <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:14,padding:4,gap:2,marginBottom:12}}>
           {[["lista","☰  Lista"],["mappa","📍  Mappa"]].map(([v,l]) => (
             <button key={v} onClick={()=>setViewMode(v)} style={{flex:1,padding:"9px 0",borderRadius:9,border:"none",cursor:"pointer",fontSize:13,fontWeight:viewMode===v?700:500,background:viewMode===v?T.ink:"transparent",color:viewMode===v?T.white:T.inkMid,fontFamily:"inherit"}}>{l}</button>
           ))}
@@ -1851,8 +1851,8 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
         <h1 style={{fontSize:19,fontWeight:700,color:T.ink,margin:"0 0 1px"}}>{info.name}</h1>
         <p style={{fontSize:13,color:T.inkMid,margin:"0 0 12px"}}>@{info.handle} · {info.city}</p>
         <div style={{display:"flex",gap:8}}>
-          <button onClick={()=>{setTab("impostazioni");setEditInfo(true);setTmp(info);}} style={{flex:1,padding:"9px 0",borderRadius:11,border:"none",background:T.white,cursor:"pointer",fontSize:13,fontWeight:700,color:T.ink,fontFamily:"inherit",boxShadow:"0 2px 8px rgba(140,115,83,.12)"}}>Modifica profilo</button>
-          <button onClick={()=>setTab("impostazioni")} style={{width:42,borderRadius:11,border:"none",background:T.white,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(140,115,83,.12)"}}>
+          <button onClick={()=>{setTab("impostazioni");setEditInfo(true);setTmp(info);}} className="clay-soft" style={{flex:1,padding:"11px 0",borderRadius:14,border:"none",background:T.white,cursor:"pointer",fontSize:13,fontWeight:700,color:T.ink,fontFamily:"inherit"}}>Modifica profilo</button>
+          <button onClick={()=>setTab("impostazioni")} className="clay-soft" style={{width:44,borderRadius:14,border:"none",background:T.white,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{TABS[2].icon}</svg>
           </button>
         </div>
@@ -2136,7 +2136,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours}) {
             <button onClick={()=>setShowAdd(true)} style={{width:32,height:32,borderRadius:8,background:T.ink,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"white"}}><IPlus/></button>
           </div>
         </div>
-        <div style={{display:"flex",background:T.surface,borderRadius:8,padding:3,gap:2,marginBottom:9}}>
+        <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:13,padding:4,gap:2,marginBottom:9}}>
           {[["giorno","Giorno"],["mese","Mese"]].map(([v,l])=><button key={v} onClick={()=>setView(v)} style={{flex:1,padding:"6px 0",borderRadius:6,border:"none",cursor:"pointer",fontSize:12,fontWeight:view===v?700:400,background:view===v?T.white:T.surface,color:view===v?T.ink:T.inkSoft,fontFamily:"inherit"}}>{l}</button>)}
         </div>
         {view==="giorno" && (
@@ -2170,7 +2170,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours}) {
                   <span style={{fontSize:11,color:appt?T.inkMid:"#D1D5DB",fontWeight:appt?600:400}}>{slot}</span>
                 </div>
                 {appt ? (
-                  <div onClick={()=>setSelAppt(selAppt===appt.id?null:appt.id)} style={{flex:1,background:T.white,borderRadius:11,overflow:"hidden",cursor:"pointer",border:`1px solid ${T.line}`,marginBottom:3}}>
+                  <div onClick={()=>setSelAppt(selAppt===appt.id?null:appt.id)} className="clay-soft" style={{flex:1,background:T.white,borderRadius:14,overflow:"hidden",cursor:"pointer",marginBottom:3}}>
                     <div style={{display:"flex",alignItems:"center",gap:8,padding:"10px 11px"}}>
                       <div style={{width:4,height:34,borderRadius:2,background:s?.bar,flexShrink:0}}/>
                       <div style={{flex:1,minWidth:0}}>
@@ -2370,7 +2370,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
           <h1 style={{fontSize:20,fontWeight:700,color:T.ink,margin:0}}>Gestione</h1>
           <button onClick={()=>tab==="servizi"?setShowAddSvc(true):null} style={{display:"flex",alignItems:"center",gap:4,padding:"6px 11px",borderRadius:8,border:"none",background:T.brand,color:T.white,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><IPlus/>Aggiungi</button>
         </div>
-        <div style={{display:"flex",background:T.surface,borderRadius:8,padding:3,gap:2}}>
+        <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:13,padding:4,gap:2}}>
           {[["servizi","Servizi"],["staff","Staff"],["orari","Orari"]].map(([v,l])=><button key={v} onClick={()=>setTab(v)} style={{flex:1,padding:"6px 0",borderRadius:6,border:"none",cursor:"pointer",fontSize:11,fontWeight:tab===v?700:400,background:tab===v?T.white:T.surface,color:tab===v?T.ink:T.inkSoft,fontFamily:"inherit"}}>{l}</button>)}
         </div>
       </div>
@@ -2378,7 +2378,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
       {tab==="servizi" && (
         <div style={{padding:"10px 14px"}}>
           {services.map(s => (
-            <div key={s.id} style={{background:T.white,borderRadius:12,marginBottom:7,overflow:"hidden",opacity:s.active?1:.55}}>
+            <div key={s.id} className="clay-soft" style={{background:T.white,borderRadius:15,marginBottom:11,overflow:"hidden",opacity:s.active?1:.55}}>
               {editSvc===s.id ? (
                 <div style={{padding:"11px 13px",background:T.surface}}>
                   <div style={{marginBottom:7}}>
@@ -2408,7 +2408,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
       {tab==="staff" && (
         <div style={{padding:"10px 14px"}}>
           {staff.map(s => (
-            <div key={s.id} style={{background:T.white,borderRadius:12,marginBottom:7,padding:"12px 13px"}}>
+            <div key={s.id} className="clay-soft" style={{background:T.white,borderRadius:15,marginBottom:11,padding:"12px 13px"}}>
               <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:7}}>
                 <div style={{width:40,height:40,borderRadius:"50%",background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",fontSize:19}}>{s.emoji}</div>
                 <div style={{flex:1}}><p style={{fontSize:14,fontWeight:600,color:T.ink,margin:"0 0 1px"}}>{s.name}</p><p style={{fontSize:11,color:T.inkSoft,margin:"0 0 2px"}}>{s.role}</p><p style={{fontSize:10,color:T.inkSoft,margin:0}}>{s.schedule}</p></div>
@@ -2424,7 +2424,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
             const isOpen = hours.days.includes(i);
             const dh = hours.perDay?.[i]||{open:hours.open,close:hours.close};
             return (
-              <div key={i} style={{background:T.white,borderRadius:12,marginBottom:7,overflow:"hidden",opacity:isOpen?1:.6}}>
+              <div key={i} className="clay-soft" style={{background:T.white,borderRadius:15,marginBottom:11,overflow:"hidden",opacity:isOpen?1:.6}}>
                 <div style={{display:"flex",alignItems:"center",gap:11,padding:"12px 14px"}}>
                   <button onClick={()=>setHours(p=>({...p,days:p.days.includes(i)?p.days.filter(x=>x!==i):[...p.days,i].sort()}))} style={{width:40,height:22,borderRadius:11,border:"none",cursor:"pointer",background:isOpen?T.green:T.line,position:"relative",flexShrink:0}}>
                     <div style={{width:16,height:16,borderRadius:8,background:T.white,position:"absolute",top:3,left:isOpen?20:3,boxShadow:"0 1px 3px rgba(0,0,0,.2)"}}/>
