@@ -1416,7 +1416,7 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
       </div>
 
       {/* PRENOTA ORA sticky */}
-      <div style={{position:"fixed",bottom:98,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 32px)",maxWidth:398,zIndex:50}}>
+      <div style={{position:"fixed",bottom:80,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 32px)",maxWidth:398,zIndex:50}}>
         <button onClick={()=>nav("cl_prenota",{pro})} style={{width:"100%",padding:"17px 0",borderRadius:16,border:"none",background:T.brand,color:T.white,fontSize:17,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 8px 28px rgba(0,0,0,.35)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
           PRENOTA ORA
         </button>
@@ -2484,7 +2484,7 @@ const BETA_DAYS_LEFT = Math.ceil((BETA_END-TODAY_DEMO)/(1000*60*60*24));
 function BetaBanner({nav}) {
   const filled = Math.max(0,Math.min(100,Math.round((1-BETA_DAYS_LEFT/90)*100)));
   return (
-    <div onClick={()=>nav("pro_piani")} style={{margin:"12px 14px 100px",background:T.ink,borderRadius:14,padding:"13px 14px",cursor:"pointer"}}>
+    <div onClick={()=>nav("pro_piani")} style={{margin:"12px 14px 0",background:T.ink,borderRadius:14,padding:"13px 14px",cursor:"pointer"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
         <div><p style={{color:T.gold,fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,margin:"0 0 2px"}}>Beta gratuita</p><p style={{color:T.white,fontSize:13,fontWeight:600,margin:0}}>Accesso completo - Gratis fino al 14 set 2026</p></div>
         <div style={{textAlign:"right",flexShrink:0,marginLeft:12}}><p style={{color:T.gold,fontSize:20,fontWeight:700,margin:0}}>{BETA_DAYS_LEFT}</p><p style={{color:"rgba(255,255,255,.5)",fontSize:9,margin:0}}>giorni</p></div>
@@ -2625,7 +2625,7 @@ export default function App() {
   return (
     <W>
       {render()}
-      {mode==="pro" && screen!=="pro_piani" && screen!=="pro_stats" && <BetaBanner nav={nav}/>}
+      {mode==="pro" && screen!=="pro_piani" && <BetaBanner nav={nav}/>}
       {mode==="pro" ? <NavPro s={screen} nav={nav}/> : <NavCl s={screen} nav={nav}/>}
       {showBetaWelcome && <BetaWelcome onClose={()=>setShowBetaWelcome(false)}/>}
     </W>
