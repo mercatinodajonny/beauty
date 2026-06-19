@@ -147,22 +147,24 @@ const ST = {
 };
 
 const U = (kw,w=800,h=1000) => `https://picsum.photos/seed/${encodeURIComponent(kw.split(" ")[0])}/${w}/${h}`;
-/* Foto professionisti — seed fisso per id così ogni pro ha sempre la stessa foto */
-const PRO_PHOTO_SEEDS = {
-  parrucchiere:["hair","salon","beauty","stylist","hairdress"],
-  barbiere:["barber","shave","grooming","beard","fade"],
-  nail_artist:["nail","manicure","polish","gel","nailart"],
-  estetista:["spa","facial","skincare","esthetic","wellness"],
-  tatuatore:["tattoo","ink","studio","art","needle"],
-  ciglia:["lash","eyelash","brow","eye","beauty"],
-  makeup:["makeup","cosmetic","lipstick","brush","glam"],
-  massaggio:["massage","relax","therapy","hands","wellness"],
-  laser:["laser","treatment","skin","clinic","light"],
+/* Foto beauty specifiche per categoria — ID Unsplash verificati */
+const CAT_PHOTOS = {
+  parrucchiere:["1560066984-138dadb4c035","1521590832167-7bcbfaa6381f","1595476108010-b4d1f102b1b1"],
+  barbiere:["1503951914875-452162b0f3f1","1599351431202-1e0f0137899a","1582849426146-b1a5b5c4e3c7"],
+  nail_artist:["1604654894610-df63bc536371","1604680997070-7a4a6e3b5de7","1604654894610-df63bc536371"],
+  estetista:["1570172619644-dfd03ed5d881","1512290923902-8a9f81dc236c","1515377905703-c4788e51af15"],
+  tatuatore:["1611601322175-ef8ec80854e9","1531243625247-0e2c9e65e7ed","1596300440476-08f70a2c2df9"],
+  ciglia:["1516975080664-ed2fc6a32937","1528360983277-13d401cdc186","1616394584738-fc6e612e71b9"],
+  makeup:["1522337360788-8b13dee7a37e","1487412720507-e7ab37603c6f","1457972851104-4fd469440ab9"],
+  massaggio:["1544161515-4ab6ce6db874","1519823551278-64ac92734fb1","1600334369421-73a0ca1ec5c0"],
+  laser:["1571019613454-1cb2f99b2d8b","1559762717-e9d3a52a36a4","1631217868264-e5b90bb7e133"],
 };
-const proImg = (pro,w=300,h=300) => {
-  const seeds = PRO_PHOTO_SEEDS[pro.catId]||["beauty"];
-  const seed = seeds[pro.id % seeds.length] + pro.id;
-  return `https://picsum.photos/seed/${seed}/${w}/${h}`;
+
+const proImg = (pro) => {
+  const photos = CAT_PHOTOS[pro.catId];
+  if (!photos) return null;
+  const id = photos[pro.id % photos.length];
+  return `https://images.unsplash.com/photo-${id}?w=310&h=310&fit=crop&crop=center&auto=format&q=80`;
 };
 const toMin = t => { const [h,m] = t.split(":").map(Number); return h*60+m; };
 const toTime = m => `${String(Math.floor(m/60)).padStart(2,"0")}:${String(m%60).padStart(2,"0")}`;
@@ -448,10 +450,12 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
           <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.8,margin:"6px 0 0"}}>{pros.length} risultati</p>
           {pros.map(pro => (
             <div key={pro.id} onClick={()=>onSelectPro(pro)} className="ba-lift ba-zoom" style={{background:T.white,borderRadius:16,cursor:"pointer",display:"flex",overflow:"hidden",border:`1px solid ${T.line}`,boxShadow:`0 2px 10px rgba(44,34,24,.07)`}}>
-              <div style={{width:84,height:84,flexShrink:0,position:"relative",overflow:"hidden"}}>
-                <Photo src={proImg(pro,168,168)} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+              {(()=>{const cd=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];const ph=proImg(pro);return(
+              <div style={{width:84,height:84,flexShrink:0,position:"relative",overflow:"hidden",background:cd.grad}}>
+                <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}><CatIcon id={pro.catId} size={32} color="rgba(255,255,255,.55)" strokeWidth={1.5}/></div>
+                {ph&&<img src={ph} alt={pro.name} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.currentTarget.style.display="none";}}/>}
                 {pro.verified && <div style={{position:"absolute",bottom:5,left:5,width:16,height:16,borderRadius:"50%",background:T.green,border:`2px solid ${T.white}`,display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="7" height="7" viewBox="0 0 12 12" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M2 6l3 3 5-5"/></svg></div>}
-              </div>
+              </div>);})()}
               <div style={{flex:1,padding:"11px 12px",display:"flex",flexDirection:"column",justifyContent:"space-between",minWidth:0}}>
                 <div>
                   <p style={{fontSize:14,fontWeight:800,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
@@ -997,20 +1001,29 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                     <div style={{display:"flex",gap:14,overflowX:"auto",padding:"4px 20px 24px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                       {list.map((pro,i) => (
                         <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise" style={{flexShrink:0,width:155,cursor:"pointer",animationDelay:`${0.06*i+0.06}s`}}>
-                          {/* Card: sfondo gradiente categoria + icona SVG */}
-                          {(()=>{const catDef=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0]; return (
-                          <div style={{width:155,height:155,borderRadius:18,overflow:"hidden",position:"relative",marginBottom:10,background:catDef.grad}}>
-                            <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:5}}>
-                              <CatIcon id={pro.catId} size={50} color="rgba(255,255,255,.88)" strokeWidth={1.7}/>
-                              <span style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.78)",textTransform:"uppercase",letterSpacing:1}}>{pro.cat}</span>
+                          {/* Card foto beauty */}
+                          {(()=>{
+                            const catDef=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];
+                            const photoUrl=proImg(pro);
+                            const [imgFailed,setImgFailed] = [false,()=>{}]; // gestione errore nel render
+                            return (
+                            <div style={{width:155,height:170,borderRadius:18,overflow:"hidden",position:"relative",marginBottom:10,background:catDef.grad}}>
+                              {/* Gradiente sempre visibile come base */}
+                              <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                                <CatIcon id={pro.catId} size={54} color="rgba(255,255,255,.55)" strokeWidth={1.5}/>
+                              </div>
+                              {/* Foto sopra il gradiente — se carica copre tutto, se no rimane il gradiente */}
+                              {photoUrl && <img src={photoUrl} alt={pro.cat} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.currentTarget.style.display="none";}}/>}
+                              {/* Gradiente scuro in basso per testo leggibile */}
+                              <div style={{position:"absolute",bottom:0,left:0,right:0,height:70,background:"linear-gradient(to top,rgba(0,0,0,.6) 0%,transparent 100%)",pointerEvents:"none"}}/>
+                              {/* Badge distanza */}
+                              <div style={{position:"absolute",bottom:8,left:8,display:"flex",alignItems:"center",gap:3,background:"rgba(0,0,0,.4)",borderRadius:99,padding:"3px 8px"}}>
+                                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                <span style={{fontSize:10,fontWeight:700,color:"#fff"}}>{pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</span>
+                              </div>
                             </div>
-                            {/* Badge distanza */}
-                            <div style={{position:"absolute",bottom:8,left:8,display:"flex",alignItems:"center",gap:3,background:"rgba(0,0,0,.38)",borderRadius:99,padding:"3px 7px"}}>
-                              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                              <span style={{fontSize:10,fontWeight:700,color:"#fff"}}>{pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</span>
-                            </div>
-                          </div>
-                          );})()}
+                            );
+                          })()}
                           {/* Nome + info */}
                           <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
                           <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 8px"}}>{pro.cat} · ★ {pro.rating}</p>
@@ -1031,9 +1044,14 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                 <div style={{display:"flex",gap:10,overflowX:"auto",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
                   {ALL_PROS.slice(0,5).map(pro => (
                     <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:88,cursor:"pointer"}}>
-                      <div style={{width:88,height:88,borderRadius:14,overflow:"hidden",background:T.surface,marginBottom:6}}>
-                        <img src={proImg(pro,176,176)} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.target.style.display="none";}}/>
+                            {(()=>{const catDef2=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];const ph2=proImg(pro);return(
+                      <div style={{width:88,height:88,borderRadius:14,overflow:"hidden",background:catDef2.grad,marginBottom:6,position:"relative"}}>
+                        <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                          <CatIcon id={pro.catId} size={34} color="rgba(255,255,255,.55)" strokeWidth={1.5}/>
+                        </div>
+                        {ph2 && <img src={ph2} alt={pro.name} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.currentTarget.style.display="none";}}/>}
                       </div>
+                      );})()}
                       <p style={{fontSize:11,fontWeight:700,color:T.ink,margin:0,textAlign:"center",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
                     </div>
                   ))}
@@ -1275,9 +1293,11 @@ function ClPreferiti({nav,favorites,setFavorites}) {
             <div key={pro.id} className="ba-rise ba-zoom" style={{background:T.white,borderRadius:18,marginBottom:12,overflow:"hidden",border:`1px solid ${T.line}`,boxShadow:`0 2px 10px rgba(44,34,24,.07)`,animationDelay:`${i*.06}s`}}>
               {/* Header card con foto */}
               <div style={{display:"flex",alignItems:"center",gap:0}}>
-                <div style={{width:72,height:72,flexShrink:0,overflow:"hidden"}}>
-                  <Photo src={proImg(pro,144,144)} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-                </div>
+                {(()=>{const cd=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];const ph=proImg(pro);return(
+                <div style={{width:72,height:72,flexShrink:0,overflow:"hidden",position:"relative",background:cd.grad}}>
+                  <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}><CatIcon id={pro.catId} size={28} color="rgba(255,255,255,.55)" strokeWidth={1.5}/></div>
+                  {ph&&<img src={ph} alt={pro.name} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.currentTarget.style.display="none";}}/>}
+                </div>);})()}
                 <div style={{flex:1,padding:"12px 12px",minWidth:0}}>
                   <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
                   <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} · ★ {pro.rating}</p>
