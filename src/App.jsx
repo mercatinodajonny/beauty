@@ -441,7 +441,7 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
 
       {pros.length === 0 ? (
         <div style={{textAlign:"center",padding:"60px 20px"}}>
-          <div style={{width:64,height:64,borderRadius:18,background:`${catColor}1A`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px"}}><CatIcon id={catId} size={30} color={catColor}/></div>
+          <div className="clay-soft" style={{width:66,height:66,borderRadius:22,background:`${catColor}1A`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px"}}><CatIcon id={catId} size={30} color={catColor}/></div>
           <p style={{fontSize:17,fontWeight:700,color:T.ink,marginBottom:6}}>Nessun professionista trovato</p>
           <button onClick={()=>setRadius(Infinity)} style={{padding:"12px 24px",borderRadius:12,border:"none",background:T.brand,color:T.white,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Rimuovi il limite di distanza</button>
         </div>
@@ -449,7 +449,7 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
         <div style={{padding:"4px 20px 0",display:"flex",flexDirection:"column",gap:10}}>
           <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.8,margin:"6px 0 0"}}>{pros.length} risultati</p>
           {pros.map(pro => (
-            <div key={pro.id} onClick={()=>onSelectPro(pro)} className="ba-lift ba-zoom" style={{background:T.white,borderRadius:16,cursor:"pointer",display:"flex",overflow:"hidden",border:`1px solid ${T.line}`,boxShadow:`0 2px 10px rgba(44,34,24,.07)`}}>
+            <div key={pro.id} onClick={()=>onSelectPro(pro)} className="ba-lift ba-zoom clay" style={{background:T.white,borderRadius:20,cursor:"pointer",display:"flex",overflow:"hidden"}}>
               {(()=>{const cd=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];const ph=proImg(pro);return(
               <div style={{width:84,height:84,flexShrink:0,position:"relative",overflow:"hidden",background:cd.grad}}>
                 <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}><CatIcon id={pro.catId} size={32} color="rgba(255,255,255,.55)" strokeWidth={1.5}/></div>
@@ -1290,7 +1290,7 @@ function ClPreferiti({nav,favorites,setFavorites}) {
       ) : (
         <div style={{padding:"12px 16px"}}>
           {favPros.map((pro,i) => (
-            <div key={pro.id} className="ba-rise ba-zoom" style={{background:T.white,borderRadius:18,marginBottom:12,overflow:"hidden",border:`1px solid ${T.line}`,boxShadow:`0 2px 10px rgba(44,34,24,.07)`,animationDelay:`${i*.06}s`}}>
+            <div key={pro.id} className="ba-rise ba-zoom clay" style={{background:T.white,borderRadius:22,marginBottom:14,overflow:"hidden",animationDelay:`${i*.06}s`}}>
               {/* Header card con foto */}
               <div style={{display:"flex",alignItems:"center",gap:0}}>
                 {(()=>{const cd=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];const ph=proImg(pro);return(
@@ -1470,7 +1470,7 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
 
       {/* PRENOTA ORA sticky */}
       <div style={{position:"fixed",bottom:98,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 32px)",maxWidth:398,zIndex:50}}>
-        <button onClick={()=>nav("cl_prenota",{pro})} style={{width:"100%",padding:"17px 0",borderRadius:16,border:"none",background:T.brand,color:T.white,fontSize:17,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 8px 28px rgba(0,0,0,.35)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+        <button onClick={()=>nav("cl_prenota",{pro})} className="clay-btn ba-btn-bounce" style={{width:"100%",padding:"17px 0",borderRadius:20,border:"none",background:T.brand,color:T.white,fontSize:17,fontWeight:700,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
           PRENOTA ORA
         </button>
       </div>
@@ -2567,7 +2567,7 @@ function PianiScreen({nav}) {
       <div style={{padding:"14px 14px"}}>
         <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.8,marginBottom:12,textAlign:"center"}}>Piani disponibili dal 14 settembre</p>
         {PIANI.map((p,idx) => (
-          <div key={p.id} style={{background:T.white,borderRadius:16,marginBottom:12,overflow:"hidden"}}>
+          <div key={p.id} className="clay" style={{background:T.white,borderRadius:20,marginBottom:14,overflow:"hidden"}}>
             <div style={{background:p.color,padding:"14px 16px"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
                 <div><Pill label={p.tag} style={{background:"rgba(255,255,255,.15)",color:"rgba(255,255,255,.8)",fontSize:10,marginBottom:6}}/><p style={{color:p.textColor,fontSize:18,fontWeight:700,margin:"0 0 2px"}}>{p.name}</p><p style={{color:"rgba(255,255,255,.6)",fontSize:12,margin:0}}>{p.desc}</p></div>
