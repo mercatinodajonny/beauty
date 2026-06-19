@@ -85,36 +85,34 @@ const injectFont = () => {
   s.id = "app-style-rules";
   s.textContent = `
     h1,h2,.ba-serif,.ba-display{font-family:'Fraunces',Georgia,serif !important;font-weight:600;letter-spacing:-.015em;font-optical-sizing:auto}
-    /* CLAYMORPHISM — ombre sabbia calde, gonfie e scultoree (palette Porcellana di Sabbia) */
-    .clay{box-shadow:14px 14px 30px rgba(150,124,92,.26), -12px -12px 26px rgba(255,253,248,.95), inset 3px 3px 6px rgba(255,253,248,.85), inset -5px -5px 12px rgba(150,124,92,.13);}
-    .clay-inset{box-shadow:inset 7px 7px 14px rgba(150,124,92,.22), inset -6px -6px 13px rgba(255,253,248,.95);}
-    .clay-btn{box-shadow:9px 11px 24px rgba(140,115,83,.34), -6px -7px 16px rgba(255,253,248,.5), inset 3px 3px 7px rgba(255,253,248,.4), inset -4px -5px 10px rgba(140,115,83,.34);}
-    .clay-soft{box-shadow:8px 8px 20px rgba(150,124,92,.18), -7px -7px 17px rgba(255,253,248,.95), inset 2px 2px 4px rgba(255,253,248,.7);}
+    /* CLAYMORPHISM — ombre sabbia calde e scultoree */
+    .clay{box-shadow:8px 8px 20px rgba(150,124,92,.16), -7px -7px 16px rgba(255,253,248,.9), inset 2px 2px 4px rgba(255,253,248,.7), inset -3px -3px 7px rgba(150,124,92,.07);}
+    .clay-inset{box-shadow:inset 4px 4px 9px rgba(150,124,92,.14), inset -4px -4px 9px rgba(255,253,248,.9);}
+    .clay-btn{box-shadow:0 10px 22px rgba(140,115,83,.30), inset 2px 2px 5px rgba(255,253,248,.45), inset -3px -4px 8px rgba(140,115,83,.30);}
+    .clay-soft{box-shadow:5px 5px 14px rgba(150,124,92,.12), -4px -4px 11px rgba(255,253,248,.9);}
     /* GLASSMORPHISM — vetro smerigliato caldo */
     .glass{background:rgba(255,253,248,.5)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,253,248,.65);box-shadow:0 8px 32px rgba(150,124,92,.16);}
     .glass-dark{background:rgba(168,144,107,.2)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,253,248,.35);box-shadow:0 8px 32px rgba(140,115,83,.22);}
     @keyframes baPop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
     .ba-pop{animation:baPop .22s cubic-bezier(.34,1.56,.64,1)}
-    @keyframes baRise{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes baRise{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes baFade{from{opacity:0}to{opacity:1}}
-    .ba-rise{opacity:0;animation:baRise .45s cubic-bezier(.34,1.56,.64,1) forwards}
-    .ba-fade{opacity:0;animation:baFade .4s ease forwards}
+    .ba-rise{opacity:0;animation:baRise .55s cubic-bezier(.34,1.56,.64,1) forwards}
+    .ba-fade{opacity:0;animation:baFade .6s ease forwards}
     .ba-lift{transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease}
-    .ba-lift:active{transform:scale(.95)}
+    .ba-lift:active{transform:scale(.94)}
     /* Zoom card: ingrandimento morbido al passaggio del mouse / tocco */
-    .ba-zoom{transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s ease;will-change:transform}
+    .ba-zoom{transition:transform .32s cubic-bezier(.34,1.56,.64,1),box-shadow .32s ease;will-change:transform}
     @media (hover:hover){
-      .ba-zoom:hover{transform:translateY(-5px) scale(1.04);box-shadow:18px 22px 44px rgba(150,124,92,.30), -12px -12px 26px rgba(255,253,248,.95), inset 3px 3px 6px rgba(255,253,248,.85);z-index:2}
+      .ba-zoom:hover{transform:translateY(-5px) scale(1.04);box-shadow:0 20px 40px rgba(20,48,74,.18), -6px -6px 14px rgba(255,255,255,.9);z-index:2}
     }
-    .ba-zoom:active{transform:scale(.95)!important;transition:transform .10s cubic-bezier(.34,1.56,.64,1)!important}
+    .ba-zoom:active{transform:scale(.93)!important;transition:transform .12s cubic-bezier(.34,1.56,.64,1)!important}
     /* Bounce sui pulsanti Prenota */
     @keyframes baBounce{0%{transform:scale(1)}40%{transform:scale(.88)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
     .ba-btn-bounce{transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .18s ease}
     .ba-btn-bounce:active{animation:baBounce .38s cubic-bezier(.34,1.56,.64,1)}
     button{transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-    button:active{transform:scale(.93)}
-    /* Foto professionista — crop uniforme */
-    .pro-photo{object-fit:cover;display:block;width:100%;height:100%}
+    button:active{transform:scale(.92)}
     @media (prefers-reduced-motion: reduce){
       .ba-rise,.ba-fade{animation:none;opacity:1}
       .ba-lift,.ba-zoom,button{transition:none}
@@ -126,17 +124,16 @@ const injectFont = () => {
 
 /* PALETTE "Porcellana di Sabbia" — monocromia calda avorio/sabbia + accento oro-tortora */
 const T = {
-  ink:"#2C2218",inkMid:"#7A6B5A",inkSoft:"#B5A898",
-  line:"#EAE0D2",surface:"#F0E8DC",white:"#FFFFFF",
-  paper:"#FAF6F0",
-  brand:"#9C7B52",brandDeep:"#7A5E38",brandBg:"#F0E6D4",
-  gold:"#9C7B52",goldBg:"#F0E6D4",
-  green:"#7A9669",greenBg:"#E4EBDA",
-  blue:"#7B97A0",blueBg:"#DDE8EC",
-  red:"#B87A6A",redBg:"#F0E0DA",
-  amber:"#A88B58",amberBg:"#EDE0C8",
-  purple:"#9485A0",purpleBg:"#E8E0EE",
-  rose:"#C47E72",roseBg:"#F5E4E0",
+  ink:"#43392E",inkMid:"#8A7C6A",inkSoft:"#BEB2A0",
+  line:"#E5DBCD",surface:"#EBE3D7",white:"#FFFFFF",
+  paper:"#F4EFE8",
+  brand:"#A8906B",brandDeep:"#897153",brandBg:"#EDE4D5",
+  gold:"#A8906B",goldBg:"#EDE4D5",
+  green:"#8AA17A",greenBg:"#E9EBDF",
+  blue:"#8FA3A8",blueBg:"#E4EAEA",
+  red:"#C58A78",redBg:"#F2E4DD",
+  amber:"#B79B6B",amberBg:"#EFE6D2",
+  purple:"#A595A8",purpleBg:"#ECE6ED",
 };
 
 const ST = {
@@ -146,26 +143,7 @@ const ST = {
   completato:{label:"Completato",bg:"#E9F0F4",text:"#3E6F8E",bar:"#3E6F8E"},
 };
 
-const U = (kw,w=800,h=1000) => `https://picsum.photos/seed/${encodeURIComponent(kw.split(" ")[0])}/${w}/${h}`;
-/* Foto beauty specifiche per categoria — ID Unsplash verificati */
-const CAT_PHOTOS = {
-  parrucchiere:["1560066984-138dadb4c035","1521590832167-7bcbfaa6381f","1595476108010-b4d1f102b1b1"],
-  barbiere:["1503951914875-452162b0f3f1","1599351431202-1e0f0137899a","1582849426146-b1a5b5c4e3c7"],
-  nail_artist:["1604654894610-df63bc536371","1604680997070-7a4a6e3b5de7","1604654894610-df63bc536371"],
-  estetista:["1570172619644-dfd03ed5d881","1512290923902-8a9f81dc236c","1515377905703-c4788e51af15"],
-  tatuatore:["1611601322175-ef8ec80854e9","1531243625247-0e2c9e65e7ed","1596300440476-08f70a2c2df9"],
-  ciglia:["1516975080664-ed2fc6a32937","1528360983277-13d401cdc186","1616394584738-fc6e612e71b9"],
-  makeup:["1522337360788-8b13dee7a37e","1487412720507-e7ab37603c6f","1457972851104-4fd469440ab9"],
-  massaggio:["1544161515-4ab6ce6db874","1519823551278-64ac92734fb1","1600334369421-73a0ca1ec5c0"],
-  laser:["1571019613454-1cb2f99b2d8b","1559762717-e9d3a52a36a4","1631217868264-e5b90bb7e133"],
-};
-
-const proImg = (pro) => {
-  const photos = CAT_PHOTOS[pro.catId];
-  if (!photos) return null;
-  const id = photos[pro.id % photos.length];
-  return `https://images.unsplash.com/photo-${id}?w=310&h=310&fit=crop&crop=center&auto=format&q=80`;
-};
+const U = (kw,w=800,h=1000) => `https://source.unsplash.com/${w}x${h}/?${encodeURIComponent(kw)}`;
 const toMin = t => { const [h,m] = t.split(":").map(Number); return h*60+m; };
 const toTime = m => `${String(Math.floor(m/60)).padStart(2,"0")}:${String(m%60).padStart(2,"0")}`;
 const SLOTS = []; for(let h=8;h<20;h++) for(let m=0;m<60;m+=30) SLOTS.push(toTime(h*60+m));
@@ -238,15 +216,15 @@ const MY_APPTS0 = [
 const ALL_CITIES = ["Imperia","Milano","Roma","Torino","Bologna","Genova","Sanremo","Savona"];
 
 const CAT_LIST = [
-  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"parrucchiere",emoji:"💇",label:"Capelli",     color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"laser",       emoji:"✨",label:"Laser",       color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
-  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
+  {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#B07A5E",grad:"linear-gradient(135deg,#C7977A,#A06A4E)"},
+  {id:"parrucchiere",emoji:"💇",label:"Capelli",     color:"#A38FA6",grad:"linear-gradient(135deg,#B8A4BB,#917C95)"},
+  {id:"nail_artist", emoji:"💅",label:"Unghie",      color:"#C2A45E",grad:"linear-gradient(135deg,#D7BC76,#B0924C)"},
+  {id:"estetista",   emoji:"🧖",label:"Estetica",    color:"#8FA079",grad:"linear-gradient(135deg,#A6B690,#7C8E66)"},
+  {id:"laser",       emoji:"✨",label:"Laser",       color:"#8DA1A6",grad:"linear-gradient(135deg,#A4B7BB,#7A8E93)"},
+  {id:"tatuatore",   emoji:"🖋",label:"Tattoo",      color:"#6B6259",grad:"linear-gradient(135deg,#857A6F,#544C44)"},
+  {id:"ciglia",      emoji:"👁",label:"Ciglia",      color:"#BD8C84",grad:"linear-gradient(135deg,#D0A39B,#A6746C)"},
+  {id:"makeup",      emoji:"💄",label:"Make-up",     color:"#C58A92",grad:"linear-gradient(135deg,#D7A4AB,#AB6F78)"},
+  {id:"massaggio",   emoji:"💆",label:"Massaggi",    color:"#C89A6E",grad:"linear-gradient(135deg,#DBB286,#B07E54)"},
 ];
 
 const FEED = [
@@ -449,24 +427,20 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
         <div style={{padding:"4px 20px 0",display:"flex",flexDirection:"column",gap:10}}>
           <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.8,margin:"6px 0 0"}}>{pros.length} risultati</p>
           {pros.map(pro => (
-            <div key={pro.id} onClick={()=>onSelectPro(pro)} className="ba-lift ba-zoom" style={{background:T.white,borderRadius:16,cursor:"pointer",display:"flex",overflow:"hidden",border:`1px solid ${T.line}`,boxShadow:`0 2px 10px rgba(44,34,24,.07)`}}>
-              {(()=>{const cd=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];const ph=proImg(pro);return(
-              <div style={{width:84,height:84,flexShrink:0,position:"relative",overflow:"hidden",background:cd.grad}}>
-                <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}><CatIcon id={pro.catId} size={32} color="rgba(255,255,255,.55)" strokeWidth={1.5}/></div>
-                {ph&&<img src={ph} alt={pro.name} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.currentTarget.style.display="none";}}/>}
-                {pro.verified && <div style={{position:"absolute",bottom:5,left:5,width:16,height:16,borderRadius:"50%",background:T.green,border:`2px solid ${T.white}`,display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="7" height="7" viewBox="0 0 12 12" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M2 6l3 3 5-5"/></svg></div>}
-              </div>);})()}
-              <div style={{flex:1,padding:"11px 12px",display:"flex",flexDirection:"column",justifyContent:"space-between",minWidth:0}}>
-                <div>
-                  <p style={{fontSize:14,fontWeight:800,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
-                  <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 3px"}}>{pro.distKm.toFixed(1)} km · Da {Math.min(...pro.services.map(s=>s.price))}€</p>
-                  <span style={{color:"#C9A020",fontSize:11,fontWeight:700}}>★ {pro.rating} <span style={{color:T.inkSoft,fontWeight:500}}>({pro.reviews})</span></span>
-                </div>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:6}}>
-                  <span style={{fontSize:10,color:T.inkSoft}}>Prima disp. {pro.slots[0]}</span>
-                  <button onClick={e=>{e.stopPropagation();onBook(pro);}} className="ba-btn-bounce" style={{padding:"6px 13px",borderRadius:99,border:"none",background:T.ink,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Prenota</button>
-                </div>
+            <div key={pro.id} onClick={()=>onSelectPro(pro)} className="clay ba-lift" style={{background:T.white,borderRadius:22,padding:"14px 16px",cursor:"pointer",display:"flex",alignItems:"center",gap:13}}>
+              <div style={{width:50,height:50,borderRadius:17,background:`${pro.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0,position:"relative",boxShadow:`inset 2px 2px 4px ${pro.accent}33, inset -2px -2px 4px rgba(255,255,255,.7)`}}>
+                {pro.emoji}
+                {pro.verified && <div style={{position:"absolute",bottom:-2,right:-2,width:15,height:15,borderRadius:"50%",background:T.green,border:`2.5px solid ${T.white}`}}/>}
               </div>
+              <div style={{flex:1,minWidth:0}}>
+                <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:"0 0 2px"}}>{pro.name}</p>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
+                  <span style={{color:T.gold,fontSize:12}}>{"★".repeat(Math.floor(pro.rating))}</span>
+                  <span style={{color:T.inkSoft,fontSize:11}}>({pro.reviews}) · {pro.distKm.toFixed(1)} km</span>
+                </div>
+                <p style={{fontSize:11,color:T.inkSoft,margin:0}}>Prima disp. {pro.slots[0]} · Da {Math.min(...pro.services.map(s=>s.price))}€</p>
+              </div>
+              <button onClick={e=>{e.stopPropagation();onBook(pro);}} className="clay-btn" style={{padding:"10px 15px",borderRadius:15,border:"none",background:T.brand,color:T.white,fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
             </div>
           ))}
         </div>
@@ -525,76 +499,82 @@ const LogoMark = ({size=22,color="#fff"}) => (
   </svg>
 );
 
-/* ICONE CATEGORIA — SVG line-art professionale */
+/* ICONE CATEGORIA — line-art SVG custom per ciascun servizio */
 const CAT_PATHS = {
-  // Barbiere: rasoio a mano libera classico
+  // Barbiere: rasoio a mano libera stilizzato
   barbiere: <>
-    <path d="M7 3h8l2 3H5L7 3z"/>
-    <rect x="5" y="6" width="14" height="2.5" rx="1.2"/>
-    <path d="M12 8.5V19"/>
-    <path d="M9 19h6"/>
-    <path d="M19 6.5c1 .8 1.5 1.8 1.5 3s-.5 2.2-1.5 3"/>
+    <path d="M5 4h9a2 2 0 0 1 2 2v.5a2 2 0 0 1-2 2H5V4z"/>
+    <path d="M5 8.5V20"/>
+    <path d="M16 6.5l2.5 2L16 11"/>
   </>,
-  // Parrucchiere: forbici professionali
+  // Parrucchiere: forbici moderne aperte
   parrucchiere: <>
-    <circle cx="5.5" cy="6" r="2.2"/>
-    <circle cx="5.5" cy="18" r="2.2"/>
-    <path d="M7.5 7.2L20 17"/>
-    <path d="M7.5 16.8L20 7"/>
-    <line x1="14" y1="12" x2="16" y2="12" strokeWidth="2.5"/>
+    <circle cx="6" cy="7" r="2.2"/>
+    <circle cx="6" cy="17" r="2.2"/>
+    <path d="M8 8.5L20 19"/>
+    <path d="M8 15.5L20 5"/>
   </>,
-  // Unghie: dito con smalto
+  // Unghie: mano con unghia stilizzata
   nail_artist: <>
-    <path d="M9 14V9a3 3 0 016 0v5"/>
-    <rect x="7" y="14" width="10" height="6" rx="2"/>
-    <path d="M9 17h6"/>
-    <path d="M12 3v2"/>
-    <path d="M9.5 4l1 1.5"/>
-    <path d="M14.5 4l-1 1.5"/>
+    <rect x="7" y="2" width="10" height="13" rx="5"/>
+    <path d="M7 11h10"/>
+    <path d="M9 15v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-5"/>
   </>,
-  // Estetica: viso con foglia / lotus
+  // Estetica: fiore / viso con foglie
   estetista: <>
-    <circle cx="12" cy="10" r="3.5"/>
-    <path d="M12 13.5c0 3-2 5.5-2 5.5s-3-2.5-3-6c0-1.5.5-2.5 1.5-3"/>
-    <path d="M12 13.5c0 3 2 5.5 2 5.5s3-2.5 3-6c0-1.5-.5-2.5-1.5-3"/>
-    <path d="M12 3c-1.5 2-1.5 4.5 0 6.5"/>
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M12 2C10 5 10 7 12 9"/>
+    <path d="M12 15c-2 3-2 5 0 7"/>
+    <path d="M2 12c3-2 5-2 7 0"/>
+    <path d="M15 12c3-2 5-2 7 0"/>
+    <path d="M5 5c2 1 3 3 2 5"/>
+    <path d="M17 19c-2-1-3-3-2-5"/>
+    <path d="M19 5c-2 1-3 3-2 5"/>
+    <path d="M5 19c2-1 3-3 2-5"/>
   </>,
-  // Laser: flash / energia
+  // Laser: raggio + stelle scintilla
   laser: <>
-    <path d="M13 2L4.5 13.5H11L9 22l10.5-12H13.5L13 2z"/>
+    <path d="M3 12h5"/>
+    <path d="M16 12h5"/>
+    <path d="M12 3v5"/>
+    <path d="M12 16v5"/>
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M6.3 6.3l2.1 2.1"/>
+    <path d="M15.6 15.6l2.1 2.1"/>
+    <path d="M17.7 6.3l-2.1 2.1"/>
+    <path d="M8.4 15.6L6.3 17.7"/>
   </>,
-  // Tattoo: ago macchina
+  // Tattoo: ago con inchiostro a goccia
   tatuatore: <>
-    <path d="M15 3h3a1 1 0 011 1v2a1 1 0 01-1 1h-3"/>
-    <path d="M15 4.5H8a1 1 0 00-1 1v3a1 1 0 001 1h7"/>
-    <path d="M10 9.5v8"/>
-    <path d="M10 17.5l-1.5 1.5a1 1 0 000 1.4l.6.6"/>
-    <circle cx="18" cy="18" r="1.5"/>
-    <path d="M10.5 18.5l6 0"/>
+    <path d="M3 21l5-2 9-9-3-3-9 9z"/>
+    <path d="M14.5 6.5l3 3"/>
+    <path d="M17 3l1 1a2 2 0 0 1 0 3l-1 1"/>
+    <circle cx="19" cy="19" r="1.5" fill="currentColor" stroke="none"/>
   </>,
-  // Ciglia: occhio stilizzato con ciglia
+  // Ciglia: occhio grande con ciglia
   ciglia: <>
-    <path d="M3 12c2.5-4.5 5-7 9-7s6.5 2.5 9 7"/>
-    <path d="M3 12c2.5 4.5 5 7 9 7s6.5-2.5 9-7"/>
-    <circle cx="12" cy="12" r="2.5"/>
-    <line x1="8" y1="6" x2="7" y2="3.5"/>
-    <line x1="11.5" y1="5.2" x2="11" y2="2.5"/>
-    <line x1="15" y1="6" x2="16" y2="3.5"/>
+    <path d="M2 12s4-7 10-7 10 7 10 7"/>
+    <path d="M2 12s4 7 10 7 10-7 10-7"/>
+    <circle cx="12" cy="12" r="2.8"/>
+    <path d="M8.5 5.5L7 3"/>
+    <path d="M12 5V2"/>
+    <path d="M15.5 5.5L17 3"/>
   </>,
-  // Makeup: rossetto con rifinitura
+  // Makeup: rossetto elegante
   makeup: <>
-    <rect x="9.5" y="12" width="5" height="8" rx="1.5"/>
-    <path d="M9.5 15h5"/>
-    <path d="M10.5 12V9c0-1.5.7-3 1.5-3s1.5 1.5 1.5 3v3"/>
-    <path d="M9.5 8h5"/>
+    <rect x="9" y="11" width="6" height="9" rx="1.5"/>
+    <path d="M9 14h6"/>
+    <path d="M10 11V7.5C10 6 11 4 12 4s2 1 2 3.5V11"/>
+    <path d="M11 4.5c0-1 .5-1.5 1-1.5"/>
   </>,
-  // Massaggio: mani aperte / palme
+  // Massaggio: mani che massaggiano
   massaggio: <>
-    <path d="M8 12V8a1 1 0 012 0v4"/>
-    <path d="M10 10V7a1 1 0 012 0v3"/>
-    <path d="M12 10V7a1 1 0 012 0v3"/>
-    <path d="M14 11V9a1 1 0 012 0v3"/>
-    <path d="M8 12c0 3 1 5 4 6 3-1 4-3 4-6"/>
+    <path d="M6 10c0-2.2 1.8-4 4-4h4c2.2 0 4 1.8 4 4v1c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1v-1z"/>
+    <path d="M9 11v3c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2v-3"/>
+    <path d="M12 16v2"/>
+    <path d="M9 18h6"/>
+    <path d="M5 8c-.5-1-1-3 .5-4"/>
+    <path d="M19 8c.5-1 1-3-.5-4"/>
   </>,
 };
 const CatIcon = ({id,size=24,color="currentColor",strokeWidth=2.2}) => (
@@ -664,21 +644,21 @@ function NavBar({items,s,nav,labelSize=10}) {
 
   return (
     <div ref={ref} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
-      style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",
-        width:"100%",maxWidth:430,
-        background:"rgba(255,255,255,.96)",
-        backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
-        borderTop:"1px solid rgba(234,224,210,.8)",
-        borderRadius:0,
-        display:"flex",zIndex:100,padding:"8px 4px 20px",touchAction:"none",userSelect:"none",
-        boxShadow:"0 -4px 20px rgba(44,34,24,.08)"}}>
+      style={{position:"fixed",bottom:12,left:"50%",transform:"translateX(-50%)",
+        width:"calc(100% - 24px)",maxWidth:406,
+        background:"rgba(255,253,248,.7)",
+        backdropFilter:"blur(22px)",WebkitBackdropFilter:"blur(22px)",
+        border:"1px solid rgba(255,253,248,.8)",
+        borderRadius:26,
+        display:"flex",zIndex:100,padding:"6px 4px",touchAction:"none",userSelect:"none",
+        boxShadow:"0 8px 28px rgba(140,115,83,.18)"}}>
       {/* Pillola scorrevole — oro-tortora tenue */}
       <div style={{
-        position:"absolute", top:6, height:"calc(100% - 28px)",
+        position:"absolute", top:6, height:"calc(100% - 12px)",
         left:pillLeft, width:pillW,
-        background:"rgba(156,123,82,.12)",
-        border:"1px solid rgba(156,123,82,.25)",
-        borderRadius:14,
+        background:"rgba(168,144,107,.20)",
+        border:"1px solid rgba(168,144,107,.38)",
+        borderRadius:18,
         transition:live?"none":"left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1)",
         pointerEvents:"none", zIndex:0,
       }}/>
@@ -687,7 +667,7 @@ function NavBar({items,s,nav,labelSize=10}) {
         return (
           <div key={id} data-navid={id} onClick={()=>nav(id)}
             style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",
-              gap:3,padding:"8px 0 8px",borderRadius:14,cursor:"pointer",
+              gap:3,padding:"9px 0 10px",borderRadius:18,cursor:"pointer",
               position:"relative",zIndex:1,WebkitTapHighlightColor:"transparent"}}>
             <div style={{pointerEvents:"none",transition:"transform .18s ease",
               transform:active?"translateY(-1px) scale(1.08)":"none"}}>
@@ -870,65 +850,66 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
     : [];
 
   return (
-    <div style={{paddingBottom:110,background:T.paper,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:90,background:T.surface,minHeight:"100dvh"}}>
 
-      {/* Header — fedele al design: greeting + search + banner */}
-      <div style={{background:T.white,paddingTop:54,paddingBottom:14,paddingLeft:20,paddingRight:20}}>
-        {/* Riga top: greeting + campana */}
-        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:4}}>
-          <div>
-            <h1 style={{fontSize:28,fontWeight:800,color:T.ink,margin:"0 0 3px",lineHeight:1.05,letterSpacing:"-.02em"}}>Ciao, Alessio 👋</h1>
-            <p style={{fontSize:14,color:T.inkMid,margin:0,fontWeight:500}}>Pronto a splendere oggi?</p>
+      {/* Header — duna di porcellana calda con bagliore oro-tortora */}
+      <div style={{background:"linear-gradient(170deg,#EFE6D8 0%,#F2EBE0 40%,#F4EFE8 100%)",paddingTop:52,paddingBottom:30,paddingLeft:20,paddingRight:20,position:"relative",overflow:"hidden"}}>
+        {/* Bagliori scultorei sabbia */}
+        <div style={{position:"absolute",top:-50,right:-50,width:220,height:220,borderRadius:"50%",background:"radial-gradient(circle,rgba(168,144,107,.22) 0%,rgba(168,144,107,0) 70%)",pointerEvents:"none"}}/>
+        <div style={{position:"absolute",top:40,left:-60,width:160,height:160,borderRadius:"50%",background:"radial-gradient(circle,rgba(190,170,140,.18) 0%,rgba(190,170,140,0) 70%)",pointerEvents:"none"}}/>
+        {/* Curva "duna" in basso che fonde nel contenuto */}
+        <svg viewBox="0 0 430 40" preserveAspectRatio="none" style={{position:"absolute",bottom:-1,left:0,width:"100%",height:40,pointerEvents:"none"}}>
+          <path d="M0 40 L0 18 Q140 0 230 14 Q340 26 430 8 L430 40 Z" fill="#F4EFE8"/>
+        </svg>
+        {/* Logo + cuore */}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18,position:"relative"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div className="clay-btn" style={{width:38,height:38,borderRadius:13,background:"linear-gradient(135deg,#BFA67E,#897153)",display:"flex",alignItems:"center",justifyContent:"center"}}><LogoMark size={20}/></div>
+            <span style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontSize:18,fontWeight:700,color:T.ink,letterSpacing:"-.01em"}}>BeautyApp</span>
           </div>
-          <button style={{width:38,height:38,borderRadius:"50%",border:`1px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white,flexShrink:0,marginTop:2}}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <button onClick={()=>nav("cl_preferiti")} className="ba-lift glass" style={{width:40,height:40,borderRadius:14,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <IHeart a={false}/>
           </button>
         </div>
 
-        {/* Ricerca — pill chiara con icona filtro a destra */}
-        <div style={{display:"flex",alignItems:"center",gap:10,background:T.surface,borderRadius:14,padding:"12px 14px",marginTop:14,marginBottom:0}}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.4" strokeLinecap="round" style={{flexShrink:0}}>
+        {/* Saluto grande in Fraunces */}
+        <div style={{position:"relative"}}>
+          <p style={{fontSize:13,fontWeight:600,color:T.brandDeep,margin:"0 0 2px",textTransform:"uppercase",letterSpacing:2}}>Bentornato</p>
+          <h1 className="ba-display" style={{fontSize:34,color:T.ink,margin:"0 0 14px",lineHeight:1.05}}>Ciao, Alessio.</h1>
+        </div>
+
+        {/* Ricerca */}
+        <div className="clay-inset" style={{display:"flex",alignItems:"center",gap:10,background:T.surface,borderRadius:16,padding:"14px 16px"}}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.4" strokeLinecap="round" style={{flexShrink:0}}>
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
           <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
-            placeholder="Cerca servizi, professionisti..."
+            placeholder="Cerca parrucchiere, servizio, città..."
             style={{flex:1,border:"none",outline:"none",background:"none",fontSize:14,color:T.ink,fontFamily:"inherit"}}/>
-          {q
-            ? <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:T.inkSoft,padding:0}}>×</button>
-            : <button style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center"}}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
-              </button>
-          }
+          {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:T.inkSoft,padding:0}}>×</button>}
         </div>
-      </div>
 
-      {/* Banner prossimo appuntamento — SOTTO l'header, stile card bianca */}
-      {!(searching && q.length >= 2) && banner && (
-        <div style={{padding:"12px 20px 0",background:T.white}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
-            <p style={{fontSize:14,fontWeight:800,color:T.ink,margin:0}}>Il tuo prossimo appuntamento</p>
-            <button onClick={()=>nav("cl_appts")} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,fontWeight:600,color:T.brand,fontFamily:"inherit"}}>Vedi tutto</button>
-          </div>
-          <div className="ba-zoom" onClick={()=>nav("cl_appts")}
-            style={{display:"flex",alignItems:"center",gap:13,padding:"14px 16px",borderRadius:16,cursor:"pointer",
-              background:T.paper,border:`1px solid ${T.line}`,boxShadow:"0 2px 8px rgba(44,34,24,.06)"}}>
-            <div style={{width:44,height:44,borderRadius:13,background:T.surface,border:`1px solid ${T.line}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>
+        {/* Banner appuntamento — card clay bianca con accento azzurro */}
+        {!(searching && q.length >= 2) && banner && (
+          <div className="ba-rise ba-zoom clay" onClick={()=>nextAppt?nav("cl_appts"):nav("cl_prenota",{pro:lastAppt.proObj})}
+            style={{display:"flex",alignItems:"center",gap:14,padding:"16px 18px",borderRadius:22,cursor:"pointer",
+              background:T.white,marginTop:14,animationDelay:".05s"}}>
+            <div style={{width:48,height:48,borderRadius:15,background:"linear-gradient(135deg,#BFA67E,#897153)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:"0 4px 12px rgba(140,115,83,.35)"}}>
+              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                {nextAppt?<><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></>:<><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>}
               </svg>
             </div>
             <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service}</p>
-              <p style={{fontSize:12,color:T.inkMid,margin:"0 0 1px"}}>con {banner.pro}</p>
-              <div style={{display:"flex",alignItems:"center",gap:4}}>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M3 10h18"/></svg>
-                <span style={{fontSize:11,color:T.inkSoft}}>{nextAppt?`${banner.date} · ${banner.time}`:banner.date}</span>
-              </div>
+              <p style={{fontSize:10,fontWeight:800,color:T.brandDeep,margin:"0 0 2px",textTransform:"uppercase",letterSpacing:1.1}}>
+                {nextAppt?"Il tuo appuntamento":"Ultimo appuntamento"}
+              </p>
+              <p style={{fontSize:16,fontWeight:900,color:T.ink,margin:"0 0 1px",lineHeight:1.2}}>{banner.service}</p>
+              <p style={{fontSize:12,color:T.inkMid,margin:0}}>{banner.pro} · {nextAppt?`${banner.date}, ${banner.time}`:banner.date}</p>
             </div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Risultati ricerca */}
       {searching && q.length >= 2 && (
@@ -963,99 +944,72 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
       {/* Contenuto principale */}
       {!(searching && q.length >= 2) && (
         <div style={{background:T.paper}}>
+          {/* Posizione */}
+          <div style={{padding:"18px 20px 10px"}}>
+            <button onClick={()=>setShowCity(true)} style={{display:"flex",alignItems:"center",gap:6,background:"rgba(255,255,255,.7)",border:"none",cursor:"pointer",padding:"6px 12px 6px 8px",fontFamily:"inherit",marginBottom:14,borderRadius:20,backdropFilter:"blur(6px)"}}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.2" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span style={{fontSize:14,fontWeight:700,color:T.ink}}>{city}</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div style={{display:"flex",alignItems:"center",gap:8}}>
+              <div style={{width:4,height:22,borderRadius:3,background:"linear-gradient(180deg,#BFA67E,#897153)"}}/>
+              <h2 style={{fontSize:20,fontWeight:900,color:T.ink,margin:"0",letterSpacing:"-.02em"}}>Categorie</h2>
+            </div>
+          </div>
 
-          {/* Categorie */}
+          {/* Passo 1: Categorie — chip piccole a scorrimento orizzontale */}
           {!selCat && (
             <>
-              {/* Riga categoria — cerchi colorati scroll orizzontale */}
-              <div style={{background:T.white,padding:"16px 0 14px"}}>
-                <div style={{display:"flex",gap:16,overflowX:"auto",padding:"0 20px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
-                  {CAT_LIST.map((cat,ci) => (
-                    <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,padding:0,border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:58,animationDelay:`${0.04*ci+0.04}s`}}>
-                      <div style={{width:52,height:52,borderRadius:"50%",background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                        <CatIcon id={cat.id} size={22} color={cat.color} strokeWidth={2}/>
-                      </div>
-                      <span style={{fontSize:10,fontWeight:600,color:T.inkMid,textAlign:"center",lineHeight:1.2,whiteSpace:"nowrap"}}>{cat.label}</span>
-                    </button>
-                  ))}
-                </div>
+              <div style={{display:"flex",gap:12,overflowX:"auto",padding:"4px 20px 10px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}} className="ba-noscroll">
+                {CAT_LIST.map((cat,ci) => (
+                  <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift ba-zoom" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:7,padding:"6px 0",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:68,animationDelay:`${0.03*ci+0.06}s`}}>
+                    <div style={{width:60,height:60,borderRadius:20,background:cat.grad,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 8px 22px ${cat.color}55`,position:"relative",overflow:"hidden"}}>
+                      {/* riflesso lucido */}
+                      <div style={{position:"absolute",top:0,left:0,right:0,height:"50%",background:"rgba(255,255,255,.22)",borderRadius:"20px 20px 40% 40%",pointerEvents:"none"}}/>
+                      <CatIcon id={cat.id} size={28} color="#fff" strokeWidth={2.5}/>
+                    </div>
+                    <span style={{fontSize:11,fontWeight:700,color:T.ink,textAlign:"center",lineHeight:1.2}}>{cat.label}</span>
+                  </button>
+                ))}
               </div>
 
-              {/* Banner appuntamento — solo se presente, già nell'header ma qui in alternativa lo stacco */}
-
-              {/* Sezione professionisti vicino a te */}
-              <div style={{padding:"22px 0 0"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 20px",marginBottom:14}}>
-                  <p style={{fontSize:16,fontWeight:800,color:T.ink,margin:0}}>Professionisti vicino a te</p>
-                  <button onClick={()=>setSelCat(null)||setViewMode("mappa")} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,fontWeight:600,color:T.brand,fontFamily:"inherit",display:"flex",alignItems:"center",gap:3}}>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
-                    Vedi mappa
-                  </button>
+              {/* Professionisti nella tua zona */}
+              <div style={{padding:"16px 20px 0"}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+                  <div style={{width:4,height:22,borderRadius:3,background:"linear-gradient(180deg,#A6B690,#897153)"}}/>
+                  <h2 style={{fontSize:20,fontWeight:900,color:T.ink,margin:"0",letterSpacing:"-.02em"}}>Vicino a te</h2>
                 </div>
-
-                {/* SCROLL ORIZZONTALE — card verticali foto in alto */}
                 {(() => {
                   const list = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm);
-                  if (list.length === 0) return <p style={{fontSize:14,color:T.inkSoft,padding:"20px"}}>Nessun professionista trovato in zona.</p>;
+                  if (list.length === 0) return <p style={{fontSize:14,color:T.inkSoft,padding:"20px 0"}}>Nessun professionista trovato in zona.</p>;
+                  const badgeFor = (pro) => {
+                    if (pro.rating >= 4.9) return {l:"Top",bg:"#FFF3D0",c:"#B8860B"};
+                    if (pro.reviews >= 150) return {l:"Popolare",bg:T.purpleBg,c:T.purple};
+                    if (pro.verified) return {l:"Verificato",bg:T.brandBg,c:T.brandDeep};
+                    return null;
+                  };
                   return (
-                    <div style={{display:"flex",gap:14,overflowX:"auto",padding:"4px 20px 24px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
-                      {list.map((pro,i) => (
-                        <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise" style={{flexShrink:0,width:155,cursor:"pointer",animationDelay:`${0.06*i+0.06}s`}}>
-                          {/* Card foto beauty */}
-                          {(()=>{
-                            const catDef=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];
-                            const photoUrl=proImg(pro);
-                            const [imgFailed,setImgFailed] = [false,()=>{}]; // gestione errore nel render
-                            return (
-                            <div style={{width:155,height:170,borderRadius:18,overflow:"hidden",position:"relative",marginBottom:10,background:catDef.grad}}>
-                              {/* Gradiente sempre visibile come base */}
-                              <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                                <CatIcon id={pro.catId} size={54} color="rgba(255,255,255,.55)" strokeWidth={1.5}/>
+                    <div style={{display:"flex",flexDirection:"column",gap:12}}>
+                      {list.map((pro,i) => {
+                        const b = badgeFor(pro);
+                        return (
+                          <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise clay ba-zoom" style={{display:"flex",gap:13,padding:"14px",cursor:"pointer",alignItems:"center",background:T.white,borderRadius:20,animationDelay:`${0.03*i+0.1}s`}}>
+                            <div style={{width:56,height:56,borderRadius:16,background:"linear-gradient(145deg,#F1E9DC,#E7DCCB)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,border:"2px solid #E0D3BF",boxShadow:"0 4px 12px rgba(140,115,83,.14)"}}>{pro.emoji}</div>
+                            <div style={{flex:1,minWidth:0}}>
+                              <div style={{display:"flex",alignItems:"center",gap:7,margin:"0 0 3px"}}>
+                                <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
+                                {b && <span style={{fontSize:10,fontWeight:800,color:b.c,background:b.bg,padding:"2px 8px",borderRadius:99,flexShrink:0,letterSpacing:.2}}>{b.l}</span>}
                               </div>
-                              {/* Foto sopra il gradiente — se carica copre tutto, se no rimane il gradiente */}
-                              {photoUrl && <img src={photoUrl} alt={pro.cat} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.currentTarget.style.display="none";}}/>}
-                              {/* Gradiente scuro in basso per testo leggibile */}
-                              <div style={{position:"absolute",bottom:0,left:0,right:0,height:70,background:"linear-gradient(to top,rgba(0,0,0,.6) 0%,transparent 100%)",pointerEvents:"none"}}/>
-                              {/* Badge distanza */}
-                              <div style={{position:"absolute",bottom:8,left:8,display:"flex",alignItems:"center",gap:3,background:"rgba(0,0,0,.4)",borderRadius:99,padding:"3px 8px"}}>
-                                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                                <span style={{fontSize:10,fontWeight:700,color:"#fff"}}>{pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</span>
-                              </div>
+                              <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 4px"}}>{pro.cat} · {pro.city} · {pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</p>
+                              <span style={{color:T.brandDeep,fontSize:12,fontWeight:700}}>★ {pro.rating} <span style={{color:T.inkSoft,fontWeight:500}}>({pro.reviews})</span></span>
                             </div>
-                            );
-                          })()}
-                          {/* Nome + info */}
-                          <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
-                          <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 8px"}}>{pro.cat} · ★ {pro.rating}</p>
-                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{width:"100%",padding:"8px 0",borderRadius:10,border:"none",background:T.ink,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Prenota</button>
-                        </div>
-                      ))}
+                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} className="ba-btn-bounce" style={{padding:"10px 16px",borderRadius:12,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",flexShrink:0,boxShadow:"0 4px 14px rgba(140,115,83,.4)"}}>Prenota</button>
+                          </div>
+                        );
+                      })}
                     </div>
                   );
                 })()}
-              </div>
-
-              {/* Sezione Salvati / Recenti */}
-              <div style={{padding:"0 20px 20px"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
-                  <p style={{fontSize:16,fontWeight:800,color:T.ink,margin:0}}>Salvati</p>
-                  <button onClick={()=>nav("cl_preferiti")} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,fontWeight:600,color:T.brand,fontFamily:"inherit"}}>Vedi tutti</button>
-                </div>
-                <div style={{display:"flex",gap:10,overflowX:"auto",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
-                  {ALL_PROS.slice(0,5).map(pro => (
-                    <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:88,cursor:"pointer"}}>
-                            {(()=>{const catDef2=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];const ph2=proImg(pro);return(
-                      <div style={{width:88,height:88,borderRadius:14,overflow:"hidden",background:catDef2.grad,marginBottom:6,position:"relative"}}>
-                        <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                          <CatIcon id={pro.catId} size={34} color="rgba(255,255,255,.55)" strokeWidth={1.5}/>
-                        </div>
-                        {ph2 && <img src={ph2} alt={pro.name} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.currentTarget.style.display="none";}}/>}
-                      </div>
-                      );})()}
-                      <p style={{fontSize:11,fontWeight:700,color:T.ink,margin:0,textAlign:"center",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
-                    </div>
-                  ))}
-                </div>
               </div>
             </>
           )}
@@ -1285,35 +1239,34 @@ function ClPreferiti({nav,favorites,setFavorites}) {
           <div style={{fontSize:48,marginBottom:14}}>🤍</div>
           <p style={{fontSize:17,fontWeight:700,color:T.ink,marginBottom:8}}>Nessun preferito</p>
           <p style={{fontSize:14,color:T.inkSoft,marginBottom:22,lineHeight:1.6}}>Apri un profilo e tocca il cuore per salvarlo qui.</p>
-          <button onClick={()=>nav("cl_home")} style={{padding:"13px 28px",borderRadius:99,border:"none",background:T.ink,color:"#fff",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Cerca professionisti</button>
+          <button onClick={()=>nav("cl_home")} style={{padding:"13px 28px",borderRadius:13,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",color:"#fff",fontSize:15,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Cerca professionisti</button>
         </div>
       ) : (
-        <div style={{padding:"12px 16px"}}>
+        <div style={{padding:"4px 20px"}}>
           {favPros.map((pro,i) => (
-            <div key={pro.id} className="ba-rise ba-zoom" style={{background:T.white,borderRadius:18,marginBottom:12,overflow:"hidden",border:`1px solid ${T.line}`,boxShadow:`0 2px 10px rgba(44,34,24,.07)`,animationDelay:`${i*.06}s`}}>
-              {/* Header card con foto */}
-              <div style={{display:"flex",alignItems:"center",gap:0}}>
-                {(()=>{const cd=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];const ph=proImg(pro);return(
-                <div style={{width:72,height:72,flexShrink:0,overflow:"hidden",position:"relative",background:cd.grad}}>
-                  <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}><CatIcon id={pro.catId} size={28} color="rgba(255,255,255,.55)" strokeWidth={1.5}/></div>
-                  {ph&&<img src={ph} alt={pro.name} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.currentTarget.style.display="none";}}/>}
-                </div>);})()}
-                <div style={{flex:1,padding:"12px 12px",minWidth:0}}>
-                  <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
-                  <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} · ★ {pro.rating}</p>
-                  <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-                    {pro.slots.slice(0,3).map(slot => (
-                      <button key={slot} onClick={()=>nav("cl_prenota",{pro,preselSlot:slot})} style={{padding:"4px 10px",borderRadius:99,border:`1px solid ${T.line}`,background:T.surface,cursor:"pointer",fontSize:11,fontWeight:600,color:T.inkMid,fontFamily:"inherit"}}>{slot}</button>
-                    ))}
-                  </div>
+            <div key={pro.id} className="clay ba-rise ba-zoom" style={{background:T.white,borderRadius:22,marginBottom:14,overflow:"hidden",animationDelay:`${i*.06}s`}}>
+              <div style={{padding:"16px 16px 14px",display:"flex",alignItems:"center",gap:13,borderBottom:`1px solid ${T.line}`}}>
+                <div style={{width:52,height:52,borderRadius:16,background:"linear-gradient(145deg,#F1E9DC,#E7DCCB)",border:"2px solid #E0D3BF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{pro.emoji}</div>
+                <div style={{flex:1,minWidth:0}}>
+                  <p style={{fontSize:16,fontWeight:700,color:T.ink,margin:"0 0 3px",lineHeight:1.1}}>{pro.name}</p>
+                  <p style={{fontSize:12,color:T.inkMid,margin:0,fontWeight:500}}>{pro.cat} · <span style={{color:T.brand}}>★</span> {pro.rating}</p>
                 </div>
-                <button onClick={()=>setConfirmId(pro.id)} style={{background:"none",border:"none",padding:"12px 14px",cursor:"pointer",flexShrink:0}} title="Rimuovi dai preferiti">
+                {/* Tasto rimuovi — apre la conferma */}
+                <button onClick={()=>setConfirmId(pro.id)} style={{background:T.surface,border:"none",borderRadius:10,width:34,height:34,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}} title="Rimuovi dai preferiti">
                   <IHeart a={true}/>
                 </button>
               </div>
-              <div style={{display:"flex",gap:8,padding:"10px 12px",borderTop:`1px solid ${T.line}`}}>
-                <button onClick={()=>nav("cl_pro",pro)} style={{flex:1,padding:"10px 0",borderRadius:12,border:`1px solid ${T.line}`,background:T.white,cursor:"pointer",fontSize:13,fontWeight:600,color:T.inkMid,fontFamily:"inherit"}}>Profilo</button>
-                <button onClick={()=>nav("cl_prenota",{pro})} style={{flex:2,padding:"10px 0",borderRadius:12,border:"none",background:T.ink,cursor:"pointer",fontSize:13,fontWeight:700,color:"#fff",fontFamily:"inherit"}}>Prenota ora</button>
+              <div style={{padding:"13px 16px"}}>
+                <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 8px",fontWeight:700,textTransform:"uppercase",letterSpacing:.8}}>Disponibile oggi</p>
+                <div style={{display:"flex",gap:6,marginBottom:13,flexWrap:"wrap"}}>
+                  {pro.slots.slice(0,4).map(slot => (
+                    <button key={slot} onClick={()=>nav("cl_prenota",{pro,preselSlot:slot})} style={{padding:"7px 14px",borderRadius:10,border:`1.5px solid ${T.line}`,background:T.surface,cursor:"pointer",fontSize:13,fontWeight:600,color:T.ink,fontFamily:"inherit"}}>{slot}</button>
+                  ))}
+                </div>
+                <div style={{display:"flex",gap:8}}>
+                  <button onClick={()=>nav("cl_pro",pro)} className="clay-soft" style={{flex:1,padding:"11px 0",borderRadius:12,border:"none",background:T.surface,cursor:"pointer",fontSize:13,fontWeight:600,color:T.inkMid,fontFamily:"inherit"}}>Profilo</button>
+                  <button onClick={()=>nav("cl_prenota",{pro})} style={{flex:2,padding:"11px 0",borderRadius:12,border:"none",background:"linear-gradient(135deg,#BFA67E,#897153)",cursor:"pointer",fontSize:14,fontWeight:700,color:"#fff",fontFamily:"inherit"}}>Prenota ora</button>
+                </div>
               </div>
             </div>
           ))}
@@ -1356,19 +1309,13 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
     {name:"Lucia F.",text:"Professionale e puntuale.",stars:5,date:"28 mag 2026"},
   ]);
   const proPosts = FEED.filter(p=>p.proId===pro.id);
-  const coverPhotoId = (CAT_PHOTOS[pro.catId]||[])[0];
-  const coverSrc = coverPhotoId
-    ? `https://images.unsplash.com/photo-${coverPhotoId}?w=860&h=400&fit=crop&crop=center&auto=format&q=80`
-    : null;
+  const coverKw = {parrucchiere:"hair salon interior",barbiere:"barbershop interior",nail_artist:"nail salon beauty",estetista:"spa beauty",tatuatore:"tattoo studio"}[pro.catId]||"beauty salon";
 
   return (
     <div style={{paddingBottom:140}}>
       {/* Cover */}
       <div style={{position:"relative",height:170}}>
-        {coverSrc
-          ? <img src={coverSrc} alt="" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-          : <div style={{width:"100%",height:"100%",background:`${pro.accent}44`}}/>
-        }
+        <Photo src={U(coverKw,860,400)} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.5))"}}/>
         <button onClick={()=>nav("cl_home")} style={{position:"absolute",top:48,left:14,width:32,height:32,borderRadius:16,background:"rgba(0,0,0,.4)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
