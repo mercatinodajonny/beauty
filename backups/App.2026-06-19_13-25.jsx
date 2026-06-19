@@ -2706,7 +2706,7 @@ function OfferCard({offer,msgFrom,role,onPick,onDecline}) {
         {st==="pending" && !isMine && (
           <div style={{display:"flex",gap:8}}>
             <button onClick={onDecline} style={{flex:1,padding:"10px 0",borderRadius:11,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Rifiuta</button>
-            <button onClick={onPick} style={{flex:2,padding:"11px 0",borderRadius:11,border:"none",background:"linear-gradient(135deg,#7A9669,#5E7A4F)",color:"#fff",fontSize:16,fontWeight:800,cursor:"pointer",fontFamily:"inherit",touchAction:"manipulation"}}>Accetta e scegli orario</button>
+            <button onClick={onPick} style={{flex:2,padding:"10px 0",borderRadius:11,border:"none",background:"linear-gradient(135deg,#7A9669,#5E7A4F)",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Accetta e scegli orario</button>
           </div>
         )}
         {st==="pending" && isMine && (
@@ -2737,19 +2737,19 @@ function SlotPickerModal({offer,onClose,onConfirm}) {
         <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:8}}>Giorno</label>
         <div style={{display:"flex",gap:6,overflowX:"auto",scrollbarWidth:"none",marginBottom:18,paddingBottom:2}}>
           {DATE_OPTS.map(d=>(
-            <button key={d} onClick={()=>setSelDate(d)} style={{flexShrink:0,padding:"10px 16px",borderRadius:99,border:"none",cursor:"pointer",fontSize:16,fontWeight:700,background:selDate===d?T.brand:T.white,color:selDate===d?"#fff":T.inkMid,fontFamily:"inherit",touchAction:"manipulation",boxShadow:selDate===d?"none":`0 0 0 1.5px ${T.line} inset`}}>{d}</button>
+            <button key={d} onClick={()=>setSelDate(d)} style={{flexShrink:0,padding:"9px 14px",borderRadius:99,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,background:selDate===d?T.brand:T.white,color:selDate===d?"#fff":T.inkMid,fontFamily:"inherit",boxShadow:selDate===d?"none":`0 0 0 1.5px ${T.line} inset`}}>{d}</button>
           ))}
         </div>
 
         <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:8}}>Orario</label>
-        <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:24}}>
+        <div style={{display:"flex",gap:7,flexWrap:"wrap",marginBottom:24}}>
           {TIME_OPTS.map(t=>(
-            <button key={t} onClick={()=>setSelSlot(t)} style={{padding:"11px 16px",borderRadius:12,border:"none",cursor:"pointer",fontSize:16,fontWeight:700,background:selSlot===t?T.brand:T.white,color:selSlot===t?"#fff":T.inkMid,fontFamily:"inherit",touchAction:"manipulation",boxShadow:selSlot===t?"none":`0 0 0 1.5px ${T.line} inset`}}>{t}</button>
+            <button key={t} onClick={()=>setSelSlot(t)} style={{padding:"9px 14px",borderRadius:10,border:"none",cursor:"pointer",fontSize:13,fontWeight:700,background:selSlot===t?T.brand:T.white,color:selSlot===t?"#fff":T.inkMid,fontFamily:"inherit",boxShadow:selSlot===t?"none":`0 0 0 1.5px ${T.line} inset`}}>{t}</button>
           ))}
         </div>
 
         <button onClick={()=>valid&&onConfirm(selDate,selSlot)} disabled={!valid}
-          style={{width:"100%",padding:"15px 0",borderRadius:14,border:"none",cursor:valid?"pointer":"default",fontSize:16,fontWeight:800,fontFamily:"inherit",touchAction:"manipulation",
+          style={{width:"100%",padding:"15px 0",borderRadius:14,border:"none",cursor:valid?"pointer":"default",fontSize:15,fontWeight:800,fontFamily:"inherit",
             background:valid?"linear-gradient(135deg,#7A9669,#5E7A4F)":T.line,color:valid?"#fff":T.inkSoft}}>
           Conferma prenotazione
         </button>
@@ -2768,7 +2768,7 @@ function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onAccept,onDecline}
   useEffect(()=>{ if(scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; },[conv.messages.length]);
 
   const otherName = role==="client"?pro.name:conv.clientName;
-  const send = () => { if(!text.trim()) return; const t=text.trim(); setText(""); onSendMessage(conv.id,{from:role,type:"text",text:t,_dedup:Date.now()+""+Math.random()}); };
+  const send = () => { if(!text.trim()) return; onSendMessage(conv.id,{from:role,type:"text",text:text.trim()}); setText(""); };
 
   return (
     <div style={{display:"flex",flexDirection:"column",height:"100dvh",background:T.paper}}>
@@ -2828,7 +2828,7 @@ function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onAccept,onDecline}
 
       {/* Modal crea offerta — solo pro */}
       {showOffer && role==="pro" && <OfferModal pro={pro} onClose={()=>setShowOffer(false)}
-        onSend={(offer)=>{const dedup=Date.now()+""+Math.random();onSendOffer(conv.id,{from:"pro",type:"offer",_dedup:dedup,offer:{...offer,status:"pending"}});setShowOffer(false);}}/>}
+        onSend={(offer)=>{onSendOffer(conv.id,{from:"pro",type:"offer",offer:{...offer,status:"pending"}});setShowOffer(false);}}/>}
 
       {/* Bottom-sheet scelta slot — solo cliente */}
       {pickMsg && <SlotPickerModal offer={pickMsg.offer} onClose={()=>setPickMsg(null)}
@@ -2934,13 +2934,9 @@ export default function App() {
   };
 
   const sendMessage = (convId,msg) => {
-    const msgId = Date.now() + Math.floor(Math.random()*1000);
-    setConversations(p=>p.map(c=>{
-      if(c.id!==convId) return c;
-      // evita duplicati se la funzione viene chiamata due volte in rapida successione
-      if(msg._dedup && c.messages.some(m=>m._dedup===msg._dedup)) return c;
-      return {...c,messages:[...c.messages,{id:msgId,time:nowTime(),...msg}]};
-    }));
+    setConversations(p=>p.map(c=>c.id===convId
+      ? {...c,messages:[...c.messages,{id:Date.now(),time:nowTime(),...msg}]}
+      : c));
   };
   const sendOffer = (convId,msg) => sendMessage(convId,msg);
 
