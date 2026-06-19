@@ -146,10 +146,23 @@ const ST = {
   completato:{label:"Completato",bg:"#E9F0F4",text:"#3E6F8E",bar:"#3E6F8E"},
 };
 
-const U = (kw,w=800,h=1000) => `https://source.unsplash.com/${w}x${h}/?${encodeURIComponent(kw)}`;
-const proImg = (pro,w=160,h=160) => {
-  const kw = {parrucchiere:"hair salon women stylist",barbiere:"barbershop men fade haircut",nail_artist:"nail art manicure gel",estetista:"spa facial beauty",tatuatore:"tattoo studio artist",ciglia:"eyelash beauty lash",makeup:"makeup artist beauty",massaggio:"massage therapy spa",laser:"beauty laser treatment"}[pro.catId]||"beauty salon";
-  return `https://source.unsplash.com/${w}x${h}/?${encodeURIComponent(kw)}&sig=${pro.id}`;
+const U = (kw,w=800,h=1000) => `https://picsum.photos/seed/${encodeURIComponent(kw.split(" ")[0])}/${w}/${h}`;
+/* Foto professionisti — seed fisso per id così ogni pro ha sempre la stessa foto */
+const PRO_PHOTO_SEEDS = {
+  parrucchiere:["hair","salon","beauty","stylist","hairdress"],
+  barbiere:["barber","shave","grooming","beard","fade"],
+  nail_artist:["nail","manicure","polish","gel","nailart"],
+  estetista:["spa","facial","skincare","esthetic","wellness"],
+  tatuatore:["tattoo","ink","studio","art","needle"],
+  ciglia:["lash","eyelash","brow","eye","beauty"],
+  makeup:["makeup","cosmetic","lipstick","brush","glam"],
+  massaggio:["massage","relax","therapy","hands","wellness"],
+  laser:["laser","treatment","skin","clinic","light"],
+};
+const proImg = (pro,w=300,h=300) => {
+  const seeds = PRO_PHOTO_SEEDS[pro.catId]||["beauty"];
+  const seed = seeds[pro.id % seeds.length] + pro.id;
+  return `https://picsum.photos/seed/${seed}/${w}/${h}`;
 };
 const toMin = t => { const [h,m] = t.split(":").map(Number); return h*60+m; };
 const toTime = m => `${String(Math.floor(m/60)).padStart(2,"0")}:${String(m%60).padStart(2,"0")}`;
@@ -982,29 +995,29 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                   </button>
                 </div>
 
-                {/* SCROLL ORIZZONTALE — card verticali con foto */}
+                {/* SCROLL ORIZZONTALE — card verticali foto in alto */}
                 {(() => {
                   const list = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm);
                   if (list.length === 0) return <p style={{fontSize:14,color:T.inkSoft,padding:"20px"}}>Nessun professionista trovato in zona.</p>;
                   return (
-                    <div style={{display:"flex",gap:12,overflowX:"auto",padding:"4px 20px 20px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+                    <div style={{display:"flex",gap:14,overflowX:"auto",padding:"4px 20px 24px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                       {list.map((pro,i) => (
-                        <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise ba-zoom" style={{flexShrink:0,width:148,cursor:"pointer",background:T.white,borderRadius:18,overflow:"hidden",boxShadow:"0 2px 12px rgba(44,34,24,.09)",animationDelay:`${0.05*i+0.06}s`}}>
-                          {/* Foto quadrata */}
-                          <div style={{width:"100%",height:148,position:"relative",overflow:"hidden",background:T.surface}}>
-                            <Photo src={proImg(pro,296,296)} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                        <div key={pro.id} onClick={()=>nav("cl_pro",pro)} className="ba-rise" style={{flexShrink:0,width:155,cursor:"pointer",animationDelay:`${0.06*i+0.06}s`}}>
+                          {/* Foto con badge distanza */}
+                          <div style={{width:155,height:155,borderRadius:18,overflow:"hidden",background:T.surface,position:"relative",marginBottom:10,boxShadow:"0 4px 16px rgba(44,34,24,.12)"}}>
+                            <img src={proImg(pro,310,310)} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.target.style.display="none";}}/>
+                            {/* Overlay gradiente bottom */}
+                            <div style={{position:"absolute",bottom:0,left:0,right:0,height:60,background:"linear-gradient(to top,rgba(0,0,0,.5),transparent)",pointerEvents:"none"}}/>
                             {/* Badge distanza */}
-                            <div style={{position:"absolute",bottom:8,left:8,background:"rgba(0,0,0,.52)",borderRadius:99,padding:"3px 8px",display:"flex",alignItems:"center",gap:4}}>
-                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>
+                            <div style={{position:"absolute",bottom:8,left:8,display:"flex",alignItems:"center",gap:3,background:"rgba(0,0,0,.45)",borderRadius:99,padding:"3px 7px"}}>
+                              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
                               <span style={{fontSize:10,fontWeight:700,color:"#fff"}}>{pro.distKm<1?`${Math.round(pro.distKm*1000)} m`:`${pro.distKm.toFixed(1)} km`}</span>
                             </div>
                           </div>
-                          {/* Info sotto */}
-                          <div style={{padding:"10px 10px 12px"}}>
-                            <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
-                            <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 8px"}}>{pro.cat} · ★ {pro.rating}</p>
-                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} className="ba-btn-bounce" style={{width:"100%",padding:"8px 0",borderRadius:10,border:"none",background:T.ink,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Prenota</button>
-                          </div>
+                          {/* Nome + info */}
+                          <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
+                          <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 8px"}}>{pro.cat} · ★ {pro.rating}</p>
+                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{width:"100%",padding:"8px 0",borderRadius:10,border:"none",background:T.ink,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Prenota</button>
                         </div>
                       ))}
                     </div>
@@ -1019,10 +1032,10 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                   <button onClick={()=>nav("cl_preferiti")} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,fontWeight:600,color:T.brand,fontFamily:"inherit"}}>Vedi tutti</button>
                 </div>
                 <div style={{display:"flex",gap:10,overflowX:"auto",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
-                  {ALL_PROS.slice(0,4).map(pro => (
-                    <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:90,cursor:"pointer"}}>
-                      <div style={{width:90,height:90,borderRadius:14,overflow:"hidden",background:T.surface,marginBottom:6}}>
-                        <Photo src={proImg(pro,180,180)} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                  {ALL_PROS.slice(0,5).map(pro => (
+                    <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:88,cursor:"pointer"}}>
+                      <div style={{width:88,height:88,borderRadius:14,overflow:"hidden",background:T.surface,marginBottom:6}}>
+                        <img src={proImg(pro,176,176)} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} onError={e=>{e.target.style.display="none";}}/>
                       </div>
                       <p style={{fontSize:11,fontWeight:700,color:T.ink,margin:0,textAlign:"center",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
                     </div>
@@ -1326,13 +1339,14 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
     {name:"Lucia F.",text:"Professionale e puntuale.",stars:5,date:"28 mag 2026"},
   ]);
   const proPosts = FEED.filter(p=>p.proId===pro.id);
-  const coverKw = {parrucchiere:"hair salon interior",barbiere:"barbershop interior",nail_artist:"nail salon beauty",estetista:"spa beauty",tatuatore:"tattoo studio"}[pro.catId]||"beauty salon";
+  const coverSeed = (PRO_PHOTO_SEEDS[pro.catId]||["beauty"])[0]+"cover"+pro.id;
+  const coverKw = coverSeed;
 
   return (
     <div style={{paddingBottom:140}}>
       {/* Cover */}
       <div style={{position:"relative",height:170}}>
-        <Photo src={U(coverKw,860,400)} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+        <Photo src={`https://picsum.photos/seed/${coverKw}/860/400`} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.5))"}}/>
         <button onClick={()=>nav("cl_home")} style={{position:"absolute",top:48,left:14,width:32,height:32,borderRadius:16,background:"rgba(0,0,0,.4)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
