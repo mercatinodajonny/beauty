@@ -85,11 +85,11 @@ const injectFont = () => {
   s.id = "app-style-rules";
   s.textContent = `
     h1,h2,.ba-serif,.ba-display{font-family:'Fraunces',Georgia,serif !important;font-weight:600;letter-spacing:-.015em;font-optical-sizing:auto}
-    /* CLAYMORPHISM — ombre sabbia calde, gonfie e scultoree (palette Porcellana di Sabbia) */
-    .clay{box-shadow:14px 14px 30px rgba(150,124,92,.26), -12px -12px 26px rgba(255,253,248,.95), inset 3px 3px 6px rgba(255,253,248,.85), inset -5px -5px 12px rgba(150,124,92,.13);}
-    .clay-inset{box-shadow:inset 7px 7px 14px rgba(150,124,92,.22), inset -6px -6px 13px rgba(255,253,248,.95);}
-    .clay-btn{box-shadow:9px 11px 24px rgba(140,115,83,.34), -6px -7px 16px rgba(255,253,248,.5), inset 3px 3px 7px rgba(255,253,248,.4), inset -4px -5px 10px rgba(140,115,83,.34);}
-    .clay-soft{box-shadow:8px 8px 20px rgba(150,124,92,.18), -7px -7px 17px rgba(255,253,248,.95), inset 2px 2px 4px rgba(255,253,248,.7);}
+    /* CARD — shadow leggera e pulita stile premium */
+    .clay{box-shadow:0 2px 14px rgba(140,115,83,.11), 0 0 0 1px rgba(140,115,83,.07);}
+    .clay-inset{box-shadow:inset 0 1px 4px rgba(140,115,83,.10), inset 0 -1px 3px rgba(255,253,248,.9);}
+    .clay-btn{box-shadow:0 6px 18px rgba(140,115,83,.28);}
+    .clay-soft{box-shadow:0 2px 8px rgba(140,115,83,.10), 0 0 0 1px rgba(140,115,83,.06);}
     /* GLASSMORPHISM — vetro smerigliato caldo */
     .glass{background:rgba(255,253,248,.5)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,253,248,.65);box-shadow:0 8px 32px rgba(150,124,92,.16);}
     .glass-dark{background:rgba(168,144,107,.2)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,253,248,.35);box-shadow:0 8px 32px rgba(140,115,83,.22);}
@@ -104,7 +104,7 @@ const injectFont = () => {
     /* Zoom card: ingrandimento morbido al passaggio del mouse / tocco */
     .ba-zoom{transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s ease;will-change:transform}
     @media (hover:hover){
-      .ba-zoom:hover{transform:translateY(-5px) scale(1.04);box-shadow:18px 22px 44px rgba(150,124,92,.30), -12px -12px 26px rgba(255,253,248,.95), inset 3px 3px 6px rgba(255,253,248,.85);z-index:2}
+      .ba-zoom:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 16px 36px rgba(140,115,83,.18);z-index:2}
     }
     .ba-zoom:active{transform:scale(.95)!important;transition:transform .10s cubic-bezier(.34,1.56,.64,1)!important}
     /* Bounce sui pulsanti Prenota */
@@ -233,26 +233,6 @@ const MY_APPTS0 = [
   {id:3,pro:"Salon Elite",service:"Piega",date:"3 giu 2026",time:"11:00",price:20,status:"completato",proObj:ALL_PROS[0]},
   {id:4,pro:"BarberKing",service:"Taglio uomo",date:"28 mag",time:"10:00",price:18,status:"completato",proObj:ALL_PROS[1]},
   {id:5,pro:"Nails by Sofia",service:"Nail art",date:"15 mag",time:"14:00",price:75,status:"cancellato",proObj:ALL_PROS[2]},
-];
-
-/* CONVERSAZIONI / CHAT — DM stile Vinted con offerte di lavoro su misura */
-const CONVERSATIONS0 = [
-  {
-    id:1, proId:1, clientName:"Alessio",
-    messages:[
-      {id:1, from:"client", type:"text", text:"Ciao! Avrei un colore particolare da fare, balayage + tonalizzante. Riusciamo a concordare?", time:"10:02"},
-      {id:2, from:"pro", type:"text", text:"Ciao Alessio! Certo. Per quel lavoro ci vogliono circa 2 ore. Ti faccio una proposta su misura 👇", time:"10:05"},
-      {id:3, from:"pro", type:"offer", time:"10:06",
-        offer:{service:"Balayage + tonalizzante", price:120, min:120, date:"Sab 21 giu", slot:"15:00", status:"pending"}},
-    ],
-  },
-  {
-    id:2, proId:3, clientName:"Alessio",
-    messages:[
-      {id:1, from:"client", type:"text", text:"Salve, vorrei una nail art elaborata per un matrimonio 💅", time:"Ieri"},
-      {id:2, from:"pro", type:"text", text:"Che bello! Mandami pure l'idea, intanto ti preparo un preventivo.", time:"Ieri"},
-    ],
-  },
 ];
 
 const ALL_CITIES = ["Imperia","Milano","Roma","Torino","Bologna","Genova","Sanremo","Savona"];
@@ -443,7 +423,7 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
         </div>
 
         {/* Toggle Lista / Mappa */}
-        <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:14,padding:4,gap:2,marginBottom:12}}>
+        <div style={{display:"flex",background:T.surface,borderRadius:12,padding:3,gap:2,marginBottom:12}}>
           {[["lista","☰  Lista"],["mappa","📍  Mappa"]].map(([v,l]) => (
             <button key={v} onClick={()=>setViewMode(v)} style={{flex:1,padding:"9px 0",borderRadius:9,border:"none",cursor:"pointer",fontSize:13,fontWeight:viewMode===v?700:500,background:viewMode===v?T.ink:"transparent",color:viewMode===v?T.white:T.inkMid,fontFamily:"inherit"}}>{l}</button>
           ))}
@@ -461,7 +441,7 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
 
       {pros.length === 0 ? (
         <div style={{textAlign:"center",padding:"60px 20px"}}>
-          <div className="clay-soft" style={{width:66,height:66,borderRadius:22,background:`${catColor}1A`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px"}}><CatIcon id={catId} size={30} color={catColor}/></div>
+          <div style={{width:64,height:64,borderRadius:18,background:`${catColor}1A`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px"}}><CatIcon id={catId} size={30} color={catColor}/></div>
           <p style={{fontSize:17,fontWeight:700,color:T.ink,marginBottom:6}}>Nessun professionista trovato</p>
           <button onClick={()=>setRadius(Infinity)} style={{padding:"12px 24px",borderRadius:12,border:"none",background:T.brand,color:T.white,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Rimuovi il limite di distanza</button>
         </div>
@@ -469,7 +449,7 @@ function BrowsePros({catId,catLabel,catColor,city,onBack,onChangeCity,pros,radiu
         <div style={{padding:"4px 20px 0",display:"flex",flexDirection:"column",gap:10}}>
           <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.8,margin:"6px 0 0"}}>{pros.length} risultati</p>
           {pros.map(pro => (
-            <div key={pro.id} onClick={()=>onSelectPro(pro)} className="ba-lift ba-zoom clay" style={{background:T.white,borderRadius:20,cursor:"pointer",display:"flex",overflow:"hidden"}}>
+            <div key={pro.id} onClick={()=>onSelectPro(pro)} className="ba-lift ba-zoom" style={{background:T.white,borderRadius:16,cursor:"pointer",display:"flex",overflow:"hidden",border:`1px solid ${T.line}`,boxShadow:`0 2px 10px rgba(44,34,24,.07)`}}>
               {(()=>{const cd=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];const ph=proImg(pro);return(
               <div style={{width:84,height:84,flexShrink:0,position:"relative",overflow:"hidden",background:cd.grad}}>
                 <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}><CatIcon id={pro.catId} size={32} color="rgba(255,255,255,.55)" strokeWidth={1.5}/></div>
@@ -900,14 +880,9 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
             <h1 style={{fontSize:28,fontWeight:800,color:T.ink,margin:"0 0 3px",lineHeight:1.05,letterSpacing:"-.02em"}}>Ciao, Alessio 👋</h1>
             <p style={{fontSize:14,color:T.inkMid,margin:0,fontWeight:500}}>Pronto a splendere oggi?</p>
           </div>
-          <div style={{display:"flex",gap:8,flexShrink:0,marginTop:2}}>
-            <button onClick={()=>nav("cl_chats")} style={{width:38,height:38,borderRadius:"50%",border:`1px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-            </button>
-            <button style={{width:38,height:38,borderRadius:"50%",border:`1px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-            </button>
-          </div>
+          <button style={{width:38,height:38,borderRadius:"50%",border:`1px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white,flexShrink:0,marginTop:2}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          </button>
         </div>
 
         {/* Ricerca — pill chiara con icona filtro a destra */}
@@ -1315,7 +1290,7 @@ function ClPreferiti({nav,favorites,setFavorites}) {
       ) : (
         <div style={{padding:"12px 16px"}}>
           {favPros.map((pro,i) => (
-            <div key={pro.id} className="ba-rise ba-zoom clay" style={{background:T.white,borderRadius:22,marginBottom:14,overflow:"hidden",animationDelay:`${i*.06}s`}}>
+            <div key={pro.id} className="ba-rise ba-zoom" style={{background:T.white,borderRadius:18,marginBottom:12,overflow:"hidden",border:`1px solid ${T.line}`,boxShadow:`0 2px 10px rgba(44,34,24,.07)`,animationDelay:`${i*.06}s`}}>
               {/* Header card con foto */}
               <div style={{display:"flex",alignItems:"center",gap:0}}>
                 {(()=>{const cd=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];const ph=proImg(pro);return(
@@ -1359,7 +1334,7 @@ function ClPreferiti({nav,favorites,setFavorites}) {
 }
 
 /* PROFILO PRO */
-function ClPro({pro,nav,favorites,setFavorites,following,setFollowing,onMessage}) {
+function ClPro({pro,nav,favorites,setFavorites,following,setFollowing}) {
   const isFav = favorites?.has(pro.id)||false;
   const [confirmUnfav,setConfirmUnfav] = useState(false);
   const [confirmUnfollow,setConfirmUnfollow] = useState(false);
@@ -1425,10 +1400,7 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing,onMessage}
             boxShadow:isFollowing?"none":"0 4px 14px rgba(140,115,83,.3)"}}>
             {isFollowing?"✓ Segui già":"+ Segui"}
           </button>
-          <button onClick={()=>onMessage&&onMessage()} style={{flex:1,padding:"11px 0",borderRadius:10,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontSize:13,fontWeight:700,color:T.brandDeep,fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:5}}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-            Messaggio
-          </button>
+          <button onClick={()=>setShowRev(true)} style={{flex:1,padding:"11px 0",borderRadius:10,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontSize:13,fontWeight:600,color:T.inkMid,fontFamily:"inherit"}}>Recensisci</button>
         </div>
       </div>
 
@@ -1498,7 +1470,7 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing,onMessage}
 
       {/* PRENOTA ORA sticky */}
       <div style={{position:"fixed",bottom:98,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 32px)",maxWidth:398,zIndex:50}}>
-        <button onClick={()=>nav("cl_prenota",{pro})} className="clay-btn ba-btn-bounce" style={{width:"100%",padding:"17px 0",borderRadius:20,border:"none",background:T.brand,color:T.white,fontSize:17,fontWeight:700,cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+        <button onClick={()=>nav("cl_prenota",{pro})} style={{width:"100%",padding:"17px 0",borderRadius:16,border:"none",background:T.brand,color:T.white,fontSize:17,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 8px 28px rgba(0,0,0,.35)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
           PRENOTA ORA
         </button>
       </div>
@@ -1879,8 +1851,8 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
         <h1 style={{fontSize:19,fontWeight:700,color:T.ink,margin:"0 0 1px"}}>{info.name}</h1>
         <p style={{fontSize:13,color:T.inkMid,margin:"0 0 12px"}}>@{info.handle} · {info.city}</p>
         <div style={{display:"flex",gap:8}}>
-          <button onClick={()=>{setTab("impostazioni");setEditInfo(true);setTmp(info);}} className="clay-soft" style={{flex:1,padding:"11px 0",borderRadius:14,border:"none",background:T.white,cursor:"pointer",fontSize:13,fontWeight:700,color:T.ink,fontFamily:"inherit"}}>Modifica profilo</button>
-          <button onClick={()=>setTab("impostazioni")} className="clay-soft" style={{width:44,borderRadius:14,border:"none",background:T.white,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <button onClick={()=>{setTab("impostazioni");setEditInfo(true);setTmp(info);}} style={{flex:1,padding:"9px 0",borderRadius:11,border:"none",background:T.white,cursor:"pointer",fontSize:13,fontWeight:700,color:T.ink,fontFamily:"inherit",boxShadow:"0 2px 8px rgba(140,115,83,.12)"}}>Modifica profilo</button>
+          <button onClick={()=>setTab("impostazioni")} style={{width:42,borderRadius:11,border:"none",background:T.white,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(140,115,83,.12)"}}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{TABS[2].icon}</svg>
           </button>
         </div>
@@ -2070,7 +2042,7 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
 }
 
 /* PRO - AGENDA */
-function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav}) {
+function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours}) {
   const [selStaff,setSelS] = useState(0);
   const [selAppt,setSelAppt] = useState(null);
   const [showAdd,setShowAdd] = useState(false);
@@ -2160,14 +2132,11 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav})
           <div><p style={{fontSize:11,color:T.inkSoft,margin:"0 0 1px"}}>Salon Elite</p><h1 style={{fontSize:20,fontWeight:700,color:T.ink,margin:0}}>Agenda</h1></div>
           <div style={{display:"flex",gap:7,alignItems:"center"}}>
             <div style={{textAlign:"right"}}><p style={{fontSize:12,fontWeight:700,color:T.green,margin:0}}>{todayRev}€</p><p style={{fontSize:10,color:T.inkSoft,margin:0}}>{todayConf.length} appt.</p></div>
-            <button onClick={()=>nav&&nav("pro_chats")} style={{width:32,height:32,borderRadius:8,background:T.brandBg,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-            </button>
             <button onClick={()=>setShowLM(true)} style={{width:32,height:32,borderRadius:8,background:T.amberBg,border:"none",cursor:"pointer",fontSize:16}}>⚡</button>
             <button onClick={()=>setShowAdd(true)} style={{width:32,height:32,borderRadius:8,background:T.ink,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"white"}}><IPlus/></button>
           </div>
         </div>
-        <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:13,padding:4,gap:2,marginBottom:9}}>
+        <div style={{display:"flex",background:T.surface,borderRadius:8,padding:3,gap:2,marginBottom:9}}>
           {[["giorno","Giorno"],["mese","Mese"]].map(([v,l])=><button key={v} onClick={()=>setView(v)} style={{flex:1,padding:"6px 0",borderRadius:6,border:"none",cursor:"pointer",fontSize:12,fontWeight:view===v?700:400,background:view===v?T.white:T.surface,color:view===v?T.ink:T.inkSoft,fontFamily:"inherit"}}>{l}</button>)}
         </div>
         {view==="giorno" && (
@@ -2201,7 +2170,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav})
                   <span style={{fontSize:11,color:appt?T.inkMid:"#D1D5DB",fontWeight:appt?600:400}}>{slot}</span>
                 </div>
                 {appt ? (
-                  <div onClick={()=>setSelAppt(selAppt===appt.id?null:appt.id)} className="clay-soft" style={{flex:1,background:T.white,borderRadius:14,overflow:"hidden",cursor:"pointer",marginBottom:3}}>
+                  <div onClick={()=>setSelAppt(selAppt===appt.id?null:appt.id)} style={{flex:1,background:T.white,borderRadius:11,overflow:"hidden",cursor:"pointer",border:`1px solid ${T.line}`,marginBottom:3}}>
                     <div style={{display:"flex",alignItems:"center",gap:8,padding:"10px 11px"}}>
                       <div style={{width:4,height:34,borderRadius:2,background:s?.bar,flexShrink:0}}/>
                       <div style={{flex:1,minWidth:0}}>
@@ -2401,7 +2370,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
           <h1 style={{fontSize:20,fontWeight:700,color:T.ink,margin:0}}>Gestione</h1>
           <button onClick={()=>tab==="servizi"?setShowAddSvc(true):null} style={{display:"flex",alignItems:"center",gap:4,padding:"6px 11px",borderRadius:8,border:"none",background:T.brand,color:T.white,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}><IPlus/>Aggiungi</button>
         </div>
-        <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:13,padding:4,gap:2}}>
+        <div style={{display:"flex",background:T.surface,borderRadius:8,padding:3,gap:2}}>
           {[["servizi","Servizi"],["staff","Staff"],["orari","Orari"]].map(([v,l])=><button key={v} onClick={()=>setTab(v)} style={{flex:1,padding:"6px 0",borderRadius:6,border:"none",cursor:"pointer",fontSize:11,fontWeight:tab===v?700:400,background:tab===v?T.white:T.surface,color:tab===v?T.ink:T.inkSoft,fontFamily:"inherit"}}>{l}</button>)}
         </div>
       </div>
@@ -2409,7 +2378,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
       {tab==="servizi" && (
         <div style={{padding:"10px 14px"}}>
           {services.map(s => (
-            <div key={s.id} className="clay-soft" style={{background:T.white,borderRadius:15,marginBottom:11,overflow:"hidden",opacity:s.active?1:.55}}>
+            <div key={s.id} style={{background:T.white,borderRadius:12,marginBottom:7,overflow:"hidden",opacity:s.active?1:.55}}>
               {editSvc===s.id ? (
                 <div style={{padding:"11px 13px",background:T.surface}}>
                   <div style={{marginBottom:7}}>
@@ -2439,7 +2408,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
       {tab==="staff" && (
         <div style={{padding:"10px 14px"}}>
           {staff.map(s => (
-            <div key={s.id} className="clay-soft" style={{background:T.white,borderRadius:15,marginBottom:11,padding:"12px 13px"}}>
+            <div key={s.id} style={{background:T.white,borderRadius:12,marginBottom:7,padding:"12px 13px"}}>
               <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:7}}>
                 <div style={{width:40,height:40,borderRadius:"50%",background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",fontSize:19}}>{s.emoji}</div>
                 <div style={{flex:1}}><p style={{fontSize:14,fontWeight:600,color:T.ink,margin:"0 0 1px"}}>{s.name}</p><p style={{fontSize:11,color:T.inkSoft,margin:"0 0 2px"}}>{s.role}</p><p style={{fontSize:10,color:T.inkSoft,margin:0}}>{s.schedule}</p></div>
@@ -2455,7 +2424,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
             const isOpen = hours.days.includes(i);
             const dh = hours.perDay?.[i]||{open:hours.open,close:hours.close};
             return (
-              <div key={i} className="clay-soft" style={{background:T.white,borderRadius:15,marginBottom:11,overflow:"hidden",opacity:isOpen?1:.6}}>
+              <div key={i} style={{background:T.white,borderRadius:12,marginBottom:7,overflow:"hidden",opacity:isOpen?1:.6}}>
                 <div style={{display:"flex",alignItems:"center",gap:11,padding:"12px 14px"}}>
                   <button onClick={()=>setHours(p=>({...p,days:p.days.includes(i)?p.days.filter(x=>x!==i):[...p.days,i].sort()}))} style={{width:40,height:22,borderRadius:11,border:"none",cursor:"pointer",background:isOpen?T.green:T.line,position:"relative",flexShrink:0}}>
                     <div style={{width:16,height:16,borderRadius:8,background:T.white,position:"absolute",top:3,left:isOpen?20:3,boxShadow:"0 1px 3px rgba(0,0,0,.2)"}}/>
@@ -2598,7 +2567,7 @@ function PianiScreen({nav}) {
       <div style={{padding:"14px 14px"}}>
         <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.8,marginBottom:12,textAlign:"center"}}>Piani disponibili dal 14 settembre</p>
         {PIANI.map((p,idx) => (
-          <div key={p.id} className="clay" style={{background:T.white,borderRadius:20,marginBottom:14,overflow:"hidden"}}>
+          <div key={p.id} style={{background:T.white,borderRadius:16,marginBottom:12,overflow:"hidden"}}>
             <div style={{background:p.color,padding:"14px 16px"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
                 <div><Pill label={p.tag} style={{background:"rgba(255,255,255,.15)",color:"rgba(255,255,255,.8)",fontSize:10,marginBottom:6}}/><p style={{color:p.textColor,fontSize:18,fontWeight:700,margin:"0 0 2px"}}>{p.name}</p><p style={{color:"rgba(255,255,255,.6)",fontSize:12,margin:0}}>{p.desc}</p></div>
@@ -2629,216 +2598,6 @@ function PianiScreen({nav}) {
           <p style={{fontSize:13,fontWeight:700,color:T.amber,margin:"0 0 4px"}}>Una parola da Alessio</p>
           <p style={{fontSize:12,color:T.ink,margin:0,lineHeight:1.7}}>Sono di Imperia e questa app e pensata per i professionisti della mia zona. I primi 3 mesi sono completamente gratis. Aiutami a migliorarla con il tuo feedback.</p>
         </div>
-      </div>
-    </div>
-  );
-}
-
-/* ============ CHAT / DM stile Vinted ============ */
-
-/* Lista conversazioni */
-function ChatList({conversations,role,nav}) {
-  const sorted = [...conversations];
-  return (
-    <div style={{paddingBottom:110,background:T.paper,minHeight:"100dvh"}}>
-      <div style={{background:T.white,padding:"54px 20px 16px",borderBottom:`1px solid ${T.line}`}}>
-        <h1 style={{fontSize:26,fontWeight:800,color:T.ink,margin:0,letterSpacing:"-.02em"}}>Messaggi</h1>
-        <p style={{fontSize:13,color:T.inkMid,margin:"2px 0 0"}}>Accordi su misura e prenotazioni</p>
-      </div>
-      {sorted.length===0 ? (
-        <div style={{textAlign:"center",padding:"80px 30px"}}>
-          <div style={{fontSize:46,marginBottom:14}}>💬</div>
-          <p style={{fontSize:16,fontWeight:700,color:T.ink,marginBottom:6}}>Nessun messaggio</p>
-          <p style={{fontSize:13,color:T.inkSoft,lineHeight:1.6}}>{role==="client"?"Apri il profilo di un professionista e tocca \"Messaggio\" per accordarti su un lavoro su misura.":"Qui vedrai le richieste dei clienti per lavori personalizzati."}</p>
-        </div>
-      ) : (
-        <div style={{padding:"10px 14px"}}>
-          {sorted.map(c => {
-            const pro = ALL_PROS.find(p=>p.id===c.proId)||ALL_PROS[0];
-            const last = c.messages[c.messages.length-1];
-            const preview = last.type==="offer"?`💼 Offerta: ${last.offer.service} · ${last.offer.price}€`:last.text;
-            const name = role==="client"?pro.name:c.clientName;
-            return (
-              <div key={c.id} onClick={()=>nav("chat",{convId:c.id,role})} className="ba-lift" style={{display:"flex",alignItems:"center",gap:12,padding:"12px 12px",cursor:"pointer",background:T.white,borderRadius:16,marginBottom:8,border:`1px solid ${T.line}`}}>
-                <div style={{width:50,height:50,borderRadius:"50%",background:`${pro.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{role==="client"?pro.emoji:"🧑"}</div>
-                <div style={{flex:1,minWidth:0}}>
-                  <p style={{fontSize:14,fontWeight:700,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{name}</p>
-                  <p style={{fontSize:12,color:T.inkSoft,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{preview}</p>
-                </div>
-                <span style={{fontSize:11,color:T.inkSoft,flexShrink:0}}>{last.time}</span>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* Card offerta dentro la chat — stile Vinted */
-function OfferCard({offer,msgFrom,role,onAccept,onDecline}) {
-  const isMine = msgFrom===role;            // l'offerta l'ho mandata io
-  const st = offer.status;
-  const stColor = st==="accepted"?T.green:st==="declined"?T.red:T.brand;
-  const stLabel = st==="accepted"?"Accettata ✓":st==="declined"?"Rifiutata":"In attesa di risposta";
-  return (
-    <div style={{maxWidth:"86%",alignSelf:isMine?"flex-end":"flex-start",background:T.white,border:`1.5px solid ${stColor}55`,borderRadius:18,overflow:"hidden",boxShadow:"0 2px 10px rgba(44,34,24,.08)",margin:"2px 0"}}>
-      <div style={{background:`${stColor}14`,padding:"8px 14px",display:"flex",alignItems:"center",gap:7}}>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={stColor} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
-        <span style={{fontSize:11,fontWeight:800,color:stColor,textTransform:"uppercase",letterSpacing:.6}}>Proposta di appuntamento</span>
-      </div>
-      <div style={{padding:"12px 14px"}}>
-        <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:"0 0 8px"}}>{offer.service}</p>
-        <div style={{display:"flex",gap:7,marginBottom:10}}>
-          {[["Prezzo",`${offer.price}€`],["Durata",`${offer.min} min`],["Quando",`${offer.date}`],["Ora",offer.slot]].map(([k,v])=>(
-            <div key={k} style={{flex:1,background:T.surface,borderRadius:9,padding:"7px 4px",textAlign:"center"}}>
-              <p style={{fontSize:8,color:T.inkSoft,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>{k}</p>
-              <p style={{fontSize:11,fontWeight:800,color:T.ink,margin:0}}>{v}</p>
-            </div>
-          ))}
-        </div>
-        {st==="pending" && !isMine && (
-          <div style={{display:"flex",gap:8}}>
-            <button onClick={onDecline} style={{flex:1,padding:"10px 0",borderRadius:11,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Rifiuta</button>
-            <button onClick={onAccept} style={{flex:2,padding:"10px 0",borderRadius:11,border:"none",background:"linear-gradient(135deg,#7A9669,#5E7A4F)",color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Accetta e prenota</button>
-          </div>
-        )}
-        {st==="pending" && isMine && (
-          <p style={{fontSize:12,color:T.inkSoft,margin:0,textAlign:"center",fontStyle:"italic"}}>In attesa di risposta…</p>
-        )}
-        {st!=="pending" && (
-          <p style={{fontSize:13,fontWeight:800,color:stColor,margin:0,textAlign:"center"}}>{stLabel}</p>
-        )}
-      </div>
-    </div>
-  );
-}
-
-/* Schermata singola chat */
-function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onAccept,onDecline}) {
-  const pro = ALL_PROS.find(p=>p.id===conv.proId)||ALL_PROS[0];
-  const [text,setText] = useState("");
-  const [showOffer,setShowOffer] = useState(false);
-  const scrollRef = useRef(null);
-  useEffect(()=>{ if(scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; },[conv.messages.length]);
-
-  const otherName = role==="client"?pro.name:conv.clientName;
-  const send = () => { if(!text.trim()) return; onSendMessage(conv.id,{from:role,type:"text",text:text.trim()}); setText(""); };
-
-  return (
-    <div style={{display:"flex",flexDirection:"column",height:"100dvh",background:T.paper}}>
-      {/* Header */}
-      <div style={{background:T.white,padding:"50px 14px 12px",borderBottom:`1px solid ${T.line}`,display:"flex",alignItems:"center",gap:11,flexShrink:0}}>
-        <button onClick={()=>nav(role==="client"?"cl_chats":"pro_chats")} style={{width:34,height:34,borderRadius:"50%",background:T.surface,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        </button>
-        <div onClick={()=>role==="client"&&nav("cl_pro",pro)} style={{width:40,height:40,borderRadius:"50%",background:`${pro.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0,cursor:role==="client"?"pointer":"default"}}>{role==="client"?pro.emoji:"🧑"}</div>
-        <div style={{flex:1,minWidth:0}}>
-          <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{otherName}</p>
-          <p style={{fontSize:11,color:T.green,margin:0,fontWeight:600}}>● Online</p>
-        </div>
-      </div>
-
-      {/* Messaggi */}
-      <div ref={scrollRef} style={{flex:1,overflowY:"auto",padding:"16px 14px",display:"flex",flexDirection:"column",gap:8}}>
-        <div style={{textAlign:"center",marginBottom:4}}>
-          <span style={{fontSize:11,color:T.inkSoft,background:T.surface,padding:"4px 12px",borderRadius:99}}>Accordatevi su prezzo e durata, poi prenota con un tap</span>
-        </div>
-        {conv.messages.map(m => {
-          if(m.type==="offer") return (
-            <OfferCard key={m.id} offer={m.offer} msgFrom={m.from} role={role}
-              onAccept={()=>onAccept(conv.id,m.id)} onDecline={()=>onDecline(conv.id,m.id)}/>
-          );
-          const mine = m.from===role;
-          return (
-            <div key={m.id} style={{maxWidth:"78%",alignSelf:mine?"flex-end":"flex-start",
-              background:mine?"linear-gradient(135deg,#BFA67E,#897153)":T.white,
-              color:mine?"#fff":T.ink,
-              borderRadius:mine?"16px 16px 4px 16px":"16px 16px 16px 4px",
-              padding:"9px 13px",fontSize:14,lineHeight:1.4,
-              border:mine?"none":`1px solid ${T.line}`,boxShadow:"0 1px 4px rgba(44,34,24,.06)"}}>
-              {m.text}
-              <span style={{display:"block",fontSize:9,marginTop:3,opacity:.6,textAlign:"right"}}>{m.time}</span>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Barra invio */}
-      <div style={{background:T.white,borderTop:`1px solid ${T.line}`,padding:"10px 12px 26px",flexShrink:0}}>
-        <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <button onClick={()=>setShowOffer(true)} title="Proponi appuntamento" style={{width:42,height:42,borderRadius:"50%",border:"none",background:T.brandBg,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M12 12v4M10 14h4"/></svg>
-          </button>
-          <input value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Scrivi un messaggio…"
-            style={{flex:1,border:`1px solid ${T.line}`,outline:"none",background:T.surface,borderRadius:99,padding:"11px 16px",fontSize:14,color:T.ink,fontFamily:"inherit"}}/>
-          <button onClick={send} disabled={!text.trim()} style={{width:42,height:42,borderRadius:"50%",border:"none",background:text.trim()?"linear-gradient(135deg,#BFA67E,#897153)":T.line,cursor:text.trim()?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-          </button>
-        </div>
-        <p style={{fontSize:10,color:T.inkSoft,margin:"7px 0 0",textAlign:"center"}}>💼 Tocca la valigetta per proporre un appuntamento su misura</p>
-      </div>
-
-      {/* Modal crea offerta */}
-      {showOffer && <OfferModal role={role} pro={pro} onClose={()=>setShowOffer(false)}
-        onSend={(offer)=>{onSendOffer(conv.id,{from:role,type:"offer",offer:{...offer,status:"pending"}});setShowOffer(false);}}/>}
-    </div>
-  );
-}
-
-/* Modal per comporre un'offerta */
-function OfferModal({role,pro,onClose,onSend}) {
-  const [service,setService] = useState("");
-  const [price,setPrice] = useState("");
-  const [min,setMin] = useState("60");
-  const [date,setDate] = useState("");
-  const [slot,setSlot] = useState("");
-  const DATE_OPTS = ["Oggi","Domani","Sab 21 giu","Dom 22 giu","Lun 23 giu","Mar 24 giu","Mer 25 giu"];
-  const TIME_OPTS = ["09:00","09:30","10:00","10:30","11:00","11:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"];
-  const valid = service.trim() && price && date && slot;
-  return (
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(43,34,24,.45)",zIndex:400,display:"flex",alignItems:"flex-end",backdropFilter:"blur(3px)"}}>
-      <div onClick={e=>e.stopPropagation()} className="ba-pop" style={{background:T.paper,borderRadius:"26px 26px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 18px 32px",maxHeight:"90dvh",overflowY:"auto"}}>
-        <div style={{width:40,height:4,borderRadius:99,background:T.line,margin:"0 auto 16px"}}/>
-        <h2 style={{fontSize:19,fontWeight:800,color:T.ink,margin:"0 0 4px"}}>Proponi un appuntamento</h2>
-        <p style={{fontSize:13,color:T.inkMid,margin:"0 0 18px"}}>{role==="pro"?"Invia al cliente prezzo, durata e orario. Se accetta, finisce in agenda.":"Proponi prezzo e orario. Se il professionista accetta, è prenotato."}</p>
-
-        <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Lavoro / servizio</label>
-        <input value={service} onChange={e=>setService(e.target.value)} placeholder="Es. Balayage + tonalizzante"
-          style={{width:"100%",border:`1.5px solid ${T.line}`,outline:"none",background:T.white,borderRadius:12,padding:"12px 14px",fontSize:14,color:T.ink,fontFamily:"inherit",marginBottom:14,boxSizing:"border-box"}}/>
-
-        <div style={{display:"flex",gap:10,marginBottom:14}}>
-          <div style={{flex:1}}>
-            <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Prezzo (€)</label>
-            <input value={price} onChange={e=>setPrice(e.target.value.replace(/[^0-9]/g,""))} inputMode="numeric" placeholder="120"
-              style={{width:"100%",border:`1.5px solid ${T.line}`,outline:"none",background:T.white,borderRadius:12,padding:"12px 14px",fontSize:14,color:T.ink,fontFamily:"inherit",boxSizing:"border-box"}}/>
-          </div>
-          <div style={{flex:1}}>
-            <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Durata (min)</label>
-            <input value={min} onChange={e=>setMin(e.target.value.replace(/[^0-9]/g,""))} inputMode="numeric" placeholder="60"
-              style={{width:"100%",border:`1.5px solid ${T.line}`,outline:"none",background:T.white,borderRadius:12,padding:"12px 14px",fontSize:14,color:T.ink,fontFamily:"inherit",boxSizing:"border-box"}}/>
-          </div>
-        </div>
-
-        <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Giorno</label>
-        <div style={{display:"flex",gap:6,overflowX:"auto",scrollbarWidth:"none",marginBottom:14,paddingBottom:2}}>
-          {DATE_OPTS.map(d=>(
-            <button key={d} onClick={()=>setDate(d)} style={{flexShrink:0,padding:"9px 14px",borderRadius:99,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,background:date===d?T.brand:T.white,color:date===d?"#fff":T.inkMid,fontFamily:"inherit",boxShadow:date===d?"none":`0 0 0 1.5px ${T.line} inset`}}>{d}</button>
-          ))}
-        </div>
-
-        <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Orario</label>
-        <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:22}}>
-          {TIME_OPTS.map(t=>(
-            <button key={t} onClick={()=>setSlot(t)} style={{padding:"8px 13px",borderRadius:10,border:"none",cursor:"pointer",fontSize:13,fontWeight:700,background:slot===t?T.brand:T.white,color:slot===t?"#fff":T.inkMid,fontFamily:"inherit",boxShadow:slot===t?"none":`0 0 0 1.5px ${T.line} inset`}}>{t}</button>
-          ))}
-        </div>
-
-        <button onClick={()=>valid&&onSend({service:service.trim(),price:parseInt(price),min:parseInt(min)||60,date,slot})} disabled={!valid}
-          style={{width:"100%",padding:"15px 0",borderRadius:14,border:"none",cursor:valid?"pointer":"default",fontSize:15,fontWeight:800,fontFamily:"inherit",
-            background:valid?"linear-gradient(135deg,#BFA67E,#897153)":T.line,color:valid?"#fff":T.inkSoft}}>
-          Invia proposta
-        </button>
       </div>
     </div>
   );
@@ -2881,68 +2640,10 @@ export default function App() {
   const [likedPosts,setLikedPosts] = useState(new Set([1,2,4]));
   const [showBetaWelcome,setShowBetaWelcome] = useState(false);
   const [myAppts,setMyAppts] = useState(MY_APPTS0);
-  const [conversations,setConversations] = useState(CONVERSATIONS0);
 
   useEffect(()=>{injectFont();},[]);
 
   const nav = (to,data=null) => {setScreen(to);setSD(data);window.scrollTo({top:0});};
-
-  /* ---- CHAT / OFFERTE ---- */
-  const nowTime = () => { const d=new Date(); return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; };
-
-  // Trova o crea una conversazione con un professionista, poi apri la chat
-  const openChatWithPro = (proId,role="client") => {
-    let conv = conversations.find(c=>c.proId===proId);
-    if(!conv){
-      conv = {id:Date.now(),proId,clientName:user?.name||"Cliente",messages:[]};
-      setConversations(p=>[conv,...p]);
-    }
-    nav("chat",{convId:conv.id,role});
-  };
-
-  const sendMessage = (convId,msg) => {
-    setConversations(p=>p.map(c=>c.id===convId
-      ? {...c,messages:[...c.messages,{id:Date.now(),time:nowTime(),...msg}]}
-      : c));
-  };
-  const sendOffer = (convId,msg) => sendMessage(convId,msg);
-
-  const declineOffer = (convId,msgId) => {
-    setConversations(p=>p.map(c=>c.id===convId
-      ? {...c,messages:c.messages.map(m=>m.id===msgId?{...m,offer:{...m.offer,status:"declined"}}:m)}
-      : c));
-  };
-
-  // Accetta offerta → segna accettata + crea appuntamento in entrambe le agende
-  const acceptOffer = (convId,msgId) => {
-    const conv = conversations.find(c=>c.id===convId);
-    if(!conv) return;
-    const msg = conv.messages.find(m=>m.id===msgId);
-    if(!msg||msg.type!=="offer") return;
-    const o = msg.offer;
-    const pro = ALL_PROS.find(p=>p.id===conv.proId)||ALL_PROS[0];
-
-    // 1) segna l'offerta accettata
-    setConversations(p=>p.map(c=>c.id===convId
-      ? {...c,messages:[
-          ...c.messages.map(m=>m.id===msgId?{...m,offer:{...m.offer,status:"accepted"}}:m),
-          {id:Date.now(),from:"pro",type:"text",text:`Perfetto, è confermato! Ci vediamo ${o.date} alle ${o.slot} ✨`,time:nowTime()},
-        ]}
-      : c));
-
-    // 2) appuntamento lato CLIENTE
-    setMyAppts(p=>[
-      {id:Date.now()+1,pro:pro.name,service:o.service,date:o.date,time:o.slot,price:o.price,status:"confermato",proObj:pro},
-      ...p,
-    ]);
-
-    // 3) appuntamento lato PROFESSIONISTA (crea cliente + servizio al volo per l'agenda)
-    const newClientId = Date.now()+2;
-    const newServiceId = Date.now()+3;
-    setClients(p=>p.some(c=>c.name===conv.clientName)?p:[...p,{id:newClientId,name:conv.clientName,phone:"",visits:1,lastVisit:"Oggi",totalSpent:o.price,note:"Accordo da chat",rating:0}]);
-    setServices(p=>[...p,{id:newServiceId,name:o.service,price:o.price,min:o.min,active:true}]);
-    setAppts(p=>[...p,{id:Date.now()+4,staffId:1,date:o.date,time:o.slot,clientId:newClientId,serviceId:newServiceId,status:"confermato",source:"app",note:"Accordo su misura via chat"}]);
-  };
 
   const handleAuth = ({name,type}) => {
     setUser({name,type});setMode(type==="pro"?"pro":"cliente");
@@ -2961,19 +2662,11 @@ export default function App() {
     if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts}/>;
     if(screen==="cl_explore")    return <ClExplore nav={nav}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
-    if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
+    if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing}/>;
     if(screen==="cl_prenota")    return <ClPrenota data={sData} nav={nav}/>;
     if(screen==="cl_appts")      return <ClAppts nav={nav} allAppts={myAppts} setAllAppts={setMyAppts}/>;
-    if(screen==="cl_chats")      return <ChatList conversations={conversations} role="client" nav={nav}/>;
-    if(screen==="pro_chats")     return <ChatList conversations={conversations} role="pro" nav={nav}/>;
-    if(screen==="chat"){
-      const conv = conversations.find(c=>c.id===sData?.convId);
-      if(!conv) return <ChatList conversations={conversations} role={sData?.role||"client"} nav={nav}/>;
-      return <ChatScreen conv={conv} role={sData?.role||"client"} nav={nav}
-        onSendMessage={sendMessage} onSendOffer={sendOffer} onAccept={acceptOffer} onDecline={declineOffer}/>;
-    }
     if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)}/>;
-    if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav}/>;
+    if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours}/>;
     if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav}/>;
     if(screen==="pro_cliente")   return <ProCliente client={sData} setClients={setClients} appts={appts} services={services} nav={nav}/>;
     if(screen==="pro_servizi")   return <ProServizi services={services} setServices={setServices} staff={staff} setStaff={setStaff} hours={hours} setHours={setHours}/>;
@@ -2982,13 +2675,11 @@ export default function App() {
     return null;
   };
 
-  const fullscreen = screen==="chat";  // la chat occupa tutto lo schermo, niente bottom-nav
-
   return (
     <W>
       {render()}
-      {!fullscreen && mode==="pro" && screen!=="pro_piani" && screen!=="pro_stats" && <BetaBanner nav={nav}/>}
-      {!fullscreen && (mode==="pro" ? <NavPro s={screen} nav={nav}/> : <NavCl s={screen} nav={nav}/>)}
+      {mode==="pro" && screen!=="pro_piani" && screen!=="pro_stats" && <BetaBanner nav={nav}/>}
+      {mode==="pro" ? <NavPro s={screen} nav={nav}/> : <NavCl s={screen} nav={nav}/>}
       {showBetaWelcome && <BetaWelcome onClose={()=>setShowBetaWelcome(false)}/>}
     </W>
   );
