@@ -1147,16 +1147,11 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
                   <p style={{fontSize:17,fontWeight:800,color:T.ink,margin:0,letterSpacing:"-.015em"}}>Categorie</p>
                   <button onClick={()=>openCategory(MACRO_CATS[0]?.id)} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:600,color:T.brand,fontFamily:"inherit"}}>Vedi tutte →</button>
                 </div>
-                <div style={{display:"flex",gap:14,overflowX:"auto",padding:"2px 20px 18px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+                <div style={{display:"flex",gap:12,overflowX:"auto",padding:"2px 20px 18px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {MACRO_CATS.map((cat,ci) => (
-                    <button key={cat.id} onClick={()=>openCategory(cat.id)} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:7,background:"none",border:"none",cursor:"pointer",padding:0,fontFamily:"inherit",width:62,animationDelay:`${0.04*ci}s`}}>
-                      <div style={{width:62,height:62,borderRadius:20,background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                        <MacroCatIcon id={cat.id} size={28} color={cat.color} strokeWidth={1.8}/>
-                      </div>
-                      <div style={{textAlign:"center"}}>
-                        <p style={{fontSize:11,fontWeight:700,color:T.ink,margin:0,lineHeight:1.2,whiteSpace:"pre-line"}}>{cat.label}</p>
-                        {cat.count && <p style={{fontSize:10,color:T.inkSoft,margin:"1px 0 0",fontWeight:500}}>{cat.count} pro</p>}
-                      </div>
+                    <button key={cat.id} onClick={()=>openCategory(cat.id)} style={{flexShrink:0,width:88,height:104,borderRadius:24,background:cat.bg,border:"none",cursor:"pointer",padding:"14px 8px 12px",fontFamily:"inherit",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",animationDelay:`${0.04*ci}s`}}>
+                      <MacroCatIcon id={cat.id} size={32} color={cat.color} strokeWidth={1.7}/>
+                      <p style={{fontSize:12,fontWeight:700,color:T.ink,margin:0,textAlign:"center",lineHeight:1.15,whiteSpace:"pre-line"}}>{cat.label}</p>
                     </button>
                   ))}
                 </div>
