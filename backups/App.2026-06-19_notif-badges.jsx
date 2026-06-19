@@ -903,7 +903,7 @@ function LoginScreen({onAuth}) {
 }
 
 /* HOME CLIENTE */
-function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
+function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
   const [city,setCity] = useState("Milano");
   const [userCoords,setUserCoords] = useState(DEFAULT_COORDS);
   const futuri = myAppts.filter(a=>a.status==="confermato"||a.status==="in attesa");
@@ -1018,27 +1018,14 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
             <h1 style={{fontSize:28,fontWeight:800,color:T.ink,margin:"0 0 3px",lineHeight:1.05,letterSpacing:"-.02em"}}>Ciao, Alessio 👋</h1>
             <p style={{fontSize:14,color:T.inkMid,margin:0,fontWeight:500}}>Pronto a splendere oggi?</p>
           </div>
-          {(()=>{
-            const unreadDm = conversations.reduce((sum,c)=>sum+c.messages.filter(m=>m.from==="pro").length,0);
-            const hasNotif = true;
-            const dotStyle = {position:"absolute",top:-2,right:-2,minWidth:16,height:16,borderRadius:8,background:"#E53935",border:"2px solid #fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:"#fff",lineHeight:1,padding:"0 3px"};
-            return (
-              <div style={{display:"flex",gap:8,flexShrink:0,marginTop:2}}>
-                <div style={{position:"relative"}}>
-                  <button onClick={()=>nav("cl_chats")} style={{width:38,height:38,borderRadius:"50%",border:`1px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white}}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-                  </button>
-                  {unreadDm>0 && <div style={dotStyle}>{unreadDm>9?"9+":unreadDm}</div>}
-                </div>
-                <div style={{position:"relative"}}>
-                  <button style={{width:38,height:38,borderRadius:"50%",border:`1px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white}}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-                  </button>
-                  {hasNotif && <div style={{...dotStyle,minWidth:10,height:10,padding:0,top:-1,right:-1}}/>}
-                </div>
-              </div>
-            );
-          })()}
+          <div style={{display:"flex",gap:8,flexShrink:0,marginTop:2}}>
+            <button onClick={()=>nav("cl_chats")} style={{width:38,height:38,borderRadius:"50%",border:`1px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+            </button>
+            <button style={{width:38,height:38,borderRadius:"50%",border:`1px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+            </button>
+          </div>
         </div>
 
         {/* Ricerca — pill chiara con icona filtro a destra */}
@@ -3330,7 +3317,7 @@ export default function App() {
   if(!user) return <W><LoginScreen onAuth={handleAuth}/></W>;
 
   const render = () => {
-    if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations}/>;
+    if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts}/>;
     if(screen==="cl_explore")    return <ClExplore nav={nav} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={sendPostToPro}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
