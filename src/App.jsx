@@ -2541,7 +2541,7 @@ function ProStats({appts,clients,services,staff,onSwitch,nav}) {
             </div>
           ))}
         </div>
-        <div onClick={()=>nav("pro_piani")} className="clay-btn" style={{padding:"15px",borderRadius:20,background:T.brand,cursor:"pointer",display:"flex",alignItems:"center",gap:12}}>
+        <div onClick={()=>nav("pro_piani")} style={{padding:"15px",borderRadius:20,background:T.brand,cursor:"pointer",display:"flex",alignItems:"center",gap:12,boxShadow:"10px 12px 26px rgba(120,98,68,.40), inset 2px 2px 6px rgba(255,255,255,.22), inset -4px -5px 11px rgba(80,62,40,.32)"}}>
           <div style={{flex:1}}>
             <p style={{color:"rgba(255,255,255,.85)",fontSize:10,fontWeight:800,textTransform:"uppercase",letterSpacing:.8,margin:"0 0 2px"}}>Beta gratuita</p>
             <p style={{color:T.white,fontSize:14,fontWeight:800,margin:0}}>{BETA_DAYS} giorni rimasti - Vedi i piani</p>
@@ -2657,8 +2657,8 @@ function ChatList({conversations,role,nav}) {
             const preview = last.type==="offer"?`💼 Offerta: ${last.offer.service} · ${last.offer.price}€`:last.text;
             const name = role==="client"?pro.name:c.clientName;
             return (
-              <div key={c.id} onClick={()=>nav("chat",{convId:c.id,role})} className="ba-lift" style={{display:"flex",alignItems:"center",gap:12,padding:"12px 12px",cursor:"pointer",background:T.white,borderRadius:16,marginBottom:8,border:`1px solid ${T.line}`}}>
-                <div style={{width:50,height:50,borderRadius:"50%",background:`${pro.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{role==="client"?pro.emoji:"🧑"}</div>
+              <div key={c.id} onClick={()=>nav("chat",{convId:c.id,role})} className="ba-lift clay" style={{display:"flex",alignItems:"center",gap:12,padding:"13px 15px",cursor:"pointer",background:T.white,borderRadius:20,marginBottom:12}}>
+                <div className="clay-soft" style={{width:50,height:50,borderRadius:"50%",background:`${pro.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{role==="client"?pro.emoji:"🧑"}</div>
                 <div style={{flex:1,minWidth:0}}>
                   <p style={{fontSize:14,fontWeight:700,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{name}</p>
                   <p style={{fontSize:12,color:T.inkSoft,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{preview}</p>
@@ -2681,7 +2681,7 @@ function OfferCard({offer,msgFrom,role,onPick,onDecline}) {
   const stLabel = st==="accepted"?"Accettata ✓":st==="declined"?"Rifiutata":"In attesa di risposta";
 
   return (
-    <div style={{maxWidth:"86%",alignSelf:isMine?"flex-end":"flex-start",background:T.white,border:`1.5px solid ${stColor}55`,borderRadius:18,overflow:"hidden",boxShadow:"0 2px 10px rgba(44,34,24,.08)",margin:"2px 0"}}>
+    <div className="clay" style={{maxWidth:"86%",alignSelf:isMine?"flex-end":"flex-start",background:T.white,borderRadius:20,overflow:"hidden",margin:"4px 0"}}>
       <div style={{background:`${stColor}14`,padding:"8px 14px",display:"flex",alignItems:"center",gap:7}}>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={stColor} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
         <span style={{fontSize:11,fontWeight:800,color:stColor,textTransform:"uppercase",letterSpacing:.6}}>Proposta di appuntamento</span>
@@ -2796,12 +2796,11 @@ function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onAccept,onDecline}
           );
           const mine = m.from===role;
           return (
-            <div key={m.id} style={{maxWidth:"78%",alignSelf:mine?"flex-end":"flex-start",
-              background:mine?"linear-gradient(135deg,#BFA67E,#897153)":T.white,
+            <div key={m.id} className={mine?"clay-btn":"clay-soft"} style={{maxWidth:"78%",alignSelf:mine?"flex-end":"flex-start",
+              background:mine?T.brand:T.white,
               color:mine?"#fff":T.ink,
-              borderRadius:mine?"16px 16px 4px 16px":"16px 16px 16px 4px",
-              padding:"9px 13px",fontSize:14,lineHeight:1.4,
-              border:mine?"none":`1px solid ${T.line}`,boxShadow:"0 1px 4px rgba(44,34,24,.06)"}}>
+              borderRadius:mine?"18px 18px 5px 18px":"18px 18px 18px 5px",
+              padding:"10px 14px",fontSize:14,lineHeight:1.4}}>
               {m.text}
               <span style={{display:"block",fontSize:9,marginTop:3,opacity:.6,textAlign:"right"}}>{m.time}</span>
             </div>
@@ -2813,13 +2812,13 @@ function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onAccept,onDecline}
       <div style={{background:T.white,borderTop:`1px solid ${T.line}`,padding:"10px 12px 26px",flexShrink:0}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           {role==="pro" && (
-            <button onClick={()=>setShowOffer(true)} title="Proponi appuntamento" style={{width:42,height:42,borderRadius:"50%",border:"none",background:T.brandBg,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+            <button onClick={()=>setShowOffer(true)} title="Proponi appuntamento" className="clay-soft" style={{width:42,height:42,borderRadius:"50%",border:"none",background:T.brandBg,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M12 12v4M10 14h4"/></svg>
             </button>
           )}
           <input value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Scrivi un messaggio…"
-            style={{flex:1,border:`1px solid ${T.line}`,outline:"none",background:T.surface,borderRadius:99,padding:"11px 16px",fontSize:14,color:T.ink,fontFamily:"inherit"}}/>
-          <button onClick={send} disabled={!text.trim()} style={{width:42,height:42,borderRadius:"50%",border:"none",background:text.trim()?"linear-gradient(135deg,#BFA67E,#897153)":T.line,cursor:text.trim()?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+            className="clay-inset" style={{flex:1,border:"none",outline:"none",background:T.surface,borderRadius:99,padding:"13px 17px",fontSize:14,color:T.ink,fontFamily:"inherit"}}/>
+          <button onClick={send} disabled={!text.trim()} className={text.trim()?"clay-btn":""} style={{width:42,height:42,borderRadius:"50%",border:"none",background:text.trim()?T.brand:T.line,cursor:text.trim()?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           </button>
         </div>
