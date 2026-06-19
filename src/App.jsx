@@ -909,7 +909,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
         </div>
 
         {/* Ricerca — pill chiara con icona filtro a destra */}
-        <div style={{display:"flex",alignItems:"center",gap:10,background:T.surface,borderRadius:14,padding:"12px 14px",marginTop:14,marginBottom:0}}>
+        <div className="clay-inset" style={{display:"flex",alignItems:"center",gap:10,background:T.surface,borderRadius:16,padding:"14px 16px",marginTop:14,marginBottom:0}}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.4" strokeLinecap="round" style={{flexShrink:0}}>
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
@@ -932,9 +932,9 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
             <p style={{fontSize:14,fontWeight:800,color:T.ink,margin:0}}>Il tuo prossimo appuntamento</p>
             <button onClick={()=>nav("cl_appts")} style={{background:"none",border:"none",cursor:"pointer",fontSize:12,fontWeight:600,color:T.brand,fontFamily:"inherit"}}>Vedi tutto</button>
           </div>
-          <div className="ba-zoom" onClick={()=>nav("cl_appts")}
-            style={{display:"flex",alignItems:"center",gap:13,padding:"14px 16px",borderRadius:16,cursor:"pointer",
-              background:T.paper,border:`1px solid ${T.line}`,boxShadow:"0 2px 8px rgba(44,34,24,.06)"}}>
+          <div className="ba-zoom clay" onClick={()=>nav("cl_appts")}
+            style={{display:"flex",alignItems:"center",gap:13,padding:"16px 18px",borderRadius:20,cursor:"pointer",
+              background:T.white}}>
             <div style={{width:44,height:44,borderRadius:13,background:T.surface,border:`1px solid ${T.line}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.inkMid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>
@@ -995,7 +995,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                 <div style={{display:"flex",gap:16,overflowX:"auto",padding:"0 20px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {CAT_LIST.map((cat,ci) => (
                     <button key={cat.id} onClick={()=>openCategory(cat.id)} className="ba-rise ba-lift" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,padding:0,border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",flexShrink:0,width:58,animationDelay:`${0.04*ci+0.04}s`}}>
-                      <div style={{width:52,height:52,borderRadius:"50%",background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      <div className="clay-soft" style={{width:54,height:54,borderRadius:"50%",background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center"}}>
                         <CatIcon id={cat.id} size={22} color={cat.color} strokeWidth={2}/>
                       </div>
                       <span style={{fontSize:10,fontWeight:600,color:T.inkMid,textAlign:"center",lineHeight:1.2,whiteSpace:"nowrap"}}>{cat.label}</span>
@@ -1030,7 +1030,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                             const photoUrl=proImg(pro);
                             const [imgFailed,setImgFailed] = [false,()=>{}]; // gestione errore nel render
                             return (
-                            <div style={{width:155,height:170,borderRadius:18,overflow:"hidden",position:"relative",marginBottom:10,background:catDef.grad}}>
+                            <div className="clay" style={{width:155,height:170,borderRadius:20,overflow:"hidden",position:"relative",marginBottom:12,background:catDef.grad}}>
                               {/* Gradiente sempre visibile come base */}
                               <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
                                 <CatIcon id={pro.catId} size={54} color="rgba(255,255,255,.55)" strokeWidth={1.5}/>
@@ -1050,7 +1050,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                           {/* Nome + info */}
                           <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
                           <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 8px"}}>{pro.cat} · ★ {pro.rating}</p>
-                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{width:"100%",padding:"8px 0",borderRadius:10,border:"none",background:T.ink,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Prenota</button>
+                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} className="clay-btn ba-btn-bounce" style={{width:"100%",padding:"9px 0",borderRadius:14,border:"none",background:T.brand,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Prenota</button>
                         </div>
                       ))}
                     </div>
@@ -1068,7 +1068,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[]}) {
                   {ALL_PROS.slice(0,5).map(pro => (
                     <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:88,cursor:"pointer"}}>
                             {(()=>{const catDef2=CAT_LIST.find(c=>c.id===pro.catId)||CAT_LIST[0];const ph2=proImg(pro);return(
-                      <div style={{width:88,height:88,borderRadius:14,overflow:"hidden",background:catDef2.grad,marginBottom:6,position:"relative"}}>
+                      <div className="clay-soft" style={{width:88,height:88,borderRadius:18,overflow:"hidden",background:catDef2.grad,marginBottom:8,position:"relative"}}>
                         <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
                           <CatIcon id={pro.catId} size={34} color="rgba(255,255,255,.55)" strokeWidth={1.5}/>
                         </div>
@@ -1264,7 +1264,7 @@ function ClExplore({nav}) {
         posts.map(post => {
           const pro = ALL_PROS.find(p=>p.id===post.proId)||ALL_PROS[0];
           return (
-            <div key={post.id} style={{background:T.white,borderBottom:`1px solid ${T.line}`}}>
+            <div key={post.id} className="clay" style={{background:T.white,borderRadius:22,overflow:"hidden",margin:"0 16px 16px"}}>
               <div style={{display:"flex",alignItems:"center",gap:9,padding:"10px 13px"}}>
                 <div onClick={()=>nav("cl_pro",pro)} style={{cursor:"pointer"}}><Av pro={pro} size={33} fs={15}/></div>
                 <div style={{flex:1,cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
@@ -2199,7 +2199,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav})
                   <span style={{fontSize:11,color:appt?T.inkMid:"#D1D5DB",fontWeight:appt?600:400}}>{slot}</span>
                 </div>
                 {appt ? (
-                  <div onClick={()=>setSelAppt(selAppt===appt.id?null:appt.id)} className="clay-soft" style={{flex:1,background:T.white,borderRadius:14,overflow:"hidden",cursor:"pointer",marginBottom:3}}>
+                  <div onClick={()=>setSelAppt(selAppt===appt.id?null:appt.id)} className="clay" style={{flex:1,background:T.white,borderRadius:20,overflow:"hidden",cursor:"pointer",marginBottom:3}}>
                     <div style={{display:"flex",alignItems:"center",gap:8,padding:"10px 11px"}}>
                       <div style={{width:4,height:34,borderRadius:2,background:s?.bar,flexShrink:0}}/>
                       <div style={{flex:1,minWidth:0}}>
@@ -2407,7 +2407,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
       {tab==="servizi" && (
         <div style={{padding:"10px 14px"}}>
           {services.map(s => (
-            <div key={s.id} className="clay-soft" style={{background:T.white,borderRadius:15,marginBottom:11,overflow:"hidden",opacity:s.active?1:.55}}>
+            <div key={s.id} className="clay" style={{background:T.white,borderRadius:20,marginBottom:14,overflow:"hidden",opacity:s.active?1:.55}}>
               {editSvc===s.id ? (
                 <div style={{padding:"11px 13px",background:T.surface}}>
                   <div style={{marginBottom:7}}>
@@ -2437,7 +2437,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
       {tab==="staff" && (
         <div style={{padding:"10px 14px"}}>
           {staff.map(s => (
-            <div key={s.id} className="clay-soft" style={{background:T.white,borderRadius:15,marginBottom:11,padding:"12px 13px"}}>
+            <div key={s.id} className="clay" style={{background:T.white,borderRadius:20,marginBottom:14,padding:"12px 13px"}}>
               <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:7}}>
                 <div style={{width:40,height:40,borderRadius:"50%",background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",fontSize:19}}>{s.emoji}</div>
                 <div style={{flex:1}}><p style={{fontSize:14,fontWeight:600,color:T.ink,margin:"0 0 1px"}}>{s.name}</p><p style={{fontSize:11,color:T.inkSoft,margin:"0 0 2px"}}>{s.role}</p><p style={{fontSize:10,color:T.inkSoft,margin:0}}>{s.schedule}</p></div>
@@ -2453,7 +2453,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours}) {
             const isOpen = hours.days.includes(i);
             const dh = hours.perDay?.[i]||{open:hours.open,close:hours.close};
             return (
-              <div key={i} className="clay-soft" style={{background:T.white,borderRadius:15,marginBottom:11,overflow:"hidden",opacity:isOpen?1:.6}}>
+              <div key={i} className="clay" style={{background:T.white,borderRadius:20,marginBottom:14,overflow:"hidden",opacity:isOpen?1:.6}}>
                 <div style={{display:"flex",alignItems:"center",gap:11,padding:"12px 14px"}}>
                   <button onClick={()=>setHours(p=>({...p,days:p.days.includes(i)?p.days.filter(x=>x!==i):[...p.days,i].sort()}))} style={{width:40,height:22,borderRadius:11,border:"none",cursor:"pointer",background:isOpen?T.green:T.line,position:"relative",flexShrink:0}}>
                     <div style={{width:16,height:16,borderRadius:8,background:T.white,position:"absolute",top:3,left:isOpen?20:3,boxShadow:"0 1px 3px rgba(0,0,0,.2)"}}/>
