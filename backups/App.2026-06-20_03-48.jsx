@@ -1061,6 +1061,25 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
         </div>
       </div>
 
+      {/* ── HERO card chiara (crema) ── */}
+      {!(searching && q.length >= 2) && !selCat && (
+        <div style={{padding:"0 20px 0",background:"#fff"}}>
+          <div onClick={()=>nav("cl_explore")} style={{position:"relative",borderRadius:24,overflow:"hidden",cursor:"pointer",minHeight:190,background:"#EFE5D8",boxShadow:"0 4px 20px rgba(44,34,24,.10)"}}>
+            <img src={MI("1487412720507-e7ab37603c6f")} alt="look" style={{position:"absolute",right:0,top:0,bottom:0,width:"54%",height:"100%",objectFit:"cover",objectPosition:"top center"}} onError={e=>{e.currentTarget.style.display="none";}}/>
+            <div style={{position:"absolute",inset:0,background:"linear-gradient(100deg,#EFE5D8 46%,rgba(239,229,216,.7) 62%,rgba(239,229,216,0) 88%)"}}/>
+            <div style={{position:"relative",padding:"22px 20px",maxWidth:"64%"}}>
+              <p style={{fontSize:10,fontWeight:700,color:T.brand,letterSpacing:1.5,textTransform:"uppercase",margin:"0 0 8px"}}>Ispirati. Scopri. Prenota.</p>
+              <p style={{fontSize:22,fontWeight:800,color:T.ink,margin:"0 0 6px",lineHeight:1.15,letterSpacing:"-.02em"}}>Trova il look<br/>che desideri</p>
+              <p style={{fontSize:12,color:T.inkMid,margin:"0 0 16px",lineHeight:1.4}}>Carica una foto e scopri i professionisti che possono realizzarlo</p>
+              <span style={{display:"inline-flex",alignItems:"center",gap:7,background:T.ink,color:"#fff",borderRadius:99,padding:"10px 18px",fontSize:13,fontWeight:700,letterSpacing:"-.01em"}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                Carica una foto
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── BANNER prossimo appuntamento ── */}
       {!(searching && q.length >= 2) && !selCat && banner && (
         <div style={{padding:"16px 20px 0",background:"#fff"}}>
