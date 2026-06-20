@@ -39,9 +39,8 @@ const loadMarkerCluster = () => loadLeaflet().then(L => {
 });
 
 const TILE_LAYERS = {
-  // CARTO basemaps — stile moderno, minimale e gratuito (nessuna API key)
-  light: {url:"https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>', subdomains:"abcd", maxZoom:20},
-  dark: {url:"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>', subdomains:"abcd", maxZoom:20},
+  light: {url:"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'},
+  dark: {url:"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'},
 };
 
 const proPinIcon = (L,pro) => L.divIcon({
@@ -87,7 +86,7 @@ const injectFont = () => {
   const s = document.createElement("style");
   s.id = "app-style-rules";
   s.textContent = `
-    h1,h2,.ba-serif,.ba-display{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif !important;font-weight:700;letter-spacing:-.02em}
+    h1,h2,.ba-serif,.ba-display{font-family:'Fraunces',Georgia,serif !important;font-weight:600;letter-spacing:-.015em;font-optical-sizing:auto}
     /* CLAYMORPHISM — ombre sabbia calde, gonfie e scultoree (palette Porcellana di Sabbia) */
     .clay{box-shadow:14px 14px 30px rgba(70,72,84,.16), -12px -12px 26px rgba(255,255,255,.95), inset 3px 3px 6px rgba(255,255,255,.9), inset -5px -5px 12px rgba(70,72,84,.06);}
     .clay-inset{box-shadow:inset 7px 7px 14px rgba(70,72,84,.13), inset -6px -6px 13px rgba(255,255,255,.95);}
@@ -421,7 +420,7 @@ function MapView({pros,center,onSelectPro,onMapMove,dark,height=320}) {
       const map = L.map(ref.current, {zoomControl:true, attributionControl:true}).setView([center.lat,center.lng], 12);
       mapRef.current = map;
       const tiles = dark ? TILE_LAYERS.dark : TILE_LAYERS.light;
-      tileRef.current = L.tileLayer(tiles.url, {maxZoom:20, attribution:tiles.attribution, subdomains:tiles.subdomains||"abc"}).addTo(map);
+      tileRef.current = L.tileLayer(tiles.url, {maxZoom:19, attribution:tiles.attribution}).addTo(map);
       clusterRef.current = L.markerClusterGroup({
         maxClusterRadius:50,
         iconCreateFunction: cluster => L.divIcon({
@@ -453,7 +452,7 @@ function MapView({pros,center,onSelectPro,onMapMove,dark,height=320}) {
     loadLeaflet().then(L => {
       if (tileRef.current) mapRef.current.removeLayer(tileRef.current);
       const tiles = dark ? TILE_LAYERS.dark : TILE_LAYERS.light;
-      tileRef.current = L.tileLayer(tiles.url, {maxZoom:20, attribution:tiles.attribution, subdomains:tiles.subdomains||"abc"});
+      tileRef.current = L.tileLayer(tiles.url, {maxZoom:19, attribution:tiles.attribution});
       tileRef.current.addTo(mapRef.current);
     });
   }, [dark]);
@@ -802,7 +801,8 @@ function NavBar({items,s,nav,labelSize=10}) {
     <div ref={ref} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
       style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",
         width:"100%",maxWidth:430,
-        background:"#fff",
+        background:"rgba(255,255,255,.96)",
+        backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
         borderTop:`1px solid ${T.line}`,
         borderRadius:0,
         display:"flex",zIndex:100,padding:"8px 4px 20px",touchAction:"none",userSelect:"none",
@@ -1130,7 +1130,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
                 </div>
                 <div style={{display:"flex",gap:12,overflowX:"auto",padding:"2px 20px 18px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {MACRO_CATS.map((cat,ci) => (
-                    <button key={cat.id} onClick={()=>openCategory(cat.id)} className="clay-soft ba-lift" style={{flexShrink:0,width:88,height:104,borderRadius:24,background:cat.bg,border:"none",cursor:"pointer",padding:"14px 8px 12px",fontFamily:"inherit",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",animationDelay:`${0.04*ci}s`}}>
+                    <button key={cat.id} onClick={()=>openCategory(cat.id)} style={{flexShrink:0,width:88,height:104,borderRadius:24,background:cat.bg,border:"none",cursor:"pointer",padding:"14px 8px 12px",fontFamily:"inherit",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",animationDelay:`${0.04*ci}s`}}>
                       <MacroCatIcon id={cat.id} size={32} color={cat.color} strokeWidth={1.7}/>
                       <p style={{fontSize:12,fontWeight:700,color:T.ink,margin:0,textAlign:"center",lineHeight:1.15,whiteSpace:"pre-line"}}>{cat.label}</p>
                     </button>
@@ -2065,7 +2065,7 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
       {/* Header profilo */}
       <div style={{background:T.white,padding:"50px 18px 16px"}}>
         <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
-          <div className="clay-btn" style={{width:74,height:74,borderRadius:"50%",background:T.grad,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,fontWeight:700,color:"#fff",flexShrink:0,fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif"}}>{info.name[0]}</div>
+          <div className="clay-btn" style={{width:74,height:74,borderRadius:"50%",background:T.grad,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,fontWeight:700,color:"#fff",flexShrink:0,fontFamily:"'Fraunces',serif"}}>{info.name[0]}</div>
           <div style={{flex:1,display:"flex",justifyContent:"space-around",textAlign:"center"}}>
             {[[savedPros.length,"Salvati"],[likedFeed.length,"Mi piace"],[foll.size,"Seguiti"]].map(([v,l])=>(
               <div key={l}><p style={{fontSize:18,fontWeight:700,color:T.ink,margin:0}}>{v}</p><p style={{fontSize:11,color:T.inkMid,margin:0}}>{l}</p></div>
