@@ -1186,7 +1186,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
 
               {/* ── MINI MAPPA INLINE ── */}
               <div style={{padding:"0 20px 24px"}}>
-                <div style={{borderRadius:20,overflow:"hidden",height:160,position:"relative",boxShadow:"0 2px 12px rgba(0,0,0,.08)"}}>
+                <div style={{borderRadius:20,overflow:"hidden",height:160,position:"relative",zIndex:0,isolation:"isolate",boxShadow:"0 2px 12px rgba(0,0,0,.08)"}}>
                   <MapView pros={[...prosWithDist].sort((a,b)=>a.distKm-b.distKm).slice(0,8)} center={userCoords} onSelectPro={pro=>{setSelectedPro(pro);setShowMap(true);}} onMapMove={()=>{}} dark={false} height="160px"/>
                   <button onClick={()=>{setSelectedPro(null);setShowMap(true);}} style={{position:"absolute",bottom:10,right:10,background:"#fff",border:"none",borderRadius:20,padding:"8px 14px",fontSize:12,fontWeight:700,color:T.ink,cursor:"pointer",boxShadow:"0 2px 8px rgba(0,0,0,.15)",fontFamily:"inherit",display:"flex",alignItems:"center",gap:5}}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
