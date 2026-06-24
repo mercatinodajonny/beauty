@@ -128,18 +128,18 @@ const injectFont = () => {
 
 /* PALETTE "Porcellana di Sabbia" — monocromia calda avorio/sabbia + accento oro-tortora */
 const T = {
-  ink:"#111111",inkMid:"#555555",inkSoft:"#999999",
-  line:"#EBEBEB",surface:"#F5F5F5",white:"#FFFFFF",
+  ink:"#222226",inkMid:"#6B6B70",inkSoft:"#A6A6AC",
+  line:"#ECECEE",surface:"#F5F5F6",white:"#FFFFFF",
   paper:"#FFFFFF",
-  brand:"#111111",brandDeep:"#000000",brandBg:"#F0F0F0",
-  gold:"#111111",goldBg:"#F0F0F0",
-  green:"#3E7C5A",greenBg:"#E6F0E8",
-  blue:"#3A6DD0",blueBg:"#DDE8EC",
-  red:"#CE4438",redBg:"#F8E8E4",
-  amber:"#111111",amberBg:"#F0F0F0",
-  purple:"#111111",purpleBg:"#F0F0F0",
-  rose:"#111111",roseBg:"#F0F0F0",
-  grad:"linear-gradient(135deg,#333333,#000000)",
+  brand:"#9C7B52",brandDeep:"#7A5E38",brandBg:"#F0E6D4",
+  gold:"#9C7B52",goldBg:"#F0E6D4",
+  green:"#7A9669",greenBg:"#E4EBDA",
+  blue:"#7B97A0",blueBg:"#DDE8EC",
+  red:"#B87A6A",redBg:"#F0E0DA",
+  amber:"#A88B58",amberBg:"#EDE0C8",
+  purple:"#9485A0",purpleBg:"#E8E0EE",
+  rose:"#C47E72",roseBg:"#F5E4E0",
+  grad:"linear-gradient(135deg,#B08A5C,#7A5E38)",
 };
 
 /* ===== TEMA — accento variabile in-app (sfondi invariati) ===== */
@@ -323,7 +323,7 @@ const MACRO_CATS = [
 ];
 
 /* applica l'accento salvato (o "oro") già al primo render */
-try { applyAccent((typeof localStorage!=="undefined" && localStorage.getItem("ba-accent")) || "nero"); } catch(e){ applyAccent("nero"); }
+try { applyAccent((typeof localStorage!=="undefined" && localStorage.getItem("ba-accent")) || "oro"); } catch(e){ applyAccent("oro"); }
 
 const FEED = [
   {id:1,proId:3,cat:"Nail Art",img:U("nail art manicure"),caption:"Nail art floreale 🌸",tags:["#nailart"],likes:312},
@@ -807,28 +807,29 @@ function NavBar({items,s,nav,labelSize=10}) {
         borderRadius:0,
         display:"flex",zIndex:100,padding:"8px 4px 20px",touchAction:"none",userSelect:"none",
         boxShadow:"0 -4px 20px rgba(50,52,62,.07)"}}>
-      {/* Pillola scorrevole — nera */}
+      {/* Pillola scorrevole — tinta accento */}
       <div style={{
         position:"absolute", top:6, height:"calc(100% - 28px)",
         left:pillLeft, width:pillW,
-        background:"#111",
-        borderRadius:12,
+        background:T.brandBg,
+        border:`1px solid ${T.brand}40`,
+        borderRadius:14,
         transition:live?"none":"left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1)",
         pointerEvents:"none", zIndex:0,
       }}/>
-      {items.map(({id,I,l}) => {
+      {items.map(({id,I,l,color}) => {
         const active=s===id;
         return (
           <div key={id} data-navid={id} onClick={()=>nav(id)}
             style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",
-              gap:3,padding:"8px 0 8px",borderRadius:12,cursor:"pointer",
+              gap:3,padding:"8px 0 8px",borderRadius:14,cursor:"pointer",
               position:"relative",zIndex:1,WebkitTapHighlightColor:"transparent"}}>
             <div style={{pointerEvents:"none",transition:"transform .18s ease",
-              transform:active?"translateY(-1px) scale(1.05)":"none"}}>
-              <I a={active} activeColor="#fff" inactiveColor="#999"/>
+              transform:active?"translateY(-1px) scale(1.08)":"none"}}>
+              <I a={active}/>
             </div>
-            <span style={{fontSize:labelSize,fontWeight:active?700:500,
-              color:active?"#fff":"#999",pointerEvents:"none",
+            <span style={{fontSize:labelSize,fontWeight:active?800:600,
+              color:active?T.brandDeep:T.inkSoft,pointerEvents:"none",
               transition:"color .22s ease"}}>{l}</span>
           </div>
         );
@@ -858,34 +859,43 @@ function NavPro({s,nav}) {
 function LoginScreen({onAuth}) {
   const [tp,setTp] = useState(null);
   return (
-    <div style={{minHeight:"100dvh",background:"#fff",display:"flex",flexDirection:"column",padding:"0 24px"}}>
-      {/* Logo */}
-      <div style={{paddingTop:80,paddingBottom:48}}>
-        <p style={{fontSize:36,fontWeight:900,color:"#000",margin:"0 0 6px",letterSpacing:"-.03em"}}>beauty<span style={{color:"#000"}}>.</span></p>
-        <p style={{fontSize:16,color:"#888",margin:0,fontWeight:400}}>Prenota i migliori professionisti vicino a te.</p>
+    <div style={{minHeight:"100dvh",background:T.white,display:"flex",flexDirection:"column"}}>
+      {/* Top azzurro con logo */}
+      <div style={{background:T.grad,padding:"64px 26px 40px",display:"flex",flexDirection:"column",alignItems:"flex-start"}}>
+        <div className="ba-rise" style={{width:60,height:60,borderRadius:20,background:"rgba(255,255,255,.22)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",border:"1px solid rgba(255,255,255,.4)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:20}}><LogoMark size={30} color="#fff"/></div>
+        <h1 className="ba-rise" style={{fontSize:40,fontWeight:900,color:"#fff",lineHeight:1.05,margin:"0 0 8px",animationDelay:".06s",letterSpacing:"-.02em"}}>BeautyApp</h1>
+        <p className="ba-rise" style={{fontSize:15,color:"rgba(255,255,255,.92)",margin:0,animationDelay:".12s",fontWeight:600}}>La bellezza, a portata di mano.</p>
       </div>
-      {/* Scelta modalità */}
-      <div style={{display:"flex",flexDirection:"column",gap:12,flex:1}}>
-        <p style={{fontSize:12,fontWeight:600,color:"#888",textTransform:"uppercase",letterSpacing:1.2,margin:"0 0 8px"}}>Scegli come entrare</p>
+      {/* Card scelta */}
+      <div style={{flex:1,padding:"28px 26px 40px",display:"flex",flexDirection:"column",gap:14}}>
+        <p style={{fontSize:13,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:1,margin:"0 0 4px"}}>Come vuoi entrare?</p>
         {[
-          {id:"pro",label:"Professionista",sub:"Gestisci agenda, clienti e servizi"},
-          {id:"cliente",label:"Cliente",sub:"Cerca, prenota e scopri professionisti"},
-        ].map(opt => (
-          <button key={opt.id} onClick={()=>setTp(opt.id)}
-            style={{width:"100%",padding:"20px",borderRadius:16,cursor:"pointer",fontFamily:"inherit",textAlign:"left",
-              background:tp===opt.id?"#000":"#fff",
-              border:tp===opt.id?"2px solid #000":"2px solid #E8E8E8",
-              transition:"all .15s ease"}}>
-            <p style={{fontSize:17,fontWeight:700,color:tp===opt.id?"#fff":"#000",margin:"0 0 4px"}}>{opt.label}</p>
-            <p style={{fontSize:13,color:tp===opt.id?"rgba(255,255,255,.65)":"#888",margin:0,fontWeight:400}}>{opt.sub}</p>
-          </button>
+          {id:"pro",emoji:"💼",title:"Professionista",desc:"Agenda, clienti, servizi, statistiche"},
+          {id:"cliente",emoji:"🛋️",title:"Cliente",desc:"Cerca, esplora, prenota, recensisci"},
+        ].map((opt,oi) => (
+          <div key={opt.id} onClick={()=>setTp(opt.id)} className="ba-rise ba-lift"
+            style={{borderRadius:20,padding:"18px",cursor:"pointer",
+              background:tp===opt.id?T.brand:T.white,
+              boxShadow:tp===opt.id?"0 8px 24px rgba(140,115,83,.30)":"0 2px 12px rgba(140,115,83,.10)",
+              border:tp===opt.id?"none":`1.5px solid ${T.line}`,
+              animationDelay:`${.16+oi*.07}s`,transition:"all .2s ease"}}>
+            <div style={{display:"flex",gap:14,alignItems:"center"}}>
+              <div style={{width:48,height:48,borderRadius:14,
+                background:tp===opt.id?"rgba(255,255,255,.2)":T.brandBg,
+                display:"flex",alignItems:"center",justifyContent:"center",fontSize:24,flexShrink:0}}>{opt.emoji}</div>
+              <div>
+                <p style={{fontSize:16,fontWeight:800,color:tp===opt.id?"#fff":T.ink,margin:"0 0 3px"}}>{opt.title}</p>
+                <p style={{fontSize:13,color:tp===opt.id?"rgba(255,255,255,.75)":T.inkMid,margin:0,fontWeight:500}}>{opt.desc}</p>
+              </div>
+            </div>
+          </div>
         ))}
-        <div style={{marginTop:16}}>
+        <div style={{marginTop:8}}>
           <button disabled={!tp} onClick={()=>onAuth({name:tp==="pro"?"Salon Elite":"Alessio",type:tp})}
-            style={{width:"100%",padding:"18px 0",borderRadius:14,border:"none",
-              background:tp?"#000":"#F0F0F0",color:tp?"#fff":"#bbb",
-              fontSize:16,fontWeight:700,cursor:tp?"pointer":"default",fontFamily:"inherit",
-              transition:"all .15s ease"}}>
+            style={{width:"100%",padding:"17px 0",borderRadius:18,border:"none",
+              background:tp?T.grad:T.surface,color:tp?"#fff":T.inkSoft,
+              fontSize:16,fontWeight:800,cursor:tp?"pointer":"default",fontFamily:"inherit",
+              boxShadow:tp?"0 8px 22px rgba(50,52,62,.22)":"none",transition:"all .2s ease"}}>
             Entra nell'app
           </button>
         </div>
@@ -1003,24 +1013,29 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
     <div style={{paddingBottom:100,background:"#fff",minHeight:"100dvh"}}>
 
       {/* ── HEADER ── */}
-      <div style={{background:"#fff",padding:"54px 20px 0"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
-          <span style={{fontSize:24,fontWeight:900,color:"#000",letterSpacing:"-.03em"}}>beauty.</span>
+      <div style={{background:"#fff",paddingTop:56,padding:"56px 20px 0"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
+          {/* Logo / Brand */}
+          <div>
+            <span style={{fontSize:22,fontWeight:900,color:T.ink,letterSpacing:"-.03em"}}>beauty</span>
+            <span style={{fontSize:22,fontWeight:900,color:T.brand,letterSpacing:"-.03em"}}>.</span>
+          </div>
+          {/* Icone destra */}
           {(()=>{
             const hasDm = conversations.some(c=>c.messages.some(m=>m.from==="pro"));
             return (
-              <div style={{display:"flex",gap:8}}>
+              <div style={{display:"flex",gap:6}}>
                 <div style={{position:"relative"}}>
-                  <button onClick={()=>nav("cl_chats")} style={{width:36,height:36,borderRadius:"50%",border:"1.5px solid #E8E8E8",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff",padding:0}}>
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                  <button onClick={()=>nav("cl_chats")} style={{width:38,height:38,borderRadius:"50%",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#F5F5F5",padding:0}}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
                   </button>
-                  {hasDm && <div style={{position:"absolute",top:1,right:1,width:7,height:7,borderRadius:"50%",background:"#E53935",border:"2px solid #fff"}}/>}
+                  {hasDm && <div style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:"#E53935",border:"2px solid #fff"}}/>}
                 </div>
                 <div style={{position:"relative"}}>
-                  <button style={{width:36,height:36,borderRadius:"50%",border:"1.5px solid #E8E8E8",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff",padding:0}}>
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                  <button style={{width:38,height:38,borderRadius:"50%",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#F5F5F5",padding:0}}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
                   </button>
-                  <div style={{position:"absolute",top:1,right:1,width:7,height:7,borderRadius:"50%",background:"#E53935",border:"2px solid #fff"}}/>
+                  <div style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:"#E53935",border:"2px solid #fff"}}/>
                 </div>
               </div>
             );
@@ -1028,20 +1043,20 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
         </div>
 
         {/* Posizione */}
-        <button onClick={()=>setShowCity(true)} style={{display:"inline-flex",alignItems:"center",gap:5,background:"#fff",border:"1.5px solid #E8E8E8",borderRadius:8,padding:"6px 10px",cursor:"pointer",fontFamily:"inherit",marginBottom:14}}>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span style={{fontSize:13,color:"#111",fontWeight:600}}>{city}</span>
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        <button onClick={()=>setShowCity(true)} style={{display:"inline-flex",alignItems:"center",gap:5,background:"#F5F5F5",border:"none",borderRadius:10,padding:"7px 12px",cursor:"pointer",fontFamily:"inherit",marginBottom:16}}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span style={{fontSize:13,color:T.ink,fontWeight:600}}>{city}</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
         </button>
 
         {/* Search bar */}
         <div style={{display:"flex",alignItems:"center",gap:10,background:"#F5F5F5",borderRadius:12,padding:"13px 16px",marginBottom:24}}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}>
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
           <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
             placeholder="Cerca servizio o professionista..."
-            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:"#111",fontFamily:"inherit"}}/>
+            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:T.ink,fontFamily:"inherit"}}/>
           {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:18,color:"#999",padding:0,lineHeight:1}}>×</button>}
         </div>
       </div>
@@ -1049,16 +1064,16 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
       {/* ── BANNER appuntamento ── */}
       {!(searching && q.length >= 2) && !selCat && banner && (
         <div style={{padding:"0 20px 20px"}}>
-          <div onClick={()=>nav("cl_appts")} style={{display:"flex",alignItems:"center",gap:14,padding:"16px",borderRadius:14,cursor:"pointer",background:"#F5F5F5",border:"1.5px solid #E8E8E8"}}>
-            <div style={{width:40,height:40,borderRadius:10,background:"#111",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <div onClick={()=>nav("cl_appts")} style={{display:"flex",alignItems:"center",gap:14,padding:"15px 16px",borderRadius:16,cursor:"pointer",background:T.brandBg,border:`1.5px solid ${T.brand}22`}}>
+            <div style={{width:42,height:42,borderRadius:12,background:T.brand,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
             </div>
             <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:11,fontWeight:600,color:"#999",margin:"0 0 2px",textTransform:"uppercase",letterSpacing:.8}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
-              <p style={{fontSize:14,fontWeight:700,color:"#111",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service} · {banner.pro}</p>
-              <p style={{fontSize:12,color:"#888",margin:0}}>{nextAppt?`${banner.date} · ${banner.time}`:banner.date}</p>
+              <p style={{fontSize:11,fontWeight:700,color:T.brand,margin:"0 0 2px"}}>{nextAppt?"Prossimo appuntamento":"Ultimo appuntamento"}</p>
+              <p style={{fontSize:14,fontWeight:700,color:T.ink,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service} · {banner.pro}</p>
+              <p style={{fontSize:12,color:T.inkMid,margin:0}}>{nextAppt?`${banner.date} alle ${banner.time}`:banner.date}</p>
             </div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
         </div>
       )}
@@ -1067,13 +1082,13 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
       {searching && q.length >= 2 && (
         <div style={{padding:"0 20px"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-            <p style={{fontSize:13,color:"#999",margin:0}}>{searchResults.length} risultati per "{q}"</p>
-            <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#111",fontFamily:"inherit",fontWeight:600}}>Chiudi</button>
+            <p style={{fontSize:13,color:T.inkSoft,margin:0}}>{searchResults.length} risultati per "{q}"</p>
+            <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.inkMid,fontFamily:"inherit",fontWeight:600}}>Chiudi</button>
           </div>
           {searchResults.length === 0 && (
             <div style={{textAlign:"center",padding:"50px 0"}}>
-              <p style={{fontSize:36,marginBottom:10}}>🔍</p>
-              <p style={{fontSize:15,color:"#999",fontWeight:500}}>Nessun risultato</p>
+              <p style={{fontSize:40,marginBottom:10}}>🔍</p>
+              <p style={{fontSize:15,color:T.inkSoft,fontWeight:500}}>Nessun risultato per "{q}"</p>
             </div>
           )}
           {searchResults.map((pro,i) => {
@@ -1081,18 +1096,18 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
             return (
               <div key={pro.id}>
                 <div onClick={()=>{nav("cl_pro",pro);setQ("");setSearching(false);}} style={{display:"flex",gap:14,padding:"14px 0",cursor:"pointer",alignItems:"center"}}>
-                  <div style={{width:52,height:52,borderRadius:12,background:"#F5F5F5",overflow:"hidden",flexShrink:0}}>
+                  <div style={{width:54,height:54,borderRadius:14,background:"#F5F5F5",overflow:"hidden",flexShrink:0,position:"relative"}}>
                     {photoUrl
                       ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                      : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>{pro.emoji}</div>
+                      : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>
                     }
                   </div>
                   <div style={{flex:1,minWidth:0}}>
-                    <p style={{fontSize:15,fontWeight:700,color:"#111",margin:"0 0 2px"}}>{pro.name}</p>
-                    <p style={{fontSize:12,color:"#888",margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
-                    <span style={{fontSize:12,color:"#111",fontWeight:600}}>★ {pro.rating}</span>
+                    <p style={{fontSize:15,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>{pro.name}</p>
+                    <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
+                    <span style={{fontSize:12,color:T.ink,fontWeight:600}}>★ {pro.rating}</span>
                   </div>
-                  <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 16px",borderRadius:10,border:"none",background:"#111",color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+                  <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 16px",borderRadius:10,border:"none",background:T.ink,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
                 </div>
                 {i < searchResults.length-1 && <div style={{height:1,background:"#F0F0F0"}}/>}
               </div>
@@ -1107,15 +1122,17 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
           {!selCat && (
             <>
               {/* CATEGORIE */}
-              <div style={{marginBottom:32}}>
-                <p style={{fontSize:13,fontWeight:600,color:"#999",textTransform:"uppercase",letterSpacing:1,margin:"0 0 14px",padding:"0 20px"}}>Categorie</p>
+              <div style={{marginBottom:28}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 20px",marginBottom:14}}>
+                  <p style={{fontSize:16,fontWeight:700,color:T.ink,margin:0}}>Categorie</p>
+                </div>
                 <div style={{display:"flex",gap:10,overflowX:"auto",padding:"2px 20px 4px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {MACRO_CATS.map(cat => (
                     <button key={cat.id} onClick={()=>openCategory(cat.id)} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,background:"none",border:"none",cursor:"pointer",padding:0,fontFamily:"inherit"}}>
-                      <div style={{width:62,height:62,borderRadius:16,background:"#F5F5F5",border:"1.5px solid #EBEBEB",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                        <MacroCatIcon id={cat.id} size={26} color="#111" strokeWidth={1.8}/>
+                      <div style={{width:64,height:64,borderRadius:18,background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        <MacroCatIcon id={cat.id} size={28} color={cat.color} strokeWidth={1.8}/>
                       </div>
-                      <p style={{fontSize:11,fontWeight:600,color:"#111",margin:0,textAlign:"center",lineHeight:1.2,whiteSpace:"pre-line",maxWidth:62}}>{cat.label}</p>
+                      <p style={{fontSize:11,fontWeight:600,color:T.ink,margin:0,textAlign:"center",lineHeight:1.2,whiteSpace:"pre-line",maxWidth:64}}>{cat.label}</p>
                     </button>
                   ))}
                 </div>
@@ -1123,37 +1140,37 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
 
               {/* PROFESSIONISTI VICINO A TE — lista verticale */}
               <div style={{padding:"0 20px"}}>
-                <p style={{fontSize:13,fontWeight:600,color:"#999",textTransform:"uppercase",letterSpacing:1,margin:"0 0 14px"}}>Vicino a te</p>
+                <p style={{fontSize:16,fontWeight:700,color:T.ink,margin:"0 0 14px"}}>Vicino a te</p>
                 {(() => {
                   const list = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm).slice(0,8);
-                  if (list.length === 0) return <p style={{fontSize:14,color:"#999"}}>Nessun professionista in zona.</p>;
+                  if (list.length === 0) return <p style={{fontSize:14,color:T.inkSoft}}>Nessun professionista in zona.</p>;
                   return list.map((pro,i) => {
                     const photoUrl = proImg(pro);
                     const isFav = favorites?.has(pro.id);
+                    const macroColor = MACRO_CATS.find(m=>m.catIds.includes(pro.catId))?.color || T.brand;
                     return (
                       <div key={pro.id}>
                         <div onClick={()=>nav("cl_pro",pro)} style={{display:"flex",gap:14,padding:"14px 0",cursor:"pointer",alignItems:"center"}}>
-                          <div style={{width:56,height:56,borderRadius:14,background:"#F5F5F5",overflow:"hidden",flexShrink:0}}>
+                          <div style={{width:58,height:58,borderRadius:16,background:"#F5F5F5",overflow:"hidden",flexShrink:0,position:"relative"}}>
                             {photoUrl
                               ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                              : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>
+                              : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>
                             }
                           </div>
                           <div style={{flex:1,minWidth:0}}>
-                            <p style={{fontSize:15,fontWeight:700,color:"#111",margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
-                            <p style={{fontSize:12,color:"#888",margin:"0 0 4px"}}>{pro.cat}</p>
-                            <div style={{display:"flex",alignItems:"center",gap:6}}>
-                              <span style={{fontSize:12,fontWeight:700,color:"#111"}}>★ {pro.rating}</span>
-                              <span style={{fontSize:11,color:"#999"}}>({pro.reviews})</span>
-                              <span style={{fontSize:11,color:"#bbb"}}>·</span>
-                              <span style={{fontSize:11,color:"#999"}}>{pro.distKm<1?`${Math.round(pro.distKm*1000)}m`:`${pro.distKm.toFixed(1)} km`}</span>
+                            <p style={{fontSize:15,fontWeight:700,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
+                            <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 4px"}}>{pro.cat}</p>
+                            <div style={{display:"flex",alignItems:"center",gap:8}}>
+                              <span style={{fontSize:12,fontWeight:600,color:T.ink}}>★ {pro.rating}</span>
+                              <span style={{fontSize:11,color:T.inkSoft}}>({pro.reviews})</span>
+                              <span style={{fontSize:11,color:T.inkSoft}}>· {pro.distKm<1?`${Math.round(pro.distKm*1000)}m`:`${pro.distKm.toFixed(1)} km`}</span>
                             </div>
                           </div>
                           <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{background:"none",border:"none",cursor:"pointer",padding:4,flexShrink:0}}>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill={isFav?"#E53935":"none"} stroke={isFav?"#E53935":"#CCC"} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill={isFav?"#E53935":"none"} stroke={isFav?"#E53935":"#CCC"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
                           </button>
                         </div>
-                        {i < list.length-1 && <div style={{height:1,background:"#F5F5F5",marginLeft:70}}/>}
+                        {i < list.length-1 && <div style={{height:1,background:"#F5F5F5",marginLeft:72}}/>}
                       </div>
                     );
                   });
