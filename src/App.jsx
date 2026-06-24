@@ -39,9 +39,8 @@ const loadMarkerCluster = () => loadLeaflet().then(L => {
 });
 
 const TILE_LAYERS = {
-  // CARTO basemaps — stile moderno, minimale e gratuito (nessuna API key)
-  light: {url:"https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>', subdomains:"abcd", maxZoom:20},
-  dark: {url:"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>', subdomains:"abcd", maxZoom:20},
+  light: {url:"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'},
+  dark: {url:"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'},
 };
 
 const proPinIcon = (L,pro) => L.divIcon({
@@ -87,7 +86,7 @@ const injectFont = () => {
   const s = document.createElement("style");
   s.id = "app-style-rules";
   s.textContent = `
-    h1,h2,.ba-serif,.ba-display{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif !important;font-weight:700;letter-spacing:-.02em}
+    h1,h2,.ba-serif,.ba-display{font-family:'Fraunces',Georgia,serif !important;font-weight:600;letter-spacing:-.015em;font-optical-sizing:auto}
     /* CLAYMORPHISM — ombre sabbia calde, gonfie e scultoree (palette Porcellana di Sabbia) */
     .clay{box-shadow:14px 14px 30px rgba(70,72,84,.16), -12px -12px 26px rgba(255,255,255,.95), inset 3px 3px 6px rgba(255,255,255,.9), inset -5px -5px 12px rgba(70,72,84,.06);}
     .clay-inset{box-shadow:inset 7px 7px 14px rgba(70,72,84,.13), inset -6px -6px 13px rgba(255,255,255,.95);}
@@ -421,7 +420,7 @@ function MapView({pros,center,onSelectPro,onMapMove,dark,height=320}) {
       const map = L.map(ref.current, {zoomControl:true, attributionControl:true}).setView([center.lat,center.lng], 12);
       mapRef.current = map;
       const tiles = dark ? TILE_LAYERS.dark : TILE_LAYERS.light;
-      tileRef.current = L.tileLayer(tiles.url, {maxZoom:20, attribution:tiles.attribution, subdomains:tiles.subdomains||"abc"}).addTo(map);
+      tileRef.current = L.tileLayer(tiles.url, {maxZoom:19, attribution:tiles.attribution}).addTo(map);
       clusterRef.current = L.markerClusterGroup({
         maxClusterRadius:50,
         iconCreateFunction: cluster => L.divIcon({
@@ -453,7 +452,7 @@ function MapView({pros,center,onSelectPro,onMapMove,dark,height=320}) {
     loadLeaflet().then(L => {
       if (tileRef.current) mapRef.current.removeLayer(tileRef.current);
       const tiles = dark ? TILE_LAYERS.dark : TILE_LAYERS.light;
-      tileRef.current = L.tileLayer(tiles.url, {maxZoom:20, attribution:tiles.attribution, subdomains:tiles.subdomains||"abc"});
+      tileRef.current = L.tileLayer(tiles.url, {maxZoom:19, attribution:tiles.attribution});
       tileRef.current.addTo(mapRef.current);
     });
   }, [dark]);
@@ -802,7 +801,8 @@ function NavBar({items,s,nav,labelSize=10}) {
     <div ref={ref} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
       style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",
         width:"100%",maxWidth:430,
-        background:"#fff",
+        background:"rgba(255,255,255,.96)",
+        backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
         borderTop:`1px solid ${T.line}`,
         borderRadius:0,
         display:"flex",zIndex:100,padding:"8px 4px 20px",touchAction:"none",userSelect:"none",
@@ -1130,7 +1130,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
                 </div>
                 <div style={{display:"flex",gap:12,overflowX:"auto",padding:"2px 20px 18px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {MACRO_CATS.map((cat,ci) => (
-                    <button key={cat.id} onClick={()=>openCategory(cat.id)} className="clay-soft ba-lift" style={{flexShrink:0,width:88,height:104,borderRadius:24,background:cat.bg,border:"none",cursor:"pointer",padding:"14px 8px 12px",fontFamily:"inherit",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",animationDelay:`${0.04*ci}s`}}>
+                    <button key={cat.id} onClick={()=>openCategory(cat.id)} style={{flexShrink:0,width:88,height:104,borderRadius:24,background:cat.bg,border:"none",cursor:"pointer",padding:"14px 8px 12px",fontFamily:"inherit",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",animationDelay:`${0.04*ci}s`}}>
                       <MacroCatIcon id={cat.id} size={32} color={cat.color} strokeWidth={1.7}/>
                       <p style={{fontSize:12,fontWeight:700,color:T.ink,margin:0,textAlign:"center",lineHeight:1.15,whiteSpace:"pre-line"}}>{cat.label}</p>
                     </button>
@@ -1182,17 +1182,6 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
                     </div>
                   );
                 })()}
-              </div>
-
-              {/* ── MINI MAPPA INLINE ── */}
-              <div style={{padding:"0 20px 24px"}}>
-                <div style={{borderRadius:20,overflow:"hidden",height:160,position:"relative",zIndex:0,isolation:"isolate",boxShadow:"0 2px 12px rgba(0,0,0,.08)"}}>
-                  <MapView pros={[...prosWithDist].sort((a,b)=>a.distKm-b.distKm).slice(0,8)} center={userCoords} onSelectPro={pro=>{setSelectedPro(pro);setShowMap(true);}} onMapMove={()=>{}} dark={false} height="160px"/>
-                  <button onClick={()=>{setSelectedPro(null);setShowMap(true);}} style={{position:"absolute",bottom:10,right:10,background:"#fff",border:"none",borderRadius:20,padding:"8px 14px",fontSize:12,fontWeight:700,color:T.ink,cursor:"pointer",boxShadow:"0 2px 8px rgba(0,0,0,.15)",fontFamily:"inherit",display:"flex",alignItems:"center",gap:5}}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
-                    Apri mappa
-                  </button>
-                </div>
               </div>
 
               {/* ── ISPIRATI — scroll orizzontale card foto ── */}
@@ -1248,48 +1237,6 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
           onBook={pro=>nav("cl_prenota",{pro})}
         />
       )}
-
-      {/* Mappa a tutto schermo — "Vedi mappa" dalla home */}
-      {showMap && (()=>{
-        const mapPros = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm);
-        return (
-          <div style={{position:"fixed",inset:0,zIndex:400,background:T.paper,display:"flex",flexDirection:"column"}}>
-            <div style={{padding:"50px 14px 12px",background:T.white,borderBottom:`1px solid ${T.line}`,display:"flex",alignItems:"center",gap:11,flexShrink:0}}>
-              <button onClick={()=>{setShowMap(false);setSelectedPro(null);}} className="clay-soft" style={{width:36,height:36,borderRadius:"50%",background:T.white,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-              </button>
-              <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:16,fontWeight:800,color:T.ink,margin:0}}>Professionisti in mappa</p>
-                <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{mapPros.length} vicino a te · {city}</p>
-              </div>
-              <button onClick={()=>setDarkMap(d=>!d)} className="clay-soft" style={{width:36,height:36,borderRadius:"50%",background:T.white,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,flexShrink:0}}>{darkMap?"☀️":"🌙"}</button>
-            </div>
-            <div style={{flex:1,position:"relative"}}>
-              <MapView pros={mapPros} center={searchCenter} onSelectPro={setSelectedPro} onMapMove={setSearchCenter} dark={darkMap} height="100%"/>
-              {selectedPro && (
-                <div style={{position:"absolute",left:12,right:12,bottom:18,zIndex:10}}>
-                  <div className="clay" style={{background:T.white,borderRadius:20,padding:"16px",display:"flex",gap:13,alignItems:"center",position:"relative"}}>
-                    <div className="clay-soft" style={{width:58,height:58,borderRadius:16,background:`${selectedPro.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0}}>{selectedPro.emoji}</div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:"0 0 2px"}}>{selectedPro.name}</p>
-                      <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:2}}>
-                        <span style={{color:T.gold,fontSize:12}}>{"★".repeat(Math.floor(selectedPro.rating))}</span>
-                        <span style={{color:T.inkSoft,fontSize:11}}>({selectedPro.reviews}) · {selectedPro.distKm.toFixed(1)} km</span>
-                      </div>
-                      <p style={{fontSize:11,color:T.inkSoft,margin:0}}>Prima disponibilità: {selectedPro.slots[0]}</p>
-                    </div>
-                    <button onClick={()=>setSelectedPro(null)} style={{position:"absolute",top:8,right:8,background:T.surface,border:"none",borderRadius:"50%",width:24,height:24,cursor:"pointer",fontSize:12,color:T.inkMid}}>×</button>
-                  </div>
-                  <div style={{display:"flex",gap:8,marginTop:8}}>
-                    <button onClick={()=>{setShowMap(false);nav("cl_pro",selectedPro);}} className="clay-soft" style={{flex:1,padding:"12px 0",borderRadius:14,border:"none",background:T.white,color:T.ink,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Profilo</button>
-                    <button onClick={()=>{setShowMap(false);nav("cl_prenota",{pro:selectedPro});}} className="clay-btn ba-btn-bounce" style={{flex:2,padding:"12px 0",borderRadius:14,border:"none",background:T.brand,color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Prenota</button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      })()}
 
       {/* Modal scelta posizione */}
       {showCity && (
@@ -2065,7 +2012,7 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
       {/* Header profilo */}
       <div style={{background:T.white,padding:"50px 18px 16px"}}>
         <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
-          <div className="clay-btn" style={{width:74,height:74,borderRadius:"50%",background:T.grad,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,fontWeight:700,color:"#fff",flexShrink:0,fontFamily:"'Helvetica Neue',Helvetica,Arial,sans-serif"}}>{info.name[0]}</div>
+          <div className="clay-btn" style={{width:74,height:74,borderRadius:"50%",background:T.grad,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,fontWeight:700,color:"#fff",flexShrink:0,fontFamily:"'Fraunces',serif"}}>{info.name[0]}</div>
           <div style={{flex:1,display:"flex",justifyContent:"space-around",textAlign:"center"}}>
             {[[savedPros.length,"Salvati"],[likedFeed.length,"Mi piace"],[foll.size,"Seguiti"]].map(([v,l])=>(
               <div key={l}><p style={{fontSize:18,fontWeight:700,color:T.ink,margin:0}}>{v}</p><p style={{fontSize:11,color:T.inkMid,margin:0}}>{l}</p></div>
