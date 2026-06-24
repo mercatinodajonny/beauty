@@ -3153,487 +3153,221 @@ function ManSVG({scale=1}){
   );
 }
 
-/* ─── AVATAR CARTOON 3D PREMIUM ─────────────────────────────── */
-const CharDonna = ({size=280}) => (
-  <svg width={size} height={size*1.2} viewBox="0 0 280 336" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="cgSkin" cx="42%" cy="38%" r="60%">
-        <stop offset="0%" stopColor="#FFD8B4"/>
-        <stop offset="55%" stopColor="#FBBB88"/>
-        <stop offset="100%" stopColor="#E8965C"/>
-      </radialGradient>
-      <radialGradient id="cgSkinSh" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="rgba(0,0,0,0)" />
-        <stop offset="100%" stopColor="rgba(0,0,0,.10)"/>
-      </radialGradient>
-      <radialGradient id="cgHair" cx="30%" cy="25%" r="75%">
-        <stop offset="0%" stopColor="#5C3317"/>
-        <stop offset="40%" stopColor="#3B1F0A"/>
-        <stop offset="100%" stopColor="#1C0B03"/>
-      </radialGradient>
-      <radialGradient id="cgHairHL" cx="30%" cy="20%" r="55%">
-        <stop offset="0%" stopColor="rgba(255,210,160,.35)"/>
-        <stop offset="100%" stopColor="rgba(255,210,160,0)"/>
-      </radialGradient>
-      <radialGradient id="cgIris" cx="35%" cy="35%" r="65%">
-        <stop offset="0%" stopColor="#7B4F2A"/>
-        <stop offset="60%" stopColor="#4A2C10"/>
-        <stop offset="100%" stopColor="#2A1608"/>
-      </radialGradient>
-      <radialGradient id="cgBlush" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="rgba(255,100,120,.28)"/>
-        <stop offset="100%" stopColor="rgba(255,100,120,0)"/>
-      </radialGradient>
-      <radialGradient id="cgBody" cx="40%" cy="20%" r="70%">
-        <stop offset="0%" stopColor="#F76BAE"/>
-        <stop offset="100%" stopColor="#D94888"/>
-      </radialGradient>
-      <filter id="cgBlur"><feGaussianBlur stdDeviation="2.5"/></filter>
-      <filter id="cgBlur2"><feGaussianBlur stdDeviation="1.2"/></filter>
-    </defs>
-
-    {/* ── COLLO + CORPO ── */}
-    <ellipse cx="140" cy="296" rx="88" ry="60" fill="url(#cgBody)"/>
-    <ellipse cx="140" cy="240" rx="22" ry="30" fill="url(#cgSkin)"/>
-    {/* colletto camicia / spalle */}
-    <path d="M80 280 Q90 250 118 240 Q140 236 162 240 Q190 250 200 280 Q170 268 140 267 Q110 268 80 280Z" fill="#fff" opacity=".90"/>
-
-    {/* ── CAPELLI DIETRO (layer basso) ── */}
-    <ellipse cx="140" cy="125" rx="76" ry="82" fill="url(#cgHair)"/>
-    {/* boccoli / ciuffo laterale sx */}
-    <ellipse cx="72" cy="148" rx="22" ry="38" fill="url(#cgHair)"/>
-    <ellipse cx="208" cy="148" rx="22" ry="38" fill="url(#cgHair)"/>
-
-    {/* ── VISO ── */}
-    <ellipse cx="140" cy="148" rx="68" ry="74" fill="url(#cgSkin)"/>
-    <ellipse cx="140" cy="148" rx="68" ry="74" fill="url(#cgSkinSh)"/>
-
-    {/* ── CAPELLI SOPRA (layer alto — coprono parte fronte) ── */}
-    {/* massa principale */}
-    <ellipse cx="140" cy="82" rx="70" ry="52" fill="url(#cgHair)"/>
-    {/* riga centrale + onda fronte */}
-    <path d="M140 42 C132 52 118 66 110 82 C118 72 132 68 140 72 C148 68 162 72 170 82 C162 66 148 52 140 42Z" fill="url(#cgHair)"/>
-    {/* chignon / crocchia */}
-    <ellipse cx="140" cy="46" rx="30" ry="26" fill="url(#cgHair)"/>
-    <ellipse cx="140" cy="38" rx="22" ry="18" fill="url(#cgHair)"/>
-    {/* ciuffetti morbidi laterali */}
-    <path d="M74 100 C64 90 60 76 68 68 C72 80 74 94 74 100Z" fill="url(#cgHair)"/>
-    <path d="M206 100 C216 90 220 76 212 68 C208 80 206 94 206 100Z" fill="url(#cgHair)"/>
-    {/* highlight capelli */}
-    <ellipse cx="140" cy="62" rx="40" ry="24" fill="url(#cgHairHL)"/>
-
-    {/* ── SOPRACCIGLIA ── */}
-    <path d="M110 120 Q122 114 134 118" stroke="#3B1F0A" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-    <path d="M146 118 Q158 114 170 120" stroke="#3B1F0A" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-
-    {/* ── OCCHI ── */}
-    {/* bianco sx */}
-    <ellipse cx="122" cy="138" rx="16" ry="13" fill="#fff"/>
-    {/* bianco dx */}
-    <ellipse cx="158" cy="138" rx="16" ry="13" fill="#fff"/>
-    {/* iride + pupilla sx */}
-    <ellipse cx="122" cy="139" rx="10" ry="10" fill="url(#cgIris)"/>
-    <circle  cx="122" cy="139" r="5.5" fill="#1C0B03"/>
-    <circle  cx="119" cy="135" r="3" fill="rgba(255,255,255,.75)"/>
-    <circle  cx="127" cy="142" r="1.2" fill="rgba(255,255,255,.45)"/>
-    {/* iride + pupilla dx */}
-    <ellipse cx="158" cy="139" rx="10" ry="10" fill="url(#cgIris)"/>
-    <circle  cx="158" cy="139" r="5.5" fill="#1C0B03"/>
-    <circle  cx="155" cy="135" r="3" fill="rgba(255,255,255,.75)"/>
-    <circle  cx="163" cy="142" r="1.2" fill="rgba(255,255,255,.45)"/>
-    {/* ciglia sx */}
-    <path d="M106 130 Q108 122 114 128" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M109 126 Q114 118 119 126" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M115 123 Q121 116 125 124" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M122 122 Q128 116 131 124" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M128 124 Q135 118 136 127" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    {/* ciglia dx */}
-    <path d="M174 130 Q172 122 166 128" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M171 126 Q166 118 161 126" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M165 123 Q159 116 155 124" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M158 122 Q152 116 149 124" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M152 124 Q145 118 144 127" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    {/* ombra palpebra */}
-    <path d="M106 133 Q122 127 138 133" stroke="rgba(80,40,20,.18)" strokeWidth="3" fill="none" strokeLinecap="round"/>
-    <path d="M142 133 Q158 127 174 133" stroke="rgba(80,40,20,.18)" strokeWidth="3" fill="none" strokeLinecap="round"/>
-
-    {/* ── NASO ── */}
-    <path d="M136 155 Q133 165 136 168 Q140 170 144 168 Q147 165 144 155" fill="rgba(180,90,40,.15)"/>
-    <circle cx="134" cy="167" r="4" fill="rgba(160,80,35,.12)"/>
-    <circle cx="146" cy="167" r="4" fill="rgba(160,80,35,.12)"/>
-
-    {/* ── GUANCE ── */}
-    <ellipse cx="104" cy="162" rx="22" ry="14" fill="url(#cgBlush)" filter="url(#cgBlur)"/>
-    <ellipse cx="176" cy="162" rx="22" ry="14" fill="url(#cgBlush)" filter="url(#cgBlur)"/>
-
-    {/* ── BOCCA ── */}
-    <path d="M122 182 Q140 194 158 182" stroke="#C0604A" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-    <path d="M122 182 Q140 188 158 182" fill="#E87070" opacity=".7"/>
-    {/* labbra superiori */}
-    <path d="M124 181 Q132 175 140 178 Q148 175 156 181" fill="#D05C5C" opacity=".55"/>
-    {/* denti */}
-    <path d="M128 183 Q140 191 152 183 Q140 188 128 183Z" fill="#fff" opacity=".85"/>
-    {/* gloss */}
-    <ellipse cx="140" cy="184" rx="8" ry="3" fill="rgba(255,255,255,.30)"/>
-
-    {/* ── ORECCHINI ── */}
-    {/* lobo sx */}
-    <circle cx="74" cy="150" r="6" fill="#FBBB88"/>
-    <circle cx="74" cy="150" r="4.5" fill="#F5A06A"/>
-    {/* pendente gold sx */}
-    <ellipse cx="74" cy="160" rx="4" ry="7" fill="#E8C060" stroke="#C89A30" strokeWidth=".8"/>
-    <ellipse cx="74" cy="160" rx="2" ry="4" fill="rgba(255,235,160,.6)"/>
-    {/* lobo dx */}
-    <circle cx="206" cy="150" r="6" fill="#FBBB88"/>
-    <circle cx="206" cy="150" r="4.5" fill="#F5A06A"/>
-    {/* pendente gold dx */}
-    <ellipse cx="206" cy="160" rx="4" ry="7" fill="#E8C060" stroke="#C89A30" strokeWidth=".8"/>
-    <ellipse cx="206" cy="160" rx="2" ry="4" fill="rgba(255,235,160,.6)"/>
+/* Avatar cartoon Memoji-style inline */
+const MemojiDonna = () => (
+  <svg viewBox="0 0 200 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    {/* corpo / spalle */}
+    <ellipse cx="100" cy="185" rx="64" ry="34" fill="rgba(255,255,255,0.22)"/>
+    {/* capelli voluminosi */}
+    <ellipse cx="100" cy="74" rx="52" ry="56" fill="rgba(255,255,255,0.30)"/>
+    <ellipse cx="60" cy="72" rx="20" ry="28" fill="rgba(255,255,255,0.22)"/>
+    <ellipse cx="140" cy="72" rx="20" ry="28" fill="rgba(255,255,255,0.22)"/>
+    {/* chignon in cima */}
+    <circle cx="100" cy="28" r="22" fill="rgba(255,255,255,0.30)"/>
+    <circle cx="100" cy="28" r="14" fill="rgba(255,255,255,0.40)"/>
+    {/* viso */}
+    <ellipse cx="100" cy="100" rx="44" ry="48" fill="rgba(255,255,255,0.95)"/>
+    {/* occhi */}
+    <ellipse cx="84" cy="94" rx="7" ry="8" fill="#EF7FA7"/>
+    <ellipse cx="116" cy="94" rx="7" ry="8" fill="#EF7FA7"/>
+    <circle cx="86" cy="92" r="2.5" fill="#fff"/>
+    <circle cx="118" cy="92" r="2.5" fill="#fff"/>
+    {/* ciglia */}
+    <path d="M77 86 Q84 80 91 86" stroke="#EF7FA7" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+    <path d="M109 86 Q116 80 123 86" stroke="#EF7FA7" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+    {/* sorriso */}
+    <path d="M88 115 Q100 127 112 115" stroke="#EF7FA7" strokeWidth="3" fill="none" strokeLinecap="round"/>
+    {/* guance rosa */}
+    <ellipse cx="76" cy="110" rx="10" ry="7" fill="rgba(239,127,167,0.28)"/>
+    <ellipse cx="124" cy="110" rx="10" ry="7" fill="rgba(239,127,167,0.28)"/>
+    {/* naso */}
+    <path d="M100 100 Q96 110 100 112 Q104 110 100 100" fill="rgba(239,127,167,0.20)"/>
   </svg>
 );
 
-const CharUomo = ({size=280}) => (
-  <svg width={size} height={size*1.2} viewBox="0 0 280 336" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="cuSkin" cx="40%" cy="36%" r="62%">
-        <stop offset="0%" stopColor="#FFD0A0"/>
-        <stop offset="55%" stopColor="#F5A868"/>
-        <stop offset="100%" stopColor="#D88040"/>
-      </radialGradient>
-      <radialGradient id="cuSkinSh" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="rgba(0,0,0,0)"/>
-        <stop offset="100%" stopColor="rgba(0,0,0,.12)"/>
-      </radialGradient>
-      <radialGradient id="cuHair" cx="28%" cy="22%" r="72%">
-        <stop offset="0%" stopColor="#4A2E10"/>
-        <stop offset="45%" stopColor="#2C1A07"/>
-        <stop offset="100%" stopColor="#120800"/>
-      </radialGradient>
-      <radialGradient id="cuHairHL" cx="28%" cy="18%" r="50%">
-        <stop offset="0%" stopColor="rgba(200,160,80,.30)"/>
-        <stop offset="100%" stopColor="rgba(200,160,80,0)"/>
-      </radialGradient>
-      <radialGradient id="cuIris" cx="32%" cy="32%" r="65%">
-        <stop offset="0%" stopColor="#4A7EB5"/>
-        <stop offset="55%" stopColor="#2A5A8C"/>
-        <stop offset="100%" stopColor="#183A5E"/>
-      </radialGradient>
-      <radialGradient id="cuBlush" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="rgba(90,160,220,.18)"/>
-        <stop offset="100%" stopColor="rgba(90,160,220,0)"/>
-      </radialGradient>
-      <radialGradient id="cuBody" cx="38%" cy="18%" r="72%">
-        <stop offset="0%" stopColor="#6EAEDC"/>
-        <stop offset="100%" stopColor="#3478A8"/>
-      </radialGradient>
-      <filter id="cuBlur"><feGaussianBlur stdDeviation="2.8"/></filter>
-    </defs>
-
-    {/* ── COLLO + CORPO ── */}
-    <ellipse cx="140" cy="296" rx="96" ry="58" fill="url(#cuBody)"/>
-    <ellipse cx="140" cy="242" rx="24" ry="28" fill="url(#cuSkin)"/>
-    {/* maglia / polo colletto */}
-    <path d="M74 278 Q86 248 116 240 Q140 235 164 240 Q194 248 206 278 Q174 264 140 263 Q106 264 74 278Z" fill="white" opacity=".88"/>
-    <path d="M130 240 Q140 250 150 240" stroke="#bbb" strokeWidth="1.5" fill="none"/>
-
-    {/* ── CAPELLI RETRO ── */}
-    <ellipse cx="140" cy="112" rx="74" ry="72" fill="url(#cuHair)"/>
-
-    {/* ── VISO ── forma più maschile, leggermente rettangolare ── */}
-    <ellipse cx="140" cy="148" rx="64" ry="70" fill="url(#cuSkin)"/>
-    <ellipse cx="140" cy="148" rx="64" ry="70" fill="url(#cuSkinSh)"/>
-    {/* mascella definita */}
-    <path d="M78 164 Q78 195 102 210 Q140 220 178 210 Q202 195 202 164" fill="url(#cuSkin)"/>
-    <path d="M78 164 Q78 195 102 210 Q140 220 178 210 Q202 195 202 164" fill="url(#cuSkinSh)"/>
-
-    {/* ── CAPELLI SOPRA ── styled / undercut ── */}
-    {/* base */}
-    <ellipse cx="140" cy="88" rx="68" ry="50" fill="url(#cuHair)"/>
-    {/* profilo laterale / fade sx */}
-    <path d="M76 140 C68 120 70 98 78 84 C80 100 78 118 78 140Z" fill="url(#cuSkin)"/>
-    {/* profilo laterale / fade dx */}
-    <path d="M204 140 C212 120 210 98 202 84 C200 100 202 118 202 140Z" fill="url(#cuSkin)"/>
-    {/* volume sopra */}
-    <ellipse cx="140" cy="72" rx="60" ry="40" fill="url(#cuHair)"/>
-    {/* ciuffo frontale */}
-    <path d="M110 88 C118 68 134 56 140 60 C146 56 162 68 170 88 C158 78 142 76 140 78 C138 76 122 78 110 88Z" fill="url(#cuHair)"/>
-    {/* onda ciuffo */}
-    <path d="M118 82 C126 64 138 60 140 62 C142 60 154 64 162 82 C152 74 140 72 140 72 C140 72 128 74 118 82Z" fill="#1C0A00" opacity=".6"/>
-    {/* highlight capelli */}
-    <ellipse cx="136" cy="70" rx="34" ry="18" fill="url(#cuHairHL)"/>
-
-    {/* ── SOPRACCIGLIA maschili più spesse ── */}
-    <path d="M108 120 Q122 113 136 119" stroke="#2C1A07" strokeWidth="5" fill="none" strokeLinecap="round"/>
-    <path d="M144 119 Q158 113 172 120" stroke="#2C1A07" strokeWidth="5" fill="none" strokeLinecap="round"/>
-    {/* highlight sopracciglio */}
-    <path d="M110 119 Q122 114 135 119" stroke="rgba(255,200,120,.20)" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M145 119 Q158 114 170 119" stroke="rgba(255,200,120,.20)" strokeWidth="2" fill="none" strokeLinecap="round"/>
-
-    {/* ── OCCHI ── */}
-    <ellipse cx="120" cy="140" rx="17" ry="13" fill="#fff"/>
-    <ellipse cx="160" cy="140" rx="17" ry="13" fill="#fff"/>
-    {/* iride */}
-    <ellipse cx="120" cy="141" rx="10.5" ry="10.5" fill="url(#cuIris)"/>
-    <circle  cx="120" cy="141" r="5.5" fill="#0F2840"/>
-    <circle  cx="117" cy="136" r="3.2" fill="rgba(255,255,255,.80)"/>
-    <circle  cx="125" cy="144" r="1.2" fill="rgba(255,255,255,.40)"/>
-    <ellipse cx="160" cy="141" rx="10.5" ry="10.5" fill="url(#cuIris)"/>
-    <circle  cx="160" cy="141" r="5.5" fill="#0F2840"/>
-    <circle  cx="157" cy="136" r="3.2" fill="rgba(255,255,255,.80)"/>
-    <circle  cx="165" cy="144" r="1.2" fill="rgba(255,255,255,.40)"/>
-    {/* ombra palpebra superiore */}
-    <path d="M103 133 Q120 127 137 133" stroke="rgba(60,30,10,.22)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-    <path d="M143 133 Q160 127 177 133" stroke="rgba(60,30,10,.22)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-
-    {/* ── NASO ── più deciso ── */}
-    <path d="M136 153 Q130 166 134 170 Q140 173 146 170 Q150 166 144 153" fill="rgba(160,80,30,.14)"/>
-    <circle cx="132" cy="169" r="5" fill="rgba(140,70,25,.10)"/>
-    <circle cx="148" cy="169" r="5" fill="rgba(140,70,25,.10)"/>
-
-    {/* ── GUANCE leggera ── */}
-    <ellipse cx="100" cy="166" rx="26" ry="16" fill="url(#cuBlush)" filter="url(#cuBlur)"/>
-    <ellipse cx="180" cy="166" rx="26" ry="16" fill="url(#cuBlush)" filter="url(#cuBlur)"/>
-
-    {/* ── BOCCA ── */}
-    <path d="M120 185 Q140 196 160 185" stroke="#B05535" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-    <path d="M120 185 Q140 192 160 185" fill="#C86048" opacity=".6"/>
-    <path d="M126 184 Q140 190 154 184 Q140 188 126 184Z" fill="#fff" opacity=".70"/>
-    {/* gloss sottile */}
-    <ellipse cx="140" cy="186" rx="10" ry="2.5" fill="rgba(255,255,255,.22)"/>
-
-    {/* ── BARBA / OMBRA 5gg ── */}
-    <ellipse cx="140" cy="196" rx="38" ry="18" fill="rgba(60,30,10,.13)" filter="url(#cuBlur)"/>
-    <path d="M110 188 Q140 205 170 188 Q160 215 140 218 Q120 215 110 188Z" fill="rgba(50,25,8,.09)"/>
-    {/* puntini barba */}
-    {[
-      [118,193],[124,197],[130,199],[136,201],[140,202],[144,201],[150,199],[156,197],[162,193],
-      [115,188],[121,191],[140,198],[159,191],[165,188]
-    ].map(([x,y],i)=>(
-      <circle key={i} cx={x} cy={y} r="1.2" fill="rgba(45,22,8,.22)"/>
-    ))}
-
-    {/* ── ORECCHIE ── */}
-    <ellipse cx="76" cy="152" rx="8" ry="12" fill="url(#cuSkin)"/>
-    <ellipse cx="76" cy="152" rx="5" ry="8" fill="rgba(200,100,50,.18)"/>
-    <ellipse cx="204" cy="152" rx="8" ry="12" fill="url(#cuSkin)"/>
-    <ellipse cx="204" cy="152" rx="5" ry="8" fill="rgba(200,100,50,.18)"/>
+const MemojiUomo = () => (
+  <svg viewBox="0 0 200 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    {/* corpo / spalle più larghe */}
+    <ellipse cx="100" cy="185" rx="72" ry="30" fill="rgba(255,255,255,0.22)"/>
+    {/* capelli corti */}
+    <ellipse cx="100" cy="68" rx="48" ry="44" fill="rgba(255,255,255,0.28)"/>
+    <path d="M52 68 Q50 44 100 36 Q150 44 148 68Z" fill="rgba(255,255,255,0.35)"/>
+    {/* viso leggermente quadrato */}
+    <rect x="56" y="64" width="88" height="92" rx="32" fill="rgba(255,255,255,0.95)"/>
+    {/* occhi */}
+    <ellipse cx="82" cy="98" rx="8" ry="8.5" fill="#5A9FD4"/>
+    <ellipse cx="118" cy="98" rx="8" ry="8.5" fill="#5A9FD4"/>
+    <circle cx="84" cy="96" r="3" fill="#fff"/>
+    <circle cx="120" cy="96" r="3" fill="#fff"/>
+    {/* sopracciglia maschili */}
+    <path d="M72 84 Q82 80 92 84" stroke="#5A9FD4" strokeWidth="3" fill="none" strokeLinecap="round"/>
+    <path d="M108 84 Q118 80 128 84" stroke="#5A9FD4" strokeWidth="3" fill="none" strokeLinecap="round"/>
+    {/* sorriso */}
+    <path d="M88 120 Q100 130 112 120" stroke="#5A9FD4" strokeWidth="3" fill="none" strokeLinecap="round"/>
+    {/* guance */}
+    <ellipse cx="74" cy="114" rx="11" ry="7" fill="rgba(90,159,212,0.20)"/>
+    <ellipse cx="126" cy="114" rx="11" ry="7" fill="rgba(90,159,212,0.20)"/>
+    {/* naso */}
+    <path d="M100 104 Q95 116 100 118 Q105 116 100 104" fill="rgba(90,159,212,0.18)"/>
   </svg>
 );
 
-/* ─── ONBOARDING SCREEN ─────────────────────────────────────── */
 function OnboardingScreen({onComplete}){
   const [sel,setSel]     = useState(null);
   const [exiting,setExiting] = useState(false);
-  const EASE = "400ms cubic-bezier(.4,0,.2,1)";
+  const [phase,setPhase] = useState("split"); // "split" | "expand-donna" | "expand-uomo"
 
-  const pick = (g) => { if(sel) return; setSel(g); };
-  const reset = () => setSel(null);
-  const proceed = () => { setExiting(true); setTimeout(()=>onComplete(sel),380); };
+  const pick = (g) => {
+    if(sel) return;
+    setSel(g);
+    requestAnimationFrame(()=>setPhase(g==="donna"?"expand-donna":"expand-uomo"));
+  };
 
-  // Larghezze: expanded=85%, sliver=15%
-  const donnaW = sel==="uomo" ? "15%" : sel==="donna" ? "85%" : "50%";
-  const uomoW  = sel==="donna" ? "15%" : sel==="uomo"  ? "85%" : "50%";
-  const donnaOp = sel==="uomo" ? 0.55 : 1;
-  const uomoOp  = sel==="donna" ? 0.55 : 1;
+  const reset = () => { setPhase("split"); setTimeout(()=>setSel(null),380); };
+
+  const proceed = () => {
+    setExiting(true);
+    setTimeout(()=>onComplete(sel),350);
+  };
+
+  const ease = "all 400ms cubic-bezier(.4,0,.2,1)";
+
+  // Calcoliamo le dimensioni in percentuale
+  const donnaLeft  = "0%";
+  const donnaWidth = phase==="expand-uomo" ? "0%" : phase==="expand-donna" ? "100%" : "50%";
+  const uomoRight  = "0%";
+  const uomoWidth  = phase==="expand-donna" ? "0%" : phase==="expand-uomo"  ? "100%" : "50%";
 
   return (
     <div style={{
-      position:"fixed",inset:0,background:"#fff",
-      display:"flex",flexDirection:"column",fontFamily:"inherit",
-      opacity:exiting?0:1,transition:`opacity 350ms ease`,overflow:"hidden",
+      position:"fixed", inset:0,
+      background: phase==="expand-donna" ? "#EF7FA7" : phase==="expand-uomo" ? "#5A9FD4" : "#fff",
+      transition:"background 400ms cubic-bezier(.4,0,.2,1)",
+      fontFamily:"inherit",
+      opacity: exiting ? 0 : 1, transition2:"opacity 300ms ease",
+      display:"flex", flexDirection:"column",
+      overflow:"hidden",
     }}>
       <style>{OB_CSS}</style>
 
-      {/* ── HEADER ── */}
-      <div className="ob-fadeup" style={{
-        textAlign:"center",padding:"62px 28px 24px",
-        background:"#fff",flexShrink:0,
-        pointerEvents: sel ? "none" : "auto",
-        opacity: sel ? 0 : 1,
-        transition:`opacity ${EASE}`,
-        position:"absolute",top:0,left:0,right:0,zIndex:5,
-      }}>
-        <p style={{fontSize:12,fontWeight:700,color:"#C0C0C8",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 10px"}}>beauty.</p>
-        <h1 style={{fontSize:30,fontWeight:900,color:"#111",margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.1}}>
-          Ciao, benvenuto!
-        </h1>
-        <p style={{fontSize:15,color:"#999",margin:0,lineHeight:1.55}}>
-          Per offrirti la migliore esperienza,<br/>scegli chi sei.
-        </p>
-      </div>
-
-      {/* ── CARD SPLIT CON ANIMAZIONE ── */}
-      <div style={{
-        position:"absolute",inset:0,display:"flex",
-        overflow:"hidden",
-        zIndex: sel ? 20 : 1,
-        transition:`z-index 0ms ${sel?"0ms":"400ms"}`,
-      }}>
-
-        {/* ━━━ DONNA ━━━ */}
-        <div onClick={()=>pick("donna")} style={{
-          width:donnaW, flexShrink:0,
-          background:"#F07AA8",
-          transition:`width ${EASE}, opacity ${EASE}`,
-          opacity: donnaOp,
-          cursor: sel==="uomo" ? "default" : "pointer",
-          display:"flex",flexDirection:"column",
-          overflow:"hidden",position:"relative",
-        }}>
-          {/* gradiente brillantezza angolo alto */}
-          <div style={{position:"absolute",top:0,left:0,right:0,height:"40%",background:"linear-gradient(160deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 100%)",pointerEvents:"none"}}/>
-          {/* gradiente ombra bassa */}
-          <div style={{position:"absolute",bottom:0,left:0,right:0,height:"35%",background:"linear-gradient(0deg,rgba(190,50,90,.35) 0%,rgba(190,50,90,0) 100%)",pointerEvents:"none"}}/>
-
-          {/* testo in alto */}
-          <div style={{
-            padding: sel==="donna" ? "72px 28px 0" : sel==="uomo" ? "60px 12px 0" : "52px 18px 0",
-            transition:`padding ${EASE}`,
-            position:"relative",zIndex:2,
-          }}>
-            {sel==="donna" && (
-              <p className="ob-fadein" style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.75)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 6px"}}>Hai scelto</p>
-            )}
-            <p style={{
-              fontSize: sel==="donna" ? 44 : (sel==="uomo" ? 13 : 22),
-              fontWeight:900,color:"#fff",margin:0,letterSpacing:"-.03em",lineHeight:1.05,
-              transition:`font-size ${EASE}`,
-              writingMode: sel==="uomo" ? "vertical-rl" : "horizontal-tb",
-              textOrientation: sel==="uomo" ? "mixed" : "mixed",
-              whiteSpace:"nowrap",
-            }}>Donna</p>
-            {sel==="donna" && (
-              <p className="ob-fadein" style={{fontSize:13,color:"rgba(255,255,255,.78)",margin:"10px 0 0",lineHeight:1.55,animationDelay:"100ms"}}>
-                Puoi modificare questa scelta<br/>in qualsiasi momento dal tuo profilo.
-              </p>
-            )}
+      {/* ── STATO SPLIT (nessuna selezione) ── */}
+      {phase==="split" && (
+        <div style={{display:"flex",flexDirection:"column",height:"100%",padding:"0 0 0"}}>
+          {/* Header */}
+          <div className="ob-fadeup" style={{textAlign:"center",padding:"68px 24px 28px"}}>
+            <h1 style={{fontSize:30,fontWeight:900,color:"#111",margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.1}}>
+              Ciao, benvenuto!
+            </h1>
+            <p style={{fontSize:15,color:"#888",margin:0,lineHeight:1.6}}>
+              Per offrirti la migliore esperienza,<br/>scegli chi sei.
+            </p>
           </div>
 
-          {/* Avatar donna */}
-          <div style={{
-            flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
-            paddingBottom: sel==="donna" ? 0 : 0,
-            position:"relative",zIndex:1,
-            transform: sel==="donna" ? "scale(1.06) translateY(6px)" : "scale(1) translateY(0)",
-            transition:`transform 450ms cubic-bezier(.34,1.56,.64,1)`,
-            transformOrigin:"bottom center",
-            overflow:"hidden",
+          {/* Card split */}
+          <div className="ob-fadeup" style={{
+            flex:1, margin:"0 20px 48px",
+            position:"relative", borderRadius:28, overflow:"hidden",
+            boxShadow:"0 12px 48px rgba(0,0,0,0.12)",
+            animationDelay:"80ms",
+            display:"flex",
           }}>
-            <CharDonna size={sel==="donna" ? 280 : 190}/>
-          </div>
-
-          {/* Bottone Prosegui (solo quando espanso) */}
-          {sel==="donna" && (
-            <div className="ob-fadeup" style={{padding:"16px 24px 44px",position:"relative",zIndex:3,animationDelay:"120ms"}}>
-              <button onClick={e=>{e.stopPropagation();proceed();}} style={{
-                width:"100%",padding:"18px 0",borderRadius:18,border:"none",
-                background:"#fff",color:"#D4508A",
-                fontSize:17,fontWeight:800,cursor:"pointer",fontFamily:"inherit",
-                boxShadow:"0 6px 0 rgba(0,0,0,.08)",
-              }}>Prosegui →</button>
+            {/* DONNA half */}
+            <div onClick={()=>pick("donna")} style={{
+              flex:1, background:"#EF7FA7",
+              cursor:"pointer", display:"flex", flexDirection:"column",
+              justifyContent:"space-between", padding:"28px 20px 24px",
+              position:"relative",
+            }}>
+              <p style={{fontSize:22,fontWeight:900,color:"#fff",margin:0,letterSpacing:"-.02em"}}>Donna</p>
+              <div style={{flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:8}}>
+                <div style={{width:100,height:110}}><MemojiDonna/></div>
+              </div>
             </div>
-          )}
-        </div>
 
-        {/* ━━━ FRECCE CENTRALI ━━━ */}
+            {/* Frecce centrali */}
+            <div style={{
+              position:"absolute",left:"50%",top:"50%",
+              transform:"translate(-50%,-50%)",
+              zIndex:10,pointerEvents:"none",
+              display:"flex",flexDirection:"column",alignItems:"center",gap:6,
+            }}>
+              <div style={{background:"rgba(255,255,255,0.9)",borderRadius:99,padding:"4px 10px",display:"flex",gap:8,alignItems:"center",boxShadow:"0 2px 12px rgba(0,0,0,.12)"}}>
+                <span style={{fontSize:13,color:"#EF7FA7",fontWeight:700}}>←</span>
+                <div style={{width:1,height:14,background:"#DDDDE0"}}/>
+                <span style={{fontSize:13,color:"#5A9FD4",fontWeight:700}}>→</span>
+              </div>
+            </div>
+
+            {/* UOMO half */}
+            <div onClick={()=>pick("uomo")} style={{
+              flex:1, background:"#5A9FD4",
+              cursor:"pointer", display:"flex", flexDirection:"column",
+              alignItems:"flex-end", justifyContent:"space-between",
+              padding:"28px 20px 24px",
+            }}>
+              <p style={{fontSize:22,fontWeight:900,color:"#fff",margin:0,letterSpacing:"-.02em"}}>Uomo</p>
+              <div style={{flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:8}}>
+                <div style={{width:100,height:110}}><MemojiUomo/></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── STATO ESPANSO (donna o uomo) ── */}
+      {phase!=="split" && (
         <div style={{
-          position:"absolute",
-          left: sel==="donna" ? "calc(85% - 1px)" : sel==="uomo" ? "calc(15% - 1px)" : "calc(50% - 1px)",
-          top:"50%",
-          transform:"translate(-50%,-50%)",
-          transition:`left ${EASE}`,
-          zIndex:20,pointerEvents:"none",
-          opacity: sel ? 0 : 1,
-          transition2:`opacity 180ms ease`,
-        }}>
-          <div style={{
-            background:"#fff",borderRadius:99,
-            padding:"7px 12px",display:"flex",gap:10,alignItems:"center",
-            boxShadow:"0 4px 20px rgba(0,0,0,.18)",
-          }}>
-            <span style={{fontSize:14,color:"#F07AA8",fontWeight:800,lineHeight:1}}>←</span>
-            <div style={{width:1,height:16,background:"#E0E0E8"}}/>
-            <span style={{fontSize:14,color:"#5A9FD4",fontWeight:800,lineHeight:1}}>→</span>
-          </div>
-        </div>
-
-        {/* Bottone back quando espanso */}
-        {sel && (
-          <button className="ob-fadein" onClick={e=>{e.stopPropagation();reset();}} style={{
-            position:"absolute",
-            top:52,
-            left: sel==="donna" ? 20 : "auto",
-            right: sel==="uomo" ? 20 : "auto",
-            zIndex:30,
-            width:36,height:36,borderRadius:"50%",
-            background:"rgba(255,255,255,.28)",border:"none",
-            cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",
-            color:"#fff",fontSize:18,fontWeight:400,lineHeight:1,
-            boxShadow:"0 2px 8px rgba(0,0,0,.12)",
-          }}>←</button>
-        )}
-
-        {/* ━━━ UOMO ━━━ */}
-        <div onClick={()=>pick("uomo")} style={{
-          width:uomoW, flexShrink:0,
-          background:"#5A9FD4",
-          transition:`width ${EASE}, opacity ${EASE}`,
-          opacity: uomoOp,
-          cursor: sel==="donna" ? "default" : "pointer",
           display:"flex",flexDirection:"column",
-          overflow:"hidden",position:"relative",
-          alignItems: sel==="uomo" ? "flex-start" : "flex-end",
+          height:"100%",
+          background: phase==="expand-donna" ? "#EF7FA7" : "#5A9FD4",
+          transition: ease,
         }}>
-          <div style={{position:"absolute",top:0,left:0,right:0,height:"40%",background:"linear-gradient(160deg,rgba(255,255,255,.20) 0%,rgba(255,255,255,0) 100%)",pointerEvents:"none"}}/>
-          <div style={{position:"absolute",bottom:0,left:0,right:0,height:"35%",background:"linear-gradient(0deg,rgba(30,70,120,.35) 0%,rgba(30,70,120,0) 100%)",pointerEvents:"none"}}/>
+          {/* Pulsante back */}
+          <button className="ob-fadein" onClick={reset} style={{
+            position:"absolute",top:52,left:20,zIndex:30,
+            width:36,height:36,borderRadius:"50%",
+            background:"rgba(255,255,255,0.25)",border:"none",
+            cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",
+            color:"#fff",fontSize:18,fontWeight:300,lineHeight:1,
+          }}>←</button>
 
-          <div style={{
-            padding: sel==="uomo" ? "72px 28px 0" : sel==="donna" ? "60px 8px 0" : "52px 18px 0",
-            transition:`padding ${EASE}`,
-            position:"relative",zIndex:2,
-            textAlign: sel==="uomo" ? "left" : "right",
-            width:"100%",
-          }}>
-            {sel==="uomo" && (
-              <p className="ob-fadein" style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.75)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 6px"}}>Hai scelto</p>
-            )}
-            <p style={{
-              fontSize: sel==="uomo" ? 44 : (sel==="donna" ? 13 : 22),
-              fontWeight:900,color:"#fff",margin:0,letterSpacing:"-.03em",lineHeight:1.05,
-              transition:`font-size ${EASE}`,
-              writingMode: sel==="donna" ? "vertical-rl" : "horizontal-tb",
-              whiteSpace:"nowrap",
-            }}>Uomo</p>
-            {sel==="uomo" && (
-              <p className="ob-fadein" style={{fontSize:13,color:"rgba(255,255,255,.78)",margin:"10px 0 0",lineHeight:1.55,animationDelay:"100ms"}}>
+          {/* Contenuto */}
+          <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",padding:"80px 32px 48px"}}>
+            {/* Testo */}
+            <div className="ob-fadeup" style={{textAlign:"center",width:"100%"}}>
+              <p style={{fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.72)",letterSpacing:"1.5px",textTransform:"uppercase",margin:"0 0 8px"}}>Hai scelto</p>
+              <p style={{fontSize:48,fontWeight:900,color:"#fff",margin:"0 0 12px",letterSpacing:"-.04em",lineHeight:1}}>
+                {phase==="expand-donna" ? "Donna" : "Uomo"}
+              </p>
+              <p style={{fontSize:13,color:"rgba(255,255,255,0.75)",lineHeight:1.55,margin:0}}>
                 Puoi modificare questa scelta<br/>in qualsiasi momento dal tuo profilo.
               </p>
-            )}
-          </div>
-
-          <div style={{
-            flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
-            position:"relative",zIndex:1,
-            transform: sel==="uomo" ? "scale(1.06) translateY(6px)" : "scale(1) translateY(0)",
-            transition:`transform 450ms cubic-bezier(.34,1.56,.64,1)`,
-            transformOrigin:"bottom center",
-            overflow:"hidden",
-          }}>
-            <CharUomo size={sel==="uomo" ? 280 : 190}/>
-          </div>
-
-          {sel==="uomo" && (
-            <div className="ob-fadeup" style={{padding:"16px 24px 44px",position:"relative",zIndex:3,animationDelay:"120ms"}}>
-              <button onClick={e=>{e.stopPropagation();proceed();}} style={{
-                width:"100%",padding:"18px 0",borderRadius:18,border:"none",
-                background:"#fff",color:"#3A7FB5",
-                fontSize:17,fontWeight:800,cursor:"pointer",fontFamily:"inherit",
-                boxShadow:"0 6px 0 rgba(0,0,0,.08)",
-              }}>Prosegui →</button>
             </div>
-          )}
+
+            {/* Avatar grande cartoon */}
+            <div className="ob-fadeup" style={{
+              width:200,height:200,
+              transform:"scale(1.05)",
+              transition:"transform 450ms cubic-bezier(.34,1.56,.64,1)",
+              animationDelay:"80ms",
+            }}>
+              {phase==="expand-donna" ? <MemojiDonna/> : <MemojiUomo/>}
+            </div>
+
+            {/* Bottone */}
+            <button className="ob-fadeup" onClick={proceed} style={{
+              width:"100%", padding:"18px 0", borderRadius:18,
+              border:"none", background:"#fff",
+              color: phase==="expand-donna" ? "#EF7FA7" : "#5A9FD4",
+              fontSize:17, fontWeight:800, cursor:"pointer", fontFamily:"inherit",
+              boxShadow:"0 6px 0 rgba(0,0,0,.08)",
+              animationDelay:"160ms",
+            }}>
+              Prosegui →
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
