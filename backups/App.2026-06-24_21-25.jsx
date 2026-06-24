@@ -3056,235 +3056,6 @@ function BetaWelcome({onClose}) {
   );
 }
 
-/* ─── ONBOARDING ─────────────────────────────────────────────── */
-const OB_CSS = `
-@keyframes obFadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes obFadeIn{from{opacity:0}to{opacity:1}}
-.ob-fadeup{animation:obFadeUp 320ms cubic-bezier(.4,0,.2,1) both}
-.ob-fadein{animation:obFadeIn 280ms ease both}
-`;
-
-function WomanSVG({scale=1}){
-  return (
-    <svg width={130*scale} height={180*scale} viewBox="0 0 130 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* bun di capelli */}
-      <ellipse cx="68" cy="28" rx="18" ry="16" fill="rgba(255,255,255,0.35)"/>
-      <ellipse cx="54" cy="38" rx="26" ry="22" fill="rgba(255,255,255,0.28)"/>
-      {/* viso */}
-      <ellipse cx="64" cy="66" rx="26" ry="30" fill="rgba(255,255,255,0.92)"/>
-      {/* capelli laterali */}
-      <path d="M38 56 Q30 80 36 100 Q42 72 40 56Z" fill="rgba(255,255,255,0.3)"/>
-      <path d="M90 56 Q96 74 88 96 Q84 72 88 56Z" fill="rgba(255,255,255,0.25)"/>
-      {/* collo */}
-      <rect x="56" y="94" width="16" height="16" rx="8" fill="rgba(255,255,255,0.92)"/>
-      {/* spalle & busto */}
-      <path d="M22 180 Q28 130 46 118 Q55 113 64 112 Q73 113 82 118 Q100 130 108 180Z" fill="rgba(255,255,255,0.28)"/>
-    </svg>
-  );
-}
-
-function ManSVG({scale=1}){
-  return (
-    <svg width={130*scale} height={180*scale} viewBox="0 0 130 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* capelli corti */}
-      <ellipse cx="65" cy="42" rx="28" ry="22" fill="rgba(255,255,255,0.3)"/>
-      <path d="M37 42 Q36 28 65 24 Q94 28 93 42Z" fill="rgba(255,255,255,0.35)"/>
-      {/* viso */}
-      <ellipse cx="65" cy="66" rx="26" ry="30" fill="rgba(255,255,255,0.92)"/>
-      {/* mascella leggermente squadrata */}
-      <path d="M39 72 Q39 96 65 100 Q91 96 91 72Z" fill="rgba(255,255,255,0.88)"/>
-      {/* collo */}
-      <rect x="57" y="96" width="16" height="16" rx="6" fill="rgba(255,255,255,0.92)"/>
-      {/* spalle più larghe */}
-      <path d="M12 180 Q16 126 44 114 Q54 110 65 109 Q76 110 86 114 Q114 126 118 180Z" fill="rgba(255,255,255,0.28)"/>
-    </svg>
-  );
-}
-
-function OnboardingScreen({onComplete}){
-  const [sel,setSel] = useState(null);   // null | "donna" | "uomo"
-  const [exiting,setExiting] = useState(false);
-
-  const pick = (g) => { if(sel) return; setSel(g); };
-  const reset = () => setSel(null);
-  const proceed = () => {
-    setExiting(true);
-    setTimeout(()=>onComplete(sel),350);
-  };
-
-  const donnaW = sel==="uomo" ? "0%" : sel==="donna" ? "100%" : "50%";
-  const uomoW  = sel==="donna" ? "0%" : sel==="uomo"  ? "100%" : "50%";
-  const ease   = "width 400ms cubic-bezier(.4,0,.2,1)";
-
-  return (
-    <div style={{
-      minHeight:"100vh", background:"#fff",
-      display:"flex", flexDirection:"column", alignItems:"stretch",
-      padding:"0 20px 48px", fontFamily:"inherit",
-      opacity: exiting ? 0 : 1, transition:"opacity 300ms ease",
-    }}>
-      <style>{OB_CSS}</style>
-
-      {/* Header */}
-      <div className="ob-fadeup" style={{paddingTop:68, marginBottom:36, textAlign:"center"}}>
-        <h1 style={{fontSize:30, fontWeight:800, color:"#111", margin:"0 0 10px", letterSpacing:"-0.6px", lineHeight:1.15}}>
-          Ciao, benvenuto!
-        </h1>
-        <p style={{fontSize:15, color:"#888", margin:0, lineHeight:1.6}}>
-          Per offrirti la migliore esperienza,<br/>scegli chi sei.
-        </p>
-      </div>
-
-      {/* Card grande */}
-      <div className="ob-fadeup" style={{
-        position:"relative", borderRadius:28, overflow:"hidden",
-        height:440, flexShrink:0,
-        boxShadow:"0 8px 40px rgba(0,0,0,0.10)",
-        animationDelay:"60ms",
-      }}>
-
-        {/* ── DONNA ── */}
-        <div onClick={()=>pick("donna")} style={{
-          position:"absolute", left:0, top:0, bottom:0,
-          width:donnaW, overflow:"hidden",
-          background:"#EF7FA7",
-          transition:ease,
-          cursor: sel ? "default" : "pointer",
-          display:"flex", flexDirection:"column",
-          justifyContent:"space-between", padding:26,
-          boxSizing:"border-box",
-        }}>
-          {/* Testo */}
-          <div>
-            {sel==="donna" && (
-              <p className="ob-fadein" style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.8)",letterSpacing:"0.8px",textTransform:"uppercase",margin:"0 0 6px"}}>Hai scelto</p>
-            )}
-            <p style={{
-              fontSize: sel==="donna" ? 38 : 22, fontWeight:800,
-              color:"#fff", margin:0, letterSpacing:"-0.5px",
-              transition:"font-size 350ms cubic-bezier(.4,0,.2,1)",
-              whiteSpace:"nowrap",
-            }}>Donna</p>
-            {sel==="donna" && (
-              <p className="ob-fadein" style={{fontSize:13,color:"rgba(255,255,255,0.78)",margin:"8px 0 0",lineHeight:1.5,animationDelay:"80ms"}}>
-                Puoi modificare la tua scelta<br/>in qualsiasi momento dal profilo.
-              </p>
-            )}
-          </div>
-          {/* Illustrazione */}
-          <div style={{
-            display:"flex", justifyContent:"center", alignItems:"flex-end",
-            transform: sel==="donna" ? "scale(1.08)" : "scale(1)",
-            transition:"transform 420ms cubic-bezier(.4,0,.2,1)",
-            transformOrigin:"bottom center",
-          }}>
-            <WomanSVG scale={sel==="donna" ? 1.15 : 1}/>
-          </div>
-          {/* Bottone Prosegui */}
-          {sel==="donna" && (
-            <button className="ob-fadeup" onClick={proceed} style={{
-              width:"100%", padding:"17px 0", borderRadius:16,
-              border:"none", background:"#fff", color:"#EF7FA7",
-              fontSize:16, fontWeight:700, cursor:"pointer", fontFamily:"inherit",
-              boxShadow:"0 2px 12px rgba(0,0,0,0.1)",
-              animationDelay:"120ms",
-            }}>
-              Prosegui
-            </button>
-          )}
-        </div>
-
-        {/* ── UOMO ── */}
-        <div onClick={()=>pick("uomo")} style={{
-          position:"absolute", right:0, top:0, bottom:0,
-          width:uomoW, overflow:"hidden",
-          background:"#5A9FD4",
-          transition:ease,
-          cursor: sel ? "default" : "pointer",
-          display:"flex", flexDirection:"column",
-          justifyContent:"space-between",
-          padding:26, boxSizing:"border-box",
-          alignItems: sel==="uomo" ? "flex-start" : "flex-end",
-        }}>
-          {/* Testo */}
-          <div style={{textAlign: sel==="uomo" ? "left" : "right", width:"100%"}}>
-            {sel==="uomo" && (
-              <p className="ob-fadein" style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.8)",letterSpacing:"0.8px",textTransform:"uppercase",margin:"0 0 6px"}}>Hai scelto</p>
-            )}
-            <p style={{
-              fontSize: sel==="uomo" ? 38 : 22, fontWeight:800,
-              color:"#fff", margin:0, letterSpacing:"-0.5px",
-              transition:"font-size 350ms cubic-bezier(.4,0,.2,1)",
-              whiteSpace:"nowrap",
-            }}>Uomo</p>
-            {sel==="uomo" && (
-              <p className="ob-fadein" style={{fontSize:13,color:"rgba(255,255,255,0.78)",margin:"8px 0 0",lineHeight:1.5,animationDelay:"80ms"}}>
-                Puoi modificare la tua scelta<br/>in qualsiasi momento dal profilo.
-              </p>
-            )}
-          </div>
-          {/* Illustrazione */}
-          <div style={{
-            display:"flex", justifyContent:"center", alignItems:"flex-end", width:"100%",
-            transform: sel==="uomo" ? "scale(1.08)" : "scale(1)",
-            transition:"transform 420ms cubic-bezier(.4,0,.2,1)",
-            transformOrigin:"bottom center",
-          }}>
-            <ManSVG scale={sel==="uomo" ? 1.15 : 1}/>
-          </div>
-          {/* Bottone Prosegui */}
-          {sel==="uomo" && (
-            <button className="ob-fadeup" onClick={proceed} style={{
-              width:"100%", padding:"17px 0", borderRadius:16,
-              border:"none", background:"#fff", color:"#5A9FD4",
-              fontSize:16, fontWeight:700, cursor:"pointer", fontFamily:"inherit",
-              boxShadow:"0 2px 12px rgba(0,0,0,0.1)",
-              animationDelay:"120ms",
-            }}>
-              Prosegui
-            </button>
-          )}
-        </div>
-
-        {/* ── Divisore centrale + frecce (solo quando non selezionato) ── */}
-        <div style={{
-          position:"absolute", left:"50%", top:0, bottom:0,
-          transform:"translateX(-50%)",
-          width:1,
-          background:"rgba(255,255,255,0.4)",
-          pointerEvents:"none",
-          opacity: sel ? 0 : 1,
-          transition:"opacity 250ms ease",
-          zIndex:5,
-        }}/>
-        <div style={{
-          position:"absolute", left:"50%", top:"50%",
-          transform:"translate(-50%,-50%)",
-          display:"flex", alignItems:"center", gap:10,
-          zIndex:6, pointerEvents:"none",
-          opacity: sel ? 0 : 1,
-          transition:"opacity 200ms ease",
-        }}>
-          <span style={{fontSize:15, color:"rgba(255,255,255,0.95)", fontWeight:300, lineHeight:1}}>←</span>
-          <div style={{width:1, height:20, background:"rgba(255,255,255,0.5)"}}/>
-          <span style={{fontSize:15, color:"rgba(255,255,255,0.95)", fontWeight:300, lineHeight:1}}>→</span>
-        </div>
-
-        {/* ── X per tornare indietro ── */}
-        {sel && (
-          <button className="ob-fadein" onClick={reset} style={{
-            position:"absolute", top:18, right:18, zIndex:20,
-            width:30, height:30, borderRadius:"50%",
-            background:"rgba(255,255,255,0.25)", border:"none",
-            cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center",
-            color:"#fff", fontSize:14, fontWeight:500, lineHeight:1,
-          }}>✕</button>
-        )}
-      </div>
-    </div>
-  );
-}
-
 /* ROOT */
 export default function App() {
   const [user,setUser] = useState(null);
@@ -3303,7 +3074,6 @@ export default function App() {
   const [following,setFollowing] = useState(new Set([3,6]));
   const [likedPosts,setLikedPosts] = useState(new Set([1,2,4]));
   const [showBetaWelcome,setShowBetaWelcome] = useState(false);
-  const [showOnboarding,setShowOnboarding] = useState(false);
   const [myAppts,setMyAppts] = useState(MY_APPTS0);
   const [conversations,setConversations] = useState(CONVERSATIONS0);
   const [savedPosts,setSavedPosts] = useState(new Set());
@@ -3389,8 +3159,8 @@ export default function App() {
 
   const handleAuth = ({name,type}) => {
     setUser({name,type});setMode(type==="pro"?"pro":"cliente");
-    if(type==="pro"){ setShowBetaWelcome(true); nav("pro_agenda"); }
-    else { setShowOnboarding(true); nav("cl_home"); }
+    if(type==="pro") setShowBetaWelcome(true);
+    nav(type==="pro"?"pro_agenda":"cl_home");
   };
 
   const switchMode = () => {
@@ -3399,7 +3169,6 @@ export default function App() {
   };
 
   if(!user) return <W><LoginScreen onAuth={handleAuth}/></W>;
-  if(showOnboarding) return <W><OnboardingScreen onComplete={(gender)=>{ setUser(u=>({...u,gender})); setShowOnboarding(false); }}/></W>;
 
   const render = () => {
     if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations}/>;
