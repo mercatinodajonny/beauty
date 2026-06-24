@@ -117,47 +117,28 @@ const injectFont = () => {
     button:active{transform:scale(.93)}
     /* Foto professionista — crop uniforme */
     .pro-photo{object-fit:cover;display:block;width:100%;height:100%}
-
-    /* ── CARTOON PREMIUM — card colorate con profondità ── */
-    .cat-pill{transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s ease}
-    .cat-pill:active{transform:scale(.88)!important}
-    @media(hover:hover){.cat-pill:hover{transform:translateY(-3px) scale(1.04)}}
-
-    .pro-card{transition:box-shadow .22s ease,transform .22s cubic-bezier(.34,1.56,.64,1)}
-    .pro-card:active{transform:scale(.98)}
-
-    /* Avatar bubble memoji-style */
-    .av-bubble{border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;
-      box-shadow:0 4px 0 rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.5)}
-
-    @keyframes baSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .ba-slideup{animation:baSlideUp .38s cubic-bezier(.34,1.56,.64,1) both}
-
-    @keyframes obFull{from{width:50%}to{width:100%}}
-    @keyframes obZero{from{width:50%}to{width:0%}}
-
     @media (prefers-reduced-motion: reduce){
-      .ba-rise,.ba-fade,.ba-slideup{animation:none;opacity:1}
-      .ba-lift,.ba-zoom,.cat-pill,.pro-card,button{transition:none}
-      button:active,.ba-lift:active,.ba-zoom:hover,.ba-zoom:active,.cat-pill:active{transform:none}
+      .ba-rise,.ba-fade{animation:none;opacity:1}
+      .ba-lift,.ba-zoom,button{transition:none}
+      button:active,.ba-lift:active,.ba-zoom:hover,.ba-zoom:active{transform:none}
     }
   `;
   document.head.appendChild(s);
 };
 
-/* PALETTE beauty — pastello vivaci, cartoon premium */
+/* PALETTE "Porcellana di Sabbia" — monocromia calda avorio/sabbia + accento oro-tortora */
 const T = {
-  ink:"#111111",inkMid:"#4A4A4A",inkSoft:"#9B9B9B",
-  line:"#EEEEF0",surface:"#F7F7F9",white:"#FFFFFF",
+  ink:"#111111",inkMid:"#555555",inkSoft:"#999999",
+  line:"#EBEBEB",surface:"#F5F5F5",white:"#FFFFFF",
   paper:"#FFFFFF",
   brand:"#C27A8A",brandDeep:"#9E5E6E",brandBg:"#FAF0F2",
   gold:"#C27A8A",goldBg:"#FAF0F2",
-  green:"#1E9E6E",greenBg:"#E0F5EC",
-  blue:"#3869D8",blueBg:"#E4ECFF",
-  red:"#E04060",redBg:"#FFE8ED",
-  amber:"#D4791A",amberBg:"#FFF0E0",
-  purple:"#8B52E0",purpleBg:"#EDE8FF",
-  rose:"#D4487A",roseBg:"#FFE6F1",
+  green:"#3E7C5A",greenBg:"#E6F0E8",
+  blue:"#3A6DD0",blueBg:"#DDE8EC",
+  red:"#CE4438",redBg:"#F8E8E4",
+  amber:"#C27A8A",amberBg:"#FAF0F2",
+  purple:"#C27A8A",purpleBg:"#FAF0F2",
+  rose:"#C27A8A",roseBg:"#FAF0F2",
   grad:"linear-gradient(135deg,#D48A9A,#9E5E6E)",
 };
 
@@ -334,12 +315,12 @@ const CAT_LIST = [
 // Macro-categorie home (6 voci) — ciascuna raggruppa più catId dei professionisti
 const MI = id => `https://images.unsplash.com/photo-${id}?w=360&h=440&fit=crop&crop=center&auto=format&q=80`;
 const MACRO_CATS = [
-  {id:"capelli_barba", label:"Capelli\n& Barba", catIds:["parrucchiere","barbiere"],            color:"#D4791A",bg:"#FFF0E0",shadowColor:"rgba(212,121,26,.18)", emoji:"✂️",  count:"1200+", img:MI("1560066984-138dadb4c035")},
-  {id:"unghie",        label:"Unghie",           catIds:["nail_artist"],                         color:"#D4487A",bg:"#FFE6F1",shadowColor:"rgba(212,72,122,.18)",emoji:"💅",  count:"800+",  img:MI("1604654894610-df63bc536371")},
-  {id:"estetica",      label:"Estetica",         catIds:["estetista","ciglia","makeup","laser"], color:"#8B52E0",bg:"#EDE8FF",shadowColor:"rgba(139,82,224,.18)",emoji:"✨",  count:"1500+", img:MI("1570172619644-dfd03ed5d881")},
-  {id:"benessere",     label:"Benessere",        catIds:["massaggio"],                           color:"#1E9E6E",bg:"#E0F5EC",shadowColor:"rgba(30,158,110,.18)", emoji:"🌿",  count:"600+",  img:MI("1544161515-4ab6ce6db874")},
-  {id:"tattoo",        label:"Tattoo",           catIds:["tatuatore"],                           color:"#3869D8",bg:"#E4ECFF",shadowColor:"rgba(56,105,216,.18)", emoji:"🖋️", count:"300+",  img:MI("1611501275019-9b5cda994e8d")},
-  {id:"altro",         label:"Altro",            catIds:[],                                      color:"#9B6E3A",bg:"#F5EDDE",shadowColor:"rgba(155,110,58,.18)",  emoji:"⭐",  count:"",      img:MI("1522337360788-8b13dee7a37e")},
+  {id:"capelli_barba", label:"Capelli\n& Barba", catIds:["parrucchiere","barbiere"],            color:"#B07A4E",bg:"#F6E9DD", count:"1200+", img:MI("1560066984-138dadb4c035")},
+  {id:"unghie",        label:"Unghie",           catIds:["nail_artist"],                         color:"#C76B86",bg:"#FBE5EC", count:"800+",  img:MI("1604654894610-df63bc536371")},
+  {id:"estetica",      label:"Estetica",         catIds:["estetista","ciglia","makeup","laser"], color:"#8C6FB0",bg:"#EEE7F7", count:"1500+", img:MI("1570172619644-dfd03ed5d881")},
+  {id:"benessere",     label:"Benessere",        catIds:["massaggio"],                           color:"#5E9C6E",bg:"#E4F1E5", count:"600+",  img:MI("1544161515-4ab6ce6db874")},
+  {id:"tattoo",        label:"Tattoo",           catIds:["tatuatore"],                           color:"#6B7280",bg:"#ECEDEF", count:"300+",  img:MI("1611501275019-9b5cda994e8d")},
+  {id:"altro",         label:"Altro",            catIds:[],                                      color:"#A98B5E",bg:"#F3EDE2", count:"",      img:MI("1522337360788-8b13dee7a37e")},
 ];
 
 /* applica l'accento salvato (o "oro") già al primo render */
@@ -1024,27 +1005,23 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
 
       {/* ── HEADER ── */}
       <div style={{background:"#fff",padding:"54px 20px 0"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
-          {/* Greeting + avatar */}
-          <div>
-            <p style={{fontSize:12,fontWeight:600,color:"#B0B0B8",margin:"0 0 1px",letterSpacing:".3px"}}>Ciao! 👋</p>
-            <span style={{fontSize:22,fontWeight:900,color:"#111",letterSpacing:"-.04em",lineHeight:1}}>beauty<span style={{color:T.brand}}>.</span></span>
-          </div>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
+          <span style={{fontSize:24,fontWeight:900,color:"#000",letterSpacing:"-.03em"}}>beauty.</span>
           {(()=>{
             const hasDm = conversations.some(c=>c.messages.some(m=>m.from==="pro"));
             return (
-              <div style={{display:"flex",gap:8,alignItems:"center"}}>
+              <div style={{display:"flex",gap:8}}>
                 <div style={{position:"relative"}}>
-                  <button onClick={()=>nav("cl_chats")} style={{width:38,height:38,borderRadius:"50%",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#F4F4F7",padding:0}}>
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#444" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                  <button onClick={()=>nav("cl_chats")} style={{width:36,height:36,borderRadius:"50%",border:"1.5px solid #E8E8E8",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff",padding:0}}>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
                   </button>
-                  {hasDm && <div style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:T.red,border:"2px solid #fff"}}/>}
+                  {hasDm && <div style={{position:"absolute",top:1,right:1,width:7,height:7,borderRadius:"50%",background:"#E53935",border:"2px solid #fff"}}/>}
                 </div>
                 <div style={{position:"relative"}}>
-                  <button style={{width:38,height:38,borderRadius:"50%",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#F4F4F7",padding:0}}>
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#444" strokeWidth="2.1" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                  <button style={{width:36,height:36,borderRadius:"50%",border:"1.5px solid #E8E8E8",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff",padding:0}}>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
                   </button>
-                  <div style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:T.red,border:"2px solid #fff"}}/>
+                  <div style={{position:"absolute",top:1,right:1,width:7,height:7,borderRadius:"50%",background:"#E53935",border:"2px solid #fff"}}/>
                 </div>
               </div>
             );
@@ -1070,24 +1047,19 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
         </div>
       </div>
 
-      {/* ── BANNER appuntamento — cartoon premium ── */}
+      {/* ── BANNER appuntamento ── */}
       {!(searching && q.length >= 2) && !selCat && banner && (
         <div style={{padding:"0 20px 20px"}}>
-          <div onClick={()=>nav("cl_appts")} className="pro-card" style={{
-            display:"flex",alignItems:"center",gap:14,padding:"16px 18px",
-            borderRadius:20,cursor:"pointer",
-            background:`linear-gradient(135deg,${T.brand},${T.brandDeep})`,
-            boxShadow:`0 8px 0 ${T.brandDeep}55,0 12px 24px ${T.brandBg}`
-          }}>
-            <div style={{width:44,height:44,borderRadius:14,background:"rgba(255,255,255,.2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:22}}>
-              📅
+          <div onClick={()=>nav("cl_appts")} style={{display:"flex",alignItems:"center",gap:14,padding:"16px",borderRadius:14,cursor:"pointer",background:T.brandBg,border:`1.5px solid ${T.brand}33`}}>
+            <div style={{width:40,height:40,borderRadius:10,background:T.brand,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
             </div>
             <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.75)",margin:"0 0 2px",textTransform:"uppercase",letterSpacing:"1px"}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
-              <p style={{fontSize:14,fontWeight:800,color:"#fff",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service} · {banner.pro}</p>
-              <p style={{fontSize:12,color:"rgba(255,255,255,.75)",margin:0}}>{nextAppt?`${banner.date} · ${banner.time}`:banner.date}</p>
+              <p style={{fontSize:11,fontWeight:600,color:"#999",margin:"0 0 2px",textTransform:"uppercase",letterSpacing:.8}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
+              <p style={{fontSize:14,fontWeight:700,color:"#111",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service} · {banner.pro}</p>
+              <p style={{fontSize:12,color:"#888",margin:0}}>{nextAppt?`${banner.date} · ${banner.time}`:banner.date}</p>
             </div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
         </div>
       )}
@@ -1135,107 +1107,83 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
         <div>
           {!selCat && (
             <>
-              {/* CATEGORIE — tiles pastello grandi con emoji */}
-              <div style={{marginBottom:28}}>
-                <p style={{fontSize:12,fontWeight:700,color:"#C0C0C8",textTransform:"uppercase",letterSpacing:"1.2px",margin:"0 0 14px",padding:"0 20px"}}>Esplora</p>
-                <div style={{display:"flex",gap:10,overflowX:"auto",padding:"4px 20px 8px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+              {/* CATEGORIE */}
+              <div style={{marginBottom:32}}>
+                <p style={{fontSize:13,fontWeight:600,color:"#999",textTransform:"uppercase",letterSpacing:1,margin:"0 0 14px",padding:"0 20px"}}>Categorie</p>
+                <div style={{display:"flex",gap:10,overflowX:"auto",padding:"2px 20px 4px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {MACRO_CATS.map(cat => (
-                    <button key={cat.id} onClick={()=>openCategory(cat.id)} className="cat-pill"
-                      style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:9,
-                        background:cat.bg,border:"none",cursor:"pointer",
-                        padding:"14px 16px 12px",borderRadius:22,fontFamily:"inherit",
-                        minWidth:80,
-                        boxShadow:`0 4px 0 ${cat.shadowColor},0 6px 16px ${cat.shadowColor}`}}>
-                      <span style={{fontSize:28,lineHeight:1,display:"block"}}>{cat.emoji}</span>
-                      <p style={{fontSize:11,fontWeight:700,color:cat.color,margin:0,textAlign:"center",lineHeight:1.25,whiteSpace:"pre-line"}}>{cat.label}</p>
+                    <button key={cat.id} onClick={()=>openCategory(cat.id)} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,background:"none",border:"none",cursor:"pointer",padding:0,fontFamily:"inherit"}}>
+                      <div style={{width:62,height:62,borderRadius:16,background:"#F5F5F5",border:"1.5px solid #EBEBEB",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        <MacroCatIcon id={cat.id} size={26} color="#111" strokeWidth={1.8}/>
+                      </div>
+                      <p style={{fontSize:11,fontWeight:600,color:"#111",margin:0,textAlign:"center",lineHeight:1.2,whiteSpace:"pre-line",maxWidth:62}}>{cat.label}</p>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* PROFESSIONISTI VICINO A TE — cartoon premium cards */}
-              <div style={{padding:"0 20px"}}>
-                <p style={{fontSize:12,fontWeight:700,color:"#C0C0C8",textTransform:"uppercase",letterSpacing:"1.2px",margin:"0 0 14px"}}>Vicino a te</p>
+              {/* PROFESSIONISTI VICINO A TE — stile Google Maps */}
+              <div>
+                <p style={{fontSize:13,fontWeight:600,color:"#999",textTransform:"uppercase",letterSpacing:1,margin:"0 0 4px",padding:"0 20px"}}>Vicino a te</p>
                 {(() => {
                   const list = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm).slice(0,8);
-                  if (list.length === 0) return <p style={{fontSize:14,color:"#999"}}>Nessun professionista in zona.</p>;
-                  // palette di accenti per le card — cycling
-                  const CARD_PALETTES = [
-                    {bg:"#FFF3E8",accent:"#D4791A",shadow:"rgba(212,121,26,.20)"},
-                    {bg:"#FFE6F1",accent:"#D4487A",shadow:"rgba(212,72,122,.20)"},
-                    {bg:"#EDE8FF",accent:"#8B52E0",shadow:"rgba(139,82,224,.20)"},
-                    {bg:"#E0F5EC",accent:"#1E9E6E",shadow:"rgba(30,158,110,.20)"},
-                    {bg:"#E4ECFF",accent:"#3869D8",shadow:"rgba(56,105,216,.20)"},
-                    {bg:"#FAF0F2",accent:"#C27A8A",shadow:"rgba(194,122,138,.20)"},
-                  ];
+                  if (list.length === 0) return <p style={{fontSize:14,color:"#999",padding:"0 20px"}}>Nessun professionista in zona.</p>;
                   return list.map((pro,i) => {
                     const photoUrl = proImg(pro);
                     const isFav = favorites?.has(pro.id);
+                    // stelle gialle piene/mezza
+                    const fullStars = Math.floor(pro.rating);
+                    const hasHalf = pro.rating - fullStars >= 0.3;
                     const distLabel = pro.distKm < 1 ? `${Math.round(pro.distKm*1000)} m` : `${pro.distKm.toFixed(1)} km`;
-                    const pal = CARD_PALETTES[i % CARD_PALETTES.length];
+                    const isOpen = true; // dati demo sempre aperti
                     return (
-                      <div key={pro.id} className="pro-card" style={{
-                        background:"#fff",borderRadius:22,marginBottom:12,
-                        boxShadow:`0 4px 0 rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.07)`,
-                        overflow:"hidden",
-                      }}>
-                        {/* Striscia colorata in cima */}
-                        <div style={{height:5,background:`linear-gradient(90deg,${pal.accent},${pal.accent}88)`}}/>
-                        <div style={{padding:"14px 16px 14px"}}>
-                          {/* Riga principale */}
-                          <div style={{display:"flex",gap:12,alignItems:"center",cursor:"pointer",marginBottom:12}} onClick={()=>nav("cl_pro",pro)}>
-                            {/* Avatar grande con emoji */}
-                            <div className="av-bubble" style={{
-                              width:56,height:56,background:pal.bg,
-                              boxShadow:`0 4px 0 ${pal.shadow},inset 0 1px 0 rgba(255,255,255,.6)`,
-                              fontSize:26,borderRadius:18,
-                            }}>{pro.emoji}</div>
+                      <div key={pro.id}>
+                        <div style={{padding:"14px 20px"}}>
+                          {/* Riga principale: info a sx, foto a dx */}
+                          <div style={{display:"flex",gap:12,alignItems:"flex-start",cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
                             <div style={{flex:1,minWidth:0}}>
-                              <p style={{fontSize:16,fontWeight:800,color:"#111",margin:"0 0 2px",lineHeight:1.15}}>{pro.name}</p>
-                              {/* badge categoria colorato */}
-                              <span style={{display:"inline-block",fontSize:10,fontWeight:700,color:pal.accent,background:pal.bg,padding:"2px 8px",borderRadius:99,marginBottom:4}}>{pro.cat}</span>
-                              <div style={{display:"flex",alignItems:"center",gap:4,flexWrap:"wrap"}}>
-                                <span style={{color:"#F5A623",fontSize:12,letterSpacing:"1px"}}>{"★".repeat(Math.floor(pro.rating))}</span>
-                                <span style={{fontSize:12,fontWeight:700,color:"#111"}}>{pro.rating}</span>
-                                <span style={{fontSize:11,color:"#aaa"}}>({pro.reviews}) · {distLabel}</span>
+                              <p style={{fontSize:16,fontWeight:700,color:"#111",margin:"0 0 3px",lineHeight:1.2}}>{pro.name}</p>
+                              {/* stelle + recensioni + categoria */}
+                              <div style={{display:"flex",alignItems:"center",gap:4,margin:"0 0 2px",flexWrap:"wrap"}}>
+                                <span style={{fontSize:13,fontWeight:700,color:"#111"}}>{pro.rating}</span>
+                                <span style={{color:"#F5A623",fontSize:13,letterSpacing:1}}>
+                                  {"★".repeat(fullStars)}{hasHalf?"½":""}{"☆".repeat(Math.max(0,5-fullStars-(hasHalf?1:0)))}
+                                </span>
+                                <span style={{fontSize:12,color:"#666"}}>({pro.reviews})</span>
+                                <span style={{fontSize:12,color:"#999"}}>· {pro.cat}</span>
                               </div>
+                              {/* città + distanza */}
+                              <p style={{fontSize:12,color:"#666",margin:"0 0 2px"}}>{pro.city} · {distLabel}</p>
+                              {/* stato aperto/chiuso */}
+                              <p style={{fontSize:12,margin:"0 0 10px"}}>
+                                <span style={{color:isOpen?"#1A7340":"#C0392B",fontWeight:600}}>{isOpen?"Aperto":"Chiuso"}</span>
+                                <span style={{color:"#666"}}> · Chiude alle 19:00</span>
+                              </p>
                             </div>
-                            {/* Foto tonda a destra */}
-                            <div style={{width:64,height:64,borderRadius:18,background:pal.bg,overflow:"hidden",flexShrink:0,boxShadow:`0 4px 0 ${pal.shadow}`}}>
+                            {/* Foto a destra */}
+                            <div style={{width:80,height:80,borderRadius:10,background:"#F0F0F0",overflow:"hidden",flexShrink:0}}>
                               {photoUrl
                                 ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                                : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>
+                                : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>{pro.emoji}</div>
                               }
                             </div>
                           </div>
-                          {/* Bottoni azione */}
+                          {/* Bottoni azione — pill */}
                           <div style={{display:"flex",gap:8}}>
-                            <button onClick={e=>{e.stopPropagation();nav("cl_pro",pro);}} style={{
-                              display:"flex",alignItems:"center",gap:5,padding:"8px 14px",
-                              borderRadius:12,border:`1.5px solid #EEEEF2`,
-                              background:"#FAFAFA",fontSize:13,fontWeight:700,color:"#444",
-                              cursor:"pointer",fontFamily:"inherit",
-                            }}>
-                              📞 Chiama
+                            <button onClick={e=>{e.stopPropagation();nav("cl_pro",pro);}} style={{display:"flex",alignItems:"center",gap:5,padding:"7px 14px",borderRadius:99,border:"1.5px solid #DDDDE0",background:"#fff",fontSize:13,fontWeight:600,color:"#111",cursor:"pointer",fontFamily:"inherit"}}>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.01 1.18 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+                              Chiama
                             </button>
-                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{
-                              flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:5,
-                              padding:"8px 0",borderRadius:12,border:"none",
-                              background:pal.accent,
-                              fontSize:13,fontWeight:700,color:"#fff",cursor:"pointer",fontFamily:"inherit",
-                              boxShadow:`0 3px 0 ${pal.shadow}`,
-                            }}>
-                              📅 Prenota
+                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{display:"flex",alignItems:"center",gap:5,padding:"7px 14px",borderRadius:99,border:"none",background:T.brand,fontSize:13,fontWeight:600,color:"#fff",cursor:"pointer",fontFamily:"inherit"}}>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                              Prenota
                             </button>
-                            <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{
-                              width:38,height:38,borderRadius:12,border:"1.5px solid #EEEEF2",
-                              background:"#FAFAFA",cursor:"pointer",flexShrink:0,
-                              display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,
-                            }}>
-                              {isFav?"❤️":"🤍"}
+                            <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{marginLeft:"auto",display:"flex",alignItems:"center",justifyContent:"center",width:34,height:34,borderRadius:"50%",border:"1.5px solid #DDDDE0",background:"#fff",cursor:"pointer",flexShrink:0}}>
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill={isFav?"#E53935":"none"} stroke={isFav?"#E53935":"#999"} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
                             </button>
                           </div>
                         </div>
+                        {i < list.length-1 && <div style={{height:1,background:"#F0F0F0",margin:"0 20px"}}/>}
                       </div>
                     );
                   });
@@ -3153,221 +3101,186 @@ function ManSVG({scale=1}){
   );
 }
 
-/* Avatar cartoon Memoji-style inline */
-const MemojiDonna = () => (
-  <svg viewBox="0 0 200 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-    {/* corpo / spalle */}
-    <ellipse cx="100" cy="185" rx="64" ry="34" fill="rgba(255,255,255,0.22)"/>
-    {/* capelli voluminosi */}
-    <ellipse cx="100" cy="74" rx="52" ry="56" fill="rgba(255,255,255,0.30)"/>
-    <ellipse cx="60" cy="72" rx="20" ry="28" fill="rgba(255,255,255,0.22)"/>
-    <ellipse cx="140" cy="72" rx="20" ry="28" fill="rgba(255,255,255,0.22)"/>
-    {/* chignon in cima */}
-    <circle cx="100" cy="28" r="22" fill="rgba(255,255,255,0.30)"/>
-    <circle cx="100" cy="28" r="14" fill="rgba(255,255,255,0.40)"/>
-    {/* viso */}
-    <ellipse cx="100" cy="100" rx="44" ry="48" fill="rgba(255,255,255,0.95)"/>
-    {/* occhi */}
-    <ellipse cx="84" cy="94" rx="7" ry="8" fill="#EF7FA7"/>
-    <ellipse cx="116" cy="94" rx="7" ry="8" fill="#EF7FA7"/>
-    <circle cx="86" cy="92" r="2.5" fill="#fff"/>
-    <circle cx="118" cy="92" r="2.5" fill="#fff"/>
-    {/* ciglia */}
-    <path d="M77 86 Q84 80 91 86" stroke="#EF7FA7" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-    <path d="M109 86 Q116 80 123 86" stroke="#EF7FA7" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-    {/* sorriso */}
-    <path d="M88 115 Q100 127 112 115" stroke="#EF7FA7" strokeWidth="3" fill="none" strokeLinecap="round"/>
-    {/* guance rosa */}
-    <ellipse cx="76" cy="110" rx="10" ry="7" fill="rgba(239,127,167,0.28)"/>
-    <ellipse cx="124" cy="110" rx="10" ry="7" fill="rgba(239,127,167,0.28)"/>
-    {/* naso */}
-    <path d="M100 100 Q96 110 100 112 Q104 110 100 100" fill="rgba(239,127,167,0.20)"/>
-  </svg>
-);
-
-const MemojiUomo = () => (
-  <svg viewBox="0 0 200 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-    {/* corpo / spalle più larghe */}
-    <ellipse cx="100" cy="185" rx="72" ry="30" fill="rgba(255,255,255,0.22)"/>
-    {/* capelli corti */}
-    <ellipse cx="100" cy="68" rx="48" ry="44" fill="rgba(255,255,255,0.28)"/>
-    <path d="M52 68 Q50 44 100 36 Q150 44 148 68Z" fill="rgba(255,255,255,0.35)"/>
-    {/* viso leggermente quadrato */}
-    <rect x="56" y="64" width="88" height="92" rx="32" fill="rgba(255,255,255,0.95)"/>
-    {/* occhi */}
-    <ellipse cx="82" cy="98" rx="8" ry="8.5" fill="#5A9FD4"/>
-    <ellipse cx="118" cy="98" rx="8" ry="8.5" fill="#5A9FD4"/>
-    <circle cx="84" cy="96" r="3" fill="#fff"/>
-    <circle cx="120" cy="96" r="3" fill="#fff"/>
-    {/* sopracciglia maschili */}
-    <path d="M72 84 Q82 80 92 84" stroke="#5A9FD4" strokeWidth="3" fill="none" strokeLinecap="round"/>
-    <path d="M108 84 Q118 80 128 84" stroke="#5A9FD4" strokeWidth="3" fill="none" strokeLinecap="round"/>
-    {/* sorriso */}
-    <path d="M88 120 Q100 130 112 120" stroke="#5A9FD4" strokeWidth="3" fill="none" strokeLinecap="round"/>
-    {/* guance */}
-    <ellipse cx="74" cy="114" rx="11" ry="7" fill="rgba(90,159,212,0.20)"/>
-    <ellipse cx="126" cy="114" rx="11" ry="7" fill="rgba(90,159,212,0.20)"/>
-    {/* naso */}
-    <path d="M100 104 Q95 116 100 118 Q105 116 100 104" fill="rgba(90,159,212,0.18)"/>
-  </svg>
-);
-
 function OnboardingScreen({onComplete}){
-  const [sel,setSel]     = useState(null);
+  const [sel,setSel] = useState(null);   // null | "donna" | "uomo"
   const [exiting,setExiting] = useState(false);
-  const [phase,setPhase] = useState("split"); // "split" | "expand-donna" | "expand-uomo"
 
-  const pick = (g) => {
-    if(sel) return;
-    setSel(g);
-    requestAnimationFrame(()=>setPhase(g==="donna"?"expand-donna":"expand-uomo"));
-  };
-
-  const reset = () => { setPhase("split"); setTimeout(()=>setSel(null),380); };
-
+  const pick = (g) => { if(sel) return; setSel(g); };
+  const reset = () => setSel(null);
   const proceed = () => {
     setExiting(true);
     setTimeout(()=>onComplete(sel),350);
   };
 
-  const ease = "all 400ms cubic-bezier(.4,0,.2,1)";
-
-  // Calcoliamo le dimensioni in percentuale
-  const donnaLeft  = "0%";
-  const donnaWidth = phase==="expand-uomo" ? "0%" : phase==="expand-donna" ? "100%" : "50%";
-  const uomoRight  = "0%";
-  const uomoWidth  = phase==="expand-donna" ? "0%" : phase==="expand-uomo"  ? "100%" : "50%";
+  const donnaW = sel==="uomo" ? "0%" : sel==="donna" ? "100%" : "50%";
+  const uomoW  = sel==="donna" ? "0%" : sel==="uomo"  ? "100%" : "50%";
+  const ease   = "width 400ms cubic-bezier(.4,0,.2,1)";
 
   return (
     <div style={{
-      position:"fixed", inset:0,
-      background: phase==="expand-donna" ? "#EF7FA7" : phase==="expand-uomo" ? "#5A9FD4" : "#fff",
-      transition:"background 400ms cubic-bezier(.4,0,.2,1)",
-      fontFamily:"inherit",
-      opacity: exiting ? 0 : 1, transition2:"opacity 300ms ease",
-      display:"flex", flexDirection:"column",
-      overflow:"hidden",
+      minHeight:"100vh", background:"#fff",
+      display:"flex", flexDirection:"column", alignItems:"stretch",
+      padding:"0 20px 48px", fontFamily:"inherit",
+      opacity: exiting ? 0 : 1, transition:"opacity 300ms ease",
     }}>
       <style>{OB_CSS}</style>
 
-      {/* ── STATO SPLIT (nessuna selezione) ── */}
-      {phase==="split" && (
-        <div style={{display:"flex",flexDirection:"column",height:"100%",padding:"0 0 0"}}>
-          {/* Header */}
-          <div className="ob-fadeup" style={{textAlign:"center",padding:"68px 24px 28px"}}>
-            <h1 style={{fontSize:30,fontWeight:900,color:"#111",margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.1}}>
-              Ciao, benvenuto!
-            </h1>
-            <p style={{fontSize:15,color:"#888",margin:0,lineHeight:1.6}}>
-              Per offrirti la migliore esperienza,<br/>scegli chi sei.
-            </p>
-          </div>
+      {/* Header */}
+      <div className="ob-fadeup" style={{paddingTop:68, marginBottom:36, textAlign:"center"}}>
+        <h1 style={{fontSize:30, fontWeight:800, color:"#111", margin:"0 0 10px", letterSpacing:"-0.6px", lineHeight:1.15}}>
+          Ciao, benvenuto!
+        </h1>
+        <p style={{fontSize:15, color:"#888", margin:0, lineHeight:1.6}}>
+          Per offrirti la migliore esperienza,<br/>scegli chi sei.
+        </p>
+      </div>
 
-          {/* Card split */}
-          <div className="ob-fadeup" style={{
-            flex:1, margin:"0 20px 48px",
-            position:"relative", borderRadius:28, overflow:"hidden",
-            boxShadow:"0 12px 48px rgba(0,0,0,0.12)",
-            animationDelay:"80ms",
-            display:"flex",
-          }}>
-            {/* DONNA half */}
-            <div onClick={()=>pick("donna")} style={{
-              flex:1, background:"#EF7FA7",
-              cursor:"pointer", display:"flex", flexDirection:"column",
-              justifyContent:"space-between", padding:"28px 20px 24px",
-              position:"relative",
-            }}>
-              <p style={{fontSize:22,fontWeight:900,color:"#fff",margin:0,letterSpacing:"-.02em"}}>Donna</p>
-              <div style={{flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:8}}>
-                <div style={{width:100,height:110}}><MemojiDonna/></div>
-              </div>
-            </div>
+      {/* Card grande */}
+      <div className="ob-fadeup" style={{
+        position:"relative", borderRadius:28, overflow:"hidden",
+        height:440, flexShrink:0,
+        boxShadow:"0 8px 40px rgba(0,0,0,0.10)",
+        animationDelay:"60ms",
+      }}>
 
-            {/* Frecce centrali */}
-            <div style={{
-              position:"absolute",left:"50%",top:"50%",
-              transform:"translate(-50%,-50%)",
-              zIndex:10,pointerEvents:"none",
-              display:"flex",flexDirection:"column",alignItems:"center",gap:6,
-            }}>
-              <div style={{background:"rgba(255,255,255,0.9)",borderRadius:99,padding:"4px 10px",display:"flex",gap:8,alignItems:"center",boxShadow:"0 2px 12px rgba(0,0,0,.12)"}}>
-                <span style={{fontSize:13,color:"#EF7FA7",fontWeight:700}}>←</span>
-                <div style={{width:1,height:14,background:"#DDDDE0"}}/>
-                <span style={{fontSize:13,color:"#5A9FD4",fontWeight:700}}>→</span>
-              </div>
-            </div>
-
-            {/* UOMO half */}
-            <div onClick={()=>pick("uomo")} style={{
-              flex:1, background:"#5A9FD4",
-              cursor:"pointer", display:"flex", flexDirection:"column",
-              alignItems:"flex-end", justifyContent:"space-between",
-              padding:"28px 20px 24px",
-            }}>
-              <p style={{fontSize:22,fontWeight:900,color:"#fff",margin:0,letterSpacing:"-.02em"}}>Uomo</p>
-              <div style={{flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:8}}>
-                <div style={{width:100,height:110}}><MemojiUomo/></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── STATO ESPANSO (donna o uomo) ── */}
-      {phase!=="split" && (
-        <div style={{
-          display:"flex",flexDirection:"column",
-          height:"100%",
-          background: phase==="expand-donna" ? "#EF7FA7" : "#5A9FD4",
-          transition: ease,
+        {/* ── DONNA ── */}
+        <div onClick={()=>pick("donna")} style={{
+          position:"absolute", left:0, top:0, bottom:0,
+          width:donnaW, overflow:"hidden",
+          background:"#EF7FA7",
+          transition:ease,
+          cursor: sel ? "default" : "pointer",
+          display:"flex", flexDirection:"column",
+          justifyContent:"space-between", padding:26,
+          boxSizing:"border-box",
         }}>
-          {/* Pulsante back */}
-          <button className="ob-fadein" onClick={reset} style={{
-            position:"absolute",top:52,left:20,zIndex:30,
-            width:36,height:36,borderRadius:"50%",
-            background:"rgba(255,255,255,0.25)",border:"none",
-            cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",
-            color:"#fff",fontSize:18,fontWeight:300,lineHeight:1,
-          }}>←</button>
-
-          {/* Contenuto */}
-          <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",padding:"80px 32px 48px"}}>
-            {/* Testo */}
-            <div className="ob-fadeup" style={{textAlign:"center",width:"100%"}}>
-              <p style={{fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.72)",letterSpacing:"1.5px",textTransform:"uppercase",margin:"0 0 8px"}}>Hai scelto</p>
-              <p style={{fontSize:48,fontWeight:900,color:"#fff",margin:"0 0 12px",letterSpacing:"-.04em",lineHeight:1}}>
-                {phase==="expand-donna" ? "Donna" : "Uomo"}
+          {/* Testo */}
+          <div>
+            {sel==="donna" && (
+              <p className="ob-fadein" style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.8)",letterSpacing:"0.8px",textTransform:"uppercase",margin:"0 0 6px"}}>Hai scelto</p>
+            )}
+            <p style={{
+              fontSize: sel==="donna" ? 38 : 22, fontWeight:800,
+              color:"#fff", margin:0, letterSpacing:"-0.5px",
+              transition:"font-size 350ms cubic-bezier(.4,0,.2,1)",
+              whiteSpace:"nowrap",
+            }}>Donna</p>
+            {sel==="donna" && (
+              <p className="ob-fadein" style={{fontSize:13,color:"rgba(255,255,255,0.78)",margin:"8px 0 0",lineHeight:1.5,animationDelay:"80ms"}}>
+                Puoi modificare la tua scelta<br/>in qualsiasi momento dal profilo.
               </p>
-              <p style={{fontSize:13,color:"rgba(255,255,255,0.75)",lineHeight:1.55,margin:0}}>
-                Puoi modificare questa scelta<br/>in qualsiasi momento dal tuo profilo.
-              </p>
-            </div>
-
-            {/* Avatar grande cartoon */}
-            <div className="ob-fadeup" style={{
-              width:200,height:200,
-              transform:"scale(1.05)",
-              transition:"transform 450ms cubic-bezier(.34,1.56,.64,1)",
-              animationDelay:"80ms",
-            }}>
-              {phase==="expand-donna" ? <MemojiDonna/> : <MemojiUomo/>}
-            </div>
-
-            {/* Bottone */}
-            <button className="ob-fadeup" onClick={proceed} style={{
-              width:"100%", padding:"18px 0", borderRadius:18,
-              border:"none", background:"#fff",
-              color: phase==="expand-donna" ? "#EF7FA7" : "#5A9FD4",
-              fontSize:17, fontWeight:800, cursor:"pointer", fontFamily:"inherit",
-              boxShadow:"0 6px 0 rgba(0,0,0,.08)",
-              animationDelay:"160ms",
-            }}>
-              Prosegui →
-            </button>
+            )}
           </div>
+          {/* Illustrazione */}
+          <div style={{
+            display:"flex", justifyContent:"center", alignItems:"flex-end",
+            transform: sel==="donna" ? "scale(1.08)" : "scale(1)",
+            transition:"transform 420ms cubic-bezier(.4,0,.2,1)",
+            transformOrigin:"bottom center",
+          }}>
+            <WomanSVG scale={sel==="donna" ? 1.15 : 1}/>
+          </div>
+          {/* Bottone Prosegui */}
+          {sel==="donna" && (
+            <button className="ob-fadeup" onClick={proceed} style={{
+              width:"100%", padding:"17px 0", borderRadius:16,
+              border:"none", background:"#fff", color:"#EF7FA7",
+              fontSize:16, fontWeight:700, cursor:"pointer", fontFamily:"inherit",
+              boxShadow:"0 2px 12px rgba(0,0,0,0.1)",
+              animationDelay:"120ms",
+            }}>
+              Prosegui
+            </button>
+          )}
         </div>
-      )}
+
+        {/* ── UOMO ── */}
+        <div onClick={()=>pick("uomo")} style={{
+          position:"absolute", right:0, top:0, bottom:0,
+          width:uomoW, overflow:"hidden",
+          background:"#5A9FD4",
+          transition:ease,
+          cursor: sel ? "default" : "pointer",
+          display:"flex", flexDirection:"column",
+          justifyContent:"space-between",
+          padding:26, boxSizing:"border-box",
+          alignItems: sel==="uomo" ? "flex-start" : "flex-end",
+        }}>
+          {/* Testo */}
+          <div style={{textAlign: sel==="uomo" ? "left" : "right", width:"100%"}}>
+            {sel==="uomo" && (
+              <p className="ob-fadein" style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.8)",letterSpacing:"0.8px",textTransform:"uppercase",margin:"0 0 6px"}}>Hai scelto</p>
+            )}
+            <p style={{
+              fontSize: sel==="uomo" ? 38 : 22, fontWeight:800,
+              color:"#fff", margin:0, letterSpacing:"-0.5px",
+              transition:"font-size 350ms cubic-bezier(.4,0,.2,1)",
+              whiteSpace:"nowrap",
+            }}>Uomo</p>
+            {sel==="uomo" && (
+              <p className="ob-fadein" style={{fontSize:13,color:"rgba(255,255,255,0.78)",margin:"8px 0 0",lineHeight:1.5,animationDelay:"80ms"}}>
+                Puoi modificare la tua scelta<br/>in qualsiasi momento dal profilo.
+              </p>
+            )}
+          </div>
+          {/* Illustrazione */}
+          <div style={{
+            display:"flex", justifyContent:"center", alignItems:"flex-end", width:"100%",
+            transform: sel==="uomo" ? "scale(1.08)" : "scale(1)",
+            transition:"transform 420ms cubic-bezier(.4,0,.2,1)",
+            transformOrigin:"bottom center",
+          }}>
+            <ManSVG scale={sel==="uomo" ? 1.15 : 1}/>
+          </div>
+          {/* Bottone Prosegui */}
+          {sel==="uomo" && (
+            <button className="ob-fadeup" onClick={proceed} style={{
+              width:"100%", padding:"17px 0", borderRadius:16,
+              border:"none", background:"#fff", color:"#5A9FD4",
+              fontSize:16, fontWeight:700, cursor:"pointer", fontFamily:"inherit",
+              boxShadow:"0 2px 12px rgba(0,0,0,0.1)",
+              animationDelay:"120ms",
+            }}>
+              Prosegui
+            </button>
+          )}
+        </div>
+
+        {/* ── Divisore centrale + frecce (solo quando non selezionato) ── */}
+        <div style={{
+          position:"absolute", left:"50%", top:0, bottom:0,
+          transform:"translateX(-50%)",
+          width:1,
+          background:"rgba(255,255,255,0.4)",
+          pointerEvents:"none",
+          opacity: sel ? 0 : 1,
+          transition:"opacity 250ms ease",
+          zIndex:5,
+        }}/>
+        <div style={{
+          position:"absolute", left:"50%", top:"50%",
+          transform:"translate(-50%,-50%)",
+          display:"flex", alignItems:"center", gap:10,
+          zIndex:6, pointerEvents:"none",
+          opacity: sel ? 0 : 1,
+          transition:"opacity 200ms ease",
+        }}>
+          <span style={{fontSize:15, color:"rgba(255,255,255,0.95)", fontWeight:300, lineHeight:1}}>←</span>
+          <div style={{width:1, height:20, background:"rgba(255,255,255,0.5)"}}/>
+          <span style={{fontSize:15, color:"rgba(255,255,255,0.95)", fontWeight:300, lineHeight:1}}>→</span>
+        </div>
+
+        {/* ── X per tornare indietro ── */}
+        {sel && (
+          <button className="ob-fadein" onClick={reset} style={{
+            position:"absolute", top:18, right:18, zIndex:20,
+            width:30, height:30, borderRadius:"50%",
+            background:"rgba(255,255,255,0.25)", border:"none",
+            cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center",
+            color:"#fff", fontSize:14, fontWeight:500, lineHeight:1,
+          }}>✕</button>
+        )}
+      </div>
     </div>
   );
 }
