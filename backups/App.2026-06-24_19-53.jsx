@@ -1122,68 +1122,39 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
                 </div>
               </div>
 
-              {/* PROFESSIONISTI VICINO A TE — stile Google Maps */}
-              <div>
-                <p style={{fontSize:13,fontWeight:600,color:"#999",textTransform:"uppercase",letterSpacing:1,margin:"0 0 4px",padding:"0 20px"}}>Vicino a te</p>
+              {/* PROFESSIONISTI VICINO A TE — lista verticale */}
+              <div style={{padding:"0 20px"}}>
+                <p style={{fontSize:13,fontWeight:600,color:"#999",textTransform:"uppercase",letterSpacing:1,margin:"0 0 14px"}}>Vicino a te</p>
                 {(() => {
                   const list = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm).slice(0,8);
-                  if (list.length === 0) return <p style={{fontSize:14,color:"#999",padding:"0 20px"}}>Nessun professionista in zona.</p>;
+                  if (list.length === 0) return <p style={{fontSize:14,color:"#999"}}>Nessun professionista in zona.</p>;
                   return list.map((pro,i) => {
                     const photoUrl = proImg(pro);
                     const isFav = favorites?.has(pro.id);
-                    // stelle gialle piene/mezza
-                    const fullStars = Math.floor(pro.rating);
-                    const hasHalf = pro.rating - fullStars >= 0.3;
-                    const distLabel = pro.distKm < 1 ? `${Math.round(pro.distKm*1000)} m` : `${pro.distKm.toFixed(1)} km`;
-                    const isOpen = true; // dati demo sempre aperti
                     return (
                       <div key={pro.id}>
-                        <div style={{padding:"14px 20px"}}>
-                          {/* Riga principale: info a sx, foto a dx */}
-                          <div style={{display:"flex",gap:12,alignItems:"flex-start",cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
-                            <div style={{flex:1,minWidth:0}}>
-                              <p style={{fontSize:16,fontWeight:700,color:"#111",margin:"0 0 3px",lineHeight:1.2}}>{pro.name}</p>
-                              {/* stelle + recensioni + categoria */}
-                              <div style={{display:"flex",alignItems:"center",gap:4,margin:"0 0 2px",flexWrap:"wrap"}}>
-                                <span style={{fontSize:13,fontWeight:700,color:"#111"}}>{pro.rating}</span>
-                                <span style={{color:"#F5A623",fontSize:13,letterSpacing:1}}>
-                                  {"★".repeat(fullStars)}{hasHalf?"½":""}{"☆".repeat(Math.max(0,5-fullStars-(hasHalf?1:0)))}
-                                </span>
-                                <span style={{fontSize:12,color:"#666"}}>({pro.reviews})</span>
-                                <span style={{fontSize:12,color:"#999"}}>· {pro.cat}</span>
-                              </div>
-                              {/* città + distanza */}
-                              <p style={{fontSize:12,color:"#666",margin:"0 0 2px"}}>{pro.city} · {distLabel}</p>
-                              {/* stato aperto/chiuso */}
-                              <p style={{fontSize:12,margin:"0 0 10px"}}>
-                                <span style={{color:isOpen?"#1A7340":"#C0392B",fontWeight:600}}>{isOpen?"Aperto":"Chiuso"}</span>
-                                <span style={{color:"#666"}}> · Chiude alle 19:00</span>
-                              </p>
-                            </div>
-                            {/* Foto a destra */}
-                            <div style={{width:80,height:80,borderRadius:10,background:"#F0F0F0",overflow:"hidden",flexShrink:0}}>
-                              {photoUrl
-                                ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                                : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>{pro.emoji}</div>
-                              }
+                        <div onClick={()=>nav("cl_pro",pro)} style={{display:"flex",gap:14,padding:"14px 0",cursor:"pointer",alignItems:"center"}}>
+                          <div style={{width:56,height:56,borderRadius:14,background:"#F5F5F5",overflow:"hidden",flexShrink:0}}>
+                            {photoUrl
+                              ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
+                              : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>
+                            }
+                          </div>
+                          <div style={{flex:1,minWidth:0}}>
+                            <p style={{fontSize:15,fontWeight:700,color:"#111",margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
+                            <p style={{fontSize:12,color:"#888",margin:"0 0 4px"}}>{pro.cat}</p>
+                            <div style={{display:"flex",alignItems:"center",gap:6}}>
+                              <span style={{fontSize:12,fontWeight:700,color:"#111"}}>★ {pro.rating}</span>
+                              <span style={{fontSize:11,color:"#999"}}>({pro.reviews})</span>
+                              <span style={{fontSize:11,color:"#bbb"}}>·</span>
+                              <span style={{fontSize:11,color:"#999"}}>{pro.distKm<1?`${Math.round(pro.distKm*1000)}m`:`${pro.distKm.toFixed(1)} km`}</span>
                             </div>
                           </div>
-                          {/* Bottoni azione — pill */}
-                          <div style={{display:"flex",gap:8}}>
-                            <button onClick={e=>{e.stopPropagation();nav("cl_pro",pro);}} style={{display:"flex",alignItems:"center",gap:5,padding:"7px 14px",borderRadius:99,border:"1.5px solid #DDDDE0",background:"#fff",fontSize:13,fontWeight:600,color:"#111",cursor:"pointer",fontFamily:"inherit"}}>
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.01 1.18 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-                              Chiama
-                            </button>
-                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{display:"flex",alignItems:"center",gap:5,padding:"7px 14px",borderRadius:99,border:"none",background:T.brand,fontSize:13,fontWeight:600,color:"#fff",cursor:"pointer",fontFamily:"inherit"}}>
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                              Prenota
-                            </button>
-                            <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{marginLeft:"auto",display:"flex",alignItems:"center",justifyContent:"center",width:34,height:34,borderRadius:"50%",border:"1.5px solid #DDDDE0",background:"#fff",cursor:"pointer",flexShrink:0}}>
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill={isFav?"#E53935":"none"} stroke={isFav?"#E53935":"#999"} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-                            </button>
-                          </div>
+                          <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{background:"none",border:"none",cursor:"pointer",padding:4,flexShrink:0}}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill={isFav?"#E53935":"none"} stroke={isFav?"#E53935":"#CCC"} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                          </button>
                         </div>
-                        {i < list.length-1 && <div style={{height:1,background:"#F0F0F0",margin:"0 20px"}}/>}
+                        {i < list.length-1 && <div style={{height:1,background:"#F5F5F5",marginLeft:70}}/>}
                       </div>
                     );
                   });
