@@ -131,15 +131,15 @@ const T = {
   ink:"#111111",inkMid:"#555555",inkSoft:"#999999",
   line:"#EBEBEB",surface:"#F5F5F5",white:"#FFFFFF",
   paper:"#FFFFFF",
-  brand:"#C27A8A",brandDeep:"#9E5E6E",brandBg:"#FAF0F2",
-  gold:"#C27A8A",goldBg:"#FAF0F2",
+  brand:"#111111",brandDeep:"#000000",brandBg:"#F0F0F0",
+  gold:"#111111",goldBg:"#F0F0F0",
   green:"#3E7C5A",greenBg:"#E6F0E8",
   blue:"#3A6DD0",blueBg:"#DDE8EC",
   red:"#CE4438",redBg:"#F8E8E4",
-  amber:"#C27A8A",amberBg:"#FAF0F2",
-  purple:"#C27A8A",purpleBg:"#FAF0F2",
-  rose:"#C27A8A",roseBg:"#FAF0F2",
-  grad:"linear-gradient(135deg,#D48A9A,#9E5E6E)",
+  amber:"#111111",amberBg:"#F0F0F0",
+  purple:"#111111",purpleBg:"#F0F0F0",
+  rose:"#111111",roseBg:"#F0F0F0",
+  grad:"linear-gradient(135deg,#333333,#000000)",
 };
 
 /* ===== TEMA — accento variabile in-app (sfondi invariati) ===== */
@@ -149,7 +149,7 @@ const lighten = (hex,amt)=>{const[r,g,b]=_hx(hex);return _rgb([r+(255-r)*amt,g+(
 const darken  = (hex,amt)=>{const[r,g,b]=_hx(hex);return _rgb([r*(1-amt),g*(1-amt),b*(1-amt)]);};
 
 const ACCENTS = {
-  nero:     {label:"Nero",          base:"#111111"},
+  nero:     {label:"Nero",          base:"#2B2B2B"},
   oro:      {label:"Oro",           base:"#9C7B52"},
   rosa:     {label:"Rosa",          base:"#D26A92"},
   arancione:{label:"Arancione",     base:"#DC7A2E"},
@@ -162,7 +162,6 @@ const ACCENTS = {
   grigio:   {label:"Grigio",        base:"#6E6E6E"},
   azzurro:  {label:"Azzurro",       base:"#3FA3D8"},
   lilla:    {label:"Lilla",         base:"#A877D0"},
-  cipria:   {label:"Rosa Cipria",   base:"#C27A8A"},
 };
 const ACCENT_ORDER = ["nero","oro","rosa","arancione","blu","verde","petronas","rosso","giallo","viola","grigio","azzurro","lilla"];
 
@@ -324,7 +323,7 @@ const MACRO_CATS = [
 ];
 
 /* applica l'accento salvato (o "oro") già al primo render */
-try { applyAccent((typeof localStorage!=="undefined" && localStorage.getItem("ba-accent")) || "cipria"); } catch(e){ applyAccent("cipria"); }
+try { applyAccent((typeof localStorage!=="undefined" && localStorage.getItem("ba-accent")) || "nero"); } catch(e){ applyAccent("nero"); }
 
 const FEED = [
   {id:1,proId:3,cat:"Nail Art",img:U("nail art manicure"),caption:"Nail art floreale 🌸",tags:["#nailart"],likes:312},
@@ -808,11 +807,11 @@ function NavBar({items,s,nav,labelSize=10}) {
         borderRadius:0,
         display:"flex",zIndex:100,padding:"8px 4px 20px",touchAction:"none",userSelect:"none",
         boxShadow:"0 -4px 20px rgba(50,52,62,.07)"}}>
-      {/* Pillola scorrevole */}
+      {/* Pillola scorrevole — nera */}
       <div style={{
         position:"absolute", top:6, height:"calc(100% - 28px)",
         left:pillLeft, width:pillW,
-        background:T.brand,
+        background:"#111",
         borderRadius:12,
         transition:live?"none":"left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1)",
         pointerEvents:"none", zIndex:0,
@@ -874,17 +873,17 @@ function LoginScreen({onAuth}) {
         ].map(opt => (
           <button key={opt.id} onClick={()=>setTp(opt.id)}
             style={{width:"100%",padding:"20px",borderRadius:16,cursor:"pointer",fontFamily:"inherit",textAlign:"left",
-              background:tp===opt.id?T.brand:"#fff",
-              border:tp===opt.id?`2px solid ${T.brand}`:"2px solid #E8E8E8",
+              background:tp===opt.id?"#000":"#fff",
+              border:tp===opt.id?"2px solid #000":"2px solid #E8E8E8",
               transition:"all .15s ease"}}>
-            <p style={{fontSize:17,fontWeight:700,color:tp===opt.id?"#fff":"#111",margin:"0 0 4px"}}>{opt.label}</p>
-            <p style={{fontSize:13,color:tp===opt.id?"rgba(255,255,255,.75)":"#888",margin:0,fontWeight:400}}>{opt.sub}</p>
+            <p style={{fontSize:17,fontWeight:700,color:tp===opt.id?"#fff":"#000",margin:"0 0 4px"}}>{opt.label}</p>
+            <p style={{fontSize:13,color:tp===opt.id?"rgba(255,255,255,.65)":"#888",margin:0,fontWeight:400}}>{opt.sub}</p>
           </button>
         ))}
         <div style={{marginTop:16}}>
           <button disabled={!tp} onClick={()=>onAuth({name:tp==="pro"?"Salon Elite":"Alessio",type:tp})}
             style={{width:"100%",padding:"18px 0",borderRadius:14,border:"none",
-              background:tp?T.brand:"#F0F0F0",color:tp?"#fff":"#bbb",
+              background:tp?"#000":"#F0F0F0",color:tp?"#fff":"#bbb",
               fontSize:16,fontWeight:700,cursor:tp?"pointer":"default",fontFamily:"inherit",
               transition:"all .15s ease"}}>
             Entra nell'app
@@ -1050,8 +1049,8 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
       {/* ── BANNER appuntamento ── */}
       {!(searching && q.length >= 2) && !selCat && banner && (
         <div style={{padding:"0 20px 20px"}}>
-          <div onClick={()=>nav("cl_appts")} style={{display:"flex",alignItems:"center",gap:14,padding:"16px",borderRadius:14,cursor:"pointer",background:T.brandBg,border:`1.5px solid ${T.brand}33`}}>
-            <div style={{width:40,height:40,borderRadius:10,background:T.brand,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+          <div onClick={()=>nav("cl_appts")} style={{display:"flex",alignItems:"center",gap:14,padding:"16px",borderRadius:14,cursor:"pointer",background:"#F5F5F5",border:"1.5px solid #E8E8E8"}}>
+            <div style={{width:40,height:40,borderRadius:10,background:"#111",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
             </div>
             <div style={{flex:1,minWidth:0}}>
@@ -1093,7 +1092,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
                     <p style={{fontSize:12,color:"#888",margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
                     <span style={{fontSize:12,color:"#111",fontWeight:600}}>★ {pro.rating}</span>
                   </div>
-                  <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 16px",borderRadius:10,border:"none",background:T.brand,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
+                  <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 16px",borderRadius:10,border:"none",background:"#111",color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
                 </div>
                 {i < searchResults.length-1 && <div style={{height:1,background:"#F0F0F0"}}/>}
               </div>
