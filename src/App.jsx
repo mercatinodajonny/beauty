@@ -3162,10 +3162,11 @@ function ManSVG({scale=1}){
 const CharDonna = () => (
   <img src="/beauty/donna-v5.png" alt="Donna"
     style={{
-      position:"absolute",bottom:0,left:"50%",
-      transform:"translateX(-50%)",
-      height:"92%",width:"auto",
-      maxWidth:"none",
+      position:"absolute",
+      top:"6%",bottom:0,left:0,right:0,
+      width:"100%",height:"94%",
+      objectFit:"contain",
+      objectPosition:"bottom center",
       display:"block",pointerEvents:"none",
     }}/>
 );
@@ -3173,10 +3174,11 @@ const CharDonna = () => (
 const CharUomo = () => (
   <img src="/beauty/uomo-v5.png" alt="Uomo"
     style={{
-      position:"absolute",bottom:0,left:"50%",
-      transform:"translateX(-50%)",
-      height:"92%",width:"auto",
-      maxWidth:"none",
+      position:"absolute",
+      top:"6%",bottom:0,left:0,right:0,
+      width:"100%",height:"94%",
+      objectFit:"contain",
+      objectPosition:"bottom center",
       display:"block",pointerEvents:"none",
     }}/>
 );
@@ -3255,7 +3257,7 @@ function OnboardingScreen({onComplete}){
             </div>
             {/* avatar */}
             <div style={{
-              flex:1,position:"relative",zIndex:1,minHeight:0,
+              flex:1,position:"relative",zIndex:1,minHeight:0,overflow:"hidden",
               transform: sel==="donna" ? "scale(1.04) translateY(2px)" : "scale(1)",
               transition:`transform 400ms cubic-bezier(0.22,1,0.36,1)`,
               transformOrigin:"bottom center",
@@ -3336,7 +3338,7 @@ function OnboardingScreen({onComplete}){
             </div>
             {/* avatar */}
             <div style={{
-              flex:1,position:"relative",zIndex:1,minHeight:0,
+              flex:1,position:"relative",zIndex:1,minHeight:0,overflow:"hidden",
               transform: sel==="uomo" ? "scale(1.04) translateY(2px)" : "scale(1)",
               transition:`transform 400ms cubic-bezier(0.22,1,0.36,1)`,
               transformOrigin:"bottom center",
