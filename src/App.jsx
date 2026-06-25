@@ -2577,7 +2577,7 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
               <p style={{fontSize:10,fontWeight:700,color:T.brand,margin:"18px 0 4px",textTransform:"uppercase",letterSpacing:1.2}}>✨ Avatar Beauty</p>
               <p style={{fontSize:16,fontWeight:800,color:"#0D0D0E",margin:"0 0 4px",letterSpacing:"-.02em"}}>{avatarConfig?"Il tuo avatar":"Crea il tuo avatar"}</p>
               <p style={{fontSize:12,color:"#ADADAD",margin:"0 0 12px"}}>{avatarConfig?"Tocca per personalizzarlo":"La tua identità digitale su Beauty"}</p>
-              <button style={{padding:"9px 18px",borderRadius:999,border:"none",background:T.brand,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 3px 10px ${T.brand}44`}}>
+              <button type="button" onClick={(e)=>{e.stopPropagation();nav("cl_avatar_editor");}} style={{padding:"9px 18px",borderRadius:999,border:"none",background:T.brand,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 3px 10px ${T.brand}44`}}>
                 {avatarConfig?"Personalizza":"Inizia ora →"}
               </button>
             </div>
