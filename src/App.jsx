@@ -3160,13 +3160,13 @@ function ManSVG({scale=1}){
 
 /* ─── AVATAR — immagini reali 3D ─────────────────────────────── */
 const CharDonna = ({size=260}) => (
-  <img src="/beauty/avatar-donna.png" alt="Donna" width={size} height={size*1.25}
-    style={{objectFit:"cover",objectPosition:"center top",display:"block",pointerEvents:"none"}}/>
+  <img src="/beauty/avatar-donna.png" alt="Donna"
+    style={{width:"100%",height:"100%",objectFit:"contain",objectPosition:"bottom center",display:"block",pointerEvents:"none"}}/>
 );
 
 const CharUomo = ({size=260}) => (
-  <img src="/beauty/avatar-uomo.png" alt="Uomo" width={size} height={size*1.25}
-    style={{objectFit:"cover",objectPosition:"center top",display:"block",pointerEvents:"none"}}/>
+  <img src="/beauty/avatar-uomo.png" alt="Uomo"
+    style={{width:"100%",height:"100%",objectFit:"contain",objectPosition:"bottom center",display:"block",pointerEvents:"none"}}/>
 );
 
 /* ─── ONBOARDING SCREEN ─────────────────────────────────────── */
@@ -3244,10 +3244,11 @@ function OnboardingScreen({onComplete}){
             {/* avatar */}
             <div style={{
               flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
-              overflow:"hidden",position:"relative",zIndex:1,
+              position:"relative",zIndex:1,
               transform: sel==="donna" ? "scale(1.04) translateY(2px)" : "scale(1)",
               transition:`transform 400ms cubic-bezier(0.22,1,0.36,1)`,
               transformOrigin:"bottom center",
+              minHeight:0,
             }}>
               <CharDonna size={260}/>
             </div>
@@ -3326,7 +3327,7 @@ function OnboardingScreen({onComplete}){
             {/* avatar */}
             <div style={{
               flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
-              overflow:"hidden",position:"relative",zIndex:1,
+              position:"relative",zIndex:1,
               transform: sel==="uomo" ? "scale(1.04) translateY(2px)" : "scale(1)",
               transition:`transform 400ms cubic-bezier(0.22,1,0.36,1)`,
               transformOrigin:"bottom center",
