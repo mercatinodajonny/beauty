@@ -3427,206 +3427,223 @@ const CharUomo = ({size=280}) => (
 
 /* ─── ONBOARDING SCREEN ─────────────────────────────────────── */
 function OnboardingScreen({onComplete}){
-  const [sel,setSel]     = useState(null);
+  const [sel,setSel]   = useState(null); // "donna" | "uomo" | "nonspec" | null
   const [exiting,setExiting] = useState(false);
-  const EASE = "400ms cubic-bezier(.4,0,.2,1)";
+  const EASE = "350ms cubic-bezier(0.22,1,0.36,1)";
 
-  const pick = (g) => { if(sel) return; setSel(g); };
+  const pick = (g) => {
+    if(sel==="donna"||sel==="uomo") return; // già scelta, ignora
+    setSel(g);
+  };
   const reset = () => setSel(null);
   const proceed = () => { setExiting(true); setTimeout(()=>onComplete(sel),380); };
 
-  const donnaW = sel==="uomo" ? "20%" : sel==="donna" ? "80%" : "50%";
-  const uomoW  = sel==="donna" ? "20%" : sel==="uomo"  ? "80%" : "50%";
-  const donnaOp = sel==="uomo" ? 0.5 : 1;
-  const uomoOp  = sel==="donna" ? 0.5 : 1;
+  // Larghezze card animate
+  const donnaW = sel==="uomo" ? "28%" : sel==="donna" ? "72%" : "50%";
+  const uomoW  = sel==="donna" ? "28%" : sel==="uomo"  ? "72%" : "50%";
+
+  const PINK = "#F06B9D";
+  const BLUE = "#4A7BF7";
 
   return (
     <div style={{
       position:"fixed",inset:0,background:"#FFFFFF",
-      display:"flex",flexDirection:"column",fontFamily:"inherit",
-      opacity:exiting?0:1,transition:"opacity 350ms ease",overflow:"hidden",
+      display:"flex",flexDirection:"column",
+      fontFamily:"'Plus Jakarta Sans',sans-serif",
+      opacity:exiting?0:1,transition:"opacity 350ms ease",
+      overflowY:"auto",
     }}>
-      <style>{OB_CSS}</style>
-
       {/* ── HEADER ── */}
-      <div className="ob-fadeup" style={{textAlign:"center",padding:"58px 28px 18px",flexShrink:0,fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
-        <div style={{display:"inline-flex",alignItems:"center",gap:8,marginBottom:16}}>
-          <div style={{width:32,height:32,borderRadius:10,background:"linear-gradient(145deg,#F07090,#E8506E)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="#fff" stroke="none"/></svg>
-          </div>
-          <span style={{fontSize:16,fontWeight:800,color:T.ink,letterSpacing:"-.03em"}}>beauty</span>
-        </div>
-        <h1 style={{fontSize:30,fontWeight:800,color:T.ink,margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.1}}>
+      <div style={{textAlign:"center",padding:"64px 28px 20px",flexShrink:0}}>
+        <h1 style={{fontSize:30,fontWeight:800,color:"#111",margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.15}}>
           Ciao, benvenuto!
         </h1>
-        <p style={{fontSize:15,color:T.inkSoft,margin:0,lineHeight:1.6}}>
+        <p style={{fontSize:15,color:"#888",margin:0,lineHeight:1.6,fontWeight:400}}>
           Per offrirti la migliore esperienza,<br/>scegli chi sei.
         </p>
       </div>
 
-      {/* ── SPLIT CARD (con bordi arrotondati come nell'immagine) ── */}
-      <div style={{
-        flex:1,margin:"12px 18px 0",
-        borderRadius:28,overflow:"hidden",
-        display:"flex",
-        boxShadow:"0 12px 48px rgba(0,0,0,.13)",
-        position:"relative",
-      }}>
+      {/* ── DUE CARD AFFIANCATE ── */}
+      <div style={{padding:"0 16px",flexShrink:0}}>
+        <div style={{display:"flex",gap:10,height:320,position:"relative"}}>
 
-        {/* ━━━ DONNA ━━━ */}
-        <div onClick={()=>pick("donna")} style={{
-          width:donnaW,flexShrink:0,
-          background:"linear-gradient(165deg,#F07090 0%,#E8506E 100%)",
-          transition:`width ${EASE}, opacity ${EASE}`,
-          opacity:donnaOp,
-          cursor:sel==="uomo"?"default":"pointer",
-          display:"flex",flexDirection:"column",
-          overflow:"hidden",position:"relative",
-        }}>
-          {/* shine top */}
-          <div style={{position:"absolute",top:0,left:0,right:0,height:"45%",background:"linear-gradient(160deg,rgba(255,255,255,.24) 0%,transparent 100%)",pointerEvents:"none"}}/>
-          {/* shadow bottom */}
-          <div style={{position:"absolute",bottom:0,left:0,right:0,height:"32%",background:"linear-gradient(0deg,rgba(180,45,85,.38) 0%,transparent 100%)",pointerEvents:"none"}}/>
-
-          {/* Testo label */}
-          <div style={{
-            padding:sel==="donna"?"64px 22px 0":sel==="uomo"?"52px 8px 0":"40px 18px 0",
-            transition:`padding ${EASE}`,position:"relative",zIndex:2,
-          }}>
-            {sel==="donna" && <p className="ob-fadein" style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.72)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 4px"}}>Hai scelto</p>}
-            <p style={{
-              fontSize:sel==="donna"?40:sel==="uomo"?11:24,
-              fontWeight:900,color:"#fff",margin:"0 0 8px",letterSpacing:"-.03em",lineHeight:1.05,
-              transition:`font-size ${EASE}`,
-              writingMode:sel==="uomo"?"vertical-rl":"horizontal-tb",
-              whiteSpace:"nowrap",textShadow:"0 2px 10px rgba(0,0,0,.15)",
-            }}>Donna</p>
-            {sel!=="uomo" && (
-              <p style={{fontSize:sel==="donna"?13:11,color:"rgba(255,255,255,.84)",margin:0,lineHeight:1.5,fontWeight:500,transition:`font-size ${EASE}`}}>
+          {/* ━━━ DONNA ━━━ */}
+          <div onClick={()=>pick("donna")}
+            style={{
+              width:donnaW,
+              flexShrink:0,
+              background:PINK,
+              borderRadius:24,
+              overflow:"hidden",
+              cursor: sel&&sel!=="donna" ? "default" : "pointer",
+              transition:`width ${EASE}`,
+              display:"flex",
+              flexDirection:"column",
+              position:"relative",
+            }}>
+            {/* label */}
+            <div style={{padding:"20px 18px 0",position:"relative",zIndex:2,flexShrink:0}}>
+              <p style={{
+                fontSize:22,fontWeight:800,color:"#fff",margin:"0 0 4px",
+                letterSpacing:"-.03em",lineHeight:1,
+                opacity: sel==="uomo" ? 0 : 1,
+                transition:`opacity ${EASE}`,
+              }}>Donna</p>
+              <p style={{
+                fontSize:11,color:"rgba(255,255,255,.88)",margin:0,lineHeight:1.4,fontWeight:500,
+                opacity: sel==="uomo" ? 0 : 1,
+                transition:`opacity ${EASE}`,
+              }}>
                 Scopri servizi e<br/>professionisti per te
               </p>
+            </div>
+            {/* avatar */}
+            <div style={{
+              flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
+              overflow:"hidden",position:"relative",zIndex:1,
+              transform: sel==="donna" ? "scale(1.04) translateY(2px)" : "scale(1)",
+              transition:`transform 400ms cubic-bezier(0.22,1,0.36,1)`,
+              transformOrigin:"bottom center",
+            }}>
+              <CharDonna size={260}/>
+            </div>
+            {/* prosegui */}
+            {sel==="donna" && (
+              <div style={{padding:"10px 16px 20px",zIndex:3,position:"relative",animation:"obFadeUp 260ms ease both"}}>
+                <button onClick={e=>{e.stopPropagation();proceed();}}
+                  style={{width:"100%",padding:"15px 0",borderRadius:16,border:"none",background:"#fff",color:PINK,fontSize:15,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 4px 0 rgba(0,0,0,.08)"}}>
+                  Prosegui →
+                </button>
+              </div>
             )}
           </div>
 
-          {/* Avatar donna — size grande, overflow:hidden ritaglia ai bordi del pannello */}
-          <div style={{
-            flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
-            position:"relative",zIndex:1,
-            transform:sel==="donna"?"scale(1.05) translateY(4px)":"scale(1) translateY(0)",
-            transition:`transform 440ms cubic-bezier(.34,1.56,.64,1)`,
-            transformOrigin:"bottom center",overflow:"hidden",
-          }}>
-            <CharDonna size={sel==="donna"?290:290}/>
-          </div>
-
-          {sel==="donna" && (
-            <div className="ob-fadeup" style={{padding:"12px 20px 32px",zIndex:3,position:"relative",animationDelay:"100ms"}}>
-              <button onClick={e=>{e.stopPropagation();proceed();}} style={{
-                width:"100%",padding:"17px 0",borderRadius:18,border:"none",
-                background:"#fff",color:"#E8506E",fontSize:16,fontWeight:800,
-                cursor:"pointer",fontFamily:"inherit",
-                boxShadow:"0 5px 0 rgba(0,0,0,.09)",
-              }}>Prosegui →</button>
+          {/* ━━━ PILL CENTRALE ← → ━━━ */}
+          {!sel && (
+            <div style={{
+              position:"absolute",top:"50%",left:"50%",
+              transform:"translate(-50%,-50%)",zIndex:20,
+              background:"#fff",borderRadius:999,
+              padding:"8px 16px",
+              display:"flex",gap:10,alignItems:"center",
+              boxShadow:"0 4px 20px rgba(0,0,0,.14)",
+            }}>
+              <span style={{fontSize:15,color:PINK,fontWeight:800,lineHeight:1}}>←</span>
+              <div style={{width:1,height:15,background:"#E0E0E0"}}/>
+              <span style={{fontSize:15,color:BLUE,fontWeight:800,lineHeight:1}}>→</span>
             </div>
           )}
-        </div>
 
-        {/* ━━━ FRECCE CENTRO ━━━ */}
-        {!sel && (
-          <div style={{
-            position:"absolute",top:"50%",left:"50%",
-            transform:"translate(-50%,-50%)",zIndex:20,
-          }}>
-            <div style={{
-              background:"#fff",borderRadius:99,
-              padding:"7px 14px",display:"flex",gap:10,alignItems:"center",
-              boxShadow:"0 4px 20px rgba(0,0,0,.16)",
+          {/* ━━━ BACK BUTTON ━━━ */}
+          {(sel==="donna"||sel==="uomo") && (
+            <button onClick={e=>{e.stopPropagation();reset();}}
+              style={{
+                position:"absolute",top:14,
+                left: sel==="donna" ? 14 : "auto",
+                right: sel==="uomo" ? 14 : "auto",
+                zIndex:30,width:34,height:34,borderRadius:"50%",
+                background:"rgba(255,255,255,.24)",border:"none",cursor:"pointer",
+                display:"flex",alignItems:"center",justifyContent:"center",
+                color:"#fff",fontSize:16,fontWeight:700,
+                animation:"obFadeIn 200ms ease both",
+              }}>←</button>
+          )}
+
+          {/* ━━━ UOMO ━━━ */}
+          <div onClick={()=>pick("uomo")}
+            style={{
+              width:uomoW,
+              flexShrink:0,
+              background:BLUE,
+              borderRadius:24,
+              overflow:"hidden",
+              cursor: sel&&sel!=="uomo" ? "default" : "pointer",
+              transition:`width ${EASE}`,
+              display:"flex",
+              flexDirection:"column",
+              position:"relative",
             }}>
-              <span style={{fontSize:15,color:"#E8508A",fontWeight:800,lineHeight:1}}>←</span>
-              <div style={{width:1,height:15,background:"#E4E4E8"}}/>
-              <span style={{fontSize:15,color:"#4A7BF7",fontWeight:800,lineHeight:1}}>→</span>
-            </div>
-          </div>
-        )}
-
-        {/* Back button */}
-        {sel && (
-          <button className="ob-fadein" onClick={e=>{e.stopPropagation();reset();}} style={{
-            position:"absolute",top:20,
-            left:sel==="donna"?18:"auto",right:sel==="uomo"?18:"auto",
-            zIndex:30,width:36,height:36,borderRadius:"50%",
-            background:"rgba(255,255,255,.26)",border:"none",cursor:"pointer",
-            display:"flex",alignItems:"center",justifyContent:"center",
-            color:"#fff",fontSize:18,fontWeight:400,
-            boxShadow:"0 2px 8px rgba(0,0,0,.12)",
-          }}>←</button>
-        )}
-
-        {/* ━━━ UOMO ━━━ */}
-        <div onClick={()=>pick("uomo")} style={{
-          width:uomoW,flexShrink:0,
-          background:"linear-gradient(165deg,#7BB4F8 0%,#4F7EF7 100%)",
-          transition:`width ${EASE}, opacity ${EASE}`,
-          opacity:uomoOp,
-          cursor:sel==="donna"?"default":"pointer",
-          display:"flex",flexDirection:"column",
-          overflow:"hidden",position:"relative",
-          alignItems:sel==="uomo"?"flex-start":"flex-end",
-        }}>
-          <div style={{position:"absolute",top:0,left:0,right:0,height:"45%",background:"linear-gradient(160deg,rgba(255,255,255,.22) 0%,transparent 100%)",pointerEvents:"none"}}/>
-          <div style={{position:"absolute",bottom:0,left:0,right:0,height:"32%",background:"linear-gradient(0deg,rgba(25,60,120,.38) 0%,transparent 100%)",pointerEvents:"none"}}/>
-
-          <div style={{
-            padding:sel==="uomo"?"64px 22px 0":sel==="donna"?"52px 8px 0":"40px 18px 0",
-            transition:`padding ${EASE}`,position:"relative",zIndex:2,
-            textAlign:sel==="uomo"?"left":"right",width:"100%",
-          }}>
-            {sel==="uomo" && <p className="ob-fadein" style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.72)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 4px"}}>Hai scelto</p>}
-            <p style={{
-              fontSize:sel==="uomo"?40:sel==="donna"?11:24,
-              fontWeight:900,color:"#fff",margin:"0 0 8px",letterSpacing:"-.03em",lineHeight:1.05,
-              transition:`font-size ${EASE}`,
-              writingMode:sel==="donna"?"vertical-rl":"horizontal-tb",
-              whiteSpace:"nowrap",textShadow:"0 2px 10px rgba(0,0,0,.15)",
-            }}>Uomo</p>
-            {sel!=="donna" && (
-              <p style={{fontSize:sel==="uomo"?13:11,color:"rgba(255,255,255,.84)",margin:0,lineHeight:1.5,fontWeight:500,transition:`font-size ${EASE}`,textAlign:sel==="uomo"?"left":"right"}}>
+            {/* label */}
+            <div style={{padding:"20px 18px 0",position:"relative",zIndex:2,flexShrink:0}}>
+              <p style={{
+                fontSize:22,fontWeight:800,color:"#fff",margin:"0 0 4px",
+                letterSpacing:"-.03em",lineHeight:1,
+                opacity: sel==="donna" ? 0 : 1,
+                transition:`opacity ${EASE}`,
+              }}>Uomo</p>
+              <p style={{
+                fontSize:11,color:"rgba(255,255,255,.88)",margin:0,lineHeight:1.4,fontWeight:500,
+                opacity: sel==="donna" ? 0 : 1,
+                transition:`opacity ${EASE}`,
+              }}>
                 Scopri servizi e<br/>professionisti per te
               </p>
+            </div>
+            {/* avatar */}
+            <div style={{
+              flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
+              overflow:"hidden",position:"relative",zIndex:1,
+              transform: sel==="uomo" ? "scale(1.04) translateY(2px)" : "scale(1)",
+              transition:`transform 400ms cubic-bezier(0.22,1,0.36,1)`,
+              transformOrigin:"bottom center",
+            }}>
+              <CharUomo size={260}/>
+            </div>
+            {/* prosegui */}
+            {sel==="uomo" && (
+              <div style={{padding:"10px 16px 20px",zIndex:3,position:"relative",animation:"obFadeUp 260ms ease both"}}>
+                <button onClick={e=>{e.stopPropagation();proceed();}}
+                  style={{width:"100%",padding:"15px 0",borderRadius:16,border:"none",background:"#fff",color:BLUE,fontSize:15,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:"0 4px 0 rgba(0,0,0,.08)"}}>
+                  Prosegui →
+                </button>
+              </div>
             )}
           </div>
+        </div>
+      </div>
 
-          <div style={{
-            flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
-            position:"relative",zIndex:1,
-            transform:sel==="uomo"?"scale(1.05) translateY(4px)":"scale(1) translateY(0)",
-            transition:`transform 440ms cubic-bezier(.34,1.56,.64,1)`,
-            transformOrigin:"bottom center",overflow:"hidden",
+      {/* ── NON SPECIFICARE ── */}
+      <div style={{padding:"12px 16px 0",flexShrink:0}}>
+        <div onClick={()=>{ setSel("nonspec"); }}
+          style={{
+            display:"flex",alignItems:"center",gap:14,
+            background: sel==="nonspec" ? "#FFF1F4" : "#F7F7F7",
+            border: `1.5px solid ${sel==="nonspec" ? PINK : "#ECECEC"}`,
+            borderRadius:18,
+            padding:"0 20px",
+            height:56,
+            cursor:"pointer",
+            transition:"all 280ms ease",
+            position:"relative",
           }}>
-            <CharUomo size={sel==="uomo"?290:290}/>
-          </div>
-
-          {sel==="uomo" && (
-            <div className="ob-fadeup" style={{padding:"12px 20px 32px",zIndex:3,position:"relative",animationDelay:"100ms"}}>
-              <button onClick={e=>{e.stopPropagation();proceed();}} style={{
-                width:"100%",padding:"17px 0",borderRadius:18,border:"none",
-                background:"#fff",color:"#4F7EF7",fontSize:16,fontWeight:800,
-                cursor:"pointer",fontFamily:"inherit",
-                boxShadow:"0 5px 0 rgba(0,0,0,.09)",
-              }}>Prosegui →</button>
-            </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={sel==="nonspec"?PINK:"#ADADAD"} strokeWidth="1.8" strokeLinecap="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+          <span style={{fontSize:15,fontWeight:600,color:sel==="nonspec"?"#111":"#555",flex:1}}>Non specificare</span>
+          {sel==="nonspec" && (
+            <button onClick={e=>{e.stopPropagation();proceed();}}
+              style={{padding:"9px 20px",borderRadius:999,border:"none",background:PINK,color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit",animation:"obFadeIn 220ms ease both",flexShrink:0}}>
+              Prosegui →
+            </button>
           )}
         </div>
       </div>
 
-      {/* ── NOTA IN BASSO ── */}
-      <div style={{padding:"16px 24px 44px",display:"flex",alignItems:"center",gap:12,flexShrink:0,fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
-        <div style={{width:36,height:36,borderRadius:11,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+      {/* ── INFO LOCK ── */}
+      <div style={{padding:"10px 16px 40px",flexShrink:0}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,background:"#F7F7F7",borderRadius:14,padding:"14px 16px"}}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2" strokeLinecap="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+          <p style={{fontSize:12,color:"#ADADAD",margin:0,lineHeight:1.5,flex:1,fontWeight:400}}>
+            Puoi modificare questa scelta in qualsiasi momento dal tuo profilo.
+          </p>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D0D0D0" strokeWidth="2.5" strokeLinecap="round">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
         </div>
-        <p style={{fontSize:12,color:T.inkSoft,margin:0,lineHeight:1.5,flex:1}}>
-          Puoi modificare la tua scelta in qualsiasi momento dal tuo profilo.
-        </p>
       </div>
     </div>
   );
