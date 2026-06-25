@@ -3159,14 +3159,18 @@ function ManSVG({scale=1}){
 }
 
 /* ─── AVATAR — immagini reali 3D ─────────────────────────────── */
-const CharDonna = ({size=260}) => (
-  <img src="/beauty/avatar-donna.png" alt="Donna"
-    style={{width:"100%",height:"100%",objectFit:"contain",objectPosition:"bottom center",display:"block",pointerEvents:"none"}}/>
+const CharDonna = () => (
+  <img src="/beauty/avatar-donna.png?v=4" alt="Donna"
+    style={{position:"absolute",bottom:0,left:0,right:0,width:"100%",
+      objectFit:"contain",objectPosition:"bottom center",
+      display:"block",pointerEvents:"none"}}/>
 );
 
-const CharUomo = ({size=260}) => (
-  <img src="/beauty/avatar-uomo.png" alt="Uomo"
-    style={{width:"100%",height:"100%",objectFit:"contain",objectPosition:"bottom center",display:"block",pointerEvents:"none"}}/>
+const CharUomo = () => (
+  <img src="/beauty/avatar-uomo.png?v=4" alt="Uomo"
+    style={{position:"absolute",bottom:0,left:0,right:0,width:"100%",
+      objectFit:"contain",objectPosition:"bottom center",
+      display:"block",pointerEvents:"none"}}/>
 );
 
 /* ─── ONBOARDING SCREEN ─────────────────────────────────────── */
@@ -3243,14 +3247,12 @@ function OnboardingScreen({onComplete}){
             </div>
             {/* avatar */}
             <div style={{
-              flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
-              position:"relative",zIndex:1,
+              flex:1,position:"relative",zIndex:1,minHeight:0,
               transform: sel==="donna" ? "scale(1.04) translateY(2px)" : "scale(1)",
               transition:`transform 400ms cubic-bezier(0.22,1,0.36,1)`,
               transformOrigin:"bottom center",
-              minHeight:0,
             }}>
-              <CharDonna size={260}/>
+              <CharDonna/>
             </div>
             {/* prosegui */}
             {sel==="donna" && (
@@ -3326,13 +3328,12 @@ function OnboardingScreen({onComplete}){
             </div>
             {/* avatar */}
             <div style={{
-              flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
-              position:"relative",zIndex:1,
+              flex:1,position:"relative",zIndex:1,minHeight:0,
               transform: sel==="uomo" ? "scale(1.04) translateY(2px)" : "scale(1)",
               transition:`transform 400ms cubic-bezier(0.22,1,0.36,1)`,
               transformOrigin:"bottom center",
             }}>
-              <CharUomo size={260}/>
+              <CharUomo/>
             </div>
             {/* prosegui */}
             {sel==="uomo" && (
