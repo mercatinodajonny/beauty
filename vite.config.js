@@ -7,10 +7,9 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        // Nomi file fissi (senza hash): un index.html in cache punta sempre a file esistenti → niente schermata bianca
-        entryFileNames: 'assets/app.js',
-        chunkFileNames: 'assets/app-[name].js',
-        assetFileNames: 'assets/app.[ext]',
+        entryFileNames: 'assets/app.[hash].js',
+        chunkFileNames: 'assets/app-[name].[hash].js',
+        assetFileNames: 'assets/app.[hash].[ext]',
       },
     },
   },
