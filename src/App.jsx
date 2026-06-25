@@ -924,11 +924,8 @@ function LoginScreen({onAuth}) {
     <div style={{minHeight:"100dvh",background:T.bg,display:"flex",flexDirection:"column",padding:"0 24px",fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
       {/* Logo mark */}
       <div style={{paddingTop:88,paddingBottom:56,animation:"dsFadeIn .5s ease both"}}>
-        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:20}}>
-          <div style={{width:44,height:44,borderRadius:14,background:T.grad,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 4px 16px ${T.brand}40`}}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2"/><path d="M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6"/><circle cx="12" cy="12" r="2" fill="#fff" stroke="none"/></svg>
-          </div>
-          <span style={{fontSize:28,fontWeight:800,color:T.ink,letterSpacing:"-.04em"}}>beauty</span>
+        <div style={{marginBottom:20}}>
+          <img src="/beauty/logo.png" alt="beauty" style={{height:52,width:"auto",display:"block",objectFit:"contain"}}/>
         </div>
         <p style={{fontSize:22,fontWeight:700,color:T.ink,margin:"0 0 6px",letterSpacing:"-.03em"}}>Benvenuto</p>
         <p style={{fontSize:15,color:T.inkSoft,margin:0,fontWeight:400,lineHeight:1.5}}>Prenota i migliori professionisti vicino a te.</p>
@@ -3218,7 +3215,8 @@ function OnboardingScreen({onComplete}){
       overflowY:"auto",
     }}>
       {/* ── HEADER ── */}
-      <div style={{textAlign:"center",padding:"64px 28px 20px",flexShrink:0}}>
+      <div style={{textAlign:"center",padding:"56px 28px 20px",flexShrink:0}}>
+        <img src="/beauty/logo.png" alt="beauty" style={{height:44,width:"auto",display:"block",margin:"0 auto 20px",objectFit:"contain"}}/>
         <h1 style={{fontSize:30,fontWeight:800,color:"#111",margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.15}}>
           Ciao, benvenuto!
         </h1>
