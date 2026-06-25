@@ -864,6 +864,24 @@ const NI = {
   grid:(a)=><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.brand:"#ADADAD"} strokeWidth={a?2.2:1.8} strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>,
   star:(a)=><svg width="22" height="22" viewBox="0 0 24 24" fill={a?T.brand:"none"} stroke={a?T.brand:"#ADADAD"} strokeWidth={a?2.2:1.8} strokeLinecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
 };
+function TopBar() {
+  return (
+    <div style={{
+      position:"fixed",top:0,left:0,right:0,zIndex:300,
+      background:"rgba(250,250,249,.92)",
+      backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
+      borderBottom:`1px solid ${T.line}`,
+      display:"flex",alignItems:"center",justifyContent:"center",
+      height:52,
+      paddingTop:"env(safe-area-inset-top,0px)",
+      maxWidth:430,margin:"0 auto",
+    }}>
+      <img src="/beauty/logo.png" alt="beauty"
+        style={{height:28,width:"auto",display:"block",objectFit:"contain"}}/>
+    </div>
+  );
+}
+
 function NavBar({items,s,nav}) {
   return (
     <nav style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(250,250,249,.94)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderTop:`1px solid ${T.line}`,display:"flex",alignItems:"stretch",zIndex:200,paddingBottom:"env(safe-area-inset-bottom,0px)"}}>
@@ -3538,7 +3556,10 @@ export default function App() {
 
   return (
     <W>
-      {render()}
+      {!fullscreen && <TopBar/>}
+      <div style={{paddingTop: fullscreen ? 0 : 52}}>
+        {render()}
+      </div>
       {!fullscreen && mode==="pro" && screen!=="pro_piani" && screen!=="pro_stats" && <BetaBanner nav={nav}/>}
       {!fullscreen && (mode==="pro" ? <NavPro s={screen} nav={nav}/> : <NavCl s={screen} nav={nav}/>)}
       {showBetaWelcome && <BetaWelcome onClose={()=>setShowBetaWelcome(false)}/>}
