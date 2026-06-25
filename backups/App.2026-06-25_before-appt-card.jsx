@@ -1383,88 +1383,25 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
         </div>
       </div>
 
-      {/* ── WIDGET appuntamento premium ── */}
+      {/* ── BANNER appuntamento premium ── */}
       {!(searching && q.length >= 2) && !selCat && banner && (
         <div style={{padding:"20px 20px 0"}}>
-          <div onClick={()=>nav("cl_appts")} className="ba-lift" style={{borderRadius:30,cursor:"pointer",background:"#FFFFFF",overflow:"hidden",boxShadow:`0 12px 48px ${T.brand}20, 0 2px 8px rgba(0,0,0,.04)`,position:"relative",transition:"transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s ease"}}>
-
-            {/* Barra accent superiore */}
-            <div style={{height:5,background:`linear-gradient(90deg,${T.brand} 0%,${T.brand}CC 60%,${T.brand}44 100%)`,borderRadius:"30px 30px 0 0"}}/>
-
-            {/* Gradiente sfondo tema */}
-            <div style={{position:"absolute",top:5,left:0,right:0,bottom:0,background:`linear-gradient(135deg,${T.brand}08 0%,${T.brand}03 50%,transparent 100%)`,pointerEvents:"none"}}/>
-
-            <div style={{padding:"20px 20px 0",position:"relative"}}>
-
-              {/* Label + freccia */}
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-                <span style={{fontSize:10,fontWeight:800,color:T.brand,textTransform:"uppercase",letterSpacing:1.6}}>{nextAppt?"Il tuo prossimo appuntamento":"Ultimo appuntamento"}</span>
-                <div style={{width:28,height:28,borderRadius:999,background:T.brand,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 3px 10px ${T.brand}44`}}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </div>
+          <div onClick={()=>nav("cl_appts")} style={{borderRadius:24,cursor:"pointer",background:"#FFFFFF",padding:"0",overflow:"hidden",boxShadow:`0 8px 32px ${T.brand}22`,border:`1.5px solid ${T.brand}22`,position:"relative"}}>
+            {/* Striscia accent in alto */}
+            <div style={{height:4,background:`linear-gradient(90deg,${T.brand},${T.brand}88)`,borderRadius:"24px 24px 0 0"}}/>
+            {/* Leggero gradiente di sfondo */}
+            <div style={{position:"absolute",top:4,left:0,right:0,bottom:0,background:`linear-gradient(135deg,${T.brand}06 0%,${T.brand}00 60%)`,pointerEvents:"none"}}/>
+            <div style={{padding:"16px 18px 18px",display:"flex",alignItems:"center",gap:14,position:"relative"}}>
+              {/* Icona calendario premium */}
+              <div style={{width:52,height:52,borderRadius:16,background:`linear-gradient(135deg,${T.brand},${T.brand}CC)`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 4px 14px ${T.brand}44`}}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="4"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="12" cy="16" r="1.8" fill="#fff" stroke="none"/></svg>
               </div>
-
-              {/* Corpo principale */}
-              <div style={{display:"flex",gap:16,alignItems:"flex-start"}}>
-
-                {/* Calendario 3D */}
-                <div style={{flexShrink:0,width:64,height:72,borderRadius:18,background:`linear-gradient(145deg,${T.brand} 0%,${T.brand}BB 100%)`,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"flex-start",overflow:"hidden",boxShadow:`0 6px 20px ${T.brand}44, inset 0 1px 0 rgba(255,255,255,.25)`}}>
-                  <div style={{width:"100%",background:"rgba(0,0,0,.18)",padding:"5px 0 4px",textAlign:"center"}}>
-                    <span style={{fontSize:8,fontWeight:800,color:"rgba(255,255,255,.9)",textTransform:"uppercase",letterSpacing:1.2}}>
-                      {banner.date==="Oggi"?"oggi":banner.date==="Domani"?"dom":banner.date.split(" ")[1]||banner.date.slice(0,3)}
-                    </span>
-                  </div>
-                  <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:1}}>
-                    <span style={{fontSize:28,fontWeight:900,color:"#FFFFFF",lineHeight:1,fontVariantNumeric:"tabular-nums"}}>
-                      {banner.date==="Oggi"
-                        ? new Date().getDate()
-                        : banner.date==="Domani"
-                          ? new Date(Date.now()+86400000).getDate()
-                          : (banner.date.match(/\d+/)||["?"])[0]}
-                    </span>
-                    {banner.time && <span style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.8)"}}>{banner.time}</span>}
-                  </div>
-                </div>
-
-                {/* Info servizio */}
-                <div style={{flex:1,minWidth:0}}>
-                  <p style={{fontSize:20,fontWeight:900,color:"#0D0D0E",margin:"0 0 4px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:"-.03em",lineHeight:1.15}}>{banner.service}</p>
-                  <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
-                    <div style={{width:20,height:20,borderRadius:"50%",background:`linear-gradient(135deg,${T.brand}44,${T.brand}22)`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.5" strokeLinecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    </div>
-                    <p style={{fontSize:13,color:"#555",margin:0,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.pro}</p>
-                  </div>
-                  {nextAppt && (
-                    <div style={{display:"inline-flex",alignItems:"center",gap:5,background:`${T.brand}12`,borderRadius:999,padding:"4px 10px"}}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                      <span style={{fontSize:11,fontWeight:700,color:T.brand}}>{banner.date}{banner.time&&` · ${banner.time}`}</span>
-                    </div>
-                  )}
-                </div>
+              <div style={{flex:1,minWidth:0}}>
+                <p style={{fontSize:10,fontWeight:700,color:T.brand,margin:"0 0 4px",textTransform:"uppercase",letterSpacing:1.4}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
+                <p style={{fontSize:16,fontWeight:800,color:"#0D0D0E",margin:"0 0 3px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:"-.02em"}}>{banner.service}</p>
+                <p style={{fontSize:12,color:"#ADADAD",margin:0,fontWeight:500}}>{banner.pro} · {nextAppt?`${banner.date} ${banner.time}`:banner.date}</p>
               </div>
-
-              {/* Footer con metadati */}
-              <div style={{display:"flex",alignItems:"center",gap:0,marginTop:16,paddingTop:14,borderTop:`1px solid ${T.brand}14`}}>
-                {[
-                  {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>, label:"Milano"},
-                  {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>, label: banner.proObj?.services?.find(s=>s.name===banner.service)?.min ? `${banner.proObj.services.find(s=>s.name===banner.service).min} min` : "45 min"},
-                  {icon:<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, label:`€ ${banner.price}`},
-                ].map((m,i)=>(
-                  <div key={i} style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:5,color:"#888"}}>
-                    {i>0 && <div style={{width:1,height:20,background:"#EFEFEF",marginRight:0}}/>}
-                    <span style={{color:"#ADADAD"}}>{m.icon}</span>
-                    <span style={{fontSize:12,fontWeight:700,color:"#555"}}>{m.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Pulsante bottom */}
-            <div style={{padding:"14px 20px 18px"}}>
-              <button onClick={e=>{e.stopPropagation();nav("cl_appts");}} style={{width:"100%",padding:"14px 0",borderRadius:18,border:"none",background:`linear-gradient(135deg,${T.brand},${T.brand}CC)`,color:"#fff",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",letterSpacing:.2,boxShadow:`0 6px 20px ${T.brand}44, inset 0 1px 0 rgba(255,255,255,.2)`}}>
-                Visualizza appuntamento
-              </button>
+              <button onClick={e=>{e.stopPropagation();nav("cl_appts");}} style={{flexShrink:0,padding:"10px 16px",borderRadius:14,border:"none",background:T.brand,color:"#fff",fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",boxShadow:`0 3px 12px ${T.brand}44`,letterSpacing:.2}}>Dettagli</button>
             </div>
           </div>
         </div>
