@@ -3159,269 +3159,155 @@ function ManSVG({scale=1}){
 }
 
 /* ─── AVATAR CARTOON 3D PREMIUM ─────────────────────────────── */
-const CharDonna = ({size=280}) => (
-  <svg width={size} height={size*1.2} viewBox="0 0 280 336" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="cgSkin" cx="42%" cy="38%" r="60%">
-        <stop offset="0%" stopColor="#FFD8B4"/>
-        <stop offset="55%" stopColor="#FBBB88"/>
-        <stop offset="100%" stopColor="#E8965C"/>
-      </radialGradient>
-      <radialGradient id="cgSkinSh" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="rgba(0,0,0,0)" />
-        <stop offset="100%" stopColor="rgba(0,0,0,.10)"/>
-      </radialGradient>
-      <radialGradient id="cgHair" cx="30%" cy="25%" r="75%">
-        <stop offset="0%" stopColor="#5C3317"/>
-        <stop offset="40%" stopColor="#3B1F0A"/>
-        <stop offset="100%" stopColor="#1C0B03"/>
-      </radialGradient>
-      <radialGradient id="cgHairHL" cx="30%" cy="20%" r="55%">
-        <stop offset="0%" stopColor="rgba(255,210,160,.35)"/>
-        <stop offset="100%" stopColor="rgba(255,210,160,0)"/>
-      </radialGradient>
-      <radialGradient id="cgIris" cx="35%" cy="35%" r="65%">
-        <stop offset="0%" stopColor="#7B4F2A"/>
-        <stop offset="60%" stopColor="#4A2C10"/>
-        <stop offset="100%" stopColor="#2A1608"/>
-      </radialGradient>
-      <radialGradient id="cgBlush" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="rgba(255,100,120,.28)"/>
-        <stop offset="100%" stopColor="rgba(255,100,120,0)"/>
-      </radialGradient>
-      <radialGradient id="cgBody" cx="40%" cy="20%" r="70%">
-        <stop offset="0%" stopColor="#F76BAE"/>
-        <stop offset="100%" stopColor="#D94888"/>
-      </radialGradient>
-      <filter id="cgBlur"><feGaussianBlur stdDeviation="2.5"/></filter>
-      <filter id="cgBlur2"><feGaussianBlur stdDeviation="1.2"/></filter>
-    </defs>
-
-    {/* ── COLLO + CORPO ── */}
-    <ellipse cx="140" cy="296" rx="88" ry="60" fill="url(#cgBody)"/>
-    <ellipse cx="140" cy="240" rx="22" ry="30" fill="url(#cgSkin)"/>
-    {/* colletto camicia / spalle */}
-    <path d="M80 280 Q90 250 118 240 Q140 236 162 240 Q190 250 200 280 Q170 268 140 267 Q110 268 80 280Z" fill="#fff" opacity=".90"/>
-
-    {/* ── CAPELLI DIETRO (layer basso) ── */}
-    <ellipse cx="140" cy="125" rx="76" ry="82" fill="url(#cgHair)"/>
-    {/* boccoli / ciuffo laterale sx */}
-    <ellipse cx="72" cy="148" rx="22" ry="38" fill="url(#cgHair)"/>
-    <ellipse cx="208" cy="148" rx="22" ry="38" fill="url(#cgHair)"/>
-
+const CharDonna = ({size=260}) => (
+  <svg width={size} height={size*1.25} viewBox="0 0 240 300" xmlns="http://www.w3.org/2000/svg">
+    {/* ── HOODIE CORPO ── */}
+    <path d="M120 222 C78 222 34 240 16 300 L224 300 C206 240 162 222 120 222Z" fill="#FF9DC5"/>
+    <path d="M92 222 Q120 232 148 222 L152 248 Q120 258 88 248Z" fill="#F07AAE"/>
+    {/* ── COLLO ── */}
+    <rect x="102" y="194" width="36" height="34" rx="11" fill="#FABD9A"/>
+    {/* ── CAPELLI RETRO ── */}
+    <ellipse cx="120" cy="114" rx="78" ry="90" fill="#2D1B0E"/>
+    {/* capelli laterali voluminosi */}
+    <ellipse cx="44" cy="154" rx="22" ry="46" fill="#2D1B0E"/>
+    <ellipse cx="196" cy="154" rx="22" ry="46" fill="#2D1B0E"/>
     {/* ── VISO ── */}
-    <ellipse cx="140" cy="148" rx="68" ry="74" fill="url(#cgSkin)"/>
-    <ellipse cx="140" cy="148" rx="68" ry="74" fill="url(#cgSkinSh)"/>
-
-    {/* ── CAPELLI SOPRA (layer alto — coprono parte fronte) ── */}
-    {/* massa principale */}
-    <ellipse cx="140" cy="82" rx="70" ry="52" fill="url(#cgHair)"/>
-    {/* riga centrale + onda fronte */}
-    <path d="M140 42 C132 52 118 66 110 82 C118 72 132 68 140 72 C148 68 162 72 170 82 C162 66 148 52 140 42Z" fill="url(#cgHair)"/>
-    {/* chignon / crocchia */}
-    <ellipse cx="140" cy="46" rx="30" ry="26" fill="url(#cgHair)"/>
-    <ellipse cx="140" cy="38" rx="22" ry="18" fill="url(#cgHair)"/>
-    {/* ciuffetti morbidi laterali */}
-    <path d="M74 100 C64 90 60 76 68 68 C72 80 74 94 74 100Z" fill="url(#cgHair)"/>
-    <path d="M206 100 C216 90 220 76 212 68 C208 80 206 94 206 100Z" fill="url(#cgHair)"/>
-    {/* highlight capelli */}
-    <ellipse cx="140" cy="62" rx="40" ry="24" fill="url(#cgHairHL)"/>
+    <ellipse cx="120" cy="130" rx="66" ry="74" fill="#FABD9A"/>
+    {/* ombra mento */}
+    <ellipse cx="120" cy="172" rx="46" ry="20" fill="rgba(210,120,70,.12)"/>
+    {/* ── CAPELLI FRONTE (sopra viso) ── */}
+    <ellipse cx="120" cy="72" rx="72" ry="54" fill="#2D1B0E"/>
+    {/* ── CROCCHIA / BUN ── */}
+    <circle cx="120" cy="34" r="40" fill="#2D1B0E"/>
+    <circle cx="120" cy="36" r="30" fill="#3D2414"/>
+    {/* filo bun */}
+    <path d="M88 46 Q120 58 152 46" stroke="rgba(0,0,0,.20)" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+    {/* highlight bun */}
+    <ellipse cx="104" cy="22" rx="20" ry="12" fill="rgba(255,210,160,.18)"/>
 
     {/* ── SOPRACCIGLIA ── */}
-    <path d="M110 120 Q122 114 134 118" stroke="#3B1F0A" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-    <path d="M146 118 Q158 114 170 120" stroke="#3B1F0A" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+    <path d="M80 98 Q96 90 110 96" stroke="#1C0808" strokeWidth="4" fill="none" strokeLinecap="round"/>
+    <path d="M130 96 Q144 90 160 98" stroke="#1C0808" strokeWidth="4" fill="none" strokeLinecap="round"/>
 
     {/* ── OCCHI ── */}
-    {/* bianco sx */}
-    <ellipse cx="122" cy="138" rx="16" ry="13" fill="#fff"/>
-    {/* bianco dx */}
-    <ellipse cx="158" cy="138" rx="16" ry="13" fill="#fff"/>
-    {/* iride + pupilla sx */}
-    <ellipse cx="122" cy="139" rx="10" ry="10" fill="url(#cgIris)"/>
-    <circle  cx="122" cy="139" r="5.5" fill="#1C0B03"/>
-    <circle  cx="119" cy="135" r="3" fill="rgba(255,255,255,.75)"/>
-    <circle  cx="127" cy="142" r="1.2" fill="rgba(255,255,255,.45)"/>
-    {/* iride + pupilla dx */}
-    <ellipse cx="158" cy="139" rx="10" ry="10" fill="url(#cgIris)"/>
-    <circle  cx="158" cy="139" r="5.5" fill="#1C0B03"/>
-    <circle  cx="155" cy="135" r="3" fill="rgba(255,255,255,.75)"/>
-    <circle  cx="163" cy="142" r="1.2" fill="rgba(255,255,255,.45)"/>
-    {/* ciglia sx */}
-    <path d="M106 130 Q108 122 114 128" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M109 126 Q114 118 119 126" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M115 123 Q121 116 125 124" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M122 122 Q128 116 131 124" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M128 124 Q135 118 136 127" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    {/* ciglia dx */}
-    <path d="M174 130 Q172 122 166 128" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M171 126 Q166 118 161 126" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M165 123 Q159 116 155 124" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M158 122 Q152 116 149 124" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M152 124 Q145 118 144 127" stroke="#1C0B03" strokeWidth="2" fill="none" strokeLinecap="round"/>
+    <ellipse cx="96" cy="117" rx="17" ry="15" fill="white"/>
+    <ellipse cx="144" cy="117" rx="17" ry="15" fill="white"/>
     {/* ombra palpebra */}
-    <path d="M106 133 Q122 127 138 133" stroke="rgba(80,40,20,.18)" strokeWidth="3" fill="none" strokeLinecap="round"/>
-    <path d="M142 133 Q158 127 174 133" stroke="rgba(80,40,20,.18)" strokeWidth="3" fill="none" strokeLinecap="round"/>
-
-    {/* ── NASO ── */}
-    <path d="M136 155 Q133 165 136 168 Q140 170 144 168 Q147 165 144 155" fill="rgba(180,90,40,.15)"/>
-    <circle cx="134" cy="167" r="4" fill="rgba(160,80,35,.12)"/>
-    <circle cx="146" cy="167" r="4" fill="rgba(160,80,35,.12)"/>
+    <path d="M79 112 Q96 105 113 112" stroke="rgba(80,30,20,.18)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+    <path d="M127 112 Q144 105 161 112" stroke="rgba(80,30,20,.18)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+    {/* iride sx */}
+    <circle cx="96" cy="118" r="11" fill="#6B3C18"/>
+    <circle cx="96" cy="118" r="6.5" fill="#1C0808"/>
+    <circle cx="91" cy="112" r="4" fill="white"/>
+    <circle cx="103" cy="124" r="1.5" fill="rgba(255,255,255,.45)"/>
+    {/* iride dx */}
+    <circle cx="144" cy="118" r="11" fill="#6B3C18"/>
+    <circle cx="144" cy="118" r="6.5" fill="#1C0808"/>
+    <circle cx="139" cy="112" r="4" fill="white"/>
+    <circle cx="151" cy="124" r="1.5" fill="rgba(255,255,255,.45)"/>
+    {/* ciglia sx */}
+    <path d="M79 110 C82 100 89 102 93 110" stroke="#1C0808" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+    <path d="M86 107 C90 97 96 100 97 108" stroke="#1C0808" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+    <path d="M93 105 C98 96 103 98 103 107" stroke="#1C0808" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+    {/* ciglia dx */}
+    <path d="M161 110 C158 100 151 102 147 110" stroke="#1C0808" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+    <path d="M154 107 C150 97 144 100 143 108" stroke="#1C0808" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+    <path d="M147 105 C142 96 137 98 137 107" stroke="#1C0808" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
 
     {/* ── GUANCE ── */}
-    <ellipse cx="104" cy="162" rx="22" ry="14" fill="url(#cgBlush)" filter="url(#cgBlur)"/>
-    <ellipse cx="176" cy="162" rx="22" ry="14" fill="url(#cgBlush)" filter="url(#cgBlur)"/>
+    <ellipse cx="74" cy="136" rx="24" ry="14" fill="rgba(255,100,120,.18)"/>
+    <ellipse cx="166" cy="136" rx="24" ry="14" fill="rgba(255,100,120,.18)"/>
+
+    {/* ── NASO ── */}
+    <path d="M116 152 Q112 163 116 165 Q120 168 124 165 Q128 163 124 152" fill="rgba(180,80,60,.10)"/>
+    <circle cx="113" cy="163" r="5.5" fill="rgba(180,80,60,.07)"/>
+    <circle cx="127" cy="163" r="5.5" fill="rgba(180,80,60,.07)"/>
 
     {/* ── BOCCA ── */}
-    <path d="M122 182 Q140 194 158 182" stroke="#C0604A" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-    <path d="M122 182 Q140 188 158 182" fill="#E87070" opacity=".7"/>
-    {/* labbra superiori */}
-    <path d="M124 181 Q132 175 140 178 Q148 175 156 181" fill="#D05C5C" opacity=".55"/>
-    {/* denti */}
-    <path d="M128 183 Q140 191 152 183 Q140 188 128 183Z" fill="#fff" opacity=".85"/>
-    {/* gloss */}
-    <ellipse cx="140" cy="184" rx="8" ry="3" fill="rgba(255,255,255,.30)"/>
+    <path d="M97 178 Q120 192 143 178" fill="#D96080"/>
+    <path d="M97 178 Q120 184 143 178" fill="#BE4D6A"/>
+    <path d="M102 177 Q111 170 120 172 Q129 170 138 177" fill="#CD5875" opacity=".55"/>
+    <ellipse cx="120" cy="179" rx="12" ry="3.5" fill="rgba(255,255,255,.30)"/>
 
     {/* ── ORECCHINI ── */}
-    {/* lobo sx */}
-    <circle cx="74" cy="150" r="6" fill="#FBBB88"/>
-    <circle cx="74" cy="150" r="4.5" fill="#F5A06A"/>
-    {/* pendente gold sx */}
-    <ellipse cx="74" cy="160" rx="4" ry="7" fill="#E8C060" stroke="#C89A30" strokeWidth=".8"/>
-    <ellipse cx="74" cy="160" rx="2" ry="4" fill="rgba(255,235,160,.6)"/>
-    {/* lobo dx */}
-    <circle cx="206" cy="150" r="6" fill="#FBBB88"/>
-    <circle cx="206" cy="150" r="4.5" fill="#F5A06A"/>
-    {/* pendente gold dx */}
-    <ellipse cx="206" cy="160" rx="4" ry="7" fill="#E8C060" stroke="#C89A30" strokeWidth=".8"/>
-    <ellipse cx="206" cy="160" rx="2" ry="4" fill="rgba(255,235,160,.6)"/>
+    <circle cx="55" cy="132" r="6.5" fill="#FABD9A"/>
+    <ellipse cx="55" cy="143" rx="4.5" ry="7.5" fill="#E8C050"/>
+    <ellipse cx="55" cy="143" rx="2.5" ry="4.5" fill="rgba(255,245,180,.65)"/>
+    <circle cx="185" cy="132" r="6.5" fill="#FABD9A"/>
+    <ellipse cx="185" cy="143" rx="4.5" ry="7.5" fill="#E8C050"/>
+    <ellipse cx="185" cy="143" rx="2.5" ry="4.5" fill="rgba(255,245,180,.65)"/>
   </svg>
 );
 
-const CharUomo = ({size=280}) => (
-  <svg width={size} height={size*1.2} viewBox="0 0 280 336" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="cuSkin" cx="40%" cy="36%" r="62%">
-        <stop offset="0%" stopColor="#FFD0A0"/>
-        <stop offset="55%" stopColor="#F5A868"/>
-        <stop offset="100%" stopColor="#D88040"/>
-      </radialGradient>
-      <radialGradient id="cuSkinSh" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="rgba(0,0,0,0)"/>
-        <stop offset="100%" stopColor="rgba(0,0,0,.12)"/>
-      </radialGradient>
-      <radialGradient id="cuHair" cx="28%" cy="22%" r="72%">
-        <stop offset="0%" stopColor="#4A2E10"/>
-        <stop offset="45%" stopColor="#2C1A07"/>
-        <stop offset="100%" stopColor="#120800"/>
-      </radialGradient>
-      <radialGradient id="cuHairHL" cx="28%" cy="18%" r="50%">
-        <stop offset="0%" stopColor="rgba(200,160,80,.30)"/>
-        <stop offset="100%" stopColor="rgba(200,160,80,0)"/>
-      </radialGradient>
-      <radialGradient id="cuIris" cx="32%" cy="32%" r="65%">
-        <stop offset="0%" stopColor="#4A7EB5"/>
-        <stop offset="55%" stopColor="#2A5A8C"/>
-        <stop offset="100%" stopColor="#183A5E"/>
-      </radialGradient>
-      <radialGradient id="cuBlush" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stopColor="rgba(90,160,220,.18)"/>
-        <stop offset="100%" stopColor="rgba(90,160,220,0)"/>
-      </radialGradient>
-      <radialGradient id="cuBody" cx="38%" cy="18%" r="72%">
-        <stop offset="0%" stopColor="#6EAEDC"/>
-        <stop offset="100%" stopColor="#3478A8"/>
-      </radialGradient>
-      <filter id="cuBlur"><feGaussianBlur stdDeviation="2.8"/></filter>
-    </defs>
-
-    {/* ── COLLO + CORPO ── */}
-    <ellipse cx="140" cy="296" rx="96" ry="58" fill="url(#cuBody)"/>
-    <ellipse cx="140" cy="242" rx="24" ry="28" fill="url(#cuSkin)"/>
-    {/* maglia / polo colletto */}
-    <path d="M74 278 Q86 248 116 240 Q140 235 164 240 Q194 248 206 278 Q174 264 140 263 Q106 264 74 278Z" fill="white" opacity=".88"/>
-    <path d="M130 240 Q140 250 150 240" stroke="#bbb" strokeWidth="1.5" fill="none"/>
-
+const CharUomo = ({size=260}) => (
+  <svg width={size} height={size*1.25} viewBox="0 0 240 300" xmlns="http://www.w3.org/2000/svg">
+    {/* ── HOODIE CORPO ── */}
+    <path d="M120 218 C74 218 30 237 14 300 L226 300 C210 237 166 218 120 218Z" fill="#7AB2FF"/>
+    <path d="M90 218 Q120 228 150 218 L154 244 Q120 254 86 244Z" fill="#5892EF"/>
+    {/* ── COLLO ── */}
+    <rect x="102" y="188" width="36" height="34" rx="10" fill="#F0B890"/>
     {/* ── CAPELLI RETRO ── */}
-    <ellipse cx="140" cy="112" rx="74" ry="72" fill="url(#cuHair)"/>
-
-    {/* ── VISO ── forma più maschile, leggermente rettangolare ── */}
-    <ellipse cx="140" cy="148" rx="64" ry="70" fill="url(#cuSkin)"/>
-    <ellipse cx="140" cy="148" rx="64" ry="70" fill="url(#cuSkinSh)"/>
-    {/* mascella definita */}
-    <path d="M78 164 Q78 195 102 210 Q140 220 178 210 Q202 195 202 164" fill="url(#cuSkin)"/>
-    <path d="M78 164 Q78 195 102 210 Q140 220 178 210 Q202 195 202 164" fill="url(#cuSkinSh)"/>
-
-    {/* ── CAPELLI SOPRA ── styled / undercut ── */}
-    {/* base */}
-    <ellipse cx="140" cy="88" rx="68" ry="50" fill="url(#cuHair)"/>
-    {/* profilo laterale / fade sx */}
-    <path d="M76 140 C68 120 70 98 78 84 C80 100 78 118 78 140Z" fill="url(#cuSkin)"/>
-    {/* profilo laterale / fade dx */}
-    <path d="M204 140 C212 120 210 98 202 84 C200 100 202 118 202 140Z" fill="url(#cuSkin)"/>
-    {/* volume sopra */}
-    <ellipse cx="140" cy="72" rx="60" ry="40" fill="url(#cuHair)"/>
+    <ellipse cx="120" cy="106" rx="80" ry="82" fill="#1A1008"/>
+    {/* fade laterale (pelle che compare sui lati) */}
+    <ellipse cx="44" cy="138" rx="20" ry="36" fill="#F0B890"/>
+    <ellipse cx="196" cy="138" rx="20" ry="36" fill="#F0B890"/>
+    {/* ── VISO ── */}
+    <ellipse cx="120" cy="122" rx="68" ry="76" fill="#F0B890"/>
+    {/* mascella */}
+    <path d="M60 148 Q60 192 90 205 Q120 213 150 205 Q180 192 180 148" fill="#F0B890"/>
+    <path d="M60 148 Q60 192 90 205 Q120 213 150 205 Q180 192 180 148" fill="rgba(190,100,55,.08)"/>
+    {/* ── CAPELLI SOPRA ── */}
+    <ellipse cx="120" cy="66" rx="74" ry="54" fill="#1A1008"/>
     {/* ciuffo frontale */}
-    <path d="M110 88 C118 68 134 56 140 60 C146 56 162 68 170 88 C158 78 142 76 140 78 C138 76 122 78 110 88Z" fill="url(#cuHair)"/>
-    {/* onda ciuffo */}
-    <path d="M118 82 C126 64 138 60 140 62 C142 60 154 64 162 82 C152 74 140 72 140 72 C140 72 128 74 118 82Z" fill="#1C0A00" opacity=".6"/>
+    <path d="M76 80 C95 58 115 52 120 54 C125 52 145 58 164 80 C150 68 134 64 120 66 C106 64 90 68 76 80Z" fill="#1A1008"/>
     {/* highlight capelli */}
-    <ellipse cx="136" cy="70" rx="34" ry="18" fill="url(#cuHairHL)"/>
+    <ellipse cx="106" cy="62" rx="32" ry="16" fill="rgba(200,160,80,.16)"/>
 
-    {/* ── SOPRACCIGLIA maschili più spesse ── */}
-    <path d="M108 120 Q122 113 136 119" stroke="#2C1A07" strokeWidth="5" fill="none" strokeLinecap="round"/>
-    <path d="M144 119 Q158 113 172 120" stroke="#2C1A07" strokeWidth="5" fill="none" strokeLinecap="round"/>
-    {/* highlight sopracciglio */}
-    <path d="M110 119 Q122 114 135 119" stroke="rgba(255,200,120,.20)" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M145 119 Q158 114 170 119" stroke="rgba(255,200,120,.20)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+    {/* ── SOPRACCIGLIA maschili spesse ── */}
+    <path d="M78 94 Q96 86 112 93" stroke="#180A04" strokeWidth="5.5" fill="none" strokeLinecap="round"/>
+    <path d="M128 93 Q144 86 162 94" stroke="#180A04" strokeWidth="5.5" fill="none" strokeLinecap="round"/>
 
     {/* ── OCCHI ── */}
-    <ellipse cx="120" cy="140" rx="17" ry="13" fill="#fff"/>
-    <ellipse cx="160" cy="140" rx="17" ry="13" fill="#fff"/>
-    {/* iride */}
-    <ellipse cx="120" cy="141" rx="10.5" ry="10.5" fill="url(#cuIris)"/>
-    <circle  cx="120" cy="141" r="5.5" fill="#0F2840"/>
-    <circle  cx="117" cy="136" r="3.2" fill="rgba(255,255,255,.80)"/>
-    <circle  cx="125" cy="144" r="1.2" fill="rgba(255,255,255,.40)"/>
-    <ellipse cx="160" cy="141" rx="10.5" ry="10.5" fill="url(#cuIris)"/>
-    <circle  cx="160" cy="141" r="5.5" fill="#0F2840"/>
-    <circle  cx="157" cy="136" r="3.2" fill="rgba(255,255,255,.80)"/>
-    <circle  cx="165" cy="144" r="1.2" fill="rgba(255,255,255,.40)"/>
-    {/* ombra palpebra superiore */}
-    <path d="M103 133 Q120 127 137 133" stroke="rgba(60,30,10,.22)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-    <path d="M143 133 Q160 127 177 133" stroke="rgba(60,30,10,.22)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+    <ellipse cx="96" cy="113" rx="17" ry="14" fill="white"/>
+    <ellipse cx="144" cy="113" rx="17" ry="14" fill="white"/>
+    {/* ombra palpebra */}
+    <path d="M79 108 Q96 102 113 108" stroke="rgba(60,28,10,.22)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+    <path d="M127 108 Q144 102 161 108" stroke="rgba(60,28,10,.22)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+    {/* iride blu-grigio sx */}
+    <circle cx="96" cy="114" r="11" fill="#4A72B0"/>
+    <circle cx="96" cy="114" r="6.5" fill="#183060"/>
+    <circle cx="91" cy="108" r="4" fill="white"/>
+    <circle cx="103" cy="120" r="1.5" fill="rgba(255,255,255,.40)"/>
+    {/* iride dx */}
+    <circle cx="144" cy="114" r="11" fill="#4A72B0"/>
+    <circle cx="144" cy="114" r="6.5" fill="#183060"/>
+    <circle cx="139" cy="108" r="4" fill="white"/>
+    <circle cx="151" cy="120" r="1.5" fill="rgba(255,255,255,.40)"/>
 
-    {/* ── NASO ── più deciso ── */}
-    <path d="M136 153 Q130 166 134 170 Q140 173 146 170 Q150 166 144 153" fill="rgba(160,80,30,.14)"/>
-    <circle cx="132" cy="169" r="5" fill="rgba(140,70,25,.10)"/>
-    <circle cx="148" cy="169" r="5" fill="rgba(140,70,25,.10)"/>
+    {/* ── GUANCE sottili (maschili) ── */}
+    <ellipse cx="74" cy="133" rx="24" ry="13" fill="rgba(90,140,210,.12)"/>
+    <ellipse cx="166" cy="133" rx="24" ry="13" fill="rgba(90,140,210,.12)"/>
 
-    {/* ── GUANCE leggera ── */}
-    <ellipse cx="100" cy="166" rx="26" ry="16" fill="url(#cuBlush)" filter="url(#cuBlur)"/>
-    <ellipse cx="180" cy="166" rx="26" ry="16" fill="url(#cuBlush)" filter="url(#cuBlur)"/>
+    {/* ── NASO più deciso ── */}
+    <path d="M115 146 Q110 160 114 163 Q120 166 126 163 Q130 160 125 146" fill="rgba(160,75,40,.12)"/>
+    <circle cx="111" cy="161" r="6.5" fill="rgba(160,75,40,.08)"/>
+    <circle cx="129" cy="161" r="6.5" fill="rgba(160,75,40,.08)"/>
 
-    {/* ── BOCCA ── */}
-    <path d="M120 185 Q140 196 160 185" stroke="#B05535" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-    <path d="M120 185 Q140 192 160 185" fill="#C86048" opacity=".6"/>
-    <path d="M126 184 Q140 190 154 184 Q140 188 126 184Z" fill="#fff" opacity=".70"/>
-    {/* gloss sottile */}
-    <ellipse cx="140" cy="186" rx="10" ry="2.5" fill="rgba(255,255,255,.22)"/>
+    {/* ── BOCCA maschile ── */}
+    <path d="M100 174 Q120 184 140 174" stroke="#A05030" strokeWidth="3.2" fill="none" strokeLinecap="round"/>
+    <path d="M100 174 Q120 179 140 174" fill="#B86040" opacity=".55"/>
+    <path d="M106 173 Q113 168 120 170 Q127 168 134 173" fill="#A85038" opacity=".40"/>
 
-    {/* ── BARBA / OMBRA 5gg ── */}
-    <ellipse cx="140" cy="196" rx="38" ry="18" fill="rgba(60,30,10,.13)" filter="url(#cuBlur)"/>
-    <path d="M110 188 Q140 205 170 188 Q160 215 140 218 Q120 215 110 188Z" fill="rgba(50,25,8,.09)"/>
-    {/* puntini barba */}
-    {[
-      [118,193],[124,197],[130,199],[136,201],[140,202],[144,201],[150,199],[156,197],[162,193],
-      [115,188],[121,191],[140,198],[159,191],[165,188]
-    ].map(([x,y],i)=>(
-      <circle key={i} cx={x} cy={y} r="1.2" fill="rgba(45,22,8,.22)"/>
+    {/* ── BARBA 5gg ── */}
+    {[[106,190],[112,193],[118,195],[120,196],[122,195],[128,193],[134,190],[104,185],[136,185],[100,180],[140,180],[97,174],[143,174]].map(([x,y],i)=>(
+      <circle key={i} cx={x} cy={y} r="1.4" fill="rgba(40,20,8,.22)"/>
     ))}
 
     {/* ── ORECCHIE ── */}
-    <ellipse cx="76" cy="152" rx="8" ry="12" fill="url(#cuSkin)"/>
-    <ellipse cx="76" cy="152" rx="5" ry="8" fill="rgba(200,100,50,.18)"/>
-    <ellipse cx="204" cy="152" rx="8" ry="12" fill="url(#cuSkin)"/>
-    <ellipse cx="204" cy="152" rx="5" ry="8" fill="rgba(200,100,50,.18)"/>
+    <ellipse cx="54" cy="126" rx="9.5" ry="13" fill="#F0B890"/>
+    <ellipse cx="54" cy="126" rx="5.5" ry="8" fill="rgba(190,100,55,.14)"/>
+    <ellipse cx="186" cy="126" rx="9.5" ry="13" fill="#F0B890"/>
+    <ellipse cx="186" cy="126" rx="5.5" ry="8" fill="rgba(190,100,55,.14)"/>
   </svg>
 );
 
