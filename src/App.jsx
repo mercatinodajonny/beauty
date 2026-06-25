@@ -920,29 +920,29 @@ function NavPro({s,nav}) {
 /* AUTH */
 function LoginScreen({onAuth}) {
   const [tp,setTp] = useState(null);
+  const PINK = "#F06B9D";
+  const BLUE = "#4A7BF7";
 
   const opts = [
     {
-      id:"cliente",
-      label:"Cliente",
-      sub:"Cerca e prenota professionisti",
+      id:"cliente", label:"Cliente", sub:"Cerca e prenota professionisti", color:PINK,
       icon:(sel)=>(
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={sel?T.brand:"#ADADAD"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={sel?PINK:"#ADADAD"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
         </svg>
       ),
     },
     {
-      id:"pro",
-      label:"Professionista",
-      sub:"Gestisci agenda, clienti e servizi",
+      id:"pro", label:"Professionista", sub:"Gestisci agenda, clienti e servizi", color:BLUE,
       icon:(sel)=>(
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={sel?T.brand:"#ADADAD"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={sel?BLUE:"#ADADAD"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
         </svg>
       ),
     },
   ];
+
+  const activeColor = tp==="cliente" ? PINK : tp==="pro" ? BLUE : null;
 
   return (
     <div style={{
@@ -983,6 +983,7 @@ function LoginScreen({onAuth}) {
         <div style={{display:"flex", flexDirection:"column", gap:10}}>
           {opts.map(opt => {
             const sel = tp === opt.id;
+            const c = opt.color;
             return (
               <button key={opt.id} onClick={()=>setTp(opt.id)}
                 style={{
@@ -990,18 +991,18 @@ function LoginScreen({onAuth}) {
                   borderRadius:18, cursor:"pointer",
                   fontFamily:"inherit", textAlign:"left",
                   display:"flex", alignItems:"center", gap:16,
-                  background:"#FFFFFF",
-                  border:`2px solid ${sel ? T.brand : "transparent"}`,
+                  background: sel ? c : "#FFFFFF",
+                  border:`2px solid ${sel ? c : "transparent"}`,
                   boxShadow: sel
-                    ? `0 0 0 4px ${T.brand}18, 0 2px 12px rgba(0,0,0,.06)`
+                    ? `0 6px 24px ${c}44`
                     : "0 2px 12px rgba(0,0,0,.06)",
-                  transition:"all .22s cubic-bezier(.22,1,.36,1)",
+                  transition:"all .25s cubic-bezier(.22,1,.36,1)",
                   outline:"none",
                 }}>
                 {/* icona */}
                 <div style={{
                   width:44, height:44, borderRadius:12,
-                  background: sel ? `${T.brand}14` : "#F5F5F7",
+                  background: sel ? "rgba(255,255,255,.22)" : "#F5F5F7",
                   display:"flex", alignItems:"center", justifyContent:"center",
                   flexShrink:0, transition:"background .2s",
                 }}>
@@ -1011,17 +1012,19 @@ function LoginScreen({onAuth}) {
                 <div style={{flex:1}}>
                   <p style={{
                     fontSize:16, fontWeight:700,
-                    color: sel ? T.brand : T.ink,
+                    color: sel ? "#fff" : T.ink,
                     margin:"0 0 3px", transition:"color .15s",
                   }}>{opt.label}</p>
                   <p style={{
-                    fontSize:13, color:T.inkSoft,
+                    fontSize:13,
+                    color: sel ? "rgba(255,255,255,.82)" : T.inkSoft,
                     margin:0, fontWeight:400, lineHeight:1.4,
+                    transition:"color .15s",
                   }}>{opt.sub}</p>
                 </div>
                 {/* freccia */}
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                  stroke={sel ? T.brand : "#CECECE"} strokeWidth="2.2" strokeLinecap="round">
+                  stroke={sel ? "#fff" : "#CECECE"} strokeWidth="2.2" strokeLinecap="round">
                   <path d="M9 18l6-6-6-6"/>
                 </svg>
               </button>
@@ -1037,12 +1040,14 @@ function LoginScreen({onAuth}) {
             width:"100%", padding:"17px 0",
             borderRadius:999, border:"none",
             marginTop:20,
-            background: tp ? T.grad : "#E8E8E8",
+            background: activeColor
+              ? `linear-gradient(135deg, ${activeColor}, ${activeColor}CC)`
+              : "#E8E8E8",
             color: tp ? "#fff" : "#ADADAD",
             fontSize:16, fontWeight:700,
             cursor: tp ? "pointer" : "default",
             fontFamily:"inherit",
-            boxShadow: tp ? `0 6px 24px ${T.brand}38` : "none",
+            boxShadow: activeColor ? `0 6px 24px ${activeColor}50` : "none",
             transition:"all .25s cubic-bezier(.22,1,.36,1)",
             letterSpacing:"-.01em",
           }}>
