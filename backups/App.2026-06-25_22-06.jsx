@@ -1184,111 +1184,85 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user}) {
     </button>
   );
 
-  // Emoji grandi per le categorie — stile illustrazione
-  const CAT_ILLUS = {
-    capelli_barba: {big:"✂️", sub:"💈", grad:["#FFF4E6","#FFE0B2"]},
-    unghie:        {big:"💅", sub:"✨", grad:["#FFF0F5","#FFD6E8"]},
-    estetica:      {big:"🧖", sub:"💆", grad:["#F3F0FF","#E8DFFF"]},
-    benessere:     {big:"🌿", sub:"🪨", grad:["#F0FFF4","#C8F5DA"]},
-    tattoo:        {big:"🖋️", sub:"🎨", grad:["#EFF6FF","#DBEAFE"]},
-    altro:         {big:"⭐", sub:"💎", grad:["#FFFBEB","#FDE68A"]},
-  };
-
   return (
-    <div style={{paddingBottom:100,background:"#F8F8FA",minHeight:"100dvh",fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
+    <div style={{paddingBottom:100,background:"#FFFFFF",minHeight:"100dvh",fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
 
-      {/* ── HEADER con sfondo bianco + micro-separatore ── */}
-      <div style={{background:"#FFFFFF",paddingTop:56,paddingBottom:0,boxShadow:"0 1px 0 rgba(0,0,0,.04)"}}>
-        <div style={{padding:"12px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between",position:"relative"}}>
+      {/* ── HEADER ── */}
+      <div style={{padding:"60px 20px 0",background:"#FFFFFF"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
           {/* Città */}
-          <button onClick={()=>setShowCity(true)} style={{display:"inline-flex",alignItems:"center",gap:5,background:"none",border:"none",cursor:"pointer",padding:0,fontFamily:"inherit",zIndex:1}}>
+          <button onClick={()=>setShowCity(true)} style={{display:"inline-flex",alignItems:"center",gap:5,background:"none",border:"none",cursor:"pointer",padding:0,fontFamily:"inherit"}}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <span style={{fontSize:13,fontWeight:700,color:"#0D0D0E"}}>{city}</span>
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
           </button>
-          {/* Logo centrato assoluto */}
-          <img src="/beauty/logo.png" alt="beauty" style={{height:52,width:"auto",objectFit:"contain",position:"absolute",left:"50%",transform:"translateX(-50%)",zIndex:0}}/>
+          {/* Logo centrato */}
+          <img src="/beauty/logo.png" alt="beauty" style={{height:56,width:"auto",objectFit:"contain",position:"absolute",left:"50%",transform:"translateX(-50%)"}}/>
           {/* Campanella + Avatar */}
-          <div style={{display:"flex",gap:10,alignItems:"center",zIndex:1}}>
+          <div style={{display:"flex",gap:10,alignItems:"center"}}>
             <div style={{position:"relative"}}>
-              <button style={{width:40,height:40,borderRadius:"50%",border:"1.5px solid #EFEFEF",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#FAFAFA",padding:0,boxShadow:"0 2px 8px rgba(0,0,0,.06)"}}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0D0D0E" strokeWidth="1.8" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+              <button style={{width:38,height:38,borderRadius:"50%",border:"1.5px solid #F0F0F0",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#FAFAFA",padding:0}}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0D0D0E" strokeWidth="1.8" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
               </button>
-              <span style={{position:"absolute",top:5,right:5,width:8,height:8,borderRadius:"50%",background:T.brand,border:"2px solid #fff"}}/>
+              <span style={{position:"absolute",top:4,right:4,width:7,height:7,borderRadius:"50%",background:T.brand,border:"1.5px solid #fff"}}/>
             </div>
             <AvatarBtn/>
           </div>
         </div>
 
-        {/* ── SEARCH BAR floating ── */}
-        <div style={{padding:"16px 20px 20px"}}>
-          <div style={{display:"flex",alignItems:"center",gap:12,background:"#FFFFFF",border:"1.5px solid #EFEFEF",borderRadius:999,padding:"15px 20px",boxShadow:"0 4px 20px rgba(0,0,0,.08)"}}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
-              placeholder="Cerca servizi o professionisti…"
-              style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:"#0D0D0E",fontFamily:"inherit",fontWeight:500}}/>
-            {q
-              ? <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"#EFEFEF",border:"none",cursor:"pointer",width:24,height:24,borderRadius:"50%",color:"#666",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,padding:0}}>×</button>
-              : <div style={{width:32,height:32,borderRadius:10,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/></svg>
-                </div>
-            }
-          </div>
+        {/* Search bar */}
+        <div style={{display:"flex",alignItems:"center",gap:12,background:"#F5F5F5",border:"none",borderRadius:999,padding:"14px 18px",marginBottom:4}}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
+            placeholder="Cerca servizi o professionisti…"
+            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:"#0D0D0E",fontFamily:"inherit",fontWeight:500}}/>
+          {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"#E0E0E0",border:"none",cursor:"pointer",width:22,height:22,borderRadius:"50%",color:"#666",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,padding:0}}>×</button>}
         </div>
       </div>
 
-      {/* ── BANNER appuntamento premium ── */}
+      {/* ── BANNER appuntamento — bianco con accent ── */}
       {!(searching && q.length >= 2) && !selCat && banner && (
         <div style={{padding:"20px 20px 0"}}>
-          <div onClick={()=>nav("cl_appts")} style={{borderRadius:24,cursor:"pointer",background:"#FFFFFF",padding:"0",overflow:"hidden",boxShadow:`0 8px 32px ${T.brand}22`,border:`1.5px solid ${T.brand}22`,position:"relative"}}>
-            {/* Striscia accent in alto */}
-            <div style={{height:4,background:`linear-gradient(90deg,${T.brand},${T.brand}88)`,borderRadius:"24px 24px 0 0"}}/>
-            {/* Leggero gradiente di sfondo */}
-            <div style={{position:"absolute",top:4,left:0,right:0,bottom:0,background:`linear-gradient(135deg,${T.brand}06 0%,${T.brand}00 60%)`,pointerEvents:"none"}}/>
-            <div style={{padding:"16px 18px 18px",display:"flex",alignItems:"center",gap:14,position:"relative"}}>
-              {/* Icona calendario premium */}
-              <div style={{width:52,height:52,borderRadius:16,background:`linear-gradient(135deg,${T.brand},${T.brand}CC)`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 4px 14px ${T.brand}44`}}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="4"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="12" cy="16" r="1.8" fill="#fff" stroke="none"/></svg>
-              </div>
-              <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:10,fontWeight:700,color:T.brand,margin:"0 0 4px",textTransform:"uppercase",letterSpacing:1.4}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
-                <p style={{fontSize:16,fontWeight:800,color:"#0D0D0E",margin:"0 0 3px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",letterSpacing:"-.02em"}}>{banner.service}</p>
-                <p style={{fontSize:12,color:"#ADADAD",margin:0,fontWeight:500}}>{banner.pro} · {nextAppt?`${banner.date} ${banner.time}`:banner.date}</p>
-              </div>
-              <button onClick={e=>{e.stopPropagation();nav("cl_appts");}} style={{flexShrink:0,padding:"10px 16px",borderRadius:14,border:"none",background:T.brand,color:"#fff",fontSize:12,fontWeight:800,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",boxShadow:`0 3px 12px ${T.brand}44`,letterSpacing:.2}}>Dettagli</button>
+          <div onClick={()=>nav("cl_appts")} style={{borderRadius:20,cursor:"pointer",background:"#FFFFFF",padding:"18px 18px",display:"flex",alignItems:"center",gap:14,boxShadow:"0 4px 24px rgba(0,0,0,.07)",border:`1.5px solid ${T.brandBg}`}}>
+            <div style={{width:48,height:48,borderRadius:14,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="12" cy="16" r="1.5" fill={T.brand} stroke="none"/></svg>
             </div>
+            <div style={{flex:1,minWidth:0}}>
+              <p style={{fontSize:10,fontWeight:700,color:T.brand,margin:"0 0 3px",textTransform:"uppercase",letterSpacing:1.2}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
+              <p style={{fontSize:15,fontWeight:700,color:"#0D0D0E",margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service}</p>
+              <p style={{fontSize:12,color:"#ADADAD",margin:0}}>{banner.pro} · {nextAppt?`${banner.date} ${banner.time}`:banner.date}</p>
+            </div>
+            <button onClick={e=>{e.stopPropagation();nav("cl_appts");}} style={{flexShrink:0,padding:"9px 14px",borderRadius:12,border:"none",background:T.brandBg,color:T.brand,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>Dettagli</button>
           </div>
         </div>
       )}
 
       {/* ── RISULTATI RICERCA ── */}
       {searching && q.length >= 2 && (
-        <div style={{padding:"20px 20px 0",background:"#F8F8FA"}}>
+        <div style={{padding:"20px 20px 0"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
             <p style={{fontSize:14,color:"#ADADAD",margin:0}}><strong style={{color:"#0D0D0E"}}>{searchResults.length}</strong> risultati per "{q}"</p>
             <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#ADADAD",fontFamily:"inherit",fontWeight:600}}>Chiudi</button>
           </div>
           {searchResults.length === 0 && (
             <div style={{textAlign:"center",padding:"60px 0"}}>
-              <div style={{fontSize:64,marginBottom:16}}>{gender==="donna"?"💅":"✂️"}</div>
-              <p style={{fontSize:16,fontWeight:700,color:"#0D0D0E",margin:"0 0 6px"}}>Nessun risultato</p>
-              <p style={{fontSize:14,color:"#ADADAD",fontWeight:400,margin:0}}>Prova con un termine diverso</p>
+              <p style={{fontSize:15,color:"#ADADAD",fontWeight:500,margin:0}}>Nessun risultato per "{q}"</p>
             </div>
           )}
           <div style={{display:"flex",flexDirection:"column",gap:12}}>
             {searchResults.map((pro) => {
               const photoUrl = proImg(pro);
               return (
-                <div key={pro.id} onClick={()=>{nav("cl_pro",pro);setQ("");setSearching(false);}} style={{display:"flex",gap:14,cursor:"pointer",alignItems:"center",padding:"14px 16px",borderRadius:18,background:"#FFFFFF",boxShadow:"0 2px 12px rgba(0,0,0,.06)"}}>
+                <div key={pro.id} onClick={()=>{nav("cl_pro",pro);setQ("");setSearching(false);}} style={{display:"flex",gap:14,cursor:"pointer",alignItems:"center",padding:"12px 0",borderBottom:"1px solid #F5F5F5"}}>
                   <div style={{width:56,height:56,borderRadius:16,background:"#F5F5F5",overflow:"hidden",flexShrink:0}}>
                     {photoUrl ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/> : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>}
                   </div>
                   <div style={{flex:1,minWidth:0}}>
                     <p style={{fontSize:15,fontWeight:700,color:"#0D0D0E",margin:"0 0 2px"}}>{pro.name}</p>
                     <p style={{fontSize:12,color:"#ADADAD",margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
-                    <span style={{fontSize:12,color:"#F59E0B",fontWeight:700}}>★ {pro.rating}</span>
+                    <span style={{fontSize:12,color:"#0D0D0E",fontWeight:700}}>★ {pro.rating}</span>
                   </div>
-                  <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"10px 16px",borderRadius:999,border:"none",background:T.brand,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0,boxShadow:`0 3px 10px ${T.brand}44`}}>Prenota</button>
+                  <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 16px",borderRadius:999,border:"none",background:T.brand,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
                 </div>
               );
             })}
@@ -1301,83 +1275,79 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user}) {
         <div>
           {!selCat && (
             <>
-              {/* ✨ CATEGORIE — card con illustrazione emoji grande */}
-              <div style={{marginTop:24}}>
-                <div style={{padding:"0 20px",marginBottom:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <p style={{fontSize:18,fontWeight:900,color:"#0D0D0E",margin:0,letterSpacing:"-.04em"}}>Cosa cerchi?</p>
-                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Tutto →</button>
+              {/* ✨ CONSIGLIATI PER TE — categorie premium */}
+              <div style={{marginTop:28}}>
+                <div style={{padding:"0 20px",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <p style={{fontSize:17,fontWeight:800,color:"#0D0D0E",margin:0,letterSpacing:"-.03em"}}>✨ Consigliati per te</p>
+                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti</button>
                 </div>
                 <div style={{display:"flex",gap:10,overflowX:"auto",padding:"4px 20px 16px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
-                  {orderedCats.map(cat => {
-                    const illus = CAT_ILLUS[cat.id] || CAT_ILLUS.altro;
-                    return (
-                      <button key={cat.id} onClick={()=>openCategory(cat.id)}
-                        style={{flexShrink:0,width:100,height:118,borderRadius:24,overflow:"hidden",position:"relative",border:"none",padding:0,cursor:"pointer",fontFamily:"inherit",background:`linear-gradient(145deg,${illus.grad[0]},${illus.grad[1]})`,boxShadow:`0 4px 16px ${cat.shadowColor||"rgba(0,0,0,.10)"}`,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:6}}>
-                        {/* Glow dietro emoji */}
-                        <div style={{position:"absolute",top:"30%",left:"50%",transform:"translate(-50%,-50%)",width:60,height:60,borderRadius:"50%",background:cat.color+"22",filter:"blur(12px)"}}/>
-                        {/* Emoji grande */}
-                        <span style={{fontSize:40,lineHeight:1,filter:"drop-shadow(0 4px 8px rgba(0,0,0,.15))",position:"relative",zIndex:1}}>{illus.big}</span>
-                        {/* Label */}
-                        <p style={{fontSize:11,fontWeight:800,color:cat.color||"#333",margin:0,textAlign:"center",lineHeight:1.2,whiteSpace:"pre-line",letterSpacing:"-.01em",position:"relative",zIndex:1}}>{cat.label}</p>
-                      </button>
-                    );
-                  })}
+                  {orderedCats.map(cat => (
+                    <button key={cat.id} onClick={()=>openCategory(cat.id)}
+                      style={{flexShrink:0,width:110,height:130,borderRadius:22,overflow:"hidden",position:"relative",border:"none",padding:0,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 6px 20px ${cat.shadowColor||"rgba(0,0,0,.12)"}`,transition:"transform .18s ease"}}>
+                      {/* Foto di sfondo */}
+                      {cat.img
+                        ? <img src={cat.img+"&w=220&h=260&fit=crop&auto=format"} alt={cat.label} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+                        : <div style={{position:"absolute",inset:0,background:cat.bg}}/>}
+                      {/* Overlay scuro in basso */}
+                      <div style={{position:"absolute",inset:0,background:"linear-gradient(160deg,rgba(0,0,0,.04) 0%,rgba(0,0,0,.55) 100%)"}}/>
+                      {/* Emoji in alto */}
+                      <div style={{position:"absolute",top:12,left:12,width:36,height:36,borderRadius:12,background:"rgba(255,255,255,.22)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>
+                        {cat.emoji}
+                      </div>
+                      {/* Label in basso */}
+                      <div style={{position:"absolute",bottom:12,left:10,right:10,textAlign:"left"}}>
+                        <p style={{fontSize:12,fontWeight:800,color:"#FFFFFF",margin:0,lineHeight:1.25,whiteSpace:"pre-line",textShadow:"0 1px 4px rgba(0,0,0,.4)",letterSpacing:"-.01em"}}>{cat.label}</p>
+                        {cat.count && <p style={{fontSize:9,fontWeight:600,color:"rgba(255,255,255,.75)",margin:"3px 0 0",letterSpacing:.3}}>{cat.count} professionisti</p>}
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              {/* 📍 VICINO A TE — card professionisti premium */}
-              <div style={{marginTop:24}}>
-                <div style={{padding:"0 20px",marginBottom:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <p style={{fontSize:18,fontWeight:900,color:"#0D0D0E",margin:0,letterSpacing:"-.04em"}}>Vicino a te 📍</p>
-                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti →</button>
+              {/* 📍 VICINO A TE — scroll orizzontale */}
+              <div style={{marginTop:28}}>
+                <div style={{padding:"0 20px",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <p style={{fontSize:17,fontWeight:800,color:"#0D0D0E",margin:0,letterSpacing:"-.03em"}}>Vicino a te</p>
+                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti</button>
                 </div>
-                <div style={{display:"flex",gap:14,overflowX:"auto",padding:"4px 20px 16px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+                <div style={{display:"flex",gap:14,overflowX:"auto",padding:"4px 20px 12px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {[...prosWithDist].sort((a,b)=>a.distKm-b.distKm).slice(0,8).map((pro) => {
                     const photoUrl = proImg(pro);
                     const isFav = favorites?.has(pro.id);
                     const distLabel = pro.distKm < 1 ? `${Math.round(pro.distKm*1000)} m` : `${pro.distKm.toFixed(1)} km`;
                     const isOpen = pro.id % 3 !== 0;
-                    const services = ["Taglio","Colore","Piega","Manicure","Trattamento"].slice(0,3);
                     return (
-                      <div key={pro.id} style={{flexShrink:0,width:226,borderRadius:24,overflow:"hidden",background:"#FFFFFF",boxShadow:"0 6px 28px rgba(0,0,0,.09)",cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
-                        {/* Foto grande */}
-                        <div style={{height:158,background:"#F0F0F0",position:"relative",overflow:"hidden"}}>
+                      <div key={pro.id} style={{flexShrink:0,width:210,borderRadius:22,overflow:"hidden",background:"#FFFFFF",boxShadow:"0 4px 20px rgba(0,0,0,.08)",border:"1.5px solid #F5F5F5",cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
+                        {/* Foto */}
+                        <div style={{height:145,background:"#F5F5F5",position:"relative",overflow:"hidden"}}>
                           {photoUrl
                             ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                            : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{pro.emoji}</div>}
-                          {/* Overlay sfumato in basso */}
-                          <div style={{position:"absolute",bottom:0,left:0,right:0,height:60,background:"linear-gradient(transparent,rgba(0,0,0,.35))"}}/>
-                          {/* Badge aperto in alto-sinistra */}
-                          <div style={{position:"absolute",top:10,left:10,display:"flex",alignItems:"center",gap:4,background:"rgba(255,255,255,.96)",borderRadius:999,padding:"4px 10px",backdropFilter:"blur(4px)"}}>
+                            : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:42}}>{pro.emoji}</div>}
+                          {/* badge aperto */}
+                          <div style={{position:"absolute",top:10,left:10,display:"flex",alignItems:"center",gap:4,background:"rgba(255,255,255,.95)",borderRadius:999,padding:"4px 9px"}}>
                             <span style={{width:6,height:6,borderRadius:"50%",background:isOpen?"#22C483":"#F59E0B",display:"inline-block"}}/>
                             <span style={{fontSize:10,fontWeight:700,color:"#0D0D0E"}}>{isOpen?"Aperto":"Chiuso"}</span>
                           </div>
-                          {/* Cuore */}
-                          <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{position:"absolute",top:10,right:10,width:34,height:34,borderRadius:"50%",background:"rgba(255,255,255,.92)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}}>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill={isFav?T.brand:"none"} stroke={isFav?T.brand:"#ADADAD"} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84 1-1a5.5 5.5 0 000-7.78z"/></svg>
+                          {/* cuore */}
+                          <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{position:"absolute",top:10,right:10,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.92)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill={isFav?T.brand:"none"} stroke={isFav?T.brand:"#ADADAD"} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84 1-1a5.5 5.5 0 000-7.78z"/></svg>
                           </button>
-                          {/* Distanza in basso-destra */}
-                          <span style={{position:"absolute",bottom:8,right:10,fontSize:10,fontWeight:700,color:"#fff",textShadow:"0 1px 4px rgba(0,0,0,.5)"}}>{distLabel}</span>
-                          {/* Badge verificato in basso-sinistra */}
-                          {pro.verified && <div style={{position:"absolute",bottom:8,left:10,display:"flex",alignItems:"center",gap:3,background:T.brand,borderRadius:999,padding:"3px 8px"}}>
-                            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round"><path d="M20 6L9 17l-5-5"/></svg>
-                            <span style={{fontSize:9,fontWeight:700,color:"#fff"}}>Verificato</span>
+                          {/* verificato */}
+                          {pro.verified && <div style={{position:"absolute",bottom:10,left:10,display:"flex",alignItems:"center",gap:4,background:T.brand,borderRadius:999,padding:"3px 9px"}}>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+                            <span style={{fontSize:9,fontWeight:700,color:"#fff",letterSpacing:.3}}>Verificato</span>
                           </div>}
                         </div>
                         {/* Info */}
-                        <div style={{padding:"14px 16px 16px"}}>
-                          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:4}}>
-                            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:0,letterSpacing:"-.02em",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
-                            <span style={{fontSize:13,fontWeight:700,color:"#F59E0B",flexShrink:0,marginLeft:8}}>★ {pro.rating}</span>
+                        <div style={{padding:"12px 14px"}}>
+                          <p style={{fontSize:14,fontWeight:700,color:"#0D0D0E",margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
+                          <p style={{fontSize:11,color:"#ADADAD",margin:"0 0 8px"}}>{pro.cat} · {distLabel}</p>
+                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
+                            <span style={{fontSize:12,fontWeight:700,color:"#0D0D0E"}}>★ {pro.rating} <span style={{fontWeight:400,color:"#ADADAD"}}>({pro.reviews})</span></span>
+                            <span style={{fontSize:11,color:T.brand,fontWeight:600}}>Disponibile</span>
                           </div>
-                          <p style={{fontSize:11,color:"#ADADAD",margin:"0 0 10px",fontWeight:500}}>{pro.cat} · {pro.reviews} recensioni</p>
-                          {/* Servizi pill */}
-                          <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:12}}>
-                            {services.map(s=>(
-                              <span key={s} style={{fontSize:10,fontWeight:600,color:T.brand,background:T.brandBg,borderRadius:999,padding:"3px 9px"}}>{s}</span>
-                            ))}
-                          </div>
-                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{width:"100%",padding:"12px 0",borderRadius:16,border:"none",background:T.brand,color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 4px 14px ${T.brand}44`,letterSpacing:.2}}>Prenota ora</button>
+                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{width:"100%",padding:"10px 0",borderRadius:12,border:"none",background:T.brand,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 2px 10px ${T.brand}30`}}>Prenota</button>
                         </div>
                       </div>
                     );
@@ -1385,25 +1355,21 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user}) {
                 </div>
               </div>
 
-              {/* 👥 I PIÙ RICHIESTI — avatar circolari con nome */}
-              <div style={{marginTop:24,paddingBottom:12}}>
-                <div style={{padding:"0 20px",marginBottom:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <p style={{fontSize:18,fontWeight:900,color:"#0D0D0E",margin:0,letterSpacing:"-.04em"}}>I più richiesti 🏆</p>
-                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti →</button>
+              {/* 👥 I PIÙ RICHIESTI */}
+              <div style={{marginTop:28,paddingBottom:12}}>
+                <div style={{padding:"0 20px",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <p style={{fontSize:17,fontWeight:800,color:"#0D0D0E",margin:0,letterSpacing:"-.03em"}}>I più richiesti</p>
+                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti</button>
                 </div>
-                <div style={{display:"flex",gap:14,overflowX:"auto",padding:"4px 20px 12px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+                <div style={{display:"flex",gap:16,overflowX:"auto",padding:"4px 20px 8px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {[...prosWithDist].sort((a,b)=>b.reviews-a.reviews).slice(0,8).map(pro=>{
                     const photoUrl = proImg(pro);
                     return (
-                      <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,cursor:"pointer",width:76}}>
-                        <div style={{position:"relative"}}>
-                          <div style={{width:64,height:64,borderRadius:"50%",overflow:"hidden",background:"#F5F5F5",border:`2.5px solid ${T.brand}`,boxShadow:`0 4px 14px ${T.brand}33`}}>
-                            {photoUrl ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/> : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>}
-                          </div>
-                          <div style={{position:"absolute",bottom:-1,right:-1,width:20,height:20,borderRadius:"50%",background:"#FFFFFF",border:`2px solid ${T.brand}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11}}>⭐</div>
+                      <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,cursor:"pointer",width:72}}>
+                        <div style={{width:60,height:60,borderRadius:"50%",overflow:"hidden",background:"#F5F5F5",border:`2px solid ${T.brandBg}`}}>
+                          {photoUrl ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/> : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>{pro.emoji}</div>}
                         </div>
-                        <p style={{fontSize:10,fontWeight:700,color:"#0D0D0E",margin:0,textAlign:"center",lineHeight:1.3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",width:"100%"}}>{pro.name.split(" ")[0]}</p>
-                        <p style={{fontSize:9,fontWeight:600,color:T.brand,margin:"-4px 0 0",textAlign:"center"}}>★ {pro.rating}</p>
+                        <p style={{fontSize:10,fontWeight:600,color:"#0D0D0E",margin:0,textAlign:"center",lineHeight:1.3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",width:"100%"}}>{pro.name.split(" ")[0]}</p>
                       </div>
                     );
                   })}
