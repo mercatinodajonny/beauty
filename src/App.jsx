@@ -1058,7 +1058,7 @@ function LoginScreen({onAuth}) {
 }
 
 /* HOME CLIENTE */
-function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
+function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user}) {
   const [city,setCity] = useState("Milano");
   const [userCoords,setUserCoords] = useState(DEFAULT_COORDS);
   const futuri = myAppts.filter(a=>a.status==="confermato"||a.status==="in attesa");
@@ -1164,62 +1164,75 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
 
   // ─── RENDER ───
   const hasDm = conversations.some(c=>c.messages.some(m=>m.from==="pro"));
-  const PINK = "#F06B9D";
-  const BLUE = "#4A7BF7";
+  const gender = user?.gender; // "donna"|"uomo"|"nonspec"|null
+
+  // Categorie ordinate per genere
+  const CAT_ORDER_DONNA = ["unghie","estetica","capelli_barba","benessere","tattoo","altro"];
+  const CAT_ORDER_UOMO  = ["capelli_barba","tattoo","benessere","unghie","estetica","altro"];
+  const catOrder = gender==="donna" ? CAT_ORDER_DONNA : gender==="uomo" ? CAT_ORDER_UOMO : MACRO_CATS.map(c=>c.id);
+  const orderedCats = catOrder.map(id=>MACRO_CATS.find(c=>c.id===id)).filter(Boolean);
+
+  // Avatar header basato sul genere
+  const AvatarBtn = () => (
+    <button onClick={()=>nav("cl_profilo")} style={{width:40,height:40,borderRadius:"50%",overflow:"hidden",border:`2px solid ${T.brand}`,padding:0,cursor:"pointer",background:T.brandBg,flexShrink:0}}>
+      {gender==="donna"
+        ? <img src="/beauty/donna-final.png" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center"}} alt="profilo"/>
+        : gender==="uomo"
+        ? <img src="/beauty/uomo-new.png" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center"}} alt="profilo"/>
+        : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2" strokeLinecap="round" style={{margin:"auto",display:"block",marginTop:8}}><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      }
+    </button>
+  );
 
   return (
-    <div style={{paddingBottom:100,background:T.bg,minHeight:"100dvh",fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
+    <div style={{paddingBottom:100,background:"#FFFFFF",minHeight:"100dvh",fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
 
       {/* ── HEADER ── */}
-      <div style={{padding:"56px 20px 0",background:T.bg}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
-          <div>
-            <button onClick={()=>setShowCity(true)} style={{display:"inline-flex",alignItems:"center",gap:5,background:"none",border:"none",cursor:"pointer",padding:0,fontFamily:"inherit",marginBottom:4}}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span style={{fontSize:13,color:T.inkMid,fontWeight:600}}>{city}</span>
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-            <p style={{fontSize:24,fontWeight:800,color:T.ink,margin:0,letterSpacing:"-.04em",lineHeight:1.15}}>Ciao, cosa cerchi?</p>
-          </div>
-          <div style={{display:"flex",gap:8}}>
+      <div style={{padding:"60px 20px 0",background:"#FFFFFF"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
+          {/* Città */}
+          <button onClick={()=>setShowCity(true)} style={{display:"inline-flex",alignItems:"center",gap:5,background:"none",border:"none",cursor:"pointer",padding:0,fontFamily:"inherit"}}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span style={{fontSize:13,fontWeight:700,color:"#0D0D0E"}}>{city}</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          {/* Logo centrato */}
+          <img src="/beauty/logo.png" alt="beauty" style={{height:28,width:"auto",objectFit:"contain",position:"absolute",left:"50%",transform:"translateX(-50%)"}}/>
+          {/* Campanella + Avatar */}
+          <div style={{display:"flex",gap:10,alignItems:"center"}}>
             <div style={{position:"relative"}}>
-              <button onClick={()=>nav("cl_chats")} style={{width:42,height:42,borderRadius:14,border:`1.5px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.bgCard,padding:0}}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="1.8" strokeLinecap="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+              <button style={{width:38,height:38,borderRadius:"50%",border:"1.5px solid #F0F0F0",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#FAFAFA",padding:0}}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0D0D0E" strokeWidth="1.8" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
               </button>
-              {hasDm && <span style={{position:"absolute",top:6,right:6,width:7,height:7,borderRadius:"50%",background:T.brand,border:`1.5px solid ${T.bg}`}}/>}
+              <span style={{position:"absolute",top:4,right:4,width:7,height:7,borderRadius:"50%",background:T.brand,border:"1.5px solid #fff"}}/>
             </div>
-            <div style={{position:"relative"}}>
-              <button style={{width:42,height:42,borderRadius:14,border:`1.5px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.bgCard,padding:0}}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="1.8" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-              </button>
-              <span style={{position:"absolute",top:6,right:6,width:7,height:7,borderRadius:"50%",background:T.brand,border:`1.5px solid ${T.bg}`}}/>
-            </div>
+            <AvatarBtn/>
           </div>
         </div>
 
-        {/* Search bar — grande, premium */}
-        <div style={{display:"flex",alignItems:"center",gap:12,background:T.bgCard,border:`1.5px solid ${T.line}`,borderRadius:999,padding:"14px 20px",boxShadow:"0 4px 24px rgba(13,13,14,.07)",marginBottom:6}}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        {/* Search bar */}
+        <div style={{display:"flex",alignItems:"center",gap:12,background:"#F5F5F5",border:"none",borderRadius:999,padding:"14px 18px",marginBottom:4}}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
-            placeholder="Cerca servizio o professionista…"
-            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:T.ink,fontFamily:"inherit",fontWeight:500}}/>
-          {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:T.surface,border:"none",cursor:"pointer",width:24,height:24,borderRadius:"50%",color:T.inkMid,fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700}}>×</button>}
+            placeholder="Cerca servizi o professionisti…"
+            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:"#0D0D0E",fontFamily:"inherit",fontWeight:500}}/>
+          {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"#E0E0E0",border:"none",cursor:"pointer",width:22,height:22,borderRadius:"50%",color:"#666",fontSize:13,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,padding:0}}>×</button>}
         </div>
       </div>
 
-      {/* ── BANNER appuntamento ── */}
+      {/* ── BANNER appuntamento — bianco con accent ── */}
       {!(searching && q.length >= 2) && !selCat && banner && (
         <div style={{padding:"20px 20px 0"}}>
-          <div onClick={()=>nav("cl_appts")} style={{borderRadius:20,cursor:"pointer",overflow:"hidden",background:T.bgDark,padding:"18px 20px",display:"flex",alignItems:"center",gap:14}}>
-            <div style={{width:46,height:46,borderRadius:14,background:"rgba(255,255,255,.08)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="12" cy="16" r="1.5" fill="rgba(255,255,255,.7)" stroke="none"/></svg>
+          <div onClick={()=>nav("cl_appts")} style={{borderRadius:20,cursor:"pointer",background:"#FFFFFF",padding:"18px 18px",display:"flex",alignItems:"center",gap:14,boxShadow:"0 4px 24px rgba(0,0,0,.07)",border:`1.5px solid ${T.brandBg}`}}>
+            <div style={{width:48,height:48,borderRadius:14,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="12" cy="16" r="1.5" fill={T.brand} stroke="none"/></svg>
             </div>
             <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.35)",margin:"0 0 3px",textTransform:"uppercase",letterSpacing:1.2}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
-              <p style={{fontSize:15,fontWeight:700,color:"#fff",margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service}</p>
-              <p style={{fontSize:12,color:"rgba(255,255,255,.45)",margin:0}}>{banner.pro} · {nextAppt?`${banner.date} ${banner.time}`:banner.date}</p>
+              <p style={{fontSize:10,fontWeight:700,color:T.brand,margin:"0 0 3px",textTransform:"uppercase",letterSpacing:1.2}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
+              <p style={{fontSize:15,fontWeight:700,color:"#0D0D0E",margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service}</p>
+              <p style={{fontSize:12,color:"#ADADAD",margin:0}}>{banner.pro} · {nextAppt?`${banner.date} ${banner.time}`:banner.date}</p>
             </div>
-            <div style={{width:4,height:40,borderRadius:99,background:T.grad,flexShrink:0}}/>
+            <button onClick={e=>{e.stopPropagation();nav("cl_appts");}} style={{flexShrink:0,padding:"9px 14px",borderRadius:12,border:"none",background:T.brandBg,color:T.brand,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>Dettagli</button>
           </div>
         </div>
       )}
@@ -1228,31 +1241,28 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
       {searching && q.length >= 2 && (
         <div style={{padding:"20px 20px 0"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-            <p style={{fontSize:14,color:T.inkMid,margin:0}}><strong style={{color:T.ink}}>{searchResults.length}</strong> risultati per "{q}"</p>
-            <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.inkMid,fontFamily:"inherit",fontWeight:600}}>Chiudi</button>
+            <p style={{fontSize:14,color:"#ADADAD",margin:0}}><strong style={{color:"#0D0D0E"}}>{searchResults.length}</strong> risultati per "{q}"</p>
+            <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#ADADAD",fontFamily:"inherit",fontWeight:600}}>Chiudi</button>
           </div>
           {searchResults.length === 0 && (
             <div style={{textAlign:"center",padding:"60px 0"}}>
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke={T.inkFaint} strokeWidth="1.5" strokeLinecap="round" style={{marginBottom:12}}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-              <p style={{fontSize:15,color:T.inkSoft,fontWeight:500,margin:0}}>Nessun risultato per "{q}"</p>
+              <p style={{fontSize:15,color:"#ADADAD",fontWeight:500,margin:0}}>Nessun risultato per "{q}"</p>
             </div>
           )}
           <div style={{display:"flex",flexDirection:"column",gap:12}}>
             {searchResults.map((pro) => {
               const photoUrl = proImg(pro);
               return (
-                <div key={pro.id} onClick={()=>{nav("cl_pro",pro);setQ("");setSearching(false);}} style={{display:"flex",gap:14,cursor:"pointer",alignItems:"center",padding:"12px 0",borderBottom:`1px solid ${T.line}`}}>
-                  <div style={{width:58,height:58,borderRadius:16,background:T.surface,overflow:"hidden",flexShrink:0}}>
-                    {photoUrl
-                      ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                      : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>}
+                <div key={pro.id} onClick={()=>{nav("cl_pro",pro);setQ("");setSearching(false);}} style={{display:"flex",gap:14,cursor:"pointer",alignItems:"center",padding:"12px 0",borderBottom:"1px solid #F5F5F5"}}>
+                  <div style={{width:56,height:56,borderRadius:16,background:"#F5F5F5",overflow:"hidden",flexShrink:0}}>
+                    {photoUrl ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/> : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>}
                   </div>
                   <div style={{flex:1,minWidth:0}}>
-                    <p style={{fontSize:15,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>{pro.name}</p>
-                    <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
-                    <span style={{fontSize:12,color:T.ink,fontWeight:700}}>★ {pro.rating}</span>
+                    <p style={{fontSize:15,fontWeight:700,color:"#0D0D0E",margin:"0 0 2px"}}>{pro.name}</p>
+                    <p style={{fontSize:12,color:"#ADADAD",margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
+                    <span style={{fontSize:12,color:"#0D0D0E",fontWeight:700}}>★ {pro.rating}</span>
                   </div>
-                  <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 18px",borderRadius:999,border:"none",background:T.brand,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0,boxShadow:`0 2px 10px ${T.brand}30`}}>Prenota</button>
+                  <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 16px",borderRadius:999,border:"none",background:T.brand,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
                 </div>
               );
             })}
@@ -1265,88 +1275,94 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
         <div>
           {!selCat && (
             <>
-              {/* Quick cards Donna / Uomo */}
-              <div style={{padding:"24px 20px 0",display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-                <div onClick={()=>openCategory("altro")} style={{borderRadius:22,overflow:"hidden",cursor:"pointer",height:116,position:"relative",background:`linear-gradient(145deg,${T.brand},${T.brandDeep})`,boxShadow:`0 4px 20px ${T.brand}30`}}>
-                  <div style={{position:"absolute",inset:0,background:"linear-gradient(160deg,rgba(255,255,255,.18),transparent)",pointerEvents:"none"}}/>
-                  <div style={{padding:"18px 16px"}}>
-                    <p style={{fontSize:20,fontWeight:800,color:"#fff",margin:"0 0 3px",letterSpacing:"-.04em"}}>Donna</p>
-                    <p style={{fontSize:11,color:"rgba(255,255,255,.80)",margin:0,fontWeight:500,lineHeight:1.4}}>Scopri servizi<br/>e professioniste</p>
-                  </div>
-                  <svg style={{position:"absolute",bottom:10,right:10,opacity:.25}} width="48" height="48" viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="M12 2a5 5 0 100 10A5 5 0 0012 2zm0 12c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z"/></svg>
-                </div>
-                <div onClick={()=>openCategory("altro")} style={{borderRadius:22,overflow:"hidden",cursor:"pointer",height:116,position:"relative",background:`linear-gradient(145deg,${T.blue},#3A6AE8)`,boxShadow:`0 4px 20px ${T.blue}30`}}>
-                  <div style={{position:"absolute",inset:0,background:"linear-gradient(160deg,rgba(255,255,255,.18),transparent)",pointerEvents:"none"}}/>
-                  <div style={{padding:"18px 16px"}}>
-                    <p style={{fontSize:20,fontWeight:800,color:"#fff",margin:"0 0 3px",letterSpacing:"-.04em"}}>Uomo</p>
-                    <p style={{fontSize:11,color:"rgba(255,255,255,.80)",margin:0,fontWeight:500,lineHeight:1.4}}>Scopri servizi<br/>e professionisti</p>
-                  </div>
-                  <svg style={{position:"absolute",bottom:10,right:10,opacity:.25}} width="48" height="48" viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="M12 2a5 5 0 100 10A5 5 0 0012 2zm0 12c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z"/></svg>
-                </div>
-              </div>
-
-              {/* CATEGORIE — scroll orizzontale premium */}
+              {/* ✨ CONSIGLIATI PER TE — categorie premium */}
               <div style={{marginTop:28}}>
-                <div style={{padding:"0 20px",marginBottom:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <p style={{fontSize:17,fontWeight:700,color:T.ink,margin:0,letterSpacing:"-.03em"}}>Categorie</p>
+                <div style={{padding:"0 20px",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <p style={{fontSize:17,fontWeight:800,color:"#0D0D0E",margin:0,letterSpacing:"-.03em"}}>✨ Consigliati per te</p>
+                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti</button>
                 </div>
-                <div style={{display:"flex",gap:10,overflowX:"auto",padding:"4px 20px 8px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
-                  {MACRO_CATS.map(cat => (
-                    <button key={cat.id} onClick={()=>openCategory(cat.id)} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,background:T.bgCard,border:`1.5px solid ${T.line}`,cursor:"pointer",padding:"16px 14px 12px",borderRadius:20,fontFamily:"inherit",minWidth:74,transition:"all .2s cubic-bezier(.34,1.56,.64,1)"}}>
-                      <MacroCatIcon id={cat.id} size={24} color={T.brand} strokeWidth={1.8}/>
-                      <p style={{fontSize:10,fontWeight:600,color:T.inkMid,margin:0,textAlign:"center",lineHeight:1.3,whiteSpace:"pre-line"}}>{cat.label}</p>
+                <div style={{display:"flex",gap:12,overflowX:"auto",padding:"4px 20px 12px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+                  {orderedCats.map(cat => (
+                    <button key={cat.id} onClick={()=>openCategory(cat.id)}
+                      style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:10,background:"#FFFFFF",border:"1.5px solid #F0F0F0",cursor:"pointer",padding:"16px 12px 13px",borderRadius:22,fontFamily:"inherit",minWidth:80,boxShadow:"0 2px 12px rgba(0,0,0,.05)",transition:"all .2s cubic-bezier(.34,1.56,.64,1)"}}>
+                      <div style={{width:50,height:50,borderRadius:16,background:cat.bg||"#FFF0E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        <MacroCatIcon id={cat.id} size={24} color={cat.color||T.brand} strokeWidth={1.8}/>
+                      </div>
+                      <p style={{fontSize:10,fontWeight:700,color:"#0D0D0E",margin:0,textAlign:"center",lineHeight:1.3,whiteSpace:"pre-line"}}>{cat.label}</p>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* PROFESSIONISTI — premium cards */}
-              <div style={{padding:"28px 20px 0"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
-                  <p style={{fontSize:17,fontWeight:700,color:T.ink,margin:0,letterSpacing:"-.03em"}}>Vicino a te</p>
+              {/* 📍 VICINO A TE — scroll orizzontale */}
+              <div style={{marginTop:28}}>
+                <div style={{padding:"0 20px",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <p style={{fontSize:17,fontWeight:800,color:"#0D0D0E",margin:0,letterSpacing:"-.03em"}}>Vicino a te</p>
                   <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti</button>
                 </div>
-                {(() => {
-                  const list = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm).slice(0,8);
-                  if (list.length === 0) return (
-                    <p style={{fontSize:14,color:T.inkSoft,textAlign:"center",padding:"40px 0"}}>Nessun professionista in zona.</p>
-                  );
-                  return list.map((pro) => {
+                <div style={{display:"flex",gap:14,overflowX:"auto",padding:"4px 20px 12px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+                  {[...prosWithDist].sort((a,b)=>a.distKm-b.distKm).slice(0,8).map((pro) => {
                     const photoUrl = proImg(pro);
                     const isFav = favorites?.has(pro.id);
                     const distLabel = pro.distKm < 1 ? `${Math.round(pro.distKm*1000)} m` : `${pro.distKm.toFixed(1)} km`;
                     const isOpen = pro.id % 3 !== 0;
                     return (
-                      <div key={pro.id} style={{marginBottom:24}}>
-                        <div style={{position:"relative",height:220,borderRadius:22,overflow:"hidden",background:T.surface,cursor:"pointer",marginBottom:10}} onClick={()=>nav("cl_pro",pro)}>
+                      <div key={pro.id} style={{flexShrink:0,width:210,borderRadius:22,overflow:"hidden",background:"#FFFFFF",boxShadow:"0 4px 20px rgba(0,0,0,.08)",border:"1.5px solid #F5F5F5",cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
+                        {/* Foto */}
+                        <div style={{height:145,background:"#F5F5F5",position:"relative",overflow:"hidden"}}>
                           {photoUrl
                             ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                            : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{pro.emoji}</div>}
-                          <div style={{position:"absolute",top:12,left:12,display:"flex",alignItems:"center",gap:5,background:"rgba(255,255,255,.92)",backdropFilter:"blur(8px)",borderRadius:999,padding:"5px 10px"}}>
-                            <span style={{width:6,height:6,borderRadius:"50%",background:isOpen?T.green:T.amber,flexShrink:0,display:"inline-block"}}/>
-                            <span style={{fontSize:11,fontWeight:700,color:T.ink}}>{isOpen?"Aperto":"Chiuso"}</span>
+                            : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:42}}>{pro.emoji}</div>}
+                          {/* badge aperto */}
+                          <div style={{position:"absolute",top:10,left:10,display:"flex",alignItems:"center",gap:4,background:"rgba(255,255,255,.95)",borderRadius:999,padding:"4px 9px"}}>
+                            <span style={{width:6,height:6,borderRadius:"50%",background:isOpen?"#22C483":"#F59E0B",display:"inline-block"}}/>
+                            <span style={{fontSize:10,fontWeight:700,color:"#0D0D0E"}}>{isOpen?"Aperto":"Chiuso"}</span>
                           </div>
-                          <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{position:"absolute",top:12,right:12,width:36,height:36,borderRadius:"50%",background:"rgba(255,255,255,.88)",backdropFilter:"blur(8px)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 1px 6px rgba(0,0,0,.12)"}}>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill={isFav?T.brand:"none"} stroke={isFav?T.brand:T.inkMid} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84 1-1a5.5 5.5 0 000-7.78z"/></svg>
+                          {/* cuore */}
+                          <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{position:"absolute",top:10,right:10,width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.92)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill={isFav?T.brand:"none"} stroke={isFav?T.brand:"#ADADAD"} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84 1-1a5.5 5.5 0 000-7.78z"/></svg>
                           </button>
+                          {/* verificato */}
+                          {pro.verified && <div style={{position:"absolute",bottom:10,left:10,display:"flex",alignItems:"center",gap:4,background:T.brand,borderRadius:999,padding:"3px 9px"}}>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+                            <span style={{fontSize:9,fontWeight:700,color:"#fff",letterSpacing:.3}}>Verificato</span>
+                          </div>}
                         </div>
-                        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
-                          <div style={{flex:1,minWidth:0}}>
-                            <p style={{fontSize:15,fontWeight:700,color:T.ink,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
-                            <p style={{fontSize:13,color:T.inkSoft,margin:"0 0 10px"}}>{pro.cat} · {distLabel}</p>
-                            <div style={{display:"flex",gap:8,alignItems:"center"}}>
-                              <button onClick={()=>nav("cl_pro",pro)} style={{padding:"9px 18px",borderRadius:999,border:`1.5px solid ${T.line}`,background:T.bgCard,fontSize:13,fontWeight:600,color:T.ink,cursor:"pointer",fontFamily:"inherit"}}>Profilo</button>
-                              <button onClick={()=>nav("cl_prenota",{pro})} style={{padding:"9px 20px",borderRadius:999,border:"none",background:T.brand,fontSize:13,fontWeight:700,color:"#fff",cursor:"pointer",fontFamily:"inherit",boxShadow:`0 2px 12px ${T.brand}35`}}>Prenota</button>
-                            </div>
+                        {/* Info */}
+                        <div style={{padding:"12px 14px"}}>
+                          <p style={{fontSize:14,fontWeight:700,color:"#0D0D0E",margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
+                          <p style={{fontSize:11,color:"#ADADAD",margin:"0 0 8px"}}>{pro.cat} · {distLabel}</p>
+                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
+                            <span style={{fontSize:12,fontWeight:700,color:"#0D0D0E"}}>★ {pro.rating} <span style={{fontWeight:400,color:"#ADADAD"}}>({pro.reviews})</span></span>
+                            <span style={{fontSize:11,color:T.brand,fontWeight:600}}>Disponibile</span>
                           </div>
-                          <div style={{textAlign:"right",flexShrink:0}}>
-                            <span style={{fontSize:14,fontWeight:700,color:T.ink}}>★ {pro.rating}</span>
-                          </div>
+                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{width:"100%",padding:"10px 0",borderRadius:12,border:"none",background:T.brand,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 2px 10px ${T.brand}30`}}>Prenota</button>
                         </div>
                       </div>
                     );
-                  });
-                })()}
+                  })}
+                </div>
+              </div>
+
+              {/* 👥 I PIÙ RICHIESTI */}
+              <div style={{marginTop:28,paddingBottom:12}}>
+                <div style={{padding:"0 20px",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <p style={{fontSize:17,fontWeight:800,color:"#0D0D0E",margin:0,letterSpacing:"-.03em"}}>I più richiesti</p>
+                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti</button>
+                </div>
+                <div style={{display:"flex",gap:16,overflowX:"auto",padding:"4px 20px 8px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+                  {[...prosWithDist].sort((a,b)=>b.reviews-a.reviews).slice(0,8).map(pro=>{
+                    const photoUrl = proImg(pro);
+                    return (
+                      <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,cursor:"pointer",width:72}}>
+                        <div style={{width:60,height:60,borderRadius:"50%",overflow:"hidden",background:"#F5F5F5",border:`2px solid ${T.brandBg}`}}>
+                          {photoUrl ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/> : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>{pro.emoji}</div>}
+                        </div>
+                        <p style={{fontSize:10,fontWeight:600,color:"#0D0D0E",margin:0,textAlign:"center",lineHeight:1.3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",width:"100%"}}>{pro.name.split(" ")[0]}</p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </>
           )}
@@ -3617,7 +3633,7 @@ export default function App() {
   }}/></W>;
 
   const render = () => {
-    if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations}/>;
+    if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user}/>;
     if(screen==="cl_explore")    return <ClExplore nav={nav} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={sendPostToPro}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
