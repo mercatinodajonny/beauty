@@ -3449,14 +3449,17 @@ function OnboardingScreen({onComplete}){
       <style>{OB_CSS}</style>
 
       {/* ── HEADER ── */}
-      <div className="ob-fadeup" style={{
-        textAlign:"center",padding:"58px 28px 18px",flexShrink:0,
-      }}>
-        <p style={{fontSize:11,fontWeight:700,color:"#C8C8D0",letterSpacing:"2.5px",textTransform:"uppercase",margin:"0 0 14px"}}>beauty.</p>
-        <h1 style={{fontSize:31,fontWeight:900,color:"#1A1A1A",margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.1}}>
+      <div className="ob-fadeup" style={{textAlign:"center",padding:"58px 28px 18px",flexShrink:0,fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
+        <div style={{display:"inline-flex",alignItems:"center",gap:8,marginBottom:16}}>
+          <div style={{width:32,height:32,borderRadius:10,background:"linear-gradient(145deg,#F07090,#E8506E)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="#fff" stroke="none"/></svg>
+          </div>
+          <span style={{fontSize:16,fontWeight:800,color:T.ink,letterSpacing:"-.03em"}}>beauty</span>
+        </div>
+        <h1 style={{fontSize:30,fontWeight:800,color:T.ink,margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.1}}>
           Ciao, benvenuto!
         </h1>
-        <p style={{fontSize:15,color:"#9A9A9A",margin:0,lineHeight:1.6}}>
+        <p style={{fontSize:15,color:T.inkSoft,margin:0,lineHeight:1.6}}>
           Per offrirti la migliore esperienza,<br/>scegli chi sei.
         </p>
       </div>
@@ -3473,7 +3476,7 @@ function OnboardingScreen({onComplete}){
         {/* ━━━ DONNA ━━━ */}
         <div onClick={()=>pick("donna")} style={{
           width:donnaW,flexShrink:0,
-          background:"linear-gradient(165deg,#F882B4 0%,#E8508A 100%)",
+          background:"linear-gradient(165deg,#F07090 0%,#E8506E 100%)",
           transition:`width ${EASE}, opacity ${EASE}`,
           opacity:donnaOp,
           cursor:sel==="uomo"?"default":"pointer",
@@ -3520,7 +3523,7 @@ function OnboardingScreen({onComplete}){
             <div className="ob-fadeup" style={{padding:"12px 20px 32px",zIndex:3,position:"relative",animationDelay:"100ms"}}>
               <button onClick={e=>{e.stopPropagation();proceed();}} style={{
                 width:"100%",padding:"17px 0",borderRadius:18,border:"none",
-                background:"#fff",color:"#D44E88",fontSize:16,fontWeight:800,
+                background:"#fff",color:"#E8506E",fontSize:16,fontWeight:800,
                 cursor:"pointer",fontFamily:"inherit",
                 boxShadow:"0 5px 0 rgba(0,0,0,.09)",
               }}>Prosegui →</button>
@@ -3562,7 +3565,7 @@ function OnboardingScreen({onComplete}){
         {/* ━━━ UOMO ━━━ */}
         <div onClick={()=>pick("uomo")} style={{
           width:uomoW,flexShrink:0,
-          background:"linear-gradient(165deg,#6EA8F2 0%,#3A6FD4 100%)",
+          background:"linear-gradient(165deg,#7BB4F8 0%,#4F7EF7 100%)",
           transition:`width ${EASE}, opacity ${EASE}`,
           opacity:uomoOp,
           cursor:sel==="donna"?"default":"pointer",
@@ -3607,7 +3610,7 @@ function OnboardingScreen({onComplete}){
             <div className="ob-fadeup" style={{padding:"12px 20px 32px",zIndex:3,position:"relative",animationDelay:"100ms"}}>
               <button onClick={e=>{e.stopPropagation();proceed();}} style={{
                 width:"100%",padding:"17px 0",borderRadius:18,border:"none",
-                background:"#fff",color:"#3A6FD4",fontSize:16,fontWeight:800,
+                background:"#fff",color:"#4F7EF7",fontSize:16,fontWeight:800,
                 cursor:"pointer",fontFamily:"inherit",
                 boxShadow:"0 5px 0 rgba(0,0,0,.09)",
               }}>Prosegui →</button>
@@ -3617,14 +3620,13 @@ function OnboardingScreen({onComplete}){
       </div>
 
       {/* ── NOTA IN BASSO ── */}
-      <div style={{padding:"16px 24px 44px",display:"flex",alignItems:"center",gap:12,flexShrink:0}}>
-        <div style={{width:38,height:38,borderRadius:12,background:"#F5F5F7",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A9A9A" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <div style={{padding:"16px 24px 44px",display:"flex",alignItems:"center",gap:12,flexShrink:0,fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
+        <div style={{width:36,height:36,borderRadius:11,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
         </div>
-        <p style={{fontSize:12,color:"#9A9A9A",margin:0,lineHeight:1.5,flex:1}}>
-          Puoi modificare la tua scelta<br/>in qualsiasi momento dal tuo profilo.
+        <p style={{fontSize:12,color:T.inkSoft,margin:0,lineHeight:1.5,flex:1}}>
+          Puoi modificare la tua scelta in qualsiasi momento dal tuo profilo.
         </p>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8C8D0" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
       </div>
     </div>
   );
