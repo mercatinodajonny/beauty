@@ -1197,7 +1197,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user}) {
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
           </button>
           {/* Logo centrato */}
-          <img src="/beauty/logo.png" alt="beauty" style={{height:56,width:"auto",objectFit:"contain",position:"absolute",left:"50%",transform:"translateX(-50%)"}}/>
+          <img src="/beauty/logo.png" alt="beauty" style={{height:42,width:"auto",objectFit:"contain",position:"absolute",left:"50%",transform:"translateX(-50%)"}}/>
           {/* Campanella + Avatar */}
           <div style={{display:"flex",gap:10,alignItems:"center"}}>
             <div style={{position:"relative"}}>
