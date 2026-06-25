@@ -1007,83 +1007,79 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
 
   // ─── RENDER ───
   const hasDm = conversations.some(c=>c.messages.some(m=>m.from==="pro"));
-  const PINK = "#F06B9D";
-  const BLUE = "#4A7BF7";
 
   return (
-    <div style={{paddingBottom:120,background:"#FFFFFF",minHeight:"100dvh"}}>
+    <div style={{paddingBottom:120,background:T.bg,minHeight:"100dvh"}}>
 
-      {/* ── TOP HEADER — Airbnb style ── */}
-      <div style={{padding:"54px 20px 0",background:"#fff"}}>
+      {/* ── TOP HEADER editorial ── */}
+      <div style={{padding:"56px 20px 0",background:T.bg}}>
         {/* Row 1: logo + icone */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
-          <span style={{fontSize:26,fontWeight:900,color:"#1A1A1A",letterSpacing:"-.06em",lineHeight:1}}>
-            beauty<span style={{color:PINK}}>.</span>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}}>
+          <span style={{fontSize:24,fontWeight:900,color:T.ink,letterSpacing:"-.05em",lineHeight:1}}>
+            beauty<span style={{color:T.brand}}>.</span>
           </span>
-          <div style={{display:"flex",gap:8}}>
+          <div style={{display:"flex",gap:6}}>
             <div style={{position:"relative"}}>
-              <button onClick={()=>nav("cl_chats")} style={{width:40,height:40,borderRadius:"50%",border:"1.5px solid #EBEBEB",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff",padding:0}}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+              <button onClick={()=>nav("cl_chats")} style={{width:40,height:40,borderRadius:"50%",border:`1.5px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white,padding:0}}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
               </button>
-              {hasDm && <div style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:PINK,border:"2px solid #fff"}}/>}
+              {hasDm && <div style={{position:"absolute",top:2,right:2,width:7,height:7,borderRadius:"50%",background:T.brand,border:"2px solid "+T.bg}}/>}
             </div>
             <div style={{position:"relative"}}>
-              <button style={{width:40,height:40,borderRadius:"50%",border:"1.5px solid #EBEBEB",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#fff",padding:0}}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+              <button style={{width:40,height:40,borderRadius:"50%",border:`1.5px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white,padding:0}}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
               </button>
-              <div style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:PINK,border:"2px solid #fff"}}/>
+              <div style={{position:"absolute",top:2,right:2,width:7,height:7,borderRadius:"50%",background:T.brand,border:"2px solid "+T.bg}}/>
             </div>
           </div>
         </div>
 
-        {/* Location pill */}
+        {/* Row 2: location pill */}
         <button onClick={()=>setShowCity(true)} style={{
           display:"inline-flex",alignItems:"center",gap:5,
-          background:"#F7F7F7",border:"none",borderRadius:99,
-          padding:"8px 14px 8px 10px",cursor:"pointer",fontFamily:"inherit",marginBottom:16,
+          background:T.white,border:`1.5px solid ${T.line}`,borderRadius:99,
+          padding:"7px 12px 7px 10px",cursor:"pointer",fontFamily:"inherit",marginBottom:20,
         }}>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={PINK} strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span style={{fontSize:13,color:"#1A1A1A",fontWeight:600}}>{city}</span>
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#9A9A9A" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span style={{fontSize:13,color:T.ink,fontWeight:600}}>{city}</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
         </button>
 
-        {/* Search bar — Airbnb style */}
-        <div style={{
-          display:"flex",alignItems:"center",gap:10,
-          background:"#fff",border:"1.5px solid #DDDDDD",borderRadius:40,
-          padding:"14px 18px",
-          boxShadow:"0 2px 10px rgba(0,0,0,.08)",
-          marginBottom:4,
-        }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#717171" strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}>
+        {/* Row 3: search */}
+        <div style={{display:"flex",alignItems:"center",gap:10,background:T.bgMid,borderRadius:16,padding:"14px 16px",marginBottom:4}}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}>
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
           <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
             placeholder="Cerca servizio o professionista…"
-            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:"#1A1A1A",fontFamily:"inherit",fontWeight:500}}/>
-          {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"#F7F7F7",border:"none",cursor:"pointer",width:22,height:22,borderRadius:"50%",fontSize:13,color:"#717171",padding:0,lineHeight:1,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>}
+            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:T.ink,fontFamily:"inherit",fontWeight:500}}/>
+          {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:18,color:T.inkSoft,padding:0,lineHeight:1}}>×</button>}
         </div>
       </div>
 
-      {/* ── BANNER appuntamento ── */}
+      {/* ── BANNER prossimo appuntamento — card editoriale ── */}
       {!(searching && q.length >= 2) && !selCat && banner && (
-        <div style={{padding:"16px 20px 0"}}>
+        <div style={{padding:"20px 20px 0"}}>
           <div onClick={()=>nav("cl_appts")} style={{
-            borderRadius:18,cursor:"pointer",overflow:"hidden",
-            background:"#1A1A1A",
+            borderRadius:20,cursor:"pointer",overflow:"hidden",
+            background:T.bgDark,
+            boxShadow:"0 4px 24px rgba(0,0,0,.18)",
           }}>
-            <div style={{padding:"16px 18px",display:"flex",alignItems:"center",gap:14}}>
-              <div style={{width:46,height:46,borderRadius:14,background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.1)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:20}}>
+            <div style={{padding:"18px 20px",display:"flex",alignItems:"center",gap:16}}>
+              <div style={{width:48,height:48,borderRadius:14,background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.12)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:22}}>
                 📅
               </div>
               <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.4)",margin:"0 0 3px",textTransform:"uppercase",letterSpacing:"1.2px"}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
-                <p style={{fontSize:15,fontWeight:700,color:"#fff",margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service}</p>
-                <p style={{fontSize:12,color:"rgba(255,255,255,.5)",margin:0}}>{banner.pro} · {nextAppt?`${banner.date} ${banner.time}`:banner.date}</p>
+                <p style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.45)",margin:"0 0 3px",textTransform:"uppercase",letterSpacing:"1.2px"}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
+                <p style={{fontSize:15,fontWeight:800,color:T.white,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service}</p>
+                <p style={{fontSize:13,color:"rgba(255,255,255,.55)",margin:0}}>{banner.pro} · {nextAppt?`${banner.date} ${banner.time}`:banner.date}</p>
               </div>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+              <div style={{width:32,height:32,borderRadius:99,background:"rgba(255,255,255,.08)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+              </div>
             </div>
-            <div style={{height:3,background:`linear-gradient(90deg,${PINK},${BLUE})`}}/>
+            {/* Accent line bottom */}
+            <div style={{height:3,background:T.grad}}/>
           </div>
         </div>
       )}
@@ -1092,37 +1088,39 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
       {searching && q.length >= 2 && (
         <div style={{padding:"20px 20px 0"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-            <p style={{fontSize:14,color:"#717171",margin:0}}><strong style={{color:"#1A1A1A"}}>{searchResults.length}</strong> risultati per "{q}"</p>
-            <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#717171",fontFamily:"inherit",fontWeight:600,textDecoration:"underline"}}>Chiudi</button>
+            <p style={{fontSize:13,color:T.inkSoft,margin:0}}><strong style={{color:T.ink}}>{searchResults.length}</strong> risultati per "{q}"</p>
+            <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.inkSoft,fontFamily:"inherit",fontWeight:600,textDecoration:"underline"}}>Chiudi</button>
           </div>
           {searchResults.length === 0 && (
             <div style={{textAlign:"center",padding:"60px 0"}}>
               <div style={{fontSize:40,marginBottom:12}}>🔍</div>
-              <p style={{fontSize:15,color:"#717171",fontWeight:500}}>Nessun risultato per "{q}"</p>
+              <p style={{fontSize:15,color:T.inkSoft,fontWeight:500}}>Nessun risultato per "{q}"</p>
             </div>
           )}
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            {searchResults.map((pro) => {
+          <div style={{display:"flex",flexDirection:"column",gap:2}}>
+            {searchResults.map((pro,i) => {
               const photoUrl = proImg(pro);
               return (
-                <div key={pro.id} onClick={()=>{nav("cl_pro",pro);setQ("");setSearching(false);}} style={{
-                  display:"flex",gap:14,cursor:"pointer",alignItems:"center",
-                  padding:"12px 0",borderBottom:"1px solid #F2F2F2",
+                <div key={pro.id} style={{
+                  background:T.white,borderRadius:16,overflow:"hidden",
+                  boxShadow:"0 1px 4px rgba(0,0,0,.06)",
                 }}>
-                  <div style={{width:56,height:56,borderRadius:14,background:"#F7F7F7",overflow:"hidden",flexShrink:0}}>
-                    {photoUrl
-                      ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                      : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{pro.emoji}</div>}
+                  <div style={{display:"flex",gap:14,padding:"14px 16px",cursor:"pointer",alignItems:"center"}} onClick={()=>{nav("cl_pro",pro);setQ("");setSearching(false);}}>
+                    <div style={{width:50,height:50,borderRadius:14,background:T.surface,overflow:"hidden",flexShrink:0}}>
+                      {photoUrl
+                        ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
+                        : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>{pro.emoji}</div>}
+                    </div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <p style={{fontSize:15,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>{pro.name}</p>
+                      <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
+                      <span style={{fontSize:12,color:T.amber,fontWeight:700}}>★ {pro.rating}</span>
+                    </div>
+                    <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{
+                      padding:"9px 16px",borderRadius:99,border:"none",background:T.brand,
+                      color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0,
+                    }}>Prenota</button>
                   </div>
-                  <div style={{flex:1,minWidth:0}}>
-                    <p style={{fontSize:15,fontWeight:600,color:"#1A1A1A",margin:"0 0 2px"}}>{pro.name}</p>
-                    <p style={{fontSize:12,color:"#717171",margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
-                    <span style={{fontSize:12,color:"#1A1A1A",fontWeight:600}}>★ {pro.rating}</span>
-                  </div>
-                  <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{
-                    padding:"9px 18px",borderRadius:99,border:"none",background:PINK,
-                    color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0,
-                  }}>Prenota</button>
                 </div>
               );
             })}
@@ -1135,116 +1133,98 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
         <div>
           {!selCat && (
             <>
-              {/* DONNA / UOMO quick cards */}
-              <div style={{padding:"24px 20px 0",display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-                <div onClick={()=>openCategory("altro")} style={{
-                  borderRadius:20,overflow:"hidden",cursor:"pointer",
-                  height:120,position:"relative",
-                  background:`linear-gradient(145deg,${PINK},#D44E88)`,
-                  boxShadow:"0 4px 20px rgba(240,107,157,.30)",
-                }}>
-                  <div style={{position:"absolute",top:0,left:0,right:0,height:"50%",background:"linear-gradient(160deg,rgba(255,255,255,.2),transparent)",pointerEvents:"none"}}/>
-                  <div style={{padding:"16px 14px"}}>
-                    <p style={{fontSize:20,fontWeight:900,color:"#fff",margin:"0 0 3px",letterSpacing:"-.03em"}}>Donna</p>
-                    <p style={{fontSize:11,color:"rgba(255,255,255,.82)",margin:0,fontWeight:500,lineHeight:1.4}}>Scopri servizi<br/>e professioniste</p>
-                  </div>
-                  <div style={{position:"absolute",bottom:-8,right:-8,fontSize:56,opacity:.9}}>💅</div>
+              {/* SEZIONE CATEGORIE */}
+              <div style={{marginTop:28,marginBottom:4}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 20px",marginBottom:14}}>
+                  <span className="be-label">Categorie</span>
                 </div>
-                <div onClick={()=>openCategory("altro")} style={{
-                  borderRadius:20,overflow:"hidden",cursor:"pointer",
-                  height:120,position:"relative",
-                  background:`linear-gradient(145deg,${BLUE},#2A5FD4)`,
-                  boxShadow:"0 4px 20px rgba(74,123,247,.28)",
-                }}>
-                  <div style={{position:"absolute",top:0,left:0,right:0,height:"50%",background:"linear-gradient(160deg,rgba(255,255,255,.18),transparent)",pointerEvents:"none"}}/>
-                  <div style={{padding:"16px 14px"}}>
-                    <p style={{fontSize:20,fontWeight:900,color:"#fff",margin:"0 0 3px",letterSpacing:"-.03em"}}>Uomo</p>
-                    <p style={{fontSize:11,color:"rgba(255,255,255,.82)",margin:0,fontWeight:500,lineHeight:1.4}}>Scopri servizi<br/>e professionisti</p>
-                  </div>
-                  <div style={{position:"absolute",bottom:-8,right:-8,fontSize:56,opacity:.9}}>✂️</div>
-                </div>
-              </div>
-
-              {/* CATEGORIE — Airbnb icon-scroll */}
-              <div style={{marginTop:28}}>
-                <div style={{padding:"0 20px",marginBottom:12}}>
-                  <p style={{fontSize:11,fontWeight:700,color:"#9A9A9A",margin:0,textTransform:"uppercase",letterSpacing:"1.2px"}}>Categorie</p>
-                </div>
-                <div style={{display:"flex",gap:8,overflowX:"auto",padding:"4px 20px 6px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+                <div style={{display:"flex",gap:10,overflowX:"auto",padding:"2px 20px 6px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {MACRO_CATS.map(cat => (
                     <button key={cat.id} onClick={()=>openCategory(cat.id)} style={{
-                      flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:6,
-                      background:"#F7F7F7",border:"none",cursor:"pointer",
-                      padding:"14px 12px 10px",borderRadius:16,fontFamily:"inherit",
-                      minWidth:68,transition:"background .18s",
+                      flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,
+                      background:cat.bg,border:"none",cursor:"pointer",
+                      padding:"14px 14px 12px",borderRadius:20,fontFamily:"inherit",
+                      minWidth:76,
                     }}>
-                      <span style={{fontSize:24,lineHeight:1}}>{cat.emoji}</span>
-                      <p style={{fontSize:10,fontWeight:600,color:"#484848",margin:0,textAlign:"center",lineHeight:1.3,whiteSpace:"pre-line"}}>{cat.label}</p>
+                      <span style={{fontSize:26,lineHeight:1}}>{cat.emoji}</span>
+                      <p style={{fontSize:10,fontWeight:700,color:cat.color,margin:0,textAlign:"center",lineHeight:1.3,whiteSpace:"pre-line"}}>{cat.label}</p>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* PROFESSIONISTI — Airbnb listing style */}
-              <div style={{padding:"28px 20px 0"}}>
+              {/* SEZIONE PROFESSIONISTI */}
+              <div style={{padding:"24px 20px 0"}}>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-                  <p style={{fontSize:18,fontWeight:700,color:"#1A1A1A",margin:0,letterSpacing:"-.02em"}}>Vicino a te</p>
-                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#484848",fontWeight:600,fontFamily:"inherit",padding:0,textDecoration:"underline"}}>Vedi tutti</button>
+                  <span className="be-label">Vicino a te</span>
+                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti</button>
                 </div>
                 {(() => {
                   const list = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm).slice(0,8);
                   if (list.length === 0) return (
-                    <p style={{fontSize:14,color:"#717171",textAlign:"center",padding:"40px 0"}}>Nessun professionista in zona.</p>
+                    <p style={{fontSize:14,color:T.inkSoft,textAlign:"center",padding:"40px 0"}}>Nessun professionista in zona.</p>
                   );
                   return list.map((pro) => {
                     const photoUrl = proImg(pro);
                     const isFav = favorites?.has(pro.id);
                     const distLabel = pro.distKm < 1 ? `${Math.round(pro.distKm*1000)} m` : `${pro.distKm.toFixed(1)} km`;
-                    const isOpen = pro.id % 3 !== 0;
+                    const isOpen = Math.random() > 0.35;
                     return (
-                      <div key={pro.id} style={{marginBottom:24}}>
-                        {/* Foto — Airbnb style rounded */}
-                        <div style={{position:"relative",height:220,borderRadius:18,overflow:"hidden",background:"#F7F7F7",cursor:"pointer",marginBottom:10}} onClick={()=>nav("cl_pro",pro)}>
+                      <div key={pro.id} style={{
+                        background:T.white,borderRadius:20,marginBottom:14,
+                        overflow:"hidden",
+                        boxShadow:"0 2px 12px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.04)",
+                      }}>
+                        {/* Foto hero */}
+                        <div style={{position:"relative",height:160,background:T.bgMid,cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
                           {photoUrl
                             ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                            : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{pro.emoji}</div>}
-                          {/* Stato */}
-                          <div style={{position:"absolute",top:12,left:12,display:"flex",alignItems:"center",gap:5,background:"rgba(255,255,255,.92)",backdropFilter:"blur(8px)",borderRadius:99,padding:"5px 10px"}}>
-                            <div style={{width:6,height:6,borderRadius:"50%",background:isOpen?"#00C896":"#FF9500",flexShrink:0}}/>
-                            <span style={{fontSize:11,fontWeight:700,color:"#1A1A1A"}}>{isOpen?"Aperto":"Chiuso"}</span>
+                            : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>{pro.emoji}</div>}
+                          {/* overlay gradient bottom */}
+                          <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 55%)"}}/>
+                          {/* Stato aperto */}
+                          <div style={{position:"absolute",top:10,left:12,display:"flex",alignItems:"center",gap:5,background:"rgba(0,0,0,.45)",backdropFilter:"blur(8px)",borderRadius:99,padding:"4px 10px"}}>
+                            <div style={{width:6,height:6,borderRadius:"50%",background:isOpen?T.green:"#FF9500",flexShrink:0}}/>
+                            <span style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.9)"}}>{isOpen?"Aperto":"Chiuso"}</span>
                           </div>
-                          {/* Fav */}
+                          {/* Fav button */}
                           <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{
-                            position:"absolute",top:12,right:12,
-                            width:36,height:36,borderRadius:"50%",
-                            background:"rgba(255,255,255,.88)",backdropFilter:"blur(8px)",
+                            position:"absolute",top:10,right:12,
+                            width:34,height:34,borderRadius:"50%",
+                            background:"rgba(0,0,0,.4)",backdropFilter:"blur(8px)",
                             border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",
-                            fontSize:16,boxShadow:"0 1px 4px rgba(0,0,0,.1)",
+                            fontSize:15,
                           }}>
                             {isFav?"❤️":"🤍"}
                           </button>
-                        </div>
-                        {/* Info row — Airbnb listing style */}
-                        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
-                          <div style={{flex:1,minWidth:0}}>
-                            <p style={{fontSize:15,fontWeight:700,color:"#1A1A1A",margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
-                            <p style={{fontSize:13,color:"#717171",margin:"0 0 6px"}}>{pro.cat} · {distLabel}</p>
-                            <div style={{display:"flex",gap:8,alignItems:"center"}}>
-                              <button onClick={()=>nav("cl_pro",pro)} style={{
-                                padding:"8px 16px",borderRadius:99,
-                                border:"1.5px solid #DDDDDD",background:"#fff",
-                                fontSize:13,fontWeight:600,color:"#1A1A1A",cursor:"pointer",fontFamily:"inherit",
-                              }}>Profilo</button>
-                              <button onClick={()=>nav("cl_prenota",{pro})} style={{
-                                padding:"8px 18px",borderRadius:99,border:"none",
-                                background:PINK,
-                                fontSize:13,fontWeight:700,color:"#fff",cursor:"pointer",fontFamily:"inherit",
-                              }}>Prenota</button>
+                          {/* Name overlay */}
+                          <div style={{position:"absolute",bottom:12,left:12,right:12}}>
+                            <p style={{fontSize:17,fontWeight:800,color:T.white,margin:"0 0 2px",lineHeight:1.2,textShadow:"0 1px 4px rgba(0,0,0,.4)"}}>{pro.name}</p>
+                            <div style={{display:"flex",alignItems:"center",gap:8}}>
+                              <span style={{fontSize:11,fontWeight:600,color:"rgba(255,255,255,.8)"}}>{pro.cat}</span>
+                              <span style={{width:3,height:3,borderRadius:"50%",background:"rgba(255,255,255,.5)",display:"inline-block"}}/>
+                              <span style={{fontSize:11,fontWeight:600,color:"rgba(255,255,255,.8)"}}>{distLabel}</span>
+                              <span style={{width:3,height:3,borderRadius:"50%",background:"rgba(255,255,255,.5)",display:"inline-block"}}/>
+                              <span style={{fontSize:11,fontWeight:700,color:"rgba(255,200,0,.9)"}}>★ {pro.rating}</span>
                             </div>
                           </div>
-                          <div style={{textAlign:"right",flexShrink:0}}>
-                            <span style={{fontSize:14,fontWeight:700,color:"#1A1A1A"}}>★ {pro.rating}</span>
-                          </div>
+                        </div>
+                        {/* Footer card */}
+                        <div style={{padding:"12px 14px",display:"flex",gap:8}}>
+                          <button onClick={e=>{e.stopPropagation();nav("cl_pro",pro);}} style={{
+                            flex:1,padding:"10px 0",borderRadius:12,
+                            border:`1.5px solid ${T.line}`,background:T.white,
+                            fontSize:13,fontWeight:700,color:T.ink,cursor:"pointer",fontFamily:"inherit",
+                          }}>
+                            Profilo
+                          </button>
+                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{
+                            flex:2,padding:"10px 0",borderRadius:12,border:"none",
+                            background:T.bgDark,
+                            fontSize:13,fontWeight:700,color:T.white,cursor:"pointer",fontFamily:"inherit",
+                          }}>
+                            Prenota
+                          </button>
                         </div>
                       </div>
                     );
@@ -3440,192 +3420,209 @@ function OnboardingScreen({onComplete}){
   const reset = () => setSel(null);
   const proceed = () => { setExiting(true); setTimeout(()=>onComplete(sel),380); };
 
-  const donnaW = sel==="uomo" ? "20%" : sel==="donna" ? "80%" : "50%";
-  const uomoW  = sel==="donna" ? "20%" : sel==="uomo"  ? "80%" : "50%";
-  const donnaOp = sel==="uomo" ? 0.5 : 1;
-  const uomoOp  = sel==="donna" ? 0.5 : 1;
+  // Larghezze: expanded=85%, sliver=15%
+  const donnaW = sel==="uomo" ? "15%" : sel==="donna" ? "85%" : "50%";
+  const uomoW  = sel==="donna" ? "15%" : sel==="uomo"  ? "85%" : "50%";
+  const donnaOp = sel==="uomo" ? 0.55 : 1;
+  const uomoOp  = sel==="donna" ? 0.55 : 1;
 
   return (
     <div style={{
-      position:"fixed",inset:0,background:"#FFFFFF",
+      position:"fixed",inset:0,background:"#fff",
       display:"flex",flexDirection:"column",fontFamily:"inherit",
-      opacity:exiting?0:1,transition:"opacity 350ms ease",overflow:"hidden",
+      opacity:exiting?0:1,transition:`opacity 350ms ease`,overflow:"hidden",
     }}>
       <style>{OB_CSS}</style>
 
       {/* ── HEADER ── */}
       <div className="ob-fadeup" style={{
-        textAlign:"center",padding:"58px 28px 18px",flexShrink:0,
+        textAlign:"center",padding:"62px 28px 24px",
+        background:"#fff",flexShrink:0,
+        pointerEvents: sel ? "none" : "auto",
+        opacity: sel ? 0 : 1,
+        transition:`opacity ${EASE}`,
+        position:"absolute",top:0,left:0,right:0,zIndex:5,
       }}>
-        <p style={{fontSize:11,fontWeight:700,color:"#C8C8D0",letterSpacing:"2.5px",textTransform:"uppercase",margin:"0 0 14px"}}>beauty.</p>
-        <h1 style={{fontSize:31,fontWeight:900,color:"#1A1A1A",margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.1}}>
+        <p style={{fontSize:12,fontWeight:700,color:"#C0C0C8",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 10px"}}>beauty.</p>
+        <h1 style={{fontSize:30,fontWeight:900,color:"#111",margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.1}}>
           Ciao, benvenuto!
         </h1>
-        <p style={{fontSize:15,color:"#9A9A9A",margin:0,lineHeight:1.6}}>
+        <p style={{fontSize:15,color:"#999",margin:0,lineHeight:1.55}}>
           Per offrirti la migliore esperienza,<br/>scegli chi sei.
         </p>
       </div>
 
-      {/* ── SPLIT CARD (con bordi arrotondati come nell'immagine) ── */}
+      {/* ── CARD SPLIT CON ANIMAZIONE ── */}
       <div style={{
-        flex:1,margin:"12px 18px 0",
-        borderRadius:28,overflow:"hidden",
-        display:"flex",
-        boxShadow:"0 12px 48px rgba(0,0,0,.13)",
-        position:"relative",
+        position:"absolute",inset:0,display:"flex",
+        overflow:"hidden",
+        zIndex: sel ? 20 : 1,
+        transition:`z-index 0ms ${sel?"0ms":"400ms"}`,
       }}>
 
         {/* ━━━ DONNA ━━━ */}
         <div onClick={()=>pick("donna")} style={{
-          width:donnaW,flexShrink:0,
-          background:"linear-gradient(165deg,#F882B4 0%,#E8508A 100%)",
+          width:donnaW, flexShrink:0,
+          background:"#F07AA8",
           transition:`width ${EASE}, opacity ${EASE}`,
-          opacity:donnaOp,
-          cursor:sel==="uomo"?"default":"pointer",
+          opacity: donnaOp,
+          cursor: sel==="uomo" ? "default" : "pointer",
           display:"flex",flexDirection:"column",
           overflow:"hidden",position:"relative",
         }}>
-          {/* shine top */}
-          <div style={{position:"absolute",top:0,left:0,right:0,height:"45%",background:"linear-gradient(160deg,rgba(255,255,255,.24) 0%,transparent 100%)",pointerEvents:"none"}}/>
-          {/* shadow bottom */}
-          <div style={{position:"absolute",bottom:0,left:0,right:0,height:"32%",background:"linear-gradient(0deg,rgba(180,45,85,.38) 0%,transparent 100%)",pointerEvents:"none"}}/>
+          {/* gradiente brillantezza angolo alto */}
+          <div style={{position:"absolute",top:0,left:0,right:0,height:"40%",background:"linear-gradient(160deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 100%)",pointerEvents:"none"}}/>
+          {/* gradiente ombra bassa */}
+          <div style={{position:"absolute",bottom:0,left:0,right:0,height:"35%",background:"linear-gradient(0deg,rgba(190,50,90,.35) 0%,rgba(190,50,90,0) 100%)",pointerEvents:"none"}}/>
 
-          {/* Testo label */}
+          {/* testo in alto */}
           <div style={{
-            padding:sel==="donna"?"68px 24px 0":sel==="uomo"?"56px 10px 0":"46px 18px 0",
-            transition:`padding ${EASE}`,position:"relative",zIndex:2,
+            padding: sel==="donna" ? "72px 28px 0" : sel==="uomo" ? "60px 12px 0" : "52px 18px 0",
+            transition:`padding ${EASE}`,
+            position:"relative",zIndex:2,
           }}>
-            {sel==="donna" && <p className="ob-fadein" style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.72)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 4px"}}>Hai scelto</p>}
+            {sel==="donna" && (
+              <p className="ob-fadein" style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.75)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 6px"}}>Hai scelto</p>
+            )}
             <p style={{
-              fontSize:sel==="donna"?42:sel==="uomo"?12:26,
+              fontSize: sel==="donna" ? 44 : (sel==="uomo" ? 13 : 22),
               fontWeight:900,color:"#fff",margin:0,letterSpacing:"-.03em",lineHeight:1.05,
               transition:`font-size ${EASE}`,
-              writingMode:sel==="uomo"?"vertical-rl":"horizontal-tb",
-              whiteSpace:"nowrap",textShadow:"0 2px 10px rgba(0,0,0,.15)",
+              writingMode: sel==="uomo" ? "vertical-rl" : "horizontal-tb",
+              textOrientation: sel==="uomo" ? "mixed" : "mixed",
+              whiteSpace:"nowrap",
             }}>Donna</p>
-            {sel==="donna" && <p className="ob-fadein" style={{fontSize:14,color:"rgba(255,255,255,.84)",margin:"10px 0 0",lineHeight:1.55,animationDelay:"80ms",fontWeight:500}}>
-              Scopri servizi e<br/>professionisti per te
-            </p>}
+            {sel==="donna" && (
+              <p className="ob-fadein" style={{fontSize:13,color:"rgba(255,255,255,.78)",margin:"10px 0 0",lineHeight:1.55,animationDelay:"100ms"}}>
+                Puoi modificare questa scelta<br/>in qualsiasi momento dal tuo profilo.
+              </p>
+            )}
           </div>
 
           {/* Avatar donna */}
           <div style={{
             flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
+            paddingBottom: sel==="donna" ? 0 : 0,
             position:"relative",zIndex:1,
-            transform:sel==="donna"?"scale(1.06) translateY(5px)":"scale(1) translateY(0)",
-            transition:`transform 440ms cubic-bezier(.34,1.56,.64,1)`,
-            transformOrigin:"bottom center",overflow:"hidden",
+            transform: sel==="donna" ? "scale(1.06) translateY(6px)" : "scale(1) translateY(0)",
+            transition:`transform 450ms cubic-bezier(.34,1.56,.64,1)`,
+            transformOrigin:"bottom center",
+            overflow:"hidden",
           }}>
-            <CharDonna size={sel==="donna"?268:186}/>
+            <CharDonna size={sel==="donna" ? 280 : 190}/>
           </div>
 
+          {/* Bottone Prosegui (solo quando espanso) */}
           {sel==="donna" && (
-            <div className="ob-fadeup" style={{padding:"12px 20px 32px",zIndex:3,position:"relative",animationDelay:"100ms"}}>
+            <div className="ob-fadeup" style={{padding:"16px 24px 44px",position:"relative",zIndex:3,animationDelay:"120ms"}}>
               <button onClick={e=>{e.stopPropagation();proceed();}} style={{
-                width:"100%",padding:"17px 0",borderRadius:18,border:"none",
-                background:"#fff",color:"#D44E88",fontSize:16,fontWeight:800,
-                cursor:"pointer",fontFamily:"inherit",
-                boxShadow:"0 5px 0 rgba(0,0,0,.09)",
+                width:"100%",padding:"18px 0",borderRadius:18,border:"none",
+                background:"#fff",color:"#D4508A",
+                fontSize:17,fontWeight:800,cursor:"pointer",fontFamily:"inherit",
+                boxShadow:"0 6px 0 rgba(0,0,0,.08)",
               }}>Prosegui →</button>
             </div>
           )}
         </div>
 
-        {/* ━━━ FRECCE CENTRO ━━━ */}
-        {!sel && (
+        {/* ━━━ FRECCE CENTRALI ━━━ */}
+        <div style={{
+          position:"absolute",
+          left: sel==="donna" ? "calc(85% - 1px)" : sel==="uomo" ? "calc(15% - 1px)" : "calc(50% - 1px)",
+          top:"50%",
+          transform:"translate(-50%,-50%)",
+          transition:`left ${EASE}`,
+          zIndex:20,pointerEvents:"none",
+          opacity: sel ? 0 : 1,
+          transition2:`opacity 180ms ease`,
+        }}>
           <div style={{
-            position:"absolute",top:"50%",left:"50%",
-            transform:"translate(-50%,-50%)",zIndex:20,
+            background:"#fff",borderRadius:99,
+            padding:"7px 12px",display:"flex",gap:10,alignItems:"center",
+            boxShadow:"0 4px 20px rgba(0,0,0,.18)",
           }}>
-            <div style={{
-              background:"#fff",borderRadius:99,
-              padding:"7px 14px",display:"flex",gap:10,alignItems:"center",
-              boxShadow:"0 4px 20px rgba(0,0,0,.16)",
-            }}>
-              <span style={{fontSize:15,color:"#E8508A",fontWeight:800,lineHeight:1}}>←</span>
-              <div style={{width:1,height:15,background:"#E4E4E8"}}/>
-              <span style={{fontSize:15,color:"#4A7BF7",fontWeight:800,lineHeight:1}}>→</span>
-            </div>
+            <span style={{fontSize:14,color:"#F07AA8",fontWeight:800,lineHeight:1}}>←</span>
+            <div style={{width:1,height:16,background:"#E0E0E8"}}/>
+            <span style={{fontSize:14,color:"#5A9FD4",fontWeight:800,lineHeight:1}}>→</span>
           </div>
-        )}
+        </div>
 
-        {/* Back button */}
+        {/* Bottone back quando espanso */}
         {sel && (
           <button className="ob-fadein" onClick={e=>{e.stopPropagation();reset();}} style={{
-            position:"absolute",top:20,
-            left:sel==="donna"?18:"auto",right:sel==="uomo"?18:"auto",
-            zIndex:30,width:36,height:36,borderRadius:"50%",
-            background:"rgba(255,255,255,.26)",border:"none",cursor:"pointer",
-            display:"flex",alignItems:"center",justifyContent:"center",
-            color:"#fff",fontSize:18,fontWeight:400,
+            position:"absolute",
+            top:52,
+            left: sel==="donna" ? 20 : "auto",
+            right: sel==="uomo" ? 20 : "auto",
+            zIndex:30,
+            width:36,height:36,borderRadius:"50%",
+            background:"rgba(255,255,255,.28)",border:"none",
+            cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",
+            color:"#fff",fontSize:18,fontWeight:400,lineHeight:1,
             boxShadow:"0 2px 8px rgba(0,0,0,.12)",
           }}>←</button>
         )}
 
         {/* ━━━ UOMO ━━━ */}
         <div onClick={()=>pick("uomo")} style={{
-          width:uomoW,flexShrink:0,
-          background:"linear-gradient(165deg,#6EA8F2 0%,#3A6FD4 100%)",
+          width:uomoW, flexShrink:0,
+          background:"#5A9FD4",
           transition:`width ${EASE}, opacity ${EASE}`,
-          opacity:uomoOp,
-          cursor:sel==="donna"?"default":"pointer",
+          opacity: uomoOp,
+          cursor: sel==="donna" ? "default" : "pointer",
           display:"flex",flexDirection:"column",
           overflow:"hidden",position:"relative",
-          alignItems:sel==="uomo"?"flex-start":"flex-end",
+          alignItems: sel==="uomo" ? "flex-start" : "flex-end",
         }}>
-          <div style={{position:"absolute",top:0,left:0,right:0,height:"45%",background:"linear-gradient(160deg,rgba(255,255,255,.22) 0%,transparent 100%)",pointerEvents:"none"}}/>
-          <div style={{position:"absolute",bottom:0,left:0,right:0,height:"32%",background:"linear-gradient(0deg,rgba(25,60,120,.38) 0%,transparent 100%)",pointerEvents:"none"}}/>
+          <div style={{position:"absolute",top:0,left:0,right:0,height:"40%",background:"linear-gradient(160deg,rgba(255,255,255,.20) 0%,rgba(255,255,255,0) 100%)",pointerEvents:"none"}}/>
+          <div style={{position:"absolute",bottom:0,left:0,right:0,height:"35%",background:"linear-gradient(0deg,rgba(30,70,120,.35) 0%,rgba(30,70,120,0) 100%)",pointerEvents:"none"}}/>
 
           <div style={{
-            padding:sel==="uomo"?"68px 24px 0":sel==="donna"?"56px 10px 0":"46px 18px 0",
-            transition:`padding ${EASE}`,position:"relative",zIndex:2,
-            textAlign:sel==="uomo"?"left":"right",width:"100%",
+            padding: sel==="uomo" ? "72px 28px 0" : sel==="donna" ? "60px 8px 0" : "52px 18px 0",
+            transition:`padding ${EASE}`,
+            position:"relative",zIndex:2,
+            textAlign: sel==="uomo" ? "left" : "right",
+            width:"100%",
           }}>
-            {sel==="uomo" && <p className="ob-fadein" style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.72)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 4px"}}>Hai scelto</p>}
+            {sel==="uomo" && (
+              <p className="ob-fadein" style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.75)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 6px"}}>Hai scelto</p>
+            )}
             <p style={{
-              fontSize:sel==="uomo"?42:sel==="donna"?12:26,
+              fontSize: sel==="uomo" ? 44 : (sel==="donna" ? 13 : 22),
               fontWeight:900,color:"#fff",margin:0,letterSpacing:"-.03em",lineHeight:1.05,
               transition:`font-size ${EASE}`,
-              writingMode:sel==="donna"?"vertical-rl":"horizontal-tb",
-              whiteSpace:"nowrap",textShadow:"0 2px 10px rgba(0,0,0,.15)",
+              writingMode: sel==="donna" ? "vertical-rl" : "horizontal-tb",
+              whiteSpace:"nowrap",
             }}>Uomo</p>
-            {sel==="uomo" && <p className="ob-fadein" style={{fontSize:14,color:"rgba(255,255,255,.84)",margin:"10px 0 0",lineHeight:1.55,animationDelay:"80ms",fontWeight:500}}>
-              Scopri servizi e<br/>professionisti per te
-            </p>}
+            {sel==="uomo" && (
+              <p className="ob-fadein" style={{fontSize:13,color:"rgba(255,255,255,.78)",margin:"10px 0 0",lineHeight:1.55,animationDelay:"100ms"}}>
+                Puoi modificare questa scelta<br/>in qualsiasi momento dal tuo profilo.
+              </p>
+            )}
           </div>
 
           <div style={{
             flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
             position:"relative",zIndex:1,
-            transform:sel==="uomo"?"scale(1.06) translateY(5px)":"scale(1) translateY(0)",
-            transition:`transform 440ms cubic-bezier(.34,1.56,.64,1)`,
-            transformOrigin:"bottom center",overflow:"hidden",
+            transform: sel==="uomo" ? "scale(1.06) translateY(6px)" : "scale(1) translateY(0)",
+            transition:`transform 450ms cubic-bezier(.34,1.56,.64,1)`,
+            transformOrigin:"bottom center",
+            overflow:"hidden",
           }}>
-            <CharUomo size={sel==="uomo"?268:186}/>
+            <CharUomo size={sel==="uomo" ? 280 : 190}/>
           </div>
 
           {sel==="uomo" && (
-            <div className="ob-fadeup" style={{padding:"12px 20px 32px",zIndex:3,position:"relative",animationDelay:"100ms"}}>
+            <div className="ob-fadeup" style={{padding:"16px 24px 44px",position:"relative",zIndex:3,animationDelay:"120ms"}}>
               <button onClick={e=>{e.stopPropagation();proceed();}} style={{
-                width:"100%",padding:"17px 0",borderRadius:18,border:"none",
-                background:"#fff",color:"#3A6FD4",fontSize:16,fontWeight:800,
-                cursor:"pointer",fontFamily:"inherit",
-                boxShadow:"0 5px 0 rgba(0,0,0,.09)",
+                width:"100%",padding:"18px 0",borderRadius:18,border:"none",
+                background:"#fff",color:"#3A7FB5",
+                fontSize:17,fontWeight:800,cursor:"pointer",fontFamily:"inherit",
+                boxShadow:"0 6px 0 rgba(0,0,0,.08)",
               }}>Prosegui →</button>
             </div>
           )}
         </div>
-      </div>
-
-      {/* ── NOTA IN BASSO ── */}
-      <div style={{padding:"16px 24px 44px",display:"flex",alignItems:"center",gap:12,flexShrink:0}}>
-        <div style={{width:38,height:38,borderRadius:12,background:"#F5F5F7",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9A9A9A" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-        </div>
-        <p style={{fontSize:12,color:"#9A9A9A",margin:0,lineHeight:1.5,flex:1}}>
-          Puoi modificare la tua scelta<br/>in qualsiasi momento dal tuo profilo.
-        </p>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8C8D0" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
       </div>
     </div>
   );
