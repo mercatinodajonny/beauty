@@ -920,145 +920,51 @@ function NavPro({s,nav}) {
 /* AUTH */
 function LoginScreen({onAuth}) {
   const [tp,setTp] = useState(null);
-
-  const opts = [
-    {
-      id:"cliente",
-      label:"Cliente",
-      sub:"Cerca e prenota professionisti",
-      icon:(sel)=>(
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={sel?T.brand:"#ADADAD"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-        </svg>
-      ),
-    },
-    {
-      id:"pro",
-      label:"Professionista",
-      sub:"Gestisci agenda, clienti e servizi",
-      icon:(sel)=>(
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={sel?T.brand:"#ADADAD"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-        </svg>
-      ),
-    },
-  ];
-
   return (
-    <div style={{
-      minHeight:"100dvh", background:"#F5F5F7",
-      display:"flex", flexDirection:"column",
-      fontFamily:"'Plus Jakarta Sans',sans-serif",
-    }}>
-      {/* ── LOGO + HEADER ── */}
-      <div style={{
-        textAlign:"center",
-        paddingTop:72, paddingBottom:40,
-        paddingLeft:24, paddingRight:24,
-        animation:"dsFadeIn .45s ease both",
-      }}>
-        <img src="/beauty/logo.png" alt="beauty"
-          style={{height:72, width:"auto", display:"block", margin:"0 auto 28px", objectFit:"contain"}}/>
-        <h1 style={{
-          fontSize:34, fontWeight:800, color:T.ink,
-          margin:"0 0 8px", letterSpacing:"-.04em", lineHeight:1.1,
-        }}>Benvenuto</h1>
-        <p style={{
-          fontSize:15, color:T.inkSoft, margin:0,
-          fontWeight:400, lineHeight:1.55,
-        }}>Prenota i migliori professionisti vicino a te.</p>
-      </div>
-
-      {/* ── CARDS ── */}
-      <div style={{
-        flex:1, padding:"0 20px",
-        animation:"dsSlideUp .4s cubic-bezier(.22,1,.36,1) .08s both",
-      }}>
-        <p style={{
-          fontSize:11, fontWeight:700, color:T.inkSoft,
-          textTransform:"uppercase", letterSpacing:1.5,
-          margin:"0 0 12px 4px",
-        }}>Come vuoi accedere?</p>
-
-        <div style={{display:"flex", flexDirection:"column", gap:10}}>
-          {opts.map(opt => {
-            const sel = tp === opt.id;
-            return (
-              <button key={opt.id} onClick={()=>setTp(opt.id)}
-                style={{
-                  width:"100%", padding:"18px 20px",
-                  borderRadius:18, cursor:"pointer",
-                  fontFamily:"inherit", textAlign:"left",
-                  display:"flex", alignItems:"center", gap:16,
-                  background:"#FFFFFF",
-                  border:`2px solid ${sel ? T.brand : "transparent"}`,
-                  boxShadow: sel
-                    ? `0 0 0 4px ${T.brand}18, 0 2px 12px rgba(0,0,0,.06)`
-                    : "0 2px 12px rgba(0,0,0,.06)",
-                  transition:"all .22s cubic-bezier(.22,1,.36,1)",
-                  outline:"none",
-                }}>
-                {/* icona */}
-                <div style={{
-                  width:44, height:44, borderRadius:12,
-                  background: sel ? `${T.brand}14` : "#F5F5F7",
-                  display:"flex", alignItems:"center", justifyContent:"center",
-                  flexShrink:0, transition:"background .2s",
-                }}>
-                  {opt.icon(sel)}
-                </div>
-                {/* testi */}
-                <div style={{flex:1}}>
-                  <p style={{
-                    fontSize:16, fontWeight:700,
-                    color: sel ? T.brand : T.ink,
-                    margin:"0 0 3px", transition:"color .15s",
-                  }}>{opt.label}</p>
-                  <p style={{
-                    fontSize:13, color:T.inkSoft,
-                    margin:0, fontWeight:400, lineHeight:1.4,
-                  }}>{opt.sub}</p>
-                </div>
-                {/* freccia */}
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                  stroke={sel ? T.brand : "#CECECE"} strokeWidth="2.2" strokeLinecap="round">
-                  <path d="M9 18l6-6-6-6"/>
-                </svg>
-              </button>
-            );
-          })}
+    <div style={{minHeight:"100dvh",background:T.bg,display:"flex",flexDirection:"column",padding:"0 24px",fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
+      {/* Logo mark */}
+      <div style={{paddingTop:88,paddingBottom:56,animation:"dsFadeIn .5s ease both"}}>
+        <div style={{marginBottom:20}}>
+          <img src="/beauty/logo.png" alt="beauty" style={{height:52,width:"auto",display:"block",objectFit:"contain"}}/>
         </div>
-
-        {/* ── BOTTONE CONTINUA ── */}
-        <button
-          disabled={!tp}
-          onClick={()=>onAuth({name:tp==="pro"?"Salon Elite":"Alessio",type:tp})}
-          style={{
-            width:"100%", padding:"17px 0",
-            borderRadius:999, border:"none",
-            marginTop:20,
-            background: tp ? T.grad : "#E8E8E8",
-            color: tp ? "#fff" : "#ADADAD",
-            fontSize:16, fontWeight:700,
-            cursor: tp ? "pointer" : "default",
-            fontFamily:"inherit",
-            boxShadow: tp ? `0 6px 24px ${T.brand}38` : "none",
-            transition:"all .25s cubic-bezier(.22,1,.36,1)",
-            letterSpacing:"-.01em",
-          }}>
-          Continua
+        <p style={{fontSize:22,fontWeight:700,color:T.ink,margin:"0 0 6px",letterSpacing:"-.03em"}}>Benvenuto</p>
+        <p style={{fontSize:15,color:T.inkSoft,margin:0,fontWeight:400,lineHeight:1.5}}>Prenota i migliori professionisti vicino a te.</p>
+      </div>
+      {/* Selezione tipo */}
+      <div style={{display:"flex",flexDirection:"column",gap:10,animation:"dsSlideUp .4s cubic-bezier(.34,1.56,.64,1) .1s both"}}>
+        <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:1.4,margin:"0 0 4px"}}>Come vuoi accedere?</p>
+        {[
+          {id:"cliente", label:"Cliente",        sub:"Cerca e prenota professionisti",     icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>},
+          {id:"pro",     label:"Professionista", sub:"Gestisci agenda, clienti e servizi", icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>},
+        ].map(opt => {
+          const sel = tp===opt.id;
+          return (
+            <button key={opt.id} onClick={()=>setTp(opt.id)}
+              style={{width:"100%",padding:"18px 20px",borderRadius:18,cursor:"pointer",fontFamily:"inherit",textAlign:"left",display:"flex",alignItems:"center",gap:16,
+                background:sel?T.brandBg:T.bgCard,
+                border:`2px solid ${sel?T.brand:T.line}`,
+                boxShadow:sel?`0 0 0 4px ${T.brand}14`:"none",
+                transition:"all .2s cubic-bezier(.34,1.56,.64,1)"}}>
+              <div style={{width:42,height:42,borderRadius:12,background:sel?T.brand:T.surface,display:"flex",alignItems:"center",justifyContent:"center",color:sel?"#fff":T.inkMid,flexShrink:0,transition:"all .2s"}}>
+                {opt.icon}
+              </div>
+              <div style={{flex:1}}>
+                <p style={{fontSize:16,fontWeight:700,color:sel?T.brand:T.ink,margin:"0 0 2px",transition:"color .15s"}}>{opt.label}</p>
+                <p style={{fontSize:13,color:sel?T.brandMid:T.inkSoft,margin:0,fontWeight:400}}>{opt.sub}</p>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={sel?T.brand:T.inkFaint} strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          );
+        })}
+        <button disabled={!tp} onClick={()=>onAuth({name:tp==="pro"?"Salon Elite":"Alessio",type:tp})}
+          style={{width:"100%",padding:"17px 0",borderRadius:999,border:"none",marginTop:8,
+            background:tp?T.grad:"#EBEBEB",color:tp?"#fff":T.inkFaint,
+            fontSize:16,fontWeight:700,cursor:tp?"pointer":"default",fontFamily:"inherit",
+            boxShadow:tp?`0 4px 20px ${T.brand}38`:"none",
+            transition:"all .2s cubic-bezier(.34,1.56,.64,1)",letterSpacing:"-.01em"}}>
+          Entra nell'app
         </button>
-
-        {/* ── FOOTER ── */}
-        <p style={{
-          textAlign:"center", fontSize:12, color:T.inkSoft,
-          margin:"20px 0 32px", fontWeight:400, lineHeight:1.6,
-        }}>
-          Continuando accetti i{" "}
-          <span style={{color:T.brand, fontWeight:600}}>Termini di servizio</span>
-          {" "}e la{" "}
-          <span style={{color:T.brand, fontWeight:600}}>Privacy policy</span>
-        </p>
+        <p style={{textAlign:"center",fontSize:12,color:T.inkSoft,margin:"8px 0 0",fontWeight:400}}>Continuando accetti i Termini di servizio e la Privacy policy</p>
       </div>
     </div>
   );
