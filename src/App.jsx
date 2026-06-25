@@ -1,4 +1,22 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, Component } from "react";
+
+/* ErrorBoundary — mostra l'errore su schermo invece di pagina bianca */
+class AvatarErrorBoundary extends Component {
+  constructor(p){super(p);this.state={err:null};}
+  static getDerivedStateFromError(e){return{err:e};}
+  render(){
+    if(this.state.err){
+      return(
+        <div style={{padding:40,fontFamily:"monospace",background:"#fff1f1",minHeight:"100dvh"}}>
+          <h2 style={{color:"#C00",fontSize:16,marginBottom:12}}>⚠️ Errore Avatar</h2>
+          <pre style={{fontSize:11,whiteSpace:"pre-wrap",color:"#600"}}>{String(this.state.err)}</pre>
+          <button onClick={()=>this.setState({err:null})} style={{marginTop:20,padding:"10px 20px",borderRadius:12,border:"none",background:"#C00",color:"#fff",cursor:"pointer"}}>Torna indietro</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 /* MAPPA — Leaflet + OpenStreetMap (gratis, nessuna API key). Ricerca luoghi via Nominatim (geocoding OSM). */
 let leafletPromise = null;
@@ -4073,7 +4091,7 @@ export default function App() {
 
   const render = () => {
     if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarConfig={avatarConfig}/>;
-    if(screen==="cl_avatar_editor") return <AvatarEditorScreen nav={nav} avatarConfig={avatarConfig} setAvatarConfig={setAvatarConfig}/>;
+    if(screen==="cl_avatar_editor") return <AvatarErrorBoundary><AvatarEditorScreen nav={nav} avatarConfig={avatarConfig} setAvatarConfig={setAvatarConfig}/></AvatarErrorBoundary>;
     if(screen==="cl_explore")    return <ClExplore nav={nav} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={sendPostToPro}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
