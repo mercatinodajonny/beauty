@@ -278,10 +278,6 @@ const ACCENTS = {
   azzurro:  {label:"Azzurro",       base:"#3FA3D8"},
   lilla:    {label:"Lilla",         base:"#A877D0"},
   cipria:   {label:"Rosa Cipria",   base:"#C27A8A"},
-  // temi genere
-  donna:    {label:"Donna",         base:"#F06B9D"},
-  uomo:     {label:"Uomo",          base:"#4A7BF7"},
-  nonspec:  {label:"Neutro",        base:"#6E6E6E"},
 };
 const ACCENT_ORDER = ["nero","oro","rosa","arancione","blu","verde","petronas","rosso","giallo","viola","grigio","azzurro","lilla"];
 
@@ -924,97 +920,111 @@ function NavPro({s,nav}) {
 /* AUTH */
 function LoginScreen({onAuth}) {
   const [tp,setTp] = useState(null);
+  const PINK = "#F06B9D";
+  const BLUE = "#4A7BF7";
 
   const opts = [
     {
-      id:"cliente", label:"Cliente", sub:"Cerca, prenota e scopri professionisti.",
-      icon:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>,
+      id:"cliente", label:"Cliente", sub:"Cerca e prenota professionisti", color:PINK,
+      icon:(sel)=>(
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={sel?PINK:"#ADADAD"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+      ),
     },
     {
-      id:"pro", label:"Professionista", sub:"Gestisci agenda, clienti e servizi.",
-      icon:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>,
+      id:"pro", label:"Professionista", sub:"Gestisci agenda, clienti e servizi", color:BLUE,
+      icon:(sel)=>(
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={sel?BLUE:"#ADADAD"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+        </svg>
+      ),
     },
   ];
 
+  const activeColor = tp==="cliente" ? PINK : tp==="pro" ? BLUE : null;
+
   return (
     <div style={{
-      minHeight:"100dvh", background:"#FFFFFF",
+      minHeight:"100dvh", background:"#F5F5F7",
       display:"flex", flexDirection:"column",
       fontFamily:"'Plus Jakarta Sans',sans-serif",
     }}>
       {/* ── LOGO + HEADER ── */}
       <div style={{
         textAlign:"center",
-        paddingTop:80, paddingBottom:48,
+        paddingTop:72, paddingBottom:40,
         paddingLeft:24, paddingRight:24,
         animation:"dsFadeIn .45s ease both",
       }}>
         <img src="/beauty/logo.png" alt="beauty"
-          style={{height:80, width:"auto", display:"block", margin:"0 auto 32px", objectFit:"contain"}}/>
+          style={{height:72, width:"auto", display:"block", margin:"0 auto 28px", objectFit:"contain"}}/>
         <h1 style={{
-          fontSize:34, fontWeight:800, color:"#0D0D0E",
-          margin:"0 0 10px", letterSpacing:"-.04em", lineHeight:1.1,
+          fontSize:34, fontWeight:800, color:T.ink,
+          margin:"0 0 8px", letterSpacing:"-.04em", lineHeight:1.1,
         }}>Benvenuto</h1>
         <p style={{
-          fontSize:16, color:"#8A8A8E", margin:0,
+          fontSize:15, color:T.inkSoft, margin:0,
           fontWeight:400, lineHeight:1.55,
-        }}>Scopri i migliori professionisti beauty vicino a te.</p>
+        }}>Prenota i migliori professionisti vicino a te.</p>
       </div>
 
       {/* ── CARDS ── */}
       <div style={{
         flex:1, padding:"0 20px",
-        animation:"dsSlideUp .4s cubic-bezier(.22,1,.36,1) .1s both",
+        animation:"dsSlideUp .4s cubic-bezier(.22,1,.36,1) .08s both",
       }}>
         <p style={{
-          fontSize:11, fontWeight:700, color:"#8A8A8E",
-          textTransform:"uppercase", letterSpacing:1.6,
-          margin:"0 0 14px 2px",
+          fontSize:11, fontWeight:700, color:T.inkSoft,
+          textTransform:"uppercase", letterSpacing:1.5,
+          margin:"0 0 12px 4px",
         }}>Come vuoi accedere?</p>
 
-        <div style={{display:"flex", flexDirection:"column", gap:12}}>
+        <div style={{display:"flex", flexDirection:"column", gap:10}}>
           {opts.map(opt => {
             const sel = tp === opt.id;
+            const c = opt.color;
             return (
               <button key={opt.id} onClick={()=>setTp(opt.id)}
                 style={{
-                  width:"100%", padding:"20px 20px",
-                  borderRadius:20, cursor:"pointer",
+                  width:"100%", padding:"18px 20px",
+                  borderRadius:18, cursor:"pointer",
                   fontFamily:"inherit", textAlign:"left",
                   display:"flex", alignItems:"center", gap:16,
-                  background:"#FFFFFF",
-                  border:`2px solid ${sel ? "#0D0D0E" : "#F0F0F0"}`,
+                  background: sel ? c : "#FFFFFF",
+                  border:`2px solid ${sel ? c : "transparent"}`,
                   boxShadow: sel
-                    ? "0 4px 20px rgba(0,0,0,.10)"
-                    : "0 2px 8px rgba(0,0,0,.05)",
-                  transition:"all .22s cubic-bezier(.22,1,.36,1)",
+                    ? `0 6px 24px ${c}44`
+                    : "0 2px 12px rgba(0,0,0,.06)",
+                  transition:"all .25s cubic-bezier(.22,1,.36,1)",
                   outline:"none",
                 }}>
                 {/* icona */}
                 <div style={{
-                  width:46, height:46, borderRadius:14,
-                  background: sel ? "#0D0D0E" : "#F5F5F5",
+                  width:44, height:44, borderRadius:12,
+                  background: sel ? "rgba(255,255,255,.22)" : "#F5F5F7",
                   display:"flex", alignItems:"center", justifyContent:"center",
-                  color: sel ? "#FFFFFF" : "#8A8A8E",
-                  flexShrink:0, transition:"all .22s",
+                  flexShrink:0, transition:"background .2s",
                 }}>
-                  {opt.icon}
+                  {opt.icon(sel)}
                 </div>
                 {/* testi */}
                 <div style={{flex:1}}>
                   <p style={{
-                    fontSize:17, fontWeight:700,
-                    color:"#0D0D0E",
-                    margin:"0 0 3px",
+                    fontSize:16, fontWeight:700,
+                    color: sel ? "#fff" : T.ink,
+                    margin:"0 0 3px", transition:"color .15s",
                   }}>{opt.label}</p>
                   <p style={{
-                    fontSize:13, color:"#8A8A8E",
+                    fontSize:13,
+                    color: sel ? "rgba(255,255,255,.82)" : T.inkSoft,
                     margin:0, fontWeight:400, lineHeight:1.4,
+                    transition:"color .15s",
                   }}>{opt.sub}</p>
                 </div>
                 {/* freccia */}
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                  stroke={sel ? "#0D0D0E" : "#D0D0D0"} strokeWidth="2.2" strokeLinecap="round">
+                  stroke={sel ? "#fff" : "#CECECE"} strokeWidth="2.2" strokeLinecap="round">
                   <path d="M9 18l6-6-6-6"/>
                 </svg>
               </button>
@@ -1029,13 +1039,15 @@ function LoginScreen({onAuth}) {
           style={{
             width:"100%", padding:"17px 0",
             borderRadius:999, border:"none",
-            marginTop:24,
-            background: tp ? "#0D0D0E" : "#F0F0F0",
-            color: tp ? "#FFFFFF" : "#B0B0B0",
+            marginTop:20,
+            background: activeColor
+              ? `linear-gradient(135deg, ${activeColor}, ${activeColor}CC)`
+              : "#E8E8E8",
+            color: tp ? "#fff" : "#ADADAD",
             fontSize:16, fontWeight:700,
             cursor: tp ? "pointer" : "default",
             fontFamily:"inherit",
-            boxShadow: tp ? "0 4px 20px rgba(0,0,0,.18)" : "none",
+            boxShadow: activeColor ? `0 6px 24px ${activeColor}50` : "none",
             transition:"all .25s cubic-bezier(.22,1,.36,1)",
             letterSpacing:"-.01em",
           }}>
@@ -1044,13 +1056,13 @@ function LoginScreen({onAuth}) {
 
         {/* ── FOOTER ── */}
         <p style={{
-          textAlign:"center", fontSize:12, color:"#B0B0B0",
+          textAlign:"center", fontSize:12, color:T.inkSoft,
           margin:"20px 0 32px", fontWeight:400, lineHeight:1.6,
         }}>
           Continuando accetti i{" "}
-          <span style={{color:"#0D0D0E", fontWeight:600}}>Termini di servizio</span>
+          <span style={{color:T.brand, fontWeight:600}}>Termini di servizio</span>
           {" "}e la{" "}
-          <span style={{color:"#0D0D0E", fontWeight:600}}>Privacy policy</span>
+          <span style={{color:T.brand, fontWeight:600}}>Privacy policy</span>
         </p>
       </div>
     </div>
@@ -3600,7 +3612,7 @@ export default function App() {
 
   const handleAuth = ({name,type}) => {
     setUser({name,type});setMode(type==="pro"?"pro":"cliente");
-    if(type==="pro"){ setAccent("blu"); setShowBetaWelcome(true); nav("pro_agenda"); }
+    if(type==="pro"){ setShowBetaWelcome(true); nav("pro_agenda"); }
     else { setShowOnboarding(true); nav("cl_home"); }
   };
 
@@ -3610,11 +3622,7 @@ export default function App() {
   };
 
   if(!user) return <W><LoginScreen onAuth={handleAuth}/></W>;
-  if(showOnboarding) return <W><OnboardingScreen onComplete={(gender)=>{
-    setUser(u=>({...u,gender}));
-    setAccent(gender==="donna"?"donna": gender==="uomo"?"uomo":"nonspec");
-    setShowOnboarding(false);
-  }}/></W>;
+  if(showOnboarding) return <W><OnboardingScreen onComplete={(gender)=>{ setUser(u=>({...u,gender})); setShowOnboarding(false); }}/></W>;
 
   const render = () => {
     if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations}/>;
