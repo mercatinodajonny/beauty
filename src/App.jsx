@@ -2153,6 +2153,22 @@ function ClPrenota({data,nav}) {
 }
 
 /* APPUNTAMENTI CLIENTE */
+// Helper avatar editor — definiti a livello modulo (non dentro altri component)
+function AvSelPill({label,active,onClick}) {
+  return (
+    <button onClick={onClick} style={{flexShrink:0,padding:"10px 16px",borderRadius:999,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:12,fontWeight:700,background:active?T.brand:"#F0F0F0",color:active?"#fff":"#555",boxShadow:active?`0 3px 10px ${T.brand}44`:"none",transition:"all .18s ease"}}>
+      {label}
+    </button>
+  );
+}
+function AvColorDot({color,active,onClick,size}) {
+  const s = size||46;
+  return (
+    <button onClick={onClick} style={{width:s,height:s,borderRadius:"50%",background:color,border:active?`3px solid ${T.brand}`:"3px solid transparent",cursor:"pointer",flexShrink:0,boxShadow:active?`0 0 0 2px white, 0 4px 12px ${color}88`:"0 2px 8px rgba(0,0,0,.14)",transition:"all .2s ease",padding:0}}/>
+  );
+}
+const AV_HAIR_EMOJI = ["✂️","〰️","💁","🌀","💆","🪒"];
+
 // ── AvatarEditorScreen ────────────────────────────────────────
 function AvatarEditorScreen({ nav, avatarConfig, setAvatarConfig }) {
   const [cfg, setCfg] = React.useState({...AVATAR_DEFAULT,...avatarConfig});
@@ -2169,26 +2185,6 @@ function AvatarEditorScreen({ nav, avatarConfig, setAvatarConfig }) {
     {id:"vestiti", label:"Vestiti",   emoji:"👕"},
   ];
 
-  // Pill selezionabile generica
-  const SelPill = ({label,active,onClick}) => (
-    <button onClick={onClick} style={{flexShrink:0,padding:"10px 16px",borderRadius:999,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:12,fontWeight:700,background:active?T.brand:"#F0F0F0",color:active?"#fff":"#555",boxShadow:active?`0 3px 10px ${T.brand}44`:"none",transition:"all .18s ease"}}>
-      {label}
-    </button>
-  );
-
-  // Cerchio colore selezionabile
-  const ColorDot = ({color,active,onClick,size=46}) => (
-    <button onClick={onClick} style={{width:size,height:size,borderRadius:"50%",background:color,border:active?`3px solid ${T.brand}`:"3px solid transparent",cursor:"pointer",flexShrink:0,boxShadow:active?`0 0 0 2px white, 0 4px 12px ${color}88`:"0 2px 8px rgba(0,0,0,.14)",transition:"all .2s ease",padding:0}}/>
-  );
-
-  // Mini preview di uno stile capelli
-  const HairPreview = ({style,label,active,onClick}) => (
-    <button onClick={onClick} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:6,background:active?T.brandBg:"#F8F8F8",border:active?`2px solid ${T.brand}`:"2px solid transparent",borderRadius:16,padding:"10px 8px",cursor:"pointer",minWidth:72,transition:"all .18s ease"}}>
-      <AvatarSVG config={{...cfg,hairStyle:style}} size={52} animate={false}/>
-      <span style={{fontSize:10,fontWeight:700,color:active?T.brand:"#666"}}>{label}</span>
-    </button>
-  );
-
   return (
     <div style={{background:"#F8F8FA",minHeight:"100dvh",paddingBottom:120}}>
 
@@ -2201,11 +2197,11 @@ function AvatarEditorScreen({ nav, avatarConfig, setAvatarConfig }) {
         </div>
 
         {/* Avatar preview grande + floating */}
-        <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"28px 0 20px"}}>
-          <div className="av-float" style={{width:190,height:190,borderRadius:"50%",background:`linear-gradient(145deg,${T.brandBg},#FFFFFF)`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 16px 48px ${T.brand}28, 0 4px 16px rgba(0,0,0,.06)`}}>
-            <AvatarSVG config={cfg} size={155} animate={true}/>
+        <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"24px 0 20px"}}>
+          <div className="av-float" style={{width:180,height:180,borderRadius:"50%",background:`linear-gradient(145deg,${T.brandBg},#FFFFFF)`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 16px 48px ${T.brand}28, 0 4px 16px rgba(0,0,0,.06)`}}>
+            <AvatarSVG config={cfg} size={148} animate={true}/>
           </div>
-          <p style={{marginTop:12,fontSize:13,color:"#ADADAD",fontWeight:500}}>L'avatar si aggiorna in tempo reale ✨</p>
+          <p style={{marginTop:10,fontSize:12,color:"#ADADAD",fontWeight:500}}>Si aggiorna in tempo reale ✨</p>
         </div>
 
         {/* Tab bar */}
@@ -2221,14 +2217,13 @@ function AvatarEditorScreen({ nav, avatarConfig, setAvatarConfig }) {
       {/* ── Opzioni ── */}
       <div style={{padding:"24px 20px"}}>
 
-        {/* VISO — carnagione */}
         {tab==="viso" && (
           <div className="av-pop">
             <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 16px",letterSpacing:"-.02em"}}>Carnagione</p>
             <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
               {AV_SKINS.map(s=>(
                 <div key={s.v} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
-                  <ColorDot color={s.v} active={cfg.skin===s.v} onClick={()=>update("skin",s.v)}/>
+                  <AvColorDot color={s.v} active={cfg.skin===s.v} onClick={()=>update("skin",s.v)}/>
                   <span style={{fontSize:9,fontWeight:600,color:"#999"}}>{s.l}</span>
                 </div>
               ))}
@@ -2236,83 +2231,81 @@ function AvatarEditorScreen({ nav, avatarConfig, setAvatarConfig }) {
           </div>
         )}
 
-        {/* CAPELLI — stile + colore */}
         {tab==="capelli" && (
           <div className="av-pop">
             <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Taglio</p>
             <div style={{display:"flex",gap:10,overflowX:"auto",paddingBottom:16,scrollbarWidth:"none"}}>
-              {AV_HAIR_LABELS.map((l,i)=><HairPreview key={i} style={i} label={l} active={cfg.hairStyle===i} onClick={()=>update("hairStyle",i)}/>)}
+              {AV_HAIR_LABELS.map((l,i)=>(
+                <button key={i} onClick={()=>update("hairStyle",i)} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,background:cfg.hairStyle===i?T.brandBg:"#F0F0F0",border:cfg.hairStyle===i?`2px solid ${T.brand}`:"2px solid transparent",borderRadius:16,padding:"14px 12px",cursor:"pointer",minWidth:72,transition:"all .18s ease",fontFamily:"inherit"}}>
+                  <span style={{fontSize:28}}>{AV_HAIR_EMOJI[i]}</span>
+                  <span style={{fontSize:10,fontWeight:700,color:cfg.hairStyle===i?T.brand:"#666"}}>{l}</span>
+                </button>
+              ))}
             </div>
             <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"8px 0 14px",letterSpacing:"-.02em"}}>Colore</p>
             <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-              {AV_HAIR_COLORS.map(c=>(
-                <ColorDot key={c} color={c} active={cfg.hairColor===c} onClick={()=>update("hairColor",c)} size={42}/>
-              ))}
+              {AV_HAIR_COLORS.map(c=><AvColorDot key={c} color={c} active={cfg.hairColor===c} onClick={()=>update("hairColor",c)} size={42}/>)}
             </div>
           </div>
         )}
 
-        {/* OCCHI — colore + sopracciglia */}
         {tab==="occhi" && (
           <div className="av-pop">
             <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Colore occhi</p>
             <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
-              {AV_EYE_COLORS.map(c=><ColorDot key={c} color={c} active={cfg.eyeColor===c} onClick={()=>update("eyeColor",c)}/>)}
+              {AV_EYE_COLORS.map(c=><AvColorDot key={c} color={c} active={cfg.eyeColor===c} onClick={()=>update("eyeColor",c)}/>)}
             </div>
             <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"20px 0 14px",letterSpacing:"-.02em"}}>Sopracciglia</p>
             <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-              {["Naturali","Sottili","Spesse","Alzate"].map((l,i)=><SelPill key={i} label={l} active={cfg.browStyle===i} onClick={()=>update("browStyle",i)}/>)}
+              {["Naturali","Sottili","Spesse","Alzate"].map((l,i)=><AvSelPill key={i} label={l} active={cfg.browStyle===i} onClick={()=>update("browStyle",i)}/>)}
             </div>
           </div>
         )}
 
-        {/* BARBA */}
         {tab==="barba" && (
           <div className="av-pop">
             <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Barba & Baffi</p>
             <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-              {AV_BEARD_LABELS.map((l,i)=><SelPill key={i} label={l} active={cfg.beardStyle===i} onClick={()=>update("beardStyle",i)}/>)}
+              {AV_BEARD_LABELS.map((l,i)=><AvSelPill key={i} label={l} active={cfg.beardStyle===i} onClick={()=>update("beardStyle",i)}/>)}
             </div>
           </div>
         )}
 
-        {/* ACCESSORI — occhiali + orecchini + cappello */}
         {tab==="access" && (
           <div className="av-pop">
             <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Occhiali</p>
             <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
-              {AV_GLASSES_LABELS.map((l,i)=><SelPill key={i} label={l} active={cfg.glasses===i} onClick={()=>update("glasses",i)}/>)}
+              {AV_GLASSES_LABELS.map((l,i)=><AvSelPill key={i} label={l} active={cfg.glasses===i} onClick={()=>update("glasses",i)}/>)}
             </div>
             <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Orecchini</p>
             <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
-              {AV_EARRING_LABELS.map((l,i)=><SelPill key={i} label={l} active={cfg.earrings===i} onClick={()=>update("earrings",i)}/>)}
+              {AV_EARRING_LABELS.map((l,i)=><AvSelPill key={i} label={l} active={cfg.earrings===i} onClick={()=>update("earrings",i)}/>)}
             </div>
             <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Cappello</p>
             <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-              {AV_HAT_LABELS.map((l,i)=><SelPill key={i} label={l} active={cfg.hat===i} onClick={()=>update("hat",i)}/>)}
+              {AV_HAT_LABELS.map((l,i)=><AvSelPill key={i} label={l} active={cfg.hat===i} onClick={()=>update("hat",i)}/>)}
             </div>
           </div>
         )}
 
-        {/* VESTITI — stile + colore */}
         {tab==="vestiti" && (
           <div className="av-pop">
             <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Stile</p>
             <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
-              {AV_OUTFIT_LABELS.map((l,i)=><SelPill key={i} label={l} active={cfg.outfit===i} onClick={()=>update("outfit",i)}/>)}
+              {AV_OUTFIT_LABELS.map((l,i)=><AvSelPill key={i} label={l} active={cfg.outfit===i} onClick={()=>update("outfit",i)}/>)}
             </div>
             <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Colore</p>
             <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-              {AV_OUTFIT_COLORS.map(c=><ColorDot key={c} color={c} active={cfg.outfitColor===c} onClick={()=>update("outfitColor",c)}/>)}
+              {AV_OUTFIT_COLORS.map(c=><AvColorDot key={c} color={c} active={cfg.outfitColor===c} onClick={()=>update("outfitColor",c)}/>)}
             </div>
           </div>
         )}
 
-        {/* Footer: slot AI futuro */}
+        {/* Slot AI futuro */}
         <div style={{marginTop:32,borderRadius:20,background:"#FFFFFF",border:`1.5px dashed ${T.brand}44`,padding:"20px",textAlign:"center",boxShadow:"0 2px 12px rgba(0,0,0,.04)"}}>
-          <span style={{fontSize:24}}>✨</span>
-          <p style={{fontSize:14,fontWeight:700,color:"#0D0D0E",margin:"8px 0 4px"}}>Crea da foto — Presto</p>
-          <p style={{fontSize:12,color:"#ADADAD",margin:0}}>Carica un selfie e genera automaticamente il tuo avatar con l'IA</p>
+          <span style={{fontSize:28}}>✨</span>
+          <p style={{fontSize:14,fontWeight:700,color:"#0D0D0E",margin:"8px 0 4px"}}>Crea da selfie — Prossimamente</p>
+          <p style={{fontSize:12,color:"#ADADAD",margin:0}}>Carica una foto e l'IA genererà il tuo avatar automaticamente</p>
         </div>
       </div>
     </div>
