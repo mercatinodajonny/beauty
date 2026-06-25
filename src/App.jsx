@@ -3160,7 +3160,7 @@ function ManSVG({scale=1}){
 
 /* ─── AVATAR — immagini reali 3D ─────────────────────────────── */
 const CharDonna = () => (
-  <img src="/beauty/donna-v5.png" alt="Donna"
+  <img src="/beauty/donna-v6.png" alt="Donna"
     style={{
       position:"absolute",
       top:"6%",bottom:0,left:0,right:0,
