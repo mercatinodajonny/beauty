@@ -3492,31 +3492,33 @@ function OnboardingScreen({onComplete}){
 
           {/* Testo label */}
           <div style={{
-            padding:sel==="donna"?"68px 24px 0":sel==="uomo"?"56px 10px 0":"46px 18px 0",
+            padding:sel==="donna"?"64px 22px 0":sel==="uomo"?"52px 8px 0":"40px 18px 0",
             transition:`padding ${EASE}`,position:"relative",zIndex:2,
           }}>
-            {sel==="donna" && <p className="ob-fadein" style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.72)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 4px"}}>Hai scelto</p>}
+            {sel==="donna" && <p className="ob-fadein" style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.72)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 4px"}}>Hai scelto</p>}
             <p style={{
-              fontSize:sel==="donna"?42:sel==="uomo"?12:26,
-              fontWeight:900,color:"#fff",margin:0,letterSpacing:"-.03em",lineHeight:1.05,
+              fontSize:sel==="donna"?40:sel==="uomo"?11:24,
+              fontWeight:900,color:"#fff",margin:"0 0 8px",letterSpacing:"-.03em",lineHeight:1.05,
               transition:`font-size ${EASE}`,
               writingMode:sel==="uomo"?"vertical-rl":"horizontal-tb",
               whiteSpace:"nowrap",textShadow:"0 2px 10px rgba(0,0,0,.15)",
             }}>Donna</p>
-            {sel==="donna" && <p className="ob-fadein" style={{fontSize:14,color:"rgba(255,255,255,.84)",margin:"10px 0 0",lineHeight:1.55,animationDelay:"80ms",fontWeight:500}}>
-              Scopri servizi e<br/>professionisti per te
-            </p>}
+            {sel!=="uomo" && (
+              <p style={{fontSize:sel==="donna"?13:11,color:"rgba(255,255,255,.84)",margin:0,lineHeight:1.5,fontWeight:500,transition:`font-size ${EASE}`}}>
+                Scopri servizi e<br/>professionisti per te
+              </p>
+            )}
           </div>
 
-          {/* Avatar donna */}
+          {/* Avatar donna — size grande, overflow:hidden ritaglia ai bordi del pannello */}
           <div style={{
             flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
             position:"relative",zIndex:1,
-            transform:sel==="donna"?"scale(1.06) translateY(5px)":"scale(1) translateY(0)",
+            transform:sel==="donna"?"scale(1.05) translateY(4px)":"scale(1) translateY(0)",
             transition:`transform 440ms cubic-bezier(.34,1.56,.64,1)`,
             transformOrigin:"bottom center",overflow:"hidden",
           }}>
-            <CharDonna size={sel==="donna"?268:186}/>
+            <CharDonna size={sel==="donna"?290:290}/>
           </div>
 
           {sel==="donna" && (
@@ -3577,31 +3579,33 @@ function OnboardingScreen({onComplete}){
           <div style={{position:"absolute",bottom:0,left:0,right:0,height:"32%",background:"linear-gradient(0deg,rgba(25,60,120,.38) 0%,transparent 100%)",pointerEvents:"none"}}/>
 
           <div style={{
-            padding:sel==="uomo"?"68px 24px 0":sel==="donna"?"56px 10px 0":"46px 18px 0",
+            padding:sel==="uomo"?"64px 22px 0":sel==="donna"?"52px 8px 0":"40px 18px 0",
             transition:`padding ${EASE}`,position:"relative",zIndex:2,
             textAlign:sel==="uomo"?"left":"right",width:"100%",
           }}>
-            {sel==="uomo" && <p className="ob-fadein" style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.72)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 4px"}}>Hai scelto</p>}
+            {sel==="uomo" && <p className="ob-fadein" style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.72)",letterSpacing:"2px",textTransform:"uppercase",margin:"0 0 4px"}}>Hai scelto</p>}
             <p style={{
-              fontSize:sel==="uomo"?42:sel==="donna"?12:26,
-              fontWeight:900,color:"#fff",margin:0,letterSpacing:"-.03em",lineHeight:1.05,
+              fontSize:sel==="uomo"?40:sel==="donna"?11:24,
+              fontWeight:900,color:"#fff",margin:"0 0 8px",letterSpacing:"-.03em",lineHeight:1.05,
               transition:`font-size ${EASE}`,
               writingMode:sel==="donna"?"vertical-rl":"horizontal-tb",
               whiteSpace:"nowrap",textShadow:"0 2px 10px rgba(0,0,0,.15)",
             }}>Uomo</p>
-            {sel==="uomo" && <p className="ob-fadein" style={{fontSize:14,color:"rgba(255,255,255,.84)",margin:"10px 0 0",lineHeight:1.55,animationDelay:"80ms",fontWeight:500}}>
-              Scopri servizi e<br/>professionisti per te
-            </p>}
+            {sel!=="donna" && (
+              <p style={{fontSize:sel==="uomo"?13:11,color:"rgba(255,255,255,.84)",margin:0,lineHeight:1.5,fontWeight:500,transition:`font-size ${EASE}`,textAlign:sel==="uomo"?"left":"right"}}>
+                Scopri servizi e<br/>professionisti per te
+              </p>
+            )}
           </div>
 
           <div style={{
             flex:1,display:"flex",alignItems:"flex-end",justifyContent:"center",
             position:"relative",zIndex:1,
-            transform:sel==="uomo"?"scale(1.06) translateY(5px)":"scale(1) translateY(0)",
+            transform:sel==="uomo"?"scale(1.05) translateY(4px)":"scale(1) translateY(0)",
             transition:`transform 440ms cubic-bezier(.34,1.56,.64,1)`,
             transformOrigin:"bottom center",overflow:"hidden",
           }}>
-            <CharUomo size={sel==="uomo"?268:186}/>
+            <CharUomo size={sel==="uomo"?290:290}/>
           </div>
 
           {sel==="uomo" && (
