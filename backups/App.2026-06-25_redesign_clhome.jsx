@@ -1005,126 +1005,114 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
         })
     : [];
 
-  // ─── RENDER ───
-  const hasDm = conversations.some(c=>c.messages.some(m=>m.from==="pro"));
-
   return (
-    <div style={{paddingBottom:120,background:T.bg,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:100,background:"#fff",minHeight:"100dvh"}}>
 
-      {/* ── TOP HEADER editorial ── */}
-      <div style={{padding:"56px 20px 0",background:T.bg}}>
-        {/* Row 1: logo + icone */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}}>
-          <span style={{fontSize:24,fontWeight:900,color:T.ink,letterSpacing:"-.05em",lineHeight:1}}>
-            beauty<span style={{color:T.brand}}>.</span>
-          </span>
-          <div style={{display:"flex",gap:6}}>
-            <div style={{position:"relative"}}>
-              <button onClick={()=>nav("cl_chats")} style={{width:40,height:40,borderRadius:"50%",border:`1.5px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white,padding:0}}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-              </button>
-              {hasDm && <div style={{position:"absolute",top:2,right:2,width:7,height:7,borderRadius:"50%",background:T.brand,border:"2px solid "+T.bg}}/>}
-            </div>
-            <div style={{position:"relative"}}>
-              <button style={{width:40,height:40,borderRadius:"50%",border:`1.5px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white,padding:0}}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-              </button>
-              <div style={{position:"absolute",top:2,right:2,width:7,height:7,borderRadius:"50%",background:T.brand,border:"2px solid "+T.bg}}/>
-            </div>
+      {/* ── HEADER ── */}
+      <div style={{background:"#fff",padding:"54px 20px 0"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
+          {/* Greeting + avatar */}
+          <div>
+            <p style={{fontSize:12,fontWeight:600,color:"#B0B0B8",margin:"0 0 1px",letterSpacing:".3px"}}>Ciao! 👋</p>
+            <span style={{fontSize:22,fontWeight:900,color:"#111",letterSpacing:"-.04em",lineHeight:1}}>beauty<span style={{color:T.brand}}>.</span></span>
           </div>
+          {(()=>{
+            const hasDm = conversations.some(c=>c.messages.some(m=>m.from==="pro"));
+            return (
+              <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                <div style={{position:"relative"}}>
+                  <button onClick={()=>nav("cl_chats")} style={{width:38,height:38,borderRadius:"50%",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#F4F4F7",padding:0}}>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#444" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                  </button>
+                  {hasDm && <div style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:T.red,border:"2px solid #fff"}}/>}
+                </div>
+                <div style={{position:"relative"}}>
+                  <button style={{width:38,height:38,borderRadius:"50%",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#F4F4F7",padding:0}}>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#444" strokeWidth="2.1" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                  </button>
+                  <div style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:T.red,border:"2px solid #fff"}}/>
+                </div>
+              </div>
+            );
+          })()}
         </div>
 
-        {/* Row 2: location pill */}
-        <button onClick={()=>setShowCity(true)} style={{
-          display:"inline-flex",alignItems:"center",gap:5,
-          background:T.white,border:`1.5px solid ${T.line}`,borderRadius:99,
-          padding:"7px 12px 7px 10px",cursor:"pointer",fontFamily:"inherit",marginBottom:20,
-        }}>
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span style={{fontSize:13,color:T.ink,fontWeight:600}}>{city}</span>
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        {/* Posizione */}
+        <button onClick={()=>setShowCity(true)} style={{display:"inline-flex",alignItems:"center",gap:5,background:"#fff",border:"1.5px solid #E8E8E8",borderRadius:8,padding:"6px 10px",cursor:"pointer",fontFamily:"inherit",marginBottom:14}}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span style={{fontSize:13,color:"#111",fontWeight:600}}>{city}</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
         </button>
 
-        {/* Row 3: search */}
-        <div style={{display:"flex",alignItems:"center",gap:10,background:T.bgMid,borderRadius:16,padding:"14px 16px",marginBottom:4}}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}>
+        {/* Search bar */}
+        <div style={{display:"flex",alignItems:"center",gap:10,background:"#F5F5F5",borderRadius:12,padding:"13px 16px",marginBottom:24}}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}>
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
           <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
-            placeholder="Cerca servizio o professionista…"
-            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:T.ink,fontFamily:"inherit",fontWeight:500}}/>
-          {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:18,color:T.inkSoft,padding:0,lineHeight:1}}>×</button>}
+            placeholder="Cerca servizio o professionista..."
+            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:"#111",fontFamily:"inherit"}}/>
+          {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:18,color:"#999",padding:0,lineHeight:1}}>×</button>}
         </div>
       </div>
 
-      {/* ── BANNER prossimo appuntamento — card editoriale ── */}
+      {/* ── BANNER appuntamento — cartoon premium ── */}
       {!(searching && q.length >= 2) && !selCat && banner && (
-        <div style={{padding:"20px 20px 0"}}>
-          <div onClick={()=>nav("cl_appts")} style={{
-            borderRadius:20,cursor:"pointer",overflow:"hidden",
-            background:T.bgDark,
-            boxShadow:"0 4px 24px rgba(0,0,0,.18)",
+        <div style={{padding:"0 20px 20px"}}>
+          <div onClick={()=>nav("cl_appts")} className="pro-card" style={{
+            display:"flex",alignItems:"center",gap:14,padding:"16px 18px",
+            borderRadius:20,cursor:"pointer",
+            background:`linear-gradient(135deg,${T.brand},${T.brandDeep})`,
+            boxShadow:`0 8px 0 ${T.brandDeep}55,0 12px 24px ${T.brandBg}`
           }}>
-            <div style={{padding:"18px 20px",display:"flex",alignItems:"center",gap:16}}>
-              <div style={{width:48,height:48,borderRadius:14,background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.12)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:22}}>
-                📅
-              </div>
-              <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.45)",margin:"0 0 3px",textTransform:"uppercase",letterSpacing:"1.2px"}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
-                <p style={{fontSize:15,fontWeight:800,color:T.white,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service}</p>
-                <p style={{fontSize:13,color:"rgba(255,255,255,.55)",margin:0}}>{banner.pro} · {nextAppt?`${banner.date} ${banner.time}`:banner.date}</p>
-              </div>
-              <div style={{width:32,height:32,borderRadius:99,background:"rgba(255,255,255,.08)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-              </div>
+            <div style={{width:44,height:44,borderRadius:14,background:"rgba(255,255,255,.2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:22}}>
+              📅
             </div>
-            {/* Accent line bottom */}
-            <div style={{height:3,background:T.grad}}/>
+            <div style={{flex:1,minWidth:0}}>
+              <p style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.75)",margin:"0 0 2px",textTransform:"uppercase",letterSpacing:"1px"}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
+              <p style={{fontSize:14,fontWeight:800,color:"#fff",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service} · {banner.pro}</p>
+              <p style={{fontSize:12,color:"rgba(255,255,255,.75)",margin:0}}>{nextAppt?`${banner.date} · ${banner.time}`:banner.date}</p>
+            </div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
         </div>
       )}
 
       {/* ── RISULTATI RICERCA ── */}
       {searching && q.length >= 2 && (
-        <div style={{padding:"20px 20px 0"}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-            <p style={{fontSize:13,color:T.inkSoft,margin:0}}><strong style={{color:T.ink}}>{searchResults.length}</strong> risultati per "{q}"</p>
-            <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.inkSoft,fontFamily:"inherit",fontWeight:600,textDecoration:"underline"}}>Chiudi</button>
+        <div style={{padding:"0 20px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+            <p style={{fontSize:13,color:"#999",margin:0}}>{searchResults.length} risultati per "{q}"</p>
+            <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#111",fontFamily:"inherit",fontWeight:600}}>Chiudi</button>
           </div>
           {searchResults.length === 0 && (
-            <div style={{textAlign:"center",padding:"60px 0"}}>
-              <div style={{fontSize:40,marginBottom:12}}>🔍</div>
-              <p style={{fontSize:15,color:T.inkSoft,fontWeight:500}}>Nessun risultato per "{q}"</p>
+            <div style={{textAlign:"center",padding:"50px 0"}}>
+              <p style={{fontSize:36,marginBottom:10}}>🔍</p>
+              <p style={{fontSize:15,color:"#999",fontWeight:500}}>Nessun risultato</p>
             </div>
           )}
-          <div style={{display:"flex",flexDirection:"column",gap:2}}>
-            {searchResults.map((pro,i) => {
-              const photoUrl = proImg(pro);
-              return (
-                <div key={pro.id} style={{
-                  background:T.white,borderRadius:16,overflow:"hidden",
-                  boxShadow:"0 1px 4px rgba(0,0,0,.06)",
-                }}>
-                  <div style={{display:"flex",gap:14,padding:"14px 16px",cursor:"pointer",alignItems:"center"}} onClick={()=>{nav("cl_pro",pro);setQ("");setSearching(false);}}>
-                    <div style={{width:50,height:50,borderRadius:14,background:T.surface,overflow:"hidden",flexShrink:0}}>
-                      {photoUrl
-                        ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                        : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>{pro.emoji}</div>}
-                    </div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <p style={{fontSize:15,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>{pro.name}</p>
-                      <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
-                      <span style={{fontSize:12,color:T.amber,fontWeight:700}}>★ {pro.rating}</span>
-                    </div>
-                    <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{
-                      padding:"9px 16px",borderRadius:99,border:"none",background:T.brand,
-                      color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0,
-                    }}>Prenota</button>
+          {searchResults.map((pro,i) => {
+            const photoUrl = proImg(pro);
+            return (
+              <div key={pro.id}>
+                <div onClick={()=>{nav("cl_pro",pro);setQ("");setSearching(false);}} style={{display:"flex",gap:14,padding:"14px 0",cursor:"pointer",alignItems:"center"}}>
+                  <div style={{width:52,height:52,borderRadius:12,background:"#F5F5F5",overflow:"hidden",flexShrink:0}}>
+                    {photoUrl
+                      ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
+                      : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>{pro.emoji}</div>
+                    }
                   </div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <p style={{fontSize:15,fontWeight:700,color:"#111",margin:"0 0 2px"}}>{pro.name}</p>
+                    <p style={{fontSize:12,color:"#888",margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
+                    <span style={{fontSize:12,color:"#111",fontWeight:600}}>★ {pro.rating}</span>
+                  </div>
+                  <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 16px",borderRadius:10,border:"none",background:T.brand,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
                 </div>
-              );
-            })}
-          </div>
+                {i < searchResults.length-1 && <div style={{height:1,background:"#F0F0F0"}}/>}
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -1133,98 +1121,106 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
         <div>
           {!selCat && (
             <>
-              {/* SEZIONE CATEGORIE */}
-              <div style={{marginTop:28,marginBottom:4}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 20px",marginBottom:14}}>
-                  <span className="be-label">Categorie</span>
-                </div>
-                <div style={{display:"flex",gap:10,overflowX:"auto",padding:"2px 20px 6px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+              {/* CATEGORIE — tiles pastello grandi con emoji */}
+              <div style={{marginBottom:28}}>
+                <p style={{fontSize:12,fontWeight:700,color:"#C0C0C8",textTransform:"uppercase",letterSpacing:"1.2px",margin:"0 0 14px",padding:"0 20px"}}>Esplora</p>
+                <div style={{display:"flex",gap:10,overflowX:"auto",padding:"4px 20px 8px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {MACRO_CATS.map(cat => (
-                    <button key={cat.id} onClick={()=>openCategory(cat.id)} style={{
-                      flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,
-                      background:cat.bg,border:"none",cursor:"pointer",
-                      padding:"14px 14px 12px",borderRadius:20,fontFamily:"inherit",
-                      minWidth:76,
-                    }}>
-                      <span style={{fontSize:26,lineHeight:1}}>{cat.emoji}</span>
-                      <p style={{fontSize:10,fontWeight:700,color:cat.color,margin:0,textAlign:"center",lineHeight:1.3,whiteSpace:"pre-line"}}>{cat.label}</p>
+                    <button key={cat.id} onClick={()=>openCategory(cat.id)} className="cat-pill"
+                      style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:9,
+                        background:cat.bg,border:"none",cursor:"pointer",
+                        padding:"14px 16px 12px",borderRadius:22,fontFamily:"inherit",
+                        minWidth:80,
+                        boxShadow:`0 4px 0 ${cat.shadowColor},0 6px 16px ${cat.shadowColor}`}}>
+                      <span style={{fontSize:28,lineHeight:1,display:"block"}}>{cat.emoji}</span>
+                      <p style={{fontSize:11,fontWeight:700,color:cat.color,margin:0,textAlign:"center",lineHeight:1.25,whiteSpace:"pre-line"}}>{cat.label}</p>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* SEZIONE PROFESSIONISTI */}
-              <div style={{padding:"24px 20px 0"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-                  <span className="be-label">Vicino a te</span>
-                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti</button>
-                </div>
+              {/* PROFESSIONISTI VICINO A TE — cartoon premium cards */}
+              <div style={{padding:"0 20px"}}>
+                <p style={{fontSize:12,fontWeight:700,color:"#C0C0C8",textTransform:"uppercase",letterSpacing:"1.2px",margin:"0 0 14px"}}>Vicino a te</p>
                 {(() => {
                   const list = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm).slice(0,8);
-                  if (list.length === 0) return (
-                    <p style={{fontSize:14,color:T.inkSoft,textAlign:"center",padding:"40px 0"}}>Nessun professionista in zona.</p>
-                  );
-                  return list.map((pro) => {
+                  if (list.length === 0) return <p style={{fontSize:14,color:"#999"}}>Nessun professionista in zona.</p>;
+                  // palette di accenti per le card — cycling
+                  const CARD_PALETTES = [
+                    {bg:"#FFF3E8",accent:"#D4791A",shadow:"rgba(212,121,26,.20)"},
+                    {bg:"#FFE6F1",accent:"#D4487A",shadow:"rgba(212,72,122,.20)"},
+                    {bg:"#EDE8FF",accent:"#8B52E0",shadow:"rgba(139,82,224,.20)"},
+                    {bg:"#E0F5EC",accent:"#1E9E6E",shadow:"rgba(30,158,110,.20)"},
+                    {bg:"#E4ECFF",accent:"#3869D8",shadow:"rgba(56,105,216,.20)"},
+                    {bg:"#FAF0F2",accent:"#C27A8A",shadow:"rgba(194,122,138,.20)"},
+                  ];
+                  return list.map((pro,i) => {
                     const photoUrl = proImg(pro);
                     const isFav = favorites?.has(pro.id);
                     const distLabel = pro.distKm < 1 ? `${Math.round(pro.distKm*1000)} m` : `${pro.distKm.toFixed(1)} km`;
-                    const isOpen = Math.random() > 0.35;
+                    const pal = CARD_PALETTES[i % CARD_PALETTES.length];
                     return (
-                      <div key={pro.id} style={{
-                        background:T.white,borderRadius:20,marginBottom:14,
+                      <div key={pro.id} className="pro-card" style={{
+                        background:"#fff",borderRadius:22,marginBottom:12,
+                        boxShadow:`0 4px 0 rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.07)`,
                         overflow:"hidden",
-                        boxShadow:"0 2px 12px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.04)",
                       }}>
-                        {/* Foto hero */}
-                        <div style={{position:"relative",height:160,background:T.bgMid,cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
-                          {photoUrl
-                            ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                            : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>{pro.emoji}</div>}
-                          {/* overlay gradient bottom */}
-                          <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 55%)"}}/>
-                          {/* Stato aperto */}
-                          <div style={{position:"absolute",top:10,left:12,display:"flex",alignItems:"center",gap:5,background:"rgba(0,0,0,.45)",backdropFilter:"blur(8px)",borderRadius:99,padding:"4px 10px"}}>
-                            <div style={{width:6,height:6,borderRadius:"50%",background:isOpen?T.green:"#FF9500",flexShrink:0}}/>
-                            <span style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.9)"}}>{isOpen?"Aperto":"Chiuso"}</span>
-                          </div>
-                          {/* Fav button */}
-                          <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{
-                            position:"absolute",top:10,right:12,
-                            width:34,height:34,borderRadius:"50%",
-                            background:"rgba(0,0,0,.4)",backdropFilter:"blur(8px)",
-                            border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",
-                            fontSize:15,
-                          }}>
-                            {isFav?"❤️":"🤍"}
-                          </button>
-                          {/* Name overlay */}
-                          <div style={{position:"absolute",bottom:12,left:12,right:12}}>
-                            <p style={{fontSize:17,fontWeight:800,color:T.white,margin:"0 0 2px",lineHeight:1.2,textShadow:"0 1px 4px rgba(0,0,0,.4)"}}>{pro.name}</p>
-                            <div style={{display:"flex",alignItems:"center",gap:8}}>
-                              <span style={{fontSize:11,fontWeight:600,color:"rgba(255,255,255,.8)"}}>{pro.cat}</span>
-                              <span style={{width:3,height:3,borderRadius:"50%",background:"rgba(255,255,255,.5)",display:"inline-block"}}/>
-                              <span style={{fontSize:11,fontWeight:600,color:"rgba(255,255,255,.8)"}}>{distLabel}</span>
-                              <span style={{width:3,height:3,borderRadius:"50%",background:"rgba(255,255,255,.5)",display:"inline-block"}}/>
-                              <span style={{fontSize:11,fontWeight:700,color:"rgba(255,200,0,.9)"}}>★ {pro.rating}</span>
+                        {/* Striscia colorata in cima */}
+                        <div style={{height:5,background:`linear-gradient(90deg,${pal.accent},${pal.accent}88)`}}/>
+                        <div style={{padding:"14px 16px 14px"}}>
+                          {/* Riga principale */}
+                          <div style={{display:"flex",gap:12,alignItems:"center",cursor:"pointer",marginBottom:12}} onClick={()=>nav("cl_pro",pro)}>
+                            {/* Avatar grande con emoji */}
+                            <div className="av-bubble" style={{
+                              width:56,height:56,background:pal.bg,
+                              boxShadow:`0 4px 0 ${pal.shadow},inset 0 1px 0 rgba(255,255,255,.6)`,
+                              fontSize:26,borderRadius:18,
+                            }}>{pro.emoji}</div>
+                            <div style={{flex:1,minWidth:0}}>
+                              <p style={{fontSize:16,fontWeight:800,color:"#111",margin:"0 0 2px",lineHeight:1.15}}>{pro.name}</p>
+                              {/* badge categoria colorato */}
+                              <span style={{display:"inline-block",fontSize:10,fontWeight:700,color:pal.accent,background:pal.bg,padding:"2px 8px",borderRadius:99,marginBottom:4}}>{pro.cat}</span>
+                              <div style={{display:"flex",alignItems:"center",gap:4,flexWrap:"wrap"}}>
+                                <span style={{color:"#F5A623",fontSize:12,letterSpacing:"1px"}}>{"★".repeat(Math.floor(pro.rating))}</span>
+                                <span style={{fontSize:12,fontWeight:700,color:"#111"}}>{pro.rating}</span>
+                                <span style={{fontSize:11,color:"#aaa"}}>({pro.reviews}) · {distLabel}</span>
+                              </div>
+                            </div>
+                            {/* Foto tonda a destra */}
+                            <div style={{width:64,height:64,borderRadius:18,background:pal.bg,overflow:"hidden",flexShrink:0,boxShadow:`0 4px 0 ${pal.shadow}`}}>
+                              {photoUrl
+                                ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
+                                : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>
+                              }
                             </div>
                           </div>
-                        </div>
-                        {/* Footer card */}
-                        <div style={{padding:"12px 14px",display:"flex",gap:8}}>
-                          <button onClick={e=>{e.stopPropagation();nav("cl_pro",pro);}} style={{
-                            flex:1,padding:"10px 0",borderRadius:12,
-                            border:`1.5px solid ${T.line}`,background:T.white,
-                            fontSize:13,fontWeight:700,color:T.ink,cursor:"pointer",fontFamily:"inherit",
-                          }}>
-                            Profilo
-                          </button>
-                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{
-                            flex:2,padding:"10px 0",borderRadius:12,border:"none",
-                            background:T.bgDark,
-                            fontSize:13,fontWeight:700,color:T.white,cursor:"pointer",fontFamily:"inherit",
-                          }}>
-                            Prenota
-                          </button>
+                          {/* Bottoni azione */}
+                          <div style={{display:"flex",gap:8}}>
+                            <button onClick={e=>{e.stopPropagation();nav("cl_pro",pro);}} style={{
+                              display:"flex",alignItems:"center",gap:5,padding:"8px 14px",
+                              borderRadius:12,border:`1.5px solid #EEEEF2`,
+                              background:"#FAFAFA",fontSize:13,fontWeight:700,color:"#444",
+                              cursor:"pointer",fontFamily:"inherit",
+                            }}>
+                              📞 Chiama
+                            </button>
+                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{
+                              flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:5,
+                              padding:"8px 0",borderRadius:12,border:"none",
+                              background:pal.accent,
+                              fontSize:13,fontWeight:700,color:"#fff",cursor:"pointer",fontFamily:"inherit",
+                              boxShadow:`0 3px 0 ${pal.shadow}`,
+                            }}>
+                              📅 Prenota
+                            </button>
+                            <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{
+                              width:38,height:38,borderRadius:12,border:"1.5px solid #EEEEF2",
+                              background:"#FAFAFA",cursor:"pointer",flexShrink:0,
+                              display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,
+                            }}>
+                              {isFav?"❤️":"🤍"}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     );

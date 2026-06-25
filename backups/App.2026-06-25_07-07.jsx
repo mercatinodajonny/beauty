@@ -80,145 +80,85 @@ const injectFont = () => {
   if (document.getElementById("app-fonts")) return;
   const l = document.createElement("link");
   l.id = "app-fonts"; l.rel = "stylesheet";
-  l.href = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap";
+  // "Porcellana di Sabbia": Fraunces (display caratteriale) + Plus Jakarta Sans (corpo)
+  l.href = "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap";
   document.head.appendChild(l);
   const s = document.createElement("style");
   s.id = "app-style-rules";
   s.textContent = `
-    *{box-sizing:border-box;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-    body,input,button,select,textarea{font-family:'Inter',system-ui,-apple-system,sans-serif}
-
-    /* ── BEAUTY 2026 — EDITORIAL DESIGN SYSTEM ── */
-
-    /* Typography utilities */
-    .be-display{font-size:42px;font-weight:900;letter-spacing:-.04em;line-height:1.0;color:#0D0D0D}
-    .be-h1{font-size:28px;font-weight:800;letter-spacing:-.03em;line-height:1.1;color:#0D0D0D}
-    .be-h2{font-size:20px;font-weight:700;letter-spacing:-.02em;line-height:1.2;color:#0D0D0D}
-    .be-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9A9A9A}
-    .be-body{font-size:15px;font-weight:400;line-height:1.6;color:#4A4A4A}
-    .be-caption{font-size:12px;font-weight:500;color:#9A9A9A}
-
-    /* Cards */
-    .be-card{background:#fff;border-radius:20px;overflow:hidden;transition:transform .22s cubic-bezier(.34,1.56,.64,1)}
-    .be-card:active{transform:scale(.98)}
-    .be-card-shadow{box-shadow:0 2px 16px rgba(0,0,0,.07),0 0 0 1px rgba(0,0,0,.04)}
-
-    /* Buttons */
-    .be-btn-primary{background:#FF2D5A;color:#fff;border:none;border-radius:14px;font-weight:700;cursor:pointer;
-      font-family:inherit;transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .18s ease}
-    .be-btn-primary:active{transform:scale(.95);background:#CC1A3A}
-    .be-btn-ghost{background:transparent;color:#0D0D0D;border:1.5px solid #EBEBEB;border-radius:14px;
-      font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s ease}
-    .be-btn-ghost:active{background:#F5F5F3}
-
-    /* Pills category */
-    .be-pill{display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border-radius:99px;
-      border:1.5px solid #EBEBEB;background:#fff;font-weight:600;font-size:14px;cursor:pointer;
-      white-space:nowrap;transition:all .2s cubic-bezier(.34,1.56,.64,1);font-family:inherit}
-    .be-pill:active{transform:scale(.94)}
-    .be-pill.active{background:#0D0D0D;color:#fff;border-color:#0D0D0D}
-
-    /* Search */
-    .be-search{display:flex;align-items:center;gap:10px;background:#F2F1EE;border-radius:16px;padding:14px 16px}
-    .be-search input{border:none;outline:none;background:none;font-size:15px;font-weight:500;color:#0D0D0D;font-family:inherit;width:100%}
-    .be-search input::placeholder{color:#9A9A9A}
-
-    /* NavBar floating pill */
-    .be-navbar{
-      position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-      background:#0D0D0D;border-radius:99px;
-      display:flex;align-items:center;gap:4px;
-      padding:6px 6px;
-      box-shadow:0 8px 32px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.06);
-      z-index:200;
-    }
-    .be-nav-item{
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      width:52px;height:44px;border-radius:99px;border:none;background:transparent;cursor:pointer;
-      transition:background .2s ease,transform .18s cubic-bezier(.34,1.56,.64,1);
-      position:relative;
-    }
-    .be-nav-item:active{transform:scale(.88)}
-    .be-nav-item.active{background:#FF2D5A}
-
-    /* Skeleton */
-    @keyframes beSkeleton{0%{opacity:.6}50%{opacity:1}100%{opacity:.6}}
-    .be-skeleton{background:#F0F0EE;border-radius:8px;animation:beSkeleton 1.4s ease infinite}
-
-    /* Transitions */
-    @keyframes beFadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes beFadeIn{from{opacity:0}to{opacity:1}}
-    @keyframes bePop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
-    .be-fadeup{animation:beFadeUp .35s cubic-bezier(.34,1.56,.64,1) both}
-    .be-fadein{animation:beFadeIn .28s ease both}
-    .be-pop{animation:bePop .25s cubic-bezier(.34,1.56,.64,1)}
-
-    /* Legacy compat */
-    .ba-pop{animation:bePop .22s cubic-bezier(.34,1.56,.64,1)}
-    @keyframes baRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    h1,h2,.ba-serif,.ba-display{font-family:'Fraunces',Georgia,serif !important;font-weight:600;letter-spacing:-.015em;font-optical-sizing:auto}
+    /* CLAYMORPHISM — ombre sabbia calde, gonfie e scultoree (palette Porcellana di Sabbia) */
+    .clay{box-shadow:14px 14px 30px rgba(70,72,84,.16), -12px -12px 26px rgba(255,255,255,.95), inset 3px 3px 6px rgba(255,255,255,.9), inset -5px -5px 12px rgba(70,72,84,.06);}
+    .clay-inset{box-shadow:inset 7px 7px 14px rgba(70,72,84,.13), inset -6px -6px 13px rgba(255,255,255,.95);}
+    .clay-btn{box-shadow:9px 11px 24px rgba(50,52,62,.24), -6px -7px 16px rgba(255,255,255,.5), inset 3px 3px 7px rgba(255,255,255,.35), inset -4px -5px 10px rgba(0,0,0,.18);}
+    .clay-soft{box-shadow:8px 8px 20px rgba(70,72,84,.11), -7px -7px 17px rgba(255,255,255,.95), inset 2px 2px 4px rgba(255,255,255,.8);}
+    /* GLASSMORPHISM — vetro smerigliato caldo */
+    .glass{background:rgba(255,253,248,.5)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,253,248,.65);box-shadow:0 8px 32px rgba(150,124,92,.16);}
+    .glass-dark{background:rgba(168,144,107,.2)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid rgba(255,253,248,.35);box-shadow:0 8px 32px rgba(140,115,83,.22);}
+    @keyframes baPop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+    .ba-pop{animation:baPop .22s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes baRise{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes baFade{from{opacity:0}to{opacity:1}}
-    .ba-rise{animation:baRise .38s cubic-bezier(.34,1.56,.64,1) both}
-    .ba-fade{animation:baFade .3s ease both}
-    .ba-lift:active{transform:scale(.96)}
-    .ba-slideup{animation:beFadeUp .38s cubic-bezier(.34,1.56,.64,1) both}
-    .clay-btn{} .clay-soft{} .clay{} .clay-inset{} .glass{} .glass-dark{}
+    .ba-rise{opacity:0;animation:baRise .45s cubic-bezier(.34,1.56,.64,1) forwards}
+    .ba-fade{opacity:0;animation:baFade .4s ease forwards}
+    .ba-lift{transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease}
+    .ba-lift:active{transform:scale(.95)}
+    /* Zoom card: ingrandimento morbido al passaggio del mouse / tocco */
+    .ba-zoom{transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s ease;will-change:transform}
+    @media (hover:hover){
+      .ba-zoom:hover{transform:translateY(-5px) scale(1.04);box-shadow:18px 22px 44px rgba(70,72,84,.20), -12px -12px 26px rgba(255,255,255,.95), inset 3px 3px 6px rgba(255,255,255,.9);z-index:2}
+    }
+    .ba-zoom:active{transform:scale(.95)!important;transition:transform .10s cubic-bezier(.34,1.56,.64,1)!important}
+    /* Bounce sui pulsanti Prenota */
+    @keyframes baBounce{0%{transform:scale(1)}40%{transform:scale(.88)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
+    .ba-btn-bounce{transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .18s ease}
+    .ba-btn-bounce:active{animation:baBounce .38s cubic-bezier(.34,1.56,.64,1)}
+    button{transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+    button:active{transform:scale(.93)}
+    /* Foto professionista — crop uniforme */
     .pro-photo{object-fit:cover;display:block;width:100%;height:100%}
-    .cat-pill:active{transform:scale(.92)!important}
-    .pro-card:active{transform:scale(.985)}
 
-    /* OB CSS (onboarding) */
-    @keyframes obFadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes obFadeIn{from{opacity:0}to{opacity:1}}
-    .ob-fadeup{animation:obFadeUp 320ms cubic-bezier(.4,0,.2,1) both}
-    .ob-fadein{animation:obFadeIn 280ms ease both}
+    /* ── CARTOON PREMIUM — card colorate con profondità ── */
+    .cat-pill{transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s ease}
+    .cat-pill:active{transform:scale(.88)!important}
+    @media(hover:hover){.cat-pill:hover{transform:translateY(-3px) scale(1.04)}}
 
-    @media(prefers-reduced-motion:reduce){
-      .be-fadeup,.be-fadein,.be-pop,.ba-rise,.ba-fade,.ba-slideup,.ob-fadeup,.ob-fadein{animation:none;opacity:1}
-      .be-card,.be-btn-primary,.be-nav-item,.be-pill,.ba-lift,button{transition:none}
+    .pro-card{transition:box-shadow .22s ease,transform .22s cubic-bezier(.34,1.56,.64,1)}
+    .pro-card:active{transform:scale(.98)}
+
+    /* Avatar bubble memoji-style */
+    .av-bubble{border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;
+      box-shadow:0 4px 0 rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.5)}
+
+    @keyframes baSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .ba-slideup{animation:baSlideUp .38s cubic-bezier(.34,1.56,.64,1) both}
+
+    @keyframes obFull{from{width:50%}to{width:100%}}
+    @keyframes obZero{from{width:50%}to{width:0%}}
+
+    @media (prefers-reduced-motion: reduce){
+      .ba-rise,.ba-fade,.ba-slideup{animation:none;opacity:1}
+      .ba-lift,.ba-zoom,.cat-pill,.pro-card,button{transition:none}
+      button:active,.ba-lift:active,.ba-zoom:hover,.ba-zoom:active,.cat-pill:active{transform:none}
     }
   `;
   document.head.appendChild(s);
 };
 
-/* ══════════════════════════════════════════════════
-   BEAUTY 2026 — Editorial Design System
-   ══════════════════════════════════════════════════ */
+/* PALETTE beauty — pastello vivaci, cartoon premium */
 const T = {
-  /* backgrounds */
-  bg:     "#FAFAF8",   /* warm cream */
-  bgMid:  "#F2F1EE",
-  bgCard: "#FFFFFF",
-  bgDark: "#0D0D0D",
-
-  /* ink */
-  ink:    "#0D0D0D",
-  inkMid: "#4A4A4A",
-  inkSoft:"#9A9A9A",
-  inkFaint:"#DADAD8",
-
-  /* brand */
-  brand:    "#FF2D5A",   /* THE color — corallo elettrico */
-  brandDeep:"#CC1A3A",
-  brandBg:  "#FFF0F3",
-  brandMid: "#FF6B88",
-
-  /* ui */
-  line:    "#EBEBEB",
-  surface: "#F5F5F3",
-  white:   "#FFFFFF",
-  paper:   "#FAFAF8",
-
-  /* semantic */
-  green:    "#00C896",  greenBg: "#E6FBF5",
-  blue:     "#0A84FF",  blueBg:  "#EAF3FF",
-  red:      "#FF2D5A",  redBg:   "#FFF0F3",
-  amber:    "#FF9500",  amberBg: "#FFF4E0",
-  purple:   "#7B61FF",  purpleBg:"#F0EEFF",
-  gold:     "#FF2D5A",  goldBg:  "#FFF0F3",
-  rose:     "#FF2D5A",  roseBg:  "#FFF0F3",
-
-  /* gradient */
-  grad: "linear-gradient(135deg,#FF2D5A,#CC1A3A)",
+  ink:"#111111",inkMid:"#4A4A4A",inkSoft:"#9B9B9B",
+  line:"#EEEEF0",surface:"#F7F7F9",white:"#FFFFFF",
+  paper:"#FFFFFF",
+  brand:"#C27A8A",brandDeep:"#9E5E6E",brandBg:"#FAF0F2",
+  gold:"#C27A8A",goldBg:"#FAF0F2",
+  green:"#1E9E6E",greenBg:"#E0F5EC",
+  blue:"#3869D8",blueBg:"#E4ECFF",
+  red:"#E04060",redBg:"#FFE8ED",
+  amber:"#D4791A",amberBg:"#FFF0E0",
+  purple:"#8B52E0",purpleBg:"#EDE8FF",
+  rose:"#D4487A",roseBg:"#FFE6F1",
+  grad:"linear-gradient(135deg,#D48A9A,#9E5E6E)",
 };
 
 /* ===== TEMA — accento variabile in-app (sfondi invariati) ===== */
@@ -818,45 +758,119 @@ const MacroCatIcon = ({id,size=26,color="currentColor",strokeWidth=1.7}) => (
   </svg>
 );
 
-/* ── NAV 2026 — Floating dark pill ── */
-const NavIconHome  = ({a}) => <svg width="20" height="20" viewBox="0 0 24 24" fill={a?"#fff":"none"} stroke={a?"#fff":"rgba(255,255,255,.45)"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>;
-const NavIconCompass=({a})=><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={a?"#fff":"rgba(255,255,255,.45)"} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="9"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z" fill={a?"rgba(255,255,255,.25)":"none"}/></svg>;
-const NavIconHeart =({a})=><svg width="20" height="20" viewBox="0 0 24 24" fill={a?"#fff":"none"} stroke={a?"#fff":"rgba(255,255,255,.45)"} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>;
-const NavIconCal   =({a})=><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={a?"#fff":"rgba(255,255,255,.45)"} strokeWidth="2" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="12" cy="16" r="1.3" fill={a?"#fff":"rgba(255,255,255,.45)"}/></svg>;
-const NavIconUser  =({a})=><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={a?"#fff":"rgba(255,255,255,.45)"} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>;
-const NavIconGrid  =({a})=><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={a?"#fff":"rgba(255,255,255,.45)"} strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>;
-const NavIconStar  =({a})=><svg width="20" height="20" viewBox="0 0 24 24" fill={a?"#fff":"none"} stroke={a?"#fff":"rgba(255,255,255,.45)"} strokeWidth="2" strokeLinecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
+/* NAV */
+function NavBar({items,s,nav,labelSize=10}) {
+  const ref = useRef(null);
+  const dragging = useRef(false);
+  const lastId = useRef(null);
+  const N = items.length;
 
-function NavBar({items,s,nav}) {
+  // pill: posizione frazionaria 0..(N-1) per animazione fluida
+  const [pill,setPill] = useState(() => Math.max(0,items.findIndex(it=>it.id===s)));
+  const [live,setLive] = useState(false); // true durante drag → no transition
+
+  // Sincronizza la pillola quando cambia tab dall'esterno
+  useEffect(()=>{
+    if(!dragging.current){
+      const idx=items.findIndex(it=>it.id===s);
+      if(idx>=0){setLive(false);setPill(idx);}
+    }
+  },[s]);
+
+  const fracFromX = (clientX) => {
+    if(!ref.current) return 0;
+    const {left,width}=ref.current.getBoundingClientRect();
+    const f=(clientX-left)/width*N - 0.5; // 0 = centro item 0
+    return Math.max(0,Math.min(N-1,f));
+  };
+  const idAtPoint = (x,y) => {
+    const el=document.elementFromPoint(x,y);
+    const t=el&&el.closest?el.closest("[data-navid]"):null;
+    return t?t.getAttribute("data-navid"):null;
+  };
+  const goTo = (id,frac) => {
+    if(frac!==undefined) setPill(Math.max(0,Math.min(N-1,frac)));
+    if(id&&id!==lastId.current){
+      lastId.current=id;
+      nav(id);
+      if(navigator.vibrate){try{navigator.vibrate(8);}catch(e){}}
+    }
+  };
+  const onDown = (e) => {
+    dragging.current=true; setLive(true);
+    lastId.current=s;
+    try{ref.current.setPointerCapture(e.pointerId);}catch(err){}
+    goTo(idAtPoint(e.clientX,e.clientY),fracFromX(e.clientX));
+  };
+  const onMove = (e) => {
+    if(!dragging.current) return;
+    goTo(idAtPoint(e.clientX,e.clientY),fracFromX(e.clientX));
+  };
+  const onUp = () => {
+    dragging.current=false; setLive(false);
+    const idx=items.findIndex(it=>it.id===lastId.current);
+    if(idx>=0) setPill(idx); // snap preciso
+  };
+
+  const pct = 100/N;
+  // pillola: posizionata in base a pill frazionario
+  const pillLeft = `calc(${pill*pct}% + 3px)`;
+  const pillW = `calc(${pct}% - 6px)`;
+
   return (
-    <nav className="be-navbar" style={{gap:2}}>
-      {items.map(({id,I,dot}) => {
-        const active = s===id;
+    <div ref={ref} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}
+      style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",
+        width:"100%",maxWidth:430,
+        background:"rgba(255,255,255,.96)",
+        backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
+        borderTop:`1px solid ${T.line}`,
+        borderRadius:0,
+        display:"flex",zIndex:100,padding:"8px 4px 20px",touchAction:"none",userSelect:"none",
+        boxShadow:"0 -4px 20px rgba(50,52,62,.07)"}}>
+      {/* Pillola scorrevole */}
+      <div style={{
+        position:"absolute", top:6, height:"calc(100% - 28px)",
+        left:pillLeft, width:pillW,
+        background:T.brand,
+        borderRadius:12,
+        transition:live?"none":"left .28s cubic-bezier(.34,1.56,.64,1), width .28s cubic-bezier(.34,1.56,.64,1)",
+        pointerEvents:"none", zIndex:0,
+      }}/>
+      {items.map(({id,I,l}) => {
+        const active=s===id;
         return (
-          <button key={id} className={`be-nav-item${active?" active":""}`} onClick={()=>nav(id)}>
-            <I a={active}/>
-            {dot && !active && <div style={{position:"absolute",top:8,right:12,width:6,height:6,borderRadius:"50%",background:"#FF2D5A",border:"1.5px solid #0D0D0D"}}/>}
-          </button>
+          <div key={id} data-navid={id} onClick={()=>nav(id)}
+            style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",
+              gap:3,padding:"8px 0 8px",borderRadius:12,cursor:"pointer",
+              position:"relative",zIndex:1,WebkitTapHighlightColor:"transparent"}}>
+            <div style={{pointerEvents:"none",transition:"transform .18s ease",
+              transform:active?"translateY(-1px) scale(1.05)":"none"}}>
+              <I a={active} activeColor="#fff" inactiveColor="#999"/>
+            </div>
+            <span style={{fontSize:labelSize,fontWeight:active?700:500,
+              color:active?"#fff":"#999",pointerEvents:"none",
+              transition:"color .22s ease"}}>{l}</span>
+          </div>
         );
       })}
-    </nav>
+    </div>
   );
 }
-function NavCl({s,nav,hasDm}) {
-  return <NavBar s={s} nav={nav} items={[
-    {id:"cl_home",    I:NavIconHome},
-    {id:"cl_explore", I:NavIconCompass},
-    {id:"cl_preferiti",I:NavIconHeart},
-    {id:"cl_appts",   I:NavIconCal},
-    {id:"cl_profilo", I:NavIconUser},
+function NavCl({s,nav}) {
+  return <NavBar s={s} nav={nav} labelSize={9} items={[
+    {id:"cl_home",I:IH,l:"Home"},
+    {id:"cl_explore",I:IC,l:"Esplora"},
+    {id:"cl_preferiti",I:IHeart,l:"Preferiti",color:T.purple},
+    {id:"cl_appts",I:IK,l:"Appuntamenti"},
+    {id:"cl_profilo",I:IP,l:"Profilo"},
   ]}/>;
 }
 function NavPro({s,nav}) {
-  return <NavBar s={s} nav={nav} items={[
-    {id:"pro_agenda",  I:NavIconCal},
-    {id:"pro_clienti", I:NavIconUser},
-    {id:"pro_servizi", I:NavIconGrid},
-    {id:"pro_stats",   I:NavIconStar},
+  return <NavBar s={s} nav={nav} labelSize={10} items={[
+    {id:"pro_agenda",I:IK,l:"Agenda"},
+    {id:"pro_clienti",I:IU,l:"Clienti"},
+    {id:"pro_servizi",I:ICS,l:"Servizi"},
+    {id:"pro_stats",I:IS,l:"Statistiche"},
   ]}/>;
 }
 
@@ -1005,126 +1019,114 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
         })
     : [];
 
-  // ─── RENDER ───
-  const hasDm = conversations.some(c=>c.messages.some(m=>m.from==="pro"));
-
   return (
-    <div style={{paddingBottom:120,background:T.bg,minHeight:"100dvh"}}>
+    <div style={{paddingBottom:100,background:"#fff",minHeight:"100dvh"}}>
 
-      {/* ── TOP HEADER editorial ── */}
-      <div style={{padding:"56px 20px 0",background:T.bg}}>
-        {/* Row 1: logo + icone */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}}>
-          <span style={{fontSize:24,fontWeight:900,color:T.ink,letterSpacing:"-.05em",lineHeight:1}}>
-            beauty<span style={{color:T.brand}}>.</span>
-          </span>
-          <div style={{display:"flex",gap:6}}>
-            <div style={{position:"relative"}}>
-              <button onClick={()=>nav("cl_chats")} style={{width:40,height:40,borderRadius:"50%",border:`1.5px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white,padding:0}}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-              </button>
-              {hasDm && <div style={{position:"absolute",top:2,right:2,width:7,height:7,borderRadius:"50%",background:T.brand,border:"2px solid "+T.bg}}/>}
-            </div>
-            <div style={{position:"relative"}}>
-              <button style={{width:40,height:40,borderRadius:"50%",border:`1.5px solid ${T.line}`,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.white,padding:0}}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-              </button>
-              <div style={{position:"absolute",top:2,right:2,width:7,height:7,borderRadius:"50%",background:T.brand,border:"2px solid "+T.bg}}/>
-            </div>
+      {/* ── HEADER ── */}
+      <div style={{background:"#fff",padding:"54px 20px 0"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
+          {/* Greeting + avatar */}
+          <div>
+            <p style={{fontSize:12,fontWeight:600,color:"#B0B0B8",margin:"0 0 1px",letterSpacing:".3px"}}>Ciao! 👋</p>
+            <span style={{fontSize:22,fontWeight:900,color:"#111",letterSpacing:"-.04em",lineHeight:1}}>beauty<span style={{color:T.brand}}>.</span></span>
           </div>
+          {(()=>{
+            const hasDm = conversations.some(c=>c.messages.some(m=>m.from==="pro"));
+            return (
+              <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                <div style={{position:"relative"}}>
+                  <button onClick={()=>nav("cl_chats")} style={{width:38,height:38,borderRadius:"50%",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#F4F4F7",padding:0}}>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#444" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                  </button>
+                  {hasDm && <div style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:T.red,border:"2px solid #fff"}}/>}
+                </div>
+                <div style={{position:"relative"}}>
+                  <button style={{width:38,height:38,borderRadius:"50%",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:"#F4F4F7",padding:0}}>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#444" strokeWidth="2.1" strokeLinecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                  </button>
+                  <div style={{position:"absolute",top:2,right:2,width:8,height:8,borderRadius:"50%",background:T.red,border:"2px solid #fff"}}/>
+                </div>
+              </div>
+            );
+          })()}
         </div>
 
-        {/* Row 2: location pill */}
-        <button onClick={()=>setShowCity(true)} style={{
-          display:"inline-flex",alignItems:"center",gap:5,
-          background:T.white,border:`1.5px solid ${T.line}`,borderRadius:99,
-          padding:"7px 12px 7px 10px",cursor:"pointer",fontFamily:"inherit",marginBottom:20,
-        }}>
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span style={{fontSize:13,color:T.ink,fontWeight:600}}>{city}</span>
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        {/* Posizione */}
+        <button onClick={()=>setShowCity(true)} style={{display:"inline-flex",alignItems:"center",gap:5,background:"#fff",border:"1.5px solid #E8E8E8",borderRadius:8,padding:"6px 10px",cursor:"pointer",fontFamily:"inherit",marginBottom:14}}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span style={{fontSize:13,color:"#111",fontWeight:600}}>{city}</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
         </button>
 
-        {/* Row 3: search */}
-        <div style={{display:"flex",alignItems:"center",gap:10,background:T.bgMid,borderRadius:16,padding:"14px 16px",marginBottom:4}}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}>
+        {/* Search bar */}
+        <div style={{display:"flex",alignItems:"center",gap:10,background:"#F5F5F5",borderRadius:12,padding:"13px 16px",marginBottom:24}}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}>
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
           <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
-            placeholder="Cerca servizio o professionista…"
-            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:T.ink,fontFamily:"inherit",fontWeight:500}}/>
-          {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:18,color:T.inkSoft,padding:0,lineHeight:1}}>×</button>}
+            placeholder="Cerca servizio o professionista..."
+            style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:"#111",fontFamily:"inherit"}}/>
+          {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:18,color:"#999",padding:0,lineHeight:1}}>×</button>}
         </div>
       </div>
 
-      {/* ── BANNER prossimo appuntamento — card editoriale ── */}
+      {/* ── BANNER appuntamento — cartoon premium ── */}
       {!(searching && q.length >= 2) && !selCat && banner && (
-        <div style={{padding:"20px 20px 0"}}>
-          <div onClick={()=>nav("cl_appts")} style={{
-            borderRadius:20,cursor:"pointer",overflow:"hidden",
-            background:T.bgDark,
-            boxShadow:"0 4px 24px rgba(0,0,0,.18)",
+        <div style={{padding:"0 20px 20px"}}>
+          <div onClick={()=>nav("cl_appts")} className="pro-card" style={{
+            display:"flex",alignItems:"center",gap:14,padding:"16px 18px",
+            borderRadius:20,cursor:"pointer",
+            background:`linear-gradient(135deg,${T.brand},${T.brandDeep})`,
+            boxShadow:`0 8px 0 ${T.brandDeep}55,0 12px 24px ${T.brandBg}`
           }}>
-            <div style={{padding:"18px 20px",display:"flex",alignItems:"center",gap:16}}>
-              <div style={{width:48,height:48,borderRadius:14,background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.12)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:22}}>
-                📅
-              </div>
-              <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.45)",margin:"0 0 3px",textTransform:"uppercase",letterSpacing:"1.2px"}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
-                <p style={{fontSize:15,fontWeight:800,color:T.white,margin:"0 0 2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service}</p>
-                <p style={{fontSize:13,color:"rgba(255,255,255,.55)",margin:0}}>{banner.pro} · {nextAppt?`${banner.date} ${banner.time}`:banner.date}</p>
-              </div>
-              <div style={{width:32,height:32,borderRadius:99,background:"rgba(255,255,255,.08)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-              </div>
+            <div style={{width:44,height:44,borderRadius:14,background:"rgba(255,255,255,.2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:22}}>
+              📅
             </div>
-            {/* Accent line bottom */}
-            <div style={{height:3,background:T.grad}}/>
+            <div style={{flex:1,minWidth:0}}>
+              <p style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.75)",margin:"0 0 2px",textTransform:"uppercase",letterSpacing:"1px"}}>{nextAppt?"Prossimo":"Ultimo"} appuntamento</p>
+              <p style={{fontSize:14,fontWeight:800,color:"#fff",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{banner.service} · {banner.pro}</p>
+              <p style={{fontSize:12,color:"rgba(255,255,255,.75)",margin:0}}>{nextAppt?`${banner.date} · ${banner.time}`:banner.date}</p>
+            </div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
         </div>
       )}
 
       {/* ── RISULTATI RICERCA ── */}
       {searching && q.length >= 2 && (
-        <div style={{padding:"20px 20px 0"}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-            <p style={{fontSize:13,color:T.inkSoft,margin:0}}><strong style={{color:T.ink}}>{searchResults.length}</strong> risultati per "{q}"</p>
-            <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.inkSoft,fontFamily:"inherit",fontWeight:600,textDecoration:"underline"}}>Chiudi</button>
+        <div style={{padding:"0 20px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+            <p style={{fontSize:13,color:"#999",margin:0}}>{searchResults.length} risultati per "{q}"</p>
+            <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:"#111",fontFamily:"inherit",fontWeight:600}}>Chiudi</button>
           </div>
           {searchResults.length === 0 && (
-            <div style={{textAlign:"center",padding:"60px 0"}}>
-              <div style={{fontSize:40,marginBottom:12}}>🔍</div>
-              <p style={{fontSize:15,color:T.inkSoft,fontWeight:500}}>Nessun risultato per "{q}"</p>
+            <div style={{textAlign:"center",padding:"50px 0"}}>
+              <p style={{fontSize:36,marginBottom:10}}>🔍</p>
+              <p style={{fontSize:15,color:"#999",fontWeight:500}}>Nessun risultato</p>
             </div>
           )}
-          <div style={{display:"flex",flexDirection:"column",gap:2}}>
-            {searchResults.map((pro,i) => {
-              const photoUrl = proImg(pro);
-              return (
-                <div key={pro.id} style={{
-                  background:T.white,borderRadius:16,overflow:"hidden",
-                  boxShadow:"0 1px 4px rgba(0,0,0,.06)",
-                }}>
-                  <div style={{display:"flex",gap:14,padding:"14px 16px",cursor:"pointer",alignItems:"center"}} onClick={()=>{nav("cl_pro",pro);setQ("");setSearching(false);}}>
-                    <div style={{width:50,height:50,borderRadius:14,background:T.surface,overflow:"hidden",flexShrink:0}}>
-                      {photoUrl
-                        ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                        : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>{pro.emoji}</div>}
-                    </div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <p style={{fontSize:15,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>{pro.name}</p>
-                      <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
-                      <span style={{fontSize:12,color:T.amber,fontWeight:700}}>★ {pro.rating}</span>
-                    </div>
-                    <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{
-                      padding:"9px 16px",borderRadius:99,border:"none",background:T.brand,
-                      color:T.white,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0,
-                    }}>Prenota</button>
+          {searchResults.map((pro,i) => {
+            const photoUrl = proImg(pro);
+            return (
+              <div key={pro.id}>
+                <div onClick={()=>{nav("cl_pro",pro);setQ("");setSearching(false);}} style={{display:"flex",gap:14,padding:"14px 0",cursor:"pointer",alignItems:"center"}}>
+                  <div style={{width:52,height:52,borderRadius:12,background:"#F5F5F5",overflow:"hidden",flexShrink:0}}>
+                    {photoUrl
+                      ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
+                      : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>{pro.emoji}</div>
+                    }
                   </div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <p style={{fontSize:15,fontWeight:700,color:"#111",margin:"0 0 2px"}}>{pro.name}</p>
+                    <p style={{fontSize:12,color:"#888",margin:"0 0 3px"}}>{pro.cat} · {pro.city}</p>
+                    <span style={{fontSize:12,color:"#111",fontWeight:600}}>★ {pro.rating}</span>
+                  </div>
+                  <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{padding:"9px 16px",borderRadius:10,border:"none",background:T.brand,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit",flexShrink:0}}>Prenota</button>
                 </div>
-              );
-            })}
-          </div>
+                {i < searchResults.length-1 && <div style={{height:1,background:"#F0F0F0"}}/>}
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -1133,98 +1135,106 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[]}) {
         <div>
           {!selCat && (
             <>
-              {/* SEZIONE CATEGORIE */}
-              <div style={{marginTop:28,marginBottom:4}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 20px",marginBottom:14}}>
-                  <span className="be-label">Categorie</span>
-                </div>
-                <div style={{display:"flex",gap:10,overflowX:"auto",padding:"2px 20px 6px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+              {/* CATEGORIE — tiles pastello grandi con emoji */}
+              <div style={{marginBottom:28}}>
+                <p style={{fontSize:12,fontWeight:700,color:"#C0C0C8",textTransform:"uppercase",letterSpacing:"1.2px",margin:"0 0 14px",padding:"0 20px"}}>Esplora</p>
+                <div style={{display:"flex",gap:10,overflowX:"auto",padding:"4px 20px 8px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {MACRO_CATS.map(cat => (
-                    <button key={cat.id} onClick={()=>openCategory(cat.id)} style={{
-                      flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,
-                      background:cat.bg,border:"none",cursor:"pointer",
-                      padding:"14px 14px 12px",borderRadius:20,fontFamily:"inherit",
-                      minWidth:76,
-                    }}>
-                      <span style={{fontSize:26,lineHeight:1}}>{cat.emoji}</span>
-                      <p style={{fontSize:10,fontWeight:700,color:cat.color,margin:0,textAlign:"center",lineHeight:1.3,whiteSpace:"pre-line"}}>{cat.label}</p>
+                    <button key={cat.id} onClick={()=>openCategory(cat.id)} className="cat-pill"
+                      style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:9,
+                        background:cat.bg,border:"none",cursor:"pointer",
+                        padding:"14px 16px 12px",borderRadius:22,fontFamily:"inherit",
+                        minWidth:80,
+                        boxShadow:`0 4px 0 ${cat.shadowColor},0 6px 16px ${cat.shadowColor}`}}>
+                      <span style={{fontSize:28,lineHeight:1,display:"block"}}>{cat.emoji}</span>
+                      <p style={{fontSize:11,fontWeight:700,color:cat.color,margin:0,textAlign:"center",lineHeight:1.25,whiteSpace:"pre-line"}}>{cat.label}</p>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* SEZIONE PROFESSIONISTI */}
-              <div style={{padding:"24px 20px 0"}}>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-                  <span className="be-label">Vicino a te</span>
-                  <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti</button>
-                </div>
+              {/* PROFESSIONISTI VICINO A TE — cartoon premium cards */}
+              <div style={{padding:"0 20px"}}>
+                <p style={{fontSize:12,fontWeight:700,color:"#C0C0C8",textTransform:"uppercase",letterSpacing:"1.2px",margin:"0 0 14px"}}>Vicino a te</p>
                 {(() => {
                   const list = [...prosWithDist].sort((a,b)=>a.distKm-b.distKm).slice(0,8);
-                  if (list.length === 0) return (
-                    <p style={{fontSize:14,color:T.inkSoft,textAlign:"center",padding:"40px 0"}}>Nessun professionista in zona.</p>
-                  );
-                  return list.map((pro) => {
+                  if (list.length === 0) return <p style={{fontSize:14,color:"#999"}}>Nessun professionista in zona.</p>;
+                  // palette di accenti per le card — cycling
+                  const CARD_PALETTES = [
+                    {bg:"#FFF3E8",accent:"#D4791A",shadow:"rgba(212,121,26,.20)"},
+                    {bg:"#FFE6F1",accent:"#D4487A",shadow:"rgba(212,72,122,.20)"},
+                    {bg:"#EDE8FF",accent:"#8B52E0",shadow:"rgba(139,82,224,.20)"},
+                    {bg:"#E0F5EC",accent:"#1E9E6E",shadow:"rgba(30,158,110,.20)"},
+                    {bg:"#E4ECFF",accent:"#3869D8",shadow:"rgba(56,105,216,.20)"},
+                    {bg:"#FAF0F2",accent:"#C27A8A",shadow:"rgba(194,122,138,.20)"},
+                  ];
+                  return list.map((pro,i) => {
                     const photoUrl = proImg(pro);
                     const isFav = favorites?.has(pro.id);
                     const distLabel = pro.distKm < 1 ? `${Math.round(pro.distKm*1000)} m` : `${pro.distKm.toFixed(1)} km`;
-                    const isOpen = Math.random() > 0.35;
+                    const pal = CARD_PALETTES[i % CARD_PALETTES.length];
                     return (
-                      <div key={pro.id} style={{
-                        background:T.white,borderRadius:20,marginBottom:14,
+                      <div key={pro.id} className="pro-card" style={{
+                        background:"#fff",borderRadius:22,marginBottom:12,
+                        boxShadow:`0 4px 0 rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.07)`,
                         overflow:"hidden",
-                        boxShadow:"0 2px 12px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.04)",
                       }}>
-                        {/* Foto hero */}
-                        <div style={{position:"relative",height:160,background:T.bgMid,cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
-                          {photoUrl
-                            ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                            : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>{pro.emoji}</div>}
-                          {/* overlay gradient bottom */}
-                          <div style={{position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 55%)"}}/>
-                          {/* Stato aperto */}
-                          <div style={{position:"absolute",top:10,left:12,display:"flex",alignItems:"center",gap:5,background:"rgba(0,0,0,.45)",backdropFilter:"blur(8px)",borderRadius:99,padding:"4px 10px"}}>
-                            <div style={{width:6,height:6,borderRadius:"50%",background:isOpen?T.green:"#FF9500",flexShrink:0}}/>
-                            <span style={{fontSize:11,fontWeight:700,color:"rgba(255,255,255,.9)"}}>{isOpen?"Aperto":"Chiuso"}</span>
-                          </div>
-                          {/* Fav button */}
-                          <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{
-                            position:"absolute",top:10,right:12,
-                            width:34,height:34,borderRadius:"50%",
-                            background:"rgba(0,0,0,.4)",backdropFilter:"blur(8px)",
-                            border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",
-                            fontSize:15,
-                          }}>
-                            {isFav?"❤️":"🤍"}
-                          </button>
-                          {/* Name overlay */}
-                          <div style={{position:"absolute",bottom:12,left:12,right:12}}>
-                            <p style={{fontSize:17,fontWeight:800,color:T.white,margin:"0 0 2px",lineHeight:1.2,textShadow:"0 1px 4px rgba(0,0,0,.4)"}}>{pro.name}</p>
-                            <div style={{display:"flex",alignItems:"center",gap:8}}>
-                              <span style={{fontSize:11,fontWeight:600,color:"rgba(255,255,255,.8)"}}>{pro.cat}</span>
-                              <span style={{width:3,height:3,borderRadius:"50%",background:"rgba(255,255,255,.5)",display:"inline-block"}}/>
-                              <span style={{fontSize:11,fontWeight:600,color:"rgba(255,255,255,.8)"}}>{distLabel}</span>
-                              <span style={{width:3,height:3,borderRadius:"50%",background:"rgba(255,255,255,.5)",display:"inline-block"}}/>
-                              <span style={{fontSize:11,fontWeight:700,color:"rgba(255,200,0,.9)"}}>★ {pro.rating}</span>
+                        {/* Striscia colorata in cima */}
+                        <div style={{height:5,background:`linear-gradient(90deg,${pal.accent},${pal.accent}88)`}}/>
+                        <div style={{padding:"14px 16px 14px"}}>
+                          {/* Riga principale */}
+                          <div style={{display:"flex",gap:12,alignItems:"center",cursor:"pointer",marginBottom:12}} onClick={()=>nav("cl_pro",pro)}>
+                            {/* Avatar grande con emoji */}
+                            <div className="av-bubble" style={{
+                              width:56,height:56,background:pal.bg,
+                              boxShadow:`0 4px 0 ${pal.shadow},inset 0 1px 0 rgba(255,255,255,.6)`,
+                              fontSize:26,borderRadius:18,
+                            }}>{pro.emoji}</div>
+                            <div style={{flex:1,minWidth:0}}>
+                              <p style={{fontSize:16,fontWeight:800,color:"#111",margin:"0 0 2px",lineHeight:1.15}}>{pro.name}</p>
+                              {/* badge categoria colorato */}
+                              <span style={{display:"inline-block",fontSize:10,fontWeight:700,color:pal.accent,background:pal.bg,padding:"2px 8px",borderRadius:99,marginBottom:4}}>{pro.cat}</span>
+                              <div style={{display:"flex",alignItems:"center",gap:4,flexWrap:"wrap"}}>
+                                <span style={{color:"#F5A623",fontSize:12,letterSpacing:"1px"}}>{"★".repeat(Math.floor(pro.rating))}</span>
+                                <span style={{fontSize:12,fontWeight:700,color:"#111"}}>{pro.rating}</span>
+                                <span style={{fontSize:11,color:"#aaa"}}>({pro.reviews}) · {distLabel}</span>
+                              </div>
+                            </div>
+                            {/* Foto tonda a destra */}
+                            <div style={{width:64,height:64,borderRadius:18,background:pal.bg,overflow:"hidden",flexShrink:0,boxShadow:`0 4px 0 ${pal.shadow}`}}>
+                              {photoUrl
+                                ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
+                                : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>
+                              }
                             </div>
                           </div>
-                        </div>
-                        {/* Footer card */}
-                        <div style={{padding:"12px 14px",display:"flex",gap:8}}>
-                          <button onClick={e=>{e.stopPropagation();nav("cl_pro",pro);}} style={{
-                            flex:1,padding:"10px 0",borderRadius:12,
-                            border:`1.5px solid ${T.line}`,background:T.white,
-                            fontSize:13,fontWeight:700,color:T.ink,cursor:"pointer",fontFamily:"inherit",
-                          }}>
-                            Profilo
-                          </button>
-                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{
-                            flex:2,padding:"10px 0",borderRadius:12,border:"none",
-                            background:T.bgDark,
-                            fontSize:13,fontWeight:700,color:T.white,cursor:"pointer",fontFamily:"inherit",
-                          }}>
-                            Prenota
-                          </button>
+                          {/* Bottoni azione */}
+                          <div style={{display:"flex",gap:8}}>
+                            <button onClick={e=>{e.stopPropagation();nav("cl_pro",pro);}} style={{
+                              display:"flex",alignItems:"center",gap:5,padding:"8px 14px",
+                              borderRadius:12,border:`1.5px solid #EEEEF2`,
+                              background:"#FAFAFA",fontSize:13,fontWeight:700,color:"#444",
+                              cursor:"pointer",fontFamily:"inherit",
+                            }}>
+                              📞 Chiama
+                            </button>
+                            <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} style={{
+                              flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:5,
+                              padding:"8px 0",borderRadius:12,border:"none",
+                              background:pal.accent,
+                              fontSize:13,fontWeight:700,color:"#fff",cursor:"pointer",fontFamily:"inherit",
+                              boxShadow:`0 3px 0 ${pal.shadow}`,
+                            }}>
+                              📅 Prenota
+                            </button>
+                            <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{
+                              width:38,height:38,borderRadius:12,border:"1.5px solid #EEEEF2",
+                              background:"#FAFAFA",cursor:"pointer",flexShrink:0,
+                              display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,
+                            }}>
+                              {isFav?"❤️":"🤍"}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     );
