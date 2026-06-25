@@ -1227,8 +1227,8 @@ function AvatarSVG({ config, size, animate }) {
 }
 
 // ── Ready Player Me — helpers ─────────────────────────────────
-const RPM_SUBDOMAIN = "demo"; // cambia con il tuo subdomain RPM in produzione
-const RPM_CREATOR_URL = `https://${RPM_SUBDOMAIN}.readyplayer.me/avatar?frameApi&clearCache&bodyType=halfbody`;
+const RPM_SUBDOMAIN = "demo";
+const RPM_CREATOR_URL = "https://" + RPM_SUBDOMAIN + ".readyplayer.me/avatar?frameApi";
 
 function rpmImg(avatarUrl, w, scene) {
   if (!avatarUrl) return "";
@@ -1257,15 +1257,19 @@ function AvatarCreatorScreen({ nav, onAvatarSaved }) {
   const [error,   setError]   = useState(false);
 
   useEffect(function() {
+    // Nascondi loader dopo 5s anche se onLoad non scatta (iOS Safari)
+    var t = setTimeout(function() { setLoading(false); }, 5000);
     function onMsg(e) {
       if (!e.data || e.data.source !== "readyplayerme") return;
       if (e.data.eventName === "v1.avatar.exported") {
         var url = e.data.data && e.data.data.url;
         if (url) { onAvatarSaved(url); nav("cl_profilo"); }
       }
+      // Nascondi loader non appena arriva qualsiasi evento RPM
+      setLoading(false);
     }
     window.addEventListener("message", onMsg);
-    return function() { window.removeEventListener("message", onMsg); };
+    return function() { window.removeEventListener("message", onMsg); clearTimeout(t); };
   }, []);
 
   return (
@@ -1306,16 +1310,17 @@ function AvatarCreatorScreen({ nav, onAvatarSaved }) {
         </div>
       )}
 
-      {/* Iframe RPM */}
+      {/* Iframe RPM — sempre nel DOM, nascosta solo dalla overlay */}
       {!error && (
         <iframe
-          key={error ? "err" : "ok"}
           src={RPM_CREATOR_URL}
-          allow="camera *; microphone *"
+          allow="camera; microphone; xr-spatial-tracking; accelerometer; gyroscope"
+          allowFullScreen
           onLoad={()=>setLoading(false)}
           onError={()=>{setLoading(false);setError(true);}}
-          style={{flex:1,border:"none",width:"100%",display:"block"}}
+          style={{flex:1,border:"none",width:"100%",display:"block",minHeight:0}}
           title="Ready Player Me Avatar Creator"
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"
         />
       )}
     </div>
