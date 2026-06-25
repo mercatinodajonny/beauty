@@ -919,11 +919,9 @@ const NI = {
   grid:(a)=><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={a?T.brand:"#ADADAD"} strokeWidth={a?2.2:1.8} strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>,
   star:(a)=><svg width="22" height="22" viewBox="0 0 24 24" fill={a?T.brand:"none"} stroke={a?T.brand:"#ADADAD"} strokeWidth={a?2.2:1.8} strokeLinecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
 };
-// ── AvatarSVG — Memoji-premium style ─────────────────────────
+// ── AvatarSVG — componente SVG Memoji-style ──────────────────
 function AvatarSVG({ config, size, animate }) {
-  const [uid] = useState(function(){ return 'av' + Math.random().toString(36).slice(2,8); });
   const sz = size || 200;
-  const asp = 240 / 200;
   const cfg = Object.assign({}, AVATAR_DEFAULT, config || {});
   const skin = cfg.skin;
   const hairColor = cfg.hairColor;
@@ -942,286 +940,92 @@ function AvatarSVG({ config, size, animate }) {
     if (!animate) return;
     var t = setInterval(function() {
       setBlink(true);
-      setTimeout(function() { setBlink(false); }, 150);
-    }, 3000);
+      setTimeout(function() { setBlink(false); }, 130);
+    }, 3200);
     return function() { clearInterval(t); };
   }, [animate]);
 
-  const eRy   = blink ? 2   : 22;
-  const iRy   = blink ? 1.5 : 16;
-  const pRy   = blink ? 0.8 : 9;
+  var ey = blink ? 0 : 12;
 
-  // Hair front paths (if/else — no array indexing)
-  var hf = "M 30 108 Q 26 44 100 38 Q 174 44 170 108 Q 156 66 100 60 Q 44 66 30 108 Z";
-  if (hairStyle === 1) hf = "M 24 114 Q 18 40 100 32 Q 182 40 176 114 Q 174 78 156 60 Q 134 44 100 48 Q 66 44 44 60 Q 26 78 24 114 Z";
-  if (hairStyle === 2) hf = "M 30 108 Q 26 44 100 38 Q 174 44 170 108 Q 156 66 100 60 Q 44 66 30 108 Z";
-  if (hairStyle === 3) hf = "M 16 122 Q 6 26 100 16 Q 194 26 184 122 Q 188 80 170 52 Q 150 18 100 12 Q 50 18 30 52 Q 12 80 16 122 Z";
-  if (hairStyle === 4) hf = "M 28 106 Q 24 44 100 38 Q 176 44 172 106 Q 158 68 100 62 Q 42 68 28 106 Z";
-  if (hairStyle === 5) hf = "M 40 106 Q 38 54 100 50 Q 162 54 160 106 Q 152 76 100 74 Q 48 76 40 106 Z";
+  // Capelli — path superiore
+  var hairTop = "M 37 92 Q 37 48 100 44 Q 163 48 163 92 Q 150 62 100 58 Q 50 62 37 92 Z";
+  if (hairStyle === 1) hairTop = "M 33 100 Q 30 44 100 40 Q 170 44 167 100 Q 160 68 142 62 Q 120 52 100 56 Q 80 52 58 62 Q 40 68 33 100 Z";
+  if (hairStyle === 2) hairTop = "M 37 92 Q 37 48 100 44 Q 163 48 163 92 Q 150 62 100 58 Q 50 62 37 92 Z";
+  if (hairStyle === 3) hairTop = "M 28 110 Q 18 34 100 28 Q 182 34 172 110 Q 175 76 162 56 Q 144 28 100 22 Q 56 28 38 56 Q 25 76 28 110 Z";
+  if (hairStyle === 4) hairTop = "M 37 92 Q 37 48 100 44 Q 163 48 163 92 Q 150 62 100 58 Q 50 62 37 92 Z";
+  if (hairStyle === 5) hairTop = "M 44 98 Q 44 56 100 52 Q 156 56 156 98 Q 150 72 100 70 Q 50 72 44 98 Z";
 
-  // Brow paths
-  var bL  = "M 48 92 Q 70 82 90 88"; var bR  = "M 110 88 Q 130 82 152 92"; var bW = 3.8;
-  if (browStyle === 1) { bL = "M 50 94 Q 70 88 88 91"; bR = "M 112 91 Q 130 88 150 94"; bW = 2.2; }
-  if (browStyle === 2) { bL = "M 45 90 Q 70 79 92 87"; bR = "M 108 87 Q 130 79 155 90"; bW = 6; }
-  if (browStyle === 3) { bL = "M 48 92 Q 66 82 90 86"; bR = "M 110 86 Q 134 82 152 92"; bW = 3.8; }
+  // Sopracciglia
+  var browL = "M 57 94 Q 72 88 87 92";
+  var browR = "M 113 92 Q 128 88 143 94";
+  var browW = 2.5;
+  if (browStyle === 1) { browL = "M 59 95 Q 72 91 85 93"; browR = "M 115 93 Q 128 91 141 95"; browW = 1.6; }
+  if (browStyle === 2) { browL = "M 55 92 Q 72 86 89 91"; browR = "M 111 91 Q 128 86 145 92"; browW = 4; }
+  if (browStyle === 3) { browL = "M 57 90 Q 72 84 87 88"; browR = "M 113 88 Q 128 84 143 90"; }
 
   return (
-    <svg viewBox="0 0 200 240" width={sz} height={sz * asp} style={{display:"block",overflow:"visible"}}>
-      <defs>
-        {/* Face 3-D shading */}
-        <radialGradient id={uid+"-sg"} cx="36%" cy="26%" r="70%">
-          <stop offset="0%" stopColor="white" stopOpacity="0.42"/>
-          <stop offset="52%" stopColor="white" stopOpacity="0"/>
-          <stop offset="100%" stopColor="#000" stopOpacity="0.11"/>
-        </radialGradient>
-        {/* Iris gradient */}
-        <radialGradient id={uid+"-ig"} cx="32%" cy="28%" r="68%">
-          <stop offset="0%" stopColor="white" stopOpacity="0.55"/>
-          <stop offset="38%" stopColor={eyeColor} stopOpacity="1"/>
-          <stop offset="100%" stopColor={eyeColor} stopOpacity="1"/>
-        </radialGradient>
-        {/* Hair volume gradient */}
-        <linearGradient id={uid+"-hg"} x1="25%" y1="0%" x2="75%" y2="100%">
-          <stop offset="0%" stopColor="white" stopOpacity="0.38"/>
-          <stop offset="38%" stopColor="white" stopOpacity="0"/>
-          <stop offset="100%" stopColor="#000" stopOpacity="0.28"/>
-        </linearGradient>
-        {/* Drop shadow */}
-        <filter id={uid+"-sh"} x="-25%" y="-15%" width="150%" height="150%">
-          <feDropShadow dx="0" dy="7" stdDeviation="10" floodColor="#000" floodOpacity="0.10"/>
-        </filter>
-        {/* Lip gradient */}
-        <linearGradient id={uid+"-lip"} x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#D08070" stopOpacity="0.5"/>
-          <stop offset="100%" stopColor="#B06050" stopOpacity="0.7"/>
-        </linearGradient>
-      </defs>
-
-      {/* ══ OUTFIT ══ */}
-      {outfit === 0 && <g>
-        <path d="M 54 200 Q 54 188 100 184 Q 146 188 146 200 L 168 240 L 32 240 Z" fill={outfitColor}/>
-        <path d="M 54 200 L 38 186 L 20 192 L 32 240 Z" fill={outfitColor} opacity=".78"/>
-        <path d="M 146 200 L 162 186 L 180 192 L 168 240 Z" fill={outfitColor} opacity=".78"/>
-        <path d="M 54 200 L 38 186 L 20 192 L 32 240 Z" fill="white" opacity=".06"/>
-      </g>}
-      {outfit === 1 && <g>
-        <path d="M 50 202 Q 50 188 100 184 Q 150 188 150 202 L 174 240 L 26 240 Z" fill={outfitColor}/>
-        <path d="M 50 202 L 34 186 L 16 193 L 26 240 L 56 240 Z" fill={outfitColor} opacity=".7"/>
-        <path d="M 150 202 L 166 186 L 184 193 L 174 240 L 144 240 Z" fill={outfitColor} opacity=".7"/>
-        <path d="M 94 186 L 82 216 L 100 226 L 118 216 L 106 186 Z" fill="white" opacity=".1"/>
-        <path d="M 94 186 L 84 218 L 100 228 Z" fill="white" opacity=".12"/>
-        <path d="M 106 186 L 116 218 L 100 228 Z" fill="white" opacity=".12"/>
-      </g>}
-      {outfit === 2 && <g>
-        <path d="M 52 200 Q 52 186 100 182 Q 148 186 148 200 L 170 240 L 30 240 Z" fill={outfitColor}/>
-        <path d="M 52 200 L 36 184 L 18 191 L 30 240 Z" fill={outfitColor} opacity=".8"/>
-        <path d="M 148 200 L 164 184 L 182 191 L 170 240 Z" fill={outfitColor} opacity=".8"/>
-        <path d="M 82 182 Q 100 194 118 182 Q 112 228 88 228 Z" fill={outfitColor} opacity=".6"/>
-      </g>}
-      {outfit === 3 && <g>
-        <path d="M 60 194 Q 100 180 140 194 L 174 240 L 26 240 Z" fill={outfitColor}/>
-        <path d="M 60 194 L 44 181 L 28 188 L 44 194 Z" fill={outfitColor}/>
-        <path d="M 140 194 L 156 181 L 172 188 L 156 194 Z" fill={outfitColor}/>
-      </g>}
-
-      {/* ══ HAIR BACK (long styles only) ══ */}
-      {hairStyle === 2 && hat === 0 && <g>
-        <path d="M 28 108 Q 24 46 100 38 Q 176 46 172 108 L 178 218 Q 100 234 22 218 Z" fill={hairColor}/>
-        <path d="M 28 108 Q 24 46 100 38 Q 176 46 172 108 L 178 218 Q 100 234 22 218 Z" fill={`url(#${uid}-hg)`} opacity=".55"/>
-      </g>}
-      {hairStyle === 4 && hat === 0 && <g>
-        <path d="M 30 104 Q 26 46 100 38 Q 174 46 170 104 L 173 180 Q 100 196 27 180 Z" fill={hairColor}/>
-        <path d="M 30 104 Q 26 46 100 38 Q 174 46 170 104 L 173 180 Q 100 196 27 180 Z" fill={`url(#${uid}-hg)`} opacity=".5"/>
-      </g>}
-
-      {/* ══ NECK ══ */}
-      <rect x="82" y="180" width="36" height="22" rx="11" fill={skin}/>
-      <rect x="82" y="180" width="36" height="22" rx="11" fill={`url(#${uid}-sg)`} opacity=".4"/>
-
-      {/* ══ EARS ══ */}
-      <ellipse cx="24" cy="114" rx="13" ry="18" fill={skin} filter={`url(#${uid}-sh)`}/>
-      <ellipse cx="24" cy="116" rx="8"  ry="11" fill={skin} opacity=".55"/>
-      <ellipse cx="24" cy="117" rx="4"  ry="6"  fill={skin} opacity=".38"/>
-      <ellipse cx="176" cy="114" rx="13" ry="18" fill={skin} filter={`url(#${uid}-sh)`}/>
-      <ellipse cx="176" cy="116" rx="8"  ry="11" fill={skin} opacity=".55"/>
-      <ellipse cx="176" cy="117" rx="4"  ry="6"  fill={skin} opacity=".38"/>
-
-      {/* ══ EARRINGS ══ */}
-      {earrings === 1 && <g><circle cx="14" cy="122" r="5.5" fill={outfitColor}/><circle cx="186" cy="122" r="5.5" fill={outfitColor}/></g>}
-      {earrings === 2 && <g fill="none" stroke={outfitColor} strokeWidth="3.5"><ellipse cx="14" cy="132" rx="5" ry="9"/><ellipse cx="186" cy="132" rx="5" ry="9"/></g>}
-      {earrings === 3 && <g>
-        <circle cx="14" cy="119" r="4" fill={outfitColor}/>
-        <line x1="14" y1="123" x2="14" y2="136" stroke={outfitColor} strokeWidth="2.2"/>
-        <circle cx="14" cy="141" r="6" fill={outfitColor}/>
-        <circle cx="186" cy="119" r="4" fill={outfitColor}/>
-        <line x1="186" y1="123" x2="186" y2="136" stroke={outfitColor} strokeWidth="2.2"/>
-        <circle cx="186" cy="141" r="6" fill={outfitColor}/>
-      </g>}
-
-      {/* ══ HEAD ══ */}
-      <ellipse cx="100" cy="112" rx="76" ry="80" fill={skin} filter={`url(#${uid}-sh)`}/>
-      {/* 3-D skin shading overlay */}
-      <ellipse cx="100" cy="112" rx="76" ry="80" fill={`url(#${uid}-sg)`}/>
-      {/* Forehead specular highlight */}
-      <ellipse cx="76" cy="76" rx="30" ry="19" fill="white" opacity=".16"/>
-
-      {/* ══ BLUSH ══ */}
-      <ellipse cx="44"  cy="138" rx="22" ry="12" fill="#FF8FA3" opacity=".18"/>
-      <ellipse cx="156" cy="138" rx="22" ry="12" fill="#FF8FA3" opacity=".18"/>
-
-      {/* ══ BEARD ══ */}
-      {beardStyle === 1 && <g opacity=".28">
-        <circle cx="80"  cy="154" r="2.5" fill={hairColor}/>
-        <circle cx="88"  cy="158" r="2.5" fill={hairColor}/>
-        <circle cx="96"  cy="160" r="2.5" fill={hairColor}/>
-        <circle cx="104" cy="160" r="2.5" fill={hairColor}/>
-        <circle cx="112" cy="158" r="2.5" fill={hairColor}/>
-        <circle cx="120" cy="154" r="2.5" fill={hairColor}/>
-        <circle cx="84"  cy="164" r="2.5" fill={hairColor}/>
-        <circle cx="92"  cy="168" r="2.5" fill={hairColor}/>
-        <circle cx="100" cy="169" r="2.5" fill={hairColor}/>
-        <circle cx="108" cy="168" r="2.5" fill={hairColor}/>
-        <circle cx="116" cy="164" r="2.5" fill={hairColor}/>
-      </g>}
-      {beardStyle === 2 && <path d="M 84 154 Q 100 180 116 154 Q 118 188 100 192 Q 82 188 84 154 Z" fill={hairColor} opacity=".88"/>}
-      {beardStyle === 3 && <path d="M 36 144 Q 33 168 35 183 Q 50 206 100 208 Q 150 206 165 183 Q 167 168 164 144 Q 148 160 100 163 Q 52 160 36 144 Z" fill={hairColor} opacity=".88"/>}
-      {beardStyle === 4 && <path d="M 78 150 Q 90 160 100 156 Q 110 160 122 150 Q 110 144 100 147 Q 90 144 78 150 Z" fill={hairColor} opacity=".9"/>}
-
-      {/* ══ EYES ══ */}
-      {/* Left eye white */}
-      <ellipse cx="70" cy="108" rx="23" ry={eRy} fill="white"/>
-      {/* Left iris */}
-      <ellipse cx="70" cy="110" rx="16" ry={iRy} fill={`url(#${uid}-ig)`}/>
-      {/* Left pupil */}
-      <ellipse cx="70" cy="111" rx="9"  ry={pRy} fill="#111"/>
-      {/* Left catchlights */}
-      {!blink && <ellipse cx="63" cy="105" rx="5.5" ry="7" fill="white" opacity=".92"/>}
-      {!blink && <circle  cx="76" cy="113" r="2.5"        fill="white" opacity=".55"/>}
-      {/* Left upper lash arc */}
-      <path d="M 47 108 Q 70 90 93 108" stroke="#1A1A1A" strokeWidth="3" fill="none" strokeLinecap="round"/>
-      {/* Left individual lashes */}
-      <line x1="51" y1="103" x2="46" y2="94"  stroke="#1A1A1A" strokeWidth="1.8" strokeLinecap="round"/>
-      <line x1="60" y1="98"  x2="57" y2="89"  stroke="#1A1A1A" strokeWidth="1.8" strokeLinecap="round"/>
-      <line x1="70" y1="96"  x2="70" y2="86"  stroke="#1A1A1A" strokeWidth="1.8" strokeLinecap="round"/>
-      <line x1="80" y1="98"  x2="83" y2="89"  stroke="#1A1A1A" strokeWidth="1.8" strokeLinecap="round"/>
-      <line x1="89" y1="103" x2="94" y2="94"  stroke="#1A1A1A" strokeWidth="1.8" strokeLinecap="round"/>
-      {/* Left lower lid */}
-      <path d="M 47 108 Q 70 122 93 108" stroke="rgba(0,0,0,.12)" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-
-      {/* Right eye white */}
-      <ellipse cx="130" cy="108" rx="23" ry={eRy} fill="white"/>
-      {/* Right iris */}
-      <ellipse cx="130" cy="110" rx="16" ry={iRy} fill={`url(#${uid}-ig)`}/>
-      {/* Right pupil */}
-      <ellipse cx="130" cy="111" rx="9"  ry={pRy} fill="#111"/>
-      {/* Right catchlights */}
-      {!blink && <ellipse cx="123" cy="105" rx="5.5" ry="7" fill="white" opacity=".92"/>}
-      {!blink && <circle  cx="136" cy="113" r="2.5"        fill="white" opacity=".55"/>}
-      {/* Right upper lash arc */}
-      <path d="M 107 108 Q 130 90 153 108" stroke="#1A1A1A" strokeWidth="3" fill="none" strokeLinecap="round"/>
-      {/* Right individual lashes */}
-      <line x1="111" y1="103" x2="106" y2="94"  stroke="#1A1A1A" strokeWidth="1.8" strokeLinecap="round"/>
-      <line x1="120" y1="98"  x2="117" y2="89"  stroke="#1A1A1A" strokeWidth="1.8" strokeLinecap="round"/>
-      <line x1="130" y1="96"  x2="130" y2="86"  stroke="#1A1A1A" strokeWidth="1.8" strokeLinecap="round"/>
-      <line x1="140" y1="98"  x2="143" y2="89"  stroke="#1A1A1A" strokeWidth="1.8" strokeLinecap="round"/>
-      <line x1="149" y1="103" x2="154" y2="94"  stroke="#1A1A1A" strokeWidth="1.8" strokeLinecap="round"/>
-      {/* Right lower lid */}
-      <path d="M 107 108 Q 130 122 153 108" stroke="rgba(0,0,0,.12)" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-
-      {/* ══ EYEBROWS ══ */}
-      <path d={bL} stroke={hairColor} strokeWidth={bW} fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d={bR} stroke={hairColor} strokeWidth={bW} fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-      {/* Brow shine */}
-      <path d={bL} stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity=".18"/>
-      <path d={bR} stroke="white" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity=".18"/>
-
-      {/* ══ NOSE ══ */}
-      <ellipse cx="95"  cy="136" rx="5.5" ry="4.5" fill="rgba(0,0,0,.07)"/>
-      <ellipse cx="105" cy="136" rx="5.5" ry="4.5" fill="rgba(0,0,0,.07)"/>
-      <path d="M 92 132 Q 100 138 108 132" stroke="rgba(0,0,0,.09)" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-
-      {/* ══ MOUTH ══ */}
-      {/* Smile base */}
-      <path d="M 80 154 Q 100 174 120 154" stroke="#B06050" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity=".5"/>
-      {/* Lips fill */}
-      <path d="M 80 154 Q 100 172 120 154 Q 112 164 100 166 Q 88 164 80 154 Z" fill={`url(#${uid}-lip)`}/>
-      {/* Upper lip line */}
-      <path d="M 82 154 Q 92 148 100 150 Q 108 148 118 154" stroke="rgba(0,0,0,.14)" strokeWidth="1.4" fill="none" strokeLinecap="round"/>
-      {/* Teeth */}
-      <ellipse cx="100" cy="162" rx="13" ry="5.5" fill="white" opacity=".72"/>
-      {/* Lip highlight */}
-      <ellipse cx="97" cy="157" rx="9" ry="3" fill="white" opacity=".22"/>
-      {/* Smile dimples */}
-      <circle cx="79"  cy="153" r="2.5" fill="rgba(0,0,0,.07)"/>
-      <circle cx="121" cy="153" r="2.5" fill="rgba(0,0,0,.07)"/>
-
-      {/* ══ GLASSES ══ */}
-      {glasses === 1 && <g stroke="#1A1A1A" strokeWidth="2.5" fill="rgba(200,230,255,.2)">
-        <circle cx="70"  cy="108" r="25"/>
-        <circle cx="130" cy="108" r="25"/>
-        <path d="M 95 108 L 105 108"/>
-        <path d="M 45 103 L 33 100"/>
-        <path d="M 155 103 L 167 100"/>
-      </g>}
-      {glasses === 2 && <g stroke="#1A1A1A" strokeWidth="2.5" fill="rgba(200,230,255,.2)">
-        <rect x="44" y="95" width="52" height="29" rx="6"/>
-        <rect x="104" y="95" width="52" height="29" rx="6"/>
-        <path d="M 96 109 L 104 109"/>
-        <path d="M 44 103 L 33 101"/>
-        <path d="M 156 103 L 167 101"/>
-      </g>}
-      {glasses === 3 && <g stroke="#1A1A1A" strokeWidth="2.5" fill="rgba(255,200,230,.22)">
-        <path d="M 44 116 Q 45 93 70 90 Q 92 87 96 108 Q 92 124 69 124 Q 45 124 44 116 Z"/>
-        <path d="M 104 108 Q 108 87 130 90 Q 155 93 156 116 Q 155 124 132 124 Q 108 124 104 108 Z"/>
-        <path d="M 96 108 L 104 108"/>
-        <path d="M 44 112 L 33 107"/>
-        <path d="M 156 112 L 167 107"/>
-      </g>}
-
-      {/* ══ HAIR FRONT / HAT ══ */}
+    <svg viewBox="0 0 200 230" width={sz} height={sz * 230 / 200} style={{display:"block",overflow:"visible"}}>
+      {/* Vestiti */}
+      {outfit === 0 && <g><path d="M 55 194 L 30 230 L 170 230 L 145 194 Q 128 184 100 182 Q 72 184 55 194 Z" fill={outfitColor}/><path d="M 55 194 L 40 182 L 25 186 L 30 230 Z" fill={outfitColor} opacity=".8"/><path d="M 145 194 L 160 182 L 175 186 L 170 230 Z" fill={outfitColor} opacity=".8"/></g>}
+      {outfit === 1 && <g><path d="M 50 196 L 26 230 L 174 230 L 150 196 Q 133 183 100 181 Q 67 183 50 196 Z" fill={outfitColor}/><path d="M 50 196 L 37 182 L 22 186 L 26 230 L 54 230 Z" fill={outfitColor} opacity=".7"/><path d="M 150 196 L 163 182 L 178 186 L 174 230 L 146 230 Z" fill={outfitColor} opacity=".7"/><path d="M 93 183 L 85 230 L 100 222 L 115 230 L 107 183 Z" fill="white" opacity=".18"/></g>}
+      {outfit === 2 && <g><path d="M 52 198 L 28 230 L 172 230 L 148 198 Q 132 185 100 183 Q 68 185 52 198 Z" fill={outfitColor}/><path d="M 82 183 Q 100 193 118 183 Q 112 226 88 226 Z" fill={outfitColor} opacity=".65"/><path d="M 52 198 L 40 183 L 25 187 L 28 230 Z" fill={outfitColor} opacity=".82"/><path d="M 148 198 L 160 183 L 175 187 L 172 230 Z" fill={outfitColor} opacity=".82"/></g>}
+      {outfit === 3 && <g><path d="M 58 192 Q 100 180 142 192 L 174 230 L 26 230 Z" fill={outfitColor}/><path d="M 58 192 L 42 181 L 26 187 L 42 192 Z" fill={outfitColor}/><path d="M 142 192 L 158 181 L 174 187 L 158 192 Z" fill={outfitColor}/></g>}
+      {/* Capelli back */}
+      {hairStyle === 2 && <path d="M 35 94 Q 35 48 100 44 Q 165 48 165 94 L 172 215 Q 100 228 28 215 Z" fill={hairColor}/>}
+      {hairStyle === 4 && <path d="M 35 94 Q 35 48 100 44 Q 165 48 165 94 L 168 175 Q 100 188 32 175 Z" fill={hairColor}/>}
+      {/* Collo */}
+      <rect x="84" y="182" width="32" height="16" rx="8" fill={skin}/>
+      {/* Orecchie */}
+      <ellipse cx="37" cy="118" rx="10" ry="14" fill={skin}/>
+      <ellipse cx="163" cy="118" rx="10" ry="14" fill={skin}/>
+      {/* Orecchini */}
+      {earrings === 1 && <g><circle cx="29" cy="118" r="4.5" fill={outfitColor}/><circle cx="171" cy="118" r="4.5" fill={outfitColor}/></g>}
+      {earrings === 2 && <g fill="none" stroke={outfitColor} strokeWidth="3"><circle cx="29" cy="126" r="8"/><circle cx="171" cy="126" r="8"/></g>}
+      {earrings === 3 && <g><circle cx="29" cy="116" r="3" fill={outfitColor}/><line x1="29" y1="119" x2="29" y2="131" stroke={outfitColor} strokeWidth="1.8"/><circle cx="29" cy="134" r="4.5" fill={outfitColor}/><circle cx="171" cy="116" r="3" fill={outfitColor}/><line x1="171" y1="119" x2="171" y2="131" stroke={outfitColor} strokeWidth="1.8"/><circle cx="171" cy="134" r="4.5" fill={outfitColor}/></g>}
+      {/* Viso */}
+      <ellipse cx="100" cy="118" rx="63" ry="68" fill={skin}/>
+      {/* Guance */}
+      <ellipse cx="55" cy="132" rx="17" ry="9" fill="#FFB0C8" opacity=".22"/>
+      <ellipse cx="145" cy="132" rx="17" ry="9" fill="#FFB0C8" opacity=".22"/>
+      {/* Barba */}
+      {beardStyle === 1 && <g opacity=".3"><circle cx="80" cy="152" r="2" fill={hairColor}/><circle cx="88" cy="156" r="2" fill={hairColor}/><circle cx="96" cy="158" r="2" fill={hairColor}/><circle cx="104" cy="158" r="2" fill={hairColor}/><circle cx="112" cy="156" r="2" fill={hairColor}/><circle cx="120" cy="152" r="2" fill={hairColor}/><circle cx="84" cy="162" r="2" fill={hairColor}/><circle cx="92" cy="166" r="2" fill={hairColor}/><circle cx="100" cy="167" r="2" fill={hairColor}/><circle cx="108" cy="166" r="2" fill={hairColor}/><circle cx="116" cy="162" r="2" fill={hairColor}/></g>}
+      {beardStyle === 2 && <path d="M 87 150 Q 100 174 113 150 Q 115 182 100 186 Q 85 182 87 150 Z" fill={hairColor} opacity=".9"/>}
+      {beardStyle === 3 && <path d="M 40 143 Q 37 165 39 179 Q 53 199 100 201 Q 147 199 161 179 Q 163 165 160 143 Q 146 157 100 160 Q 54 157 40 143 Z" fill={hairColor} opacity=".9"/>}
+      {beardStyle === 4 && <path d="M 81 148 Q 91 156 100 152 Q 109 156 119 148 Q 109 143 100 145 Q 91 143 81 148 Z" fill={hairColor} opacity=".9"/>}
+      {/* Occhio sinistro */}
+      <ellipse cx="72" cy="108" rx="17" ry={ey} fill="white"/>
+      <ellipse cx="72" cy="108" rx="11" ry={ey * 0.84} fill={eyeColor}/>
+      <ellipse cx="72" cy="108" rx="6" ry={ey * 0.55} fill="#111"/>
+      {!blink && <circle cx="75" cy="106" r="2.5" fill="white"/>}
+      {/* Occhio destro */}
+      <ellipse cx="128" cy="108" rx="17" ry={ey} fill="white"/>
+      <ellipse cx="128" cy="108" rx="11" ry={ey * 0.84} fill={eyeColor}/>
+      <ellipse cx="128" cy="108" rx="6" ry={ey * 0.55} fill="#111"/>
+      {!blink && <circle cx="131" cy="106" r="2.5" fill="white"/>}
+      {/* Ciglia */}
+      <path d="M 55 108 Q 72 97 89 108" stroke="#111" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      <path d="M 111 108 Q 128 97 145 108" stroke="#111" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      {/* Sopracciglia */}
+      <path d={browL} stroke={hairColor} strokeWidth={browW} fill="none" strokeLinecap="round"/>
+      <path d={browR} stroke={hairColor} strokeWidth={browW} fill="none" strokeLinecap="round"/>
+      {/* Naso */}
+      <circle cx="96" cy="133" r="4.5" fill="rgba(0,0,0,.07)"/>
+      <circle cx="104" cy="133" r="4.5" fill="rgba(0,0,0,.07)"/>
+      {/* Bocca */}
+      <path d="M 84 150 Q 100 164 116 150" stroke="#C07070" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <path d="M 84 150 Q 100 162 116 150 Q 108 160 100 162 Q 92 160 84 150 Z" fill="#D08080" opacity=".5"/>
+      {/* Occhiali */}
+      {glasses === 1 && <g stroke="#1A1A1A" strokeWidth="2.2" fill="rgba(200,230,255,.15)"><circle cx="72" cy="108" r="19"/><circle cx="128" cy="108" r="19"/><path d="M 91 108 L 109 108"/><path d="M 53 104 L 42 102"/><path d="M 147 104 L 158 102"/></g>}
+      {glasses === 2 && <g stroke="#1A1A1A" strokeWidth="2.2" fill="rgba(200,230,255,.15)"><rect x="50" y="97" width="44" height="24" rx="5"/><rect x="106" y="97" width="44" height="24" rx="5"/><path d="M 94 109 L 106 109"/><path d="M 50 105 L 40 103"/><path d="M 150 105 L 160 103"/></g>}
+      {glasses === 3 && <g stroke="#1A1A1A" strokeWidth="2.2" fill="rgba(255,200,230,.18)"><path d="M 50 114 Q 51 96 72 93 Q 91 91 95 108 Q 91 120 71 120 Q 51 120 50 114 Z"/><path d="M 105 108 Q 109 91 128 93 Q 149 96 150 114 Q 149 120 129 120 Q 109 120 105 108 Z"/><path d="M 95 108 L 105 108"/><path d="M 50 110 L 40 105"/><path d="M 150 110 L 160 105"/></g>}
+      {/* Cappello — disegnato sopra i capelli */}
       {hat === 0 && <g>
-        <path d={hf} fill={hairColor}/>
-        <path d={hf} fill={`url(#${uid}-hg)`}/>
-        {/* Long hair front strands */}
-        {hairStyle === 2 && <g>
-          <path d="M 28 108 Q 18 134 20 204 Q 30 216 42 212 L 41 164 Q 43 136 45 114 Z" fill={hairColor}/>
-          <path d="M 28 108 Q 18 134 20 204 Q 30 216 42 212 L 41 164 Q 43 136 45 114 Z" fill={`url(#${uid}-hg)`} opacity=".5"/>
-          <path d="M 172 108 Q 182 134 180 204 Q 170 216 158 212 L 159 164 Q 157 136 155 114 Z" fill={hairColor}/>
-          <path d="M 172 108 Q 182 134 180 204 Q 170 216 158 212 L 159 164 Q 157 136 155 114 Z" fill={`url(#${uid}-hg)`} opacity=".5"/>
-        </g>}
-        {hairStyle === 4 && <g>
-          <path d="M 30 104 Q 22 130 22 180 Q 32 192 44 188 L 43 148 Q 45 122 47 110 Z" fill={hairColor}/>
-          <path d="M 170 104 Q 178 130 178 180 Q 168 192 156 188 L 157 148 Q 155 122 153 110 Z" fill={hairColor}/>
-        </g>}
-        {/* Curly volume puffs */}
-        {hairStyle === 3 && <g>
-          <circle cx="60"  cy="60"  r="28" fill={hairColor}/>
-          <circle cx="100" cy="42"  r="32" fill={hairColor}/>
-          <circle cx="140" cy="60"  r="28" fill={hairColor}/>
-          <circle cx="44"  cy="86"  r="22" fill={hairColor}/>
-          <circle cx="156" cy="86"  r="22" fill={hairColor}/>
-          <circle cx="60"  cy="60"  r="28" fill={`url(#${uid}-hg)`} opacity=".6"/>
-          <circle cx="100" cy="42"  r="32" fill={`url(#${uid}-hg)`} opacity=".6"/>
-          <circle cx="140" cy="60"  r="28" fill={`url(#${uid}-hg)`} opacity=".6"/>
-        </g>}
-        {/* Wavy side detail */}
-        {hairStyle === 1 && <g>
-          <path d="M 24 114 Q 16 130 18 148 Q 24 156 30 152 Q 22 138 26 118 Z" fill={hairColor}/>
-          <path d="M 176 114 Q 184 130 182 148 Q 176 156 170 152 Q 178 138 174 118 Z" fill={hairColor}/>
-        </g>}
+        <path d={hairTop} fill={hairColor}/>
+        {hairStyle === 2 && <g><path d="M 37 92 Q 27 124 25 190 Q 35 202 46 198 L 45 157 Q 50 130 52 110 Z" fill={hairColor}/><path d="M 163 92 Q 173 124 175 190 Q 165 202 154 198 L 155 157 Q 150 130 148 110 Z" fill={hairColor}/></g>}
+        {hairStyle === 4 && <g><path d="M 37 92 Q 30 118 30 172 Q 40 184 48 180 L 47 142 Q 49 116 51 102 Z" fill={hairColor}/><path d="M 163 92 Q 170 118 170 172 Q 160 184 152 180 L 153 142 Q 151 116 149 102 Z" fill={hairColor}/></g>}
       </g>}
-
-      {hat === 1 && <g>
-        <path d="M 30 102 Q 26 44 100 38 Q 174 44 170 102 Z" fill={outfitColor}/>
-        <rect x="24" y="98" width="152" height="18" rx="9" fill={outfitColor} opacity=".88"/>
-        <path d="M 168 101 Q 186 106 184 113 Q 182 117 173 115" fill={outfitColor}/>
-        <ellipse cx="78" cy="62" rx="24" ry="11" fill="white" opacity=".13"/>
-      </g>}
-      {hat === 2 && <g>
-        <path d="M 30 104 Q 26 44 100 38 Q 174 44 170 104 Q 154 66 100 60 Q 46 66 30 104 Z" fill={outfitColor}/>
-        <rect x="26" y="100" width="148" height="18" rx="9" fill={outfitColor} opacity=".72"/>
-        <ellipse cx="76" cy="68" rx="22" ry="9" fill="white" opacity=".13"/>
-      </g>}
+      {hat === 1 && <g><path d="M 34 88 Q 34 44 100 40 Q 166 44 166 88 Z" fill={outfitColor}/><rect x="28" y="84" width="144" height="16" rx="8" fill={outfitColor} opacity=".85"/><path d="M 166 86 Q 182 90 180 96 Q 178 100 170 98" fill={outfitColor}/></g>}
+      {hat === 2 && <g><path d="M 34 92 Q 32 44 100 40 Q 168 44 166 92 Q 148 58 100 56 Q 52 58 34 92 Z" fill={outfitColor}/><rect x="30" y="88" width="140" height="16" rx="8" fill={outfitColor} opacity=".7"/></g>}
     </svg>
   );
 }
