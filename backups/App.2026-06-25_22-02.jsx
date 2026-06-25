@@ -1197,7 +1197,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user}) {
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2.5" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
           </button>
           {/* Logo centrato */}
-          <img src="/beauty/logo.png" alt="beauty" style={{height:42,width:"auto",objectFit:"contain",position:"absolute",left:"50%",transform:"translateX(-50%)"}}/>
+          <img src="/beauty/logo.png" alt="beauty" style={{height:28,width:"auto",objectFit:"contain",position:"absolute",left:"50%",transform:"translateX(-50%)"}}/>
           {/* Campanella + Avatar */}
           <div style={{display:"flex",gap:10,alignItems:"center"}}>
             <div style={{position:"relative"}}>
@@ -1281,25 +1281,14 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user}) {
                   <p style={{fontSize:17,fontWeight:800,color:"#0D0D0E",margin:0,letterSpacing:"-.03em"}}>✨ Consigliati per te</p>
                   <button onClick={()=>openCategory("altro")} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.brand,fontWeight:700,fontFamily:"inherit",padding:0}}>Vedi tutti</button>
                 </div>
-                <div style={{display:"flex",gap:10,overflowX:"auto",padding:"4px 20px 16px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+                <div style={{display:"flex",gap:12,overflowX:"auto",padding:"4px 20px 12px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
                   {orderedCats.map(cat => (
                     <button key={cat.id} onClick={()=>openCategory(cat.id)}
-                      style={{flexShrink:0,width:110,height:130,borderRadius:22,overflow:"hidden",position:"relative",border:"none",padding:0,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 6px 20px ${cat.shadowColor||"rgba(0,0,0,.12)"}`,transition:"transform .18s ease"}}>
-                      {/* Foto di sfondo */}
-                      {cat.img
-                        ? <img src={cat.img+"&w=220&h=260&fit=crop&auto=format"} alt={cat.label} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
-                        : <div style={{position:"absolute",inset:0,background:cat.bg}}/>}
-                      {/* Overlay scuro in basso */}
-                      <div style={{position:"absolute",inset:0,background:"linear-gradient(160deg,rgba(0,0,0,.04) 0%,rgba(0,0,0,.55) 100%)"}}/>
-                      {/* Emoji in alto */}
-                      <div style={{position:"absolute",top:12,left:12,width:36,height:36,borderRadius:12,background:"rgba(255,255,255,.22)",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>
-                        {cat.emoji}
+                      style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:10,background:"#FFFFFF",border:"1.5px solid #F0F0F0",cursor:"pointer",padding:"16px 12px 13px",borderRadius:22,fontFamily:"inherit",minWidth:80,boxShadow:"0 2px 12px rgba(0,0,0,.05)",transition:"all .2s cubic-bezier(.34,1.56,.64,1)"}}>
+                      <div style={{width:50,height:50,borderRadius:16,background:cat.bg||"#FFF0E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        <MacroCatIcon id={cat.id} size={24} color={cat.color||T.brand} strokeWidth={1.8}/>
                       </div>
-                      {/* Label in basso */}
-                      <div style={{position:"absolute",bottom:12,left:10,right:10,textAlign:"left"}}>
-                        <p style={{fontSize:12,fontWeight:800,color:"#FFFFFF",margin:0,lineHeight:1.25,whiteSpace:"pre-line",textShadow:"0 1px 4px rgba(0,0,0,.4)",letterSpacing:"-.01em"}}>{cat.label}</p>
-                        {cat.count && <p style={{fontSize:9,fontWeight:600,color:"rgba(255,255,255,.75)",margin:"3px 0 0",letterSpacing:.3}}>{cat.count} professionisti</p>}
-                      </div>
+                      <p style={{fontSize:10,fontWeight:700,color:"#0D0D0E",margin:0,textAlign:"center",lineHeight:1.3,whiteSpace:"pre-line"}}>{cat.label}</p>
                     </button>
                   ))}
                 </div>
