@@ -3161,24 +3161,16 @@ function ManSVG({scale=1}){
 /* ─── AVATAR — immagini reali 3D ─────────────────────────────── */
 const CharDonna = () => (
   <img src="/beauty/donna-v5.png" alt="Donna"
-    style={{
-      position:"absolute",bottom:0,left:"50%",
-      transform:"translateX(-50%)",
-      height:"92%",width:"auto",
-      maxWidth:"none",
-      display:"block",pointerEvents:"none",
-    }}/>
+    style={{position:"absolute",bottom:0,left:0,right:0,width:"100%",
+      objectFit:"contain",objectPosition:"bottom center",
+      display:"block",pointerEvents:"none"}}/>
 );
 
 const CharUomo = () => (
   <img src="/beauty/uomo-v5.png" alt="Uomo"
-    style={{
-      position:"absolute",bottom:0,left:"50%",
-      transform:"translateX(-50%)",
-      height:"92%",width:"auto",
-      maxWidth:"none",
-      display:"block",pointerEvents:"none",
-    }}/>
+    style={{position:"absolute",bottom:0,left:0,right:0,width:"100%",
+      objectFit:"contain",objectPosition:"bottom center",
+      display:"block",pointerEvents:"none"}}/>
 );
 
 /* ─── ONBOARDING SCREEN ─────────────────────────────────────── */
@@ -3221,7 +3213,7 @@ function OnboardingScreen({onComplete}){
 
       {/* ── DUE CARD AFFIANCATE ── */}
       <div style={{padding:"0 16px",flexShrink:0}}>
-        <div style={{display:"flex",gap:10,height:460,position:"relative"}}>
+        <div style={{display:"flex",gap:10,height:320,position:"relative"}}>
 
           {/* ━━━ DONNA ━━━ */}
           <div onClick={()=>pick("donna")}
