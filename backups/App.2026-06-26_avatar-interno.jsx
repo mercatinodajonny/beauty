@@ -1226,6 +1226,73 @@ function AvatarSVG({ config, size, animate }) {
   );
 }
 
+// ── Ready Player Me — helpers ─────────────────────────────────
+const RPM_REDIRECT_BASE = "https://mercatinodajonny.github.io/beauty/";
+
+function rpmCreatorUrl() {
+  var redirect = encodeURIComponent(RPM_REDIRECT_BASE);
+  return "https://demo.readyplayer.me/avatar?redirectUrl=" + redirect + "&bodyType=halfbody&quickStart=false";
+}
+
+function rpmImg(url, w, scene) {
+  if (!url) return "";
+  var id = url.replace(".glb","").split("/").pop();
+  var src = "https://models.readyplayer.me/" + id + ".png?w=" + (w||256) + "&h=" + (w||256);
+  if (scene) src += "&scene=" + scene;
+  return src;
+}
+
+function AvatarDisplay({ url, size, scene, style }) {
+  if (!url) return null;
+  var sz = size || 80;
+  return (
+    <img src={rpmImg(url, sz*2, scene)} alt="avatar"
+      style={Object.assign({width:sz,height:sz,objectFit:"cover",display:"block"}, style||{})}/>
+  );
+}
+
+// ── AvatarCreatorScreen — apre RPM nella stessa tab ───────────
+function AvatarCreatorScreen({ nav, avatarUrl }) {
+  return (
+    <div style={{background:"#0D0D16",minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:32,gap:24}}>
+      {/* Preview avatar corrente */}
+      {avatarUrl && (
+        <div style={{width:120,height:120,borderRadius:"50%",overflow:"hidden",border:`3px solid ${T.brand}`,boxShadow:`0 0 32px ${T.brand}66`}}>
+          <AvatarDisplay url={avatarUrl} size={114} scene="bust-front-v1"/>
+        </div>
+      )}
+      {!avatarUrl && (
+        <div style={{width:100,height:100,borderRadius:"50%",background:`linear-gradient(135deg,${T.brand},${T.brand}88)`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 0 40px ${T.brand}55`}}>
+          <span style={{fontSize:44}}>🧑</span>
+        </div>
+      )}
+
+      <div style={{textAlign:"center"}}>
+        <p style={{fontSize:24,fontWeight:900,color:"#fff",margin:"0 0 8px",letterSpacing:"-.03em"}}>
+          {avatarUrl ? "Modifica il tuo Avatar" : "Crea il tuo Avatar 3D"}
+        </p>
+        <p style={{fontSize:14,color:"rgba(255,255,255,.5)",margin:0,lineHeight:1.5}}>
+          Verrai reindirizzato all'editor 3D.<br/>Al salvataggio tornerai automaticamente.
+        </p>
+      </div>
+
+      {/* Pulsante principale */}
+      <a href={rpmCreatorUrl()}
+        style={{display:"block",width:"100%",maxWidth:320,padding:"17px 0",borderRadius:999,background:`linear-gradient(135deg,${T.brand},${T.brand}BB)`,color:"#fff",fontSize:16,fontWeight:800,textAlign:"center",textDecoration:"none",boxShadow:`0 8px 28px ${T.brand}55`,letterSpacing:.3}}>
+        {avatarUrl ? "✏️  Modifica Avatar" : "✨  Crea il mio Avatar"}
+      </a>
+
+      <button onClick={()=>nav("cl_profilo")} style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:"rgba(255,255,255,.4)",fontFamily:"inherit",fontWeight:600,padding:"8px 0"}}>
+        ← Torna al profilo
+      </button>
+
+      {/* Badge RPM */}
+      <div style={{position:"absolute",bottom:32,display:"flex",alignItems:"center",gap:6,opacity:.4}}>
+        <span style={{fontSize:11,color:"#fff",fontWeight:600}}>Powered by Ready Player Me</span>
+      </div>
+    </div>
+  );
+}
 
 function TopBar() {
   return (
@@ -1417,7 +1484,7 @@ function LoginScreen({onAuth}) {
 }
 
 /* HOME CLIENTE */
-function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,avatarConfig}) {
+function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,avatarConfig,avatarUrl}) {
   const [city,setCity] = useState("Milano");
   const [userCoords,setUserCoords] = useState(DEFAULT_COORDS);
   const futuri = myAppts.filter(a=>a.status==="confermato"||a.status==="in attesa");
@@ -1534,7 +1601,9 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
   // Avatar header: custom SVG se configurato, altrimenti mascotte donna/uomo
   const AvatarBtn = () => (
     <button onClick={()=>nav("cl_profilo")} style={{width:44,height:44,borderRadius:"50%",overflow:"hidden",border:`2.5px solid ${T.brand}`,padding:0,cursor:"pointer",background:T.brandBg,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 3px 10px ${T.brand}33`}}>
-      {avatarConfig
+      {avatarUrl
+        ? <AvatarDisplay url={avatarUrl} size={40} scene="bust-front-v1" style={{borderRadius:"50%"}}/>
+        : avatarConfig
         ? <AvatarSVG config={avatarConfig} size={40} animate={false}/>
         : gender==="donna"
           ? <img src="/beauty/donna-final.png" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center"}} alt="profilo"/>
@@ -2429,55 +2498,6 @@ function AvColorDot({color,active,onClick,size}) {
 }
 const AV_HAIR_EMOJI = ["✂️","〰️","💁","🌀","💆","🪒"];
 
-// Sub-component a livello modulo (non dentro funzioni) per evitare bug React
-function AvSectionTitle({children}) {
-  return <p style={{fontSize:13,fontWeight:800,color:"#888",margin:"0 0 14px",textTransform:"uppercase",letterSpacing:1.1}}>{children}</p>;
-}
-function AvColorGrid({colors, active, onSelect, size, labels}) {
-  return (
-    <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:4}}>
-      {colors.map(function(c,i) {
-        const isActive = active===c;
-        return (
-          <div key={c} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:5}}>
-            <button onClick={function(){onSelect(c);}} style={{width:size||48,height:size||48,borderRadius:"50%",background:c,border:isActive?`3.5px solid ${T.brand}`:"3.5px solid transparent",cursor:"pointer",padding:0,flexShrink:0,boxShadow:isActive?`0 0 0 2.5px white,0 4px 14px ${c}99`:`0 2px 8px rgba(0,0,0,.15)`,transition:"all .18s ease"}}/>
-            {labels && <span style={{fontSize:9,fontWeight:700,color:isActive?T.brand:"#AAA"}}>{labels[i]}</span>}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-function AvStyleGrid({options, active, onSelect, emojis}) {
-  return (
-    <div style={{display:"flex",gap:10,overflowX:"auto",paddingBottom:4,scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
-      {options.map(function(label,i) {
-        const isActive = active===i;
-        return (
-          <button key={i} onClick={function(){onSelect(i);}} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,padding:"16px 14px",minWidth:76,borderRadius:20,border:"none",cursor:"pointer",fontFamily:"inherit",background:isActive?T.brand:"#F2F2F5",transition:"all .2s cubic-bezier(.34,1.56,.64,1)",transform:isActive?"scale(1.06)":"scale(1)",boxShadow:isActive?`0 6px 20px ${T.brand}44`:"0 2px 6px rgba(0,0,0,.06)"}}>
-            {emojis && <span style={{fontSize:26,lineHeight:1}}>{emojis[i]}</span>}
-            <span style={{fontSize:11,fontWeight:800,color:isActive?"#fff":"#666",letterSpacing:.2}}>{label}</span>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-function AvPillRow({options, active, onSelect}) {
-  return (
-    <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-      {options.map(function(label,i) {
-        const isActive = active===i;
-        return (
-          <button key={i} onClick={function(){onSelect(i);}} style={{padding:"10px 18px",borderRadius:999,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700,background:isActive?T.brand:"#F2F2F5",color:isActive?"#fff":"#555",boxShadow:isActive?`0 4px 12px ${T.brand}44`:"none",transition:"all .2s ease"}}>
-            {label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 // ── AvatarEditorScreen — UI premium istantanea ───────────────
 function AvatarEditorScreen({ nav, avatarConfig, setAvatarConfig }) {
   const [cfg, setCfg] = useState(Object.assign({}, AVATAR_DEFAULT, avatarConfig || {}));
@@ -2493,6 +2513,57 @@ function AvatarEditorScreen({ nav, avatarConfig, setAvatarConfig }) {
     {id:"access",  label:"Accessori",emoji:"👓"},
     {id:"vestiti", label:"Vestiti",  emoji:"👕"},
   ];
+
+  const SectionTitle = function({children}) {
+    return <p style={{fontSize:13,fontWeight:800,color:"#888",margin:"0 0 14px",textTransform:"uppercase",letterSpacing:1.1}}>{children}</p>;
+  };
+
+  const ColorGrid = function({colors, active, onSelect, size, labels}) {
+    return (
+      <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:4}}>
+        {colors.map(function(c,i) {
+          const isActive = active===c;
+          return (
+            <div key={c} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:5}}>
+              <button onClick={function(){onSelect(c);}} style={{width:size||48,height:size||48,borderRadius:"50%",background:c,border:isActive?`3.5px solid ${T.brand}`:"3.5px solid transparent",cursor:"pointer",padding:0,flexShrink:0,boxShadow:isActive?`0 0 0 2.5px white,0 4px 14px ${c}99`:`0 2px 8px rgba(0,0,0,.15)`,transition:"all .18s ease"}}/>
+              {labels && <span style={{fontSize:9,fontWeight:700,color:isActive?T.brand:"#AAA"}}>{labels[i]}</span>}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const StyleGrid = function({options, active, onSelect, emojis}) {
+    return (
+      <div style={{display:"flex",gap:10,overflowX:"auto",paddingBottom:4,scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
+        {options.map(function(label,i) {
+          const isActive = active===i;
+          return (
+            <button key={i} onClick={function(){onSelect(i);}} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,padding:"16px 14px",minWidth:76,borderRadius:20,border:"none",cursor:"pointer",fontFamily:"inherit",background:isActive?T.brand:"#F2F2F5",transition:"all .2s cubic-bezier(.34,1.56,.64,1)",transform:isActive?"scale(1.06)":"scale(1)",boxShadow:isActive?`0 6px 20px ${T.brand}44`:"0 2px 6px rgba(0,0,0,.06)"}}>
+              {emojis && <span style={{fontSize:26,lineHeight:1}}>{emojis[i]}</span>}
+              <span style={{fontSize:11,fontWeight:800,color:isActive?"#fff":"#666",letterSpacing:.2}}>{label}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const PillRow = function({options, active, onSelect}) {
+    return (
+      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+        {options.map(function(label,i) {
+          const isActive = active===i;
+          return (
+            <button key={i} onClick={function(){onSelect(i);}} style={{padding:"10px 18px",borderRadius:999,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700,background:isActive?T.brand:"#F2F2F5",color:isActive?"#fff":"#555",boxShadow:isActive?`0 4px 12px ${T.brand}44`:"none",transition:"all .2s ease"}}>
+              {label}
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <div style={{background:"#F5F5F8",minHeight:"100dvh",paddingBottom:110}}>
@@ -2532,20 +2603,20 @@ function AvatarEditorScreen({ nav, avatarConfig, setAvatarConfig }) {
 
         {tab==="viso" && (
           <div className="av-pop" style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-            <AvSectionTitle>Carnagione</AvSectionTitle>
-            <AvColorGrid colors={AV_SKINS.map(function(s){return s.v;})} labels={AV_SKINS.map(function(s){return s.l;})} active={cfg.skin} onSelect={function(c){up("skin",c);}} size={50}/>
+            <SectionTitle>Carnagione</SectionTitle>
+            <ColorGrid colors={AV_SKINS.map(function(s){return s.v;})} labels={AV_SKINS.map(function(s){return s.l;})} active={cfg.skin} onSelect={function(c){up("skin",c);}} size={50}/>
           </div>
         )}
 
         {tab==="capelli" && (
           <div className="av-pop" style={{display:"flex",flexDirection:"column",gap:20}}>
             <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <AvSectionTitle>Taglio</AvSectionTitle>
-              <AvStyleGrid options={AV_HAIR_LABELS} emojis={AV_HAIR_EMOJI} active={cfg.hairStyle} onSelect={function(i){up("hairStyle",i);}}/>
+              <SectionTitle>Taglio</SectionTitle>
+              <StyleGrid options={AV_HAIR_LABELS} emojis={AV_HAIR_EMOJI} active={cfg.hairStyle} onSelect={function(i){up("hairStyle",i);}}/>
             </div>
             <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <AvSectionTitle>Colore capelli</AvSectionTitle>
-              <AvColorGrid colors={AV_HAIR_COLORS} active={cfg.hairColor} onSelect={function(c){up("hairColor",c);}} size={44}/>
+              <SectionTitle>Colore capelli</SectionTitle>
+              <ColorGrid colors={AV_HAIR_COLORS} active={cfg.hairColor} onSelect={function(c){up("hairColor",c);}} size={44}/>
             </div>
           </div>
         )}
@@ -2553,36 +2624,36 @@ function AvatarEditorScreen({ nav, avatarConfig, setAvatarConfig }) {
         {tab==="occhi" && (
           <div className="av-pop" style={{display:"flex",flexDirection:"column",gap:20}}>
             <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <AvSectionTitle>Colore occhi</AvSectionTitle>
-              <AvColorGrid colors={AV_EYE_COLORS} active={cfg.eyeColor} onSelect={function(c){up("eyeColor",c);}} size={52}/>
+              <SectionTitle>Colore occhi</SectionTitle>
+              <ColorGrid colors={AV_EYE_COLORS} active={cfg.eyeColor} onSelect={function(c){up("eyeColor",c);}} size={52}/>
             </div>
             <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <AvSectionTitle>Sopracciglia</AvSectionTitle>
-              <AvPillRow options={["Naturali","Sottili","Spesse","Alzate"]} active={cfg.browStyle} onSelect={function(i){up("browStyle",i);}}/>
+              <SectionTitle>Sopracciglia</SectionTitle>
+              <PillRow options={["Naturali","Sottili","Spesse","Alzate"]} active={cfg.browStyle} onSelect={function(i){up("browStyle",i);}}/>
             </div>
           </div>
         )}
 
         {tab==="barba" && (
           <div className="av-pop" style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-            <AvSectionTitle>Barba & Baffi</AvSectionTitle>
-            <AvStyleGrid options={AV_BEARD_LABELS} emojis={["🚫","✏️","🪒","🧔","👨"]} active={cfg.beardStyle} onSelect={function(i){up("beardStyle",i);}}/>
+            <SectionTitle>Barba & Baffi</SectionTitle>
+            <StyleGrid options={AV_BEARD_LABELS} emojis={["🚫","✏️","🪒","🧔","👨"]} active={cfg.beardStyle} onSelect={function(i){up("beardStyle",i);}}/>
           </div>
         )}
 
         {tab==="access" && (
           <div className="av-pop" style={{display:"flex",flexDirection:"column",gap:20}}>
             <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <AvSectionTitle>Occhiali</AvSectionTitle>
-              <AvStyleGrid options={AV_GLASSES_LABELS} emojis={["🚫","🕶️","👓","😻"]} active={cfg.glasses} onSelect={function(i){up("glasses",i);}}/>
+              <SectionTitle>Occhiali</SectionTitle>
+              <StyleGrid options={AV_GLASSES_LABELS} emojis={["🚫","🕶️","👓","😻"]} active={cfg.glasses} onSelect={function(i){up("glasses",i);}}/>
             </div>
             <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <AvSectionTitle>Orecchini</AvSectionTitle>
-              <AvStyleGrid options={AV_EARRING_LABELS} emojis={["🚫","💎","⭕","✨"]} active={cfg.earrings} onSelect={function(i){up("earrings",i);}}/>
+              <SectionTitle>Orecchini</SectionTitle>
+              <StyleGrid options={AV_EARRING_LABELS} emojis={["🚫","💎","⭕","✨"]} active={cfg.earrings} onSelect={function(i){up("earrings",i);}}/>
             </div>
             <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <AvSectionTitle>Cappello</AvSectionTitle>
-              <AvStyleGrid options={AV_HAT_LABELS} emojis={["🚫","🧢","🎓"]} active={cfg.hat} onSelect={function(i){up("hat",i);}}/>
+              <SectionTitle>Cappello</SectionTitle>
+              <StyleGrid options={AV_HAT_LABELS} emojis={["🚫","🧢","🎓"]} active={cfg.hat} onSelect={function(i){up("hat",i);}}/>
             </div>
           </div>
         )}
@@ -2590,12 +2661,12 @@ function AvatarEditorScreen({ nav, avatarConfig, setAvatarConfig }) {
         {tab==="vestiti" && (
           <div className="av-pop" style={{display:"flex",flexDirection:"column",gap:20}}>
             <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <AvSectionTitle>Stile vestito</AvSectionTitle>
-              <AvStyleGrid options={AV_OUTFIT_LABELS} emojis={["👕","🥼","🧥","👗"]} active={cfg.outfit} onSelect={function(i){up("outfit",i);}}/>
+              <SectionTitle>Stile vestito</SectionTitle>
+              <StyleGrid options={AV_OUTFIT_LABELS} emojis={["👕","🥼","🧥","👗"]} active={cfg.outfit} onSelect={function(i){up("outfit",i);}}/>
             </div>
             <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <AvSectionTitle>Colore</AvSectionTitle>
-              <AvColorGrid colors={AV_OUTFIT_COLORS} active={cfg.outfitColor} onSelect={function(c){up("outfitColor",c);}} size={52}/>
+              <SectionTitle>Colore</SectionTitle>
+              <ColorGrid colors={AV_OUTFIT_COLORS} active={cfg.outfitColor} onSelect={function(c){up("outfitColor",c);}} size={52}/>
             </div>
           </div>
         )}
@@ -2787,7 +2858,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
 }
 
 /* PROFILO CLIENTE — stile Instagram */
-function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig}) {
+function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig,avatarUrl}) {
   const [tab,setTab] = useState("griglia"); // griglia | recensioni | impostazioni
   const [info,setInfo] = useState({name:user.name,handle:(user.name||"utente").toLowerCase().replace(/\s+/g,"_"),email:"alessio@email.it",city:"Dolcedo, Liguria",phone:""});
   const [editInfo,setEditInfo] = useState(false);
@@ -2835,7 +2906,9 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
         <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
           {/* Avatar — SVG se configurato, altrimenti iniziale */}
           <div style={{width:80,height:80,borderRadius:"50%",background:`linear-gradient(145deg,${T.brandBg},#fff)`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 6px 20px ${T.brand}30`,overflow:"hidden",cursor:"pointer"}} onClick={()=>nav("cl_avatar_editor")}>
-            {avatarConfig
+            {avatarUrl
+              ? <AvatarDisplay url={avatarUrl} size={72} scene="bust-front-v1" style={{borderRadius:"50%"}}/>
+              : avatarConfig
               ? <AvatarSVG config={avatarConfig} size={72} animate={false}/>
               : <span style={{fontSize:30,fontWeight:700,color:T.brand,fontFamily:"'Fraunces',serif"}}>{info.name[0]}</span>}
           </div>
@@ -2859,16 +2932,18 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
           <div style={{position:"absolute",top:-10,right:-10,width:100,height:100,borderRadius:"50%",background:T.brand,opacity:.06}}/>
           <div style={{display:"flex",alignItems:"center",gap:16}}>
             <div style={{width:88,height:88,flexShrink:0,marginBottom:-8}}>
-              {avatarConfig
+              {avatarUrl
+                ? <AvatarDisplay url={avatarUrl} size={88} scene="fullbody-portrait-v1" style={{borderRadius:16,objectFit:"cover"}}/>
+                : avatarConfig
                 ? <AvatarSVG config={avatarConfig} size={88} animate={true}/>
                 : <div style={{width:88,height:88,display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>🧑</div>}
             </div>
             <div style={{flex:1}}>
               <p style={{fontSize:10,fontWeight:700,color:T.brand,margin:"18px 0 4px",textTransform:"uppercase",letterSpacing:1.2}}>✨ Avatar Beauty</p>
-              <p style={{fontSize:16,fontWeight:800,color:"#0D0D0E",margin:"0 0 4px",letterSpacing:"-.02em"}}>{avatarConfig?"Il tuo avatar":"Crea il tuo avatar"}</p>
-              <p style={{fontSize:12,color:"#ADADAD",margin:"0 0 12px"}}>{avatarConfig?"Tocca per modificarlo":"La tua identità digitale su Beauty"}</p>
+              <p style={{fontSize:16,fontWeight:800,color:"#0D0D0E",margin:"0 0 4px",letterSpacing:"-.02em"}}>{(avatarUrl||avatarConfig)?"Il tuo avatar 3D":"Crea il tuo avatar 3D"}</p>
+              <p style={{fontSize:12,color:"#ADADAD",margin:"0 0 12px"}}>{(avatarUrl||avatarConfig)?"Tocca per modificarlo":"La tua identità digitale su Beauty"}</p>
               <button type="button" onClick={(e)=>{e.stopPropagation();nav("cl_avatar_editor");}} style={{padding:"9px 18px",borderRadius:999,border:"none",background:T.brand,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 3px 10px ${T.brand}44`}}>
-                {avatarConfig?"Modifica →":"Inizia ora →"}
+                {(avatarUrl||avatarConfig)?"Modifica →":"Inizia ora →"}
               </button>
             </div>
           </div>
@@ -4225,7 +4300,23 @@ export default function App() {
   const [conversations,setConversations] = useState(CONVERSATIONS0);
   const [savedPosts,setSavedPosts] = useState(new Set());
   const [avatarConfig,setAvatarConfig] = useState(null);
+  const [avatarUrl,setAvatarUrlState] = useState(function(){ try{return localStorage.getItem("ba-rpm-url")||null;}catch(e){return null;} });
+  const saveRpmAvatar = function(url){ setAvatarUrlState(url); try{localStorage.setItem("ba-rpm-url",url);}catch(e){} };
+
   useEffect(()=>{injectFont();},[]);
+
+  // Intercetta il ritorno da Ready Player Me (?avatarUrl=...)
+  useEffect(function(){
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var rpmUrl = params.get("avatarUrl");
+      if (rpmUrl) {
+        saveRpmAvatar(rpmUrl);
+        window.history.replaceState({}, "", window.location.pathname);
+        nav("cl_profilo");
+      }
+    } catch(e) {}
+  }, []);
 
   const nav = (to,data=null) => {setScreen(to);setSD(data);window.scrollTo({top:0});};
 
@@ -4323,8 +4414,8 @@ export default function App() {
   }}/></W>;
 
   const render = () => {
-    if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarConfig={avatarConfig}/>;
-    if(screen==="cl_avatar_editor") return <AvatarEditorScreen nav={nav} avatarConfig={avatarConfig} setAvatarConfig={setAvatarConfig}/>;
+    if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarConfig={avatarConfig} avatarUrl={avatarUrl}/>;
+    if(screen==="cl_avatar_editor") return <AvatarCreatorScreen nav={nav} avatarUrl={avatarUrl}/>;
     if(screen==="cl_explore")    return <ClExplore nav={nav} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={sendPostToPro}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
@@ -4338,7 +4429,7 @@ export default function App() {
       return <ChatScreen conv={conv} role={sData?.role||"client"} nav={nav}
         onSendMessage={sendMessage} onSendOffer={sendOffer} onAccept={acceptOffer} onDecline={declineOffer}/>;
     }
-    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig}/>;
+    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig} avatarUrl={avatarUrl}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav}/>;
     if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav}/>;
     if(screen==="pro_cliente")   return <ProCliente client={sData} setClients={setClients} appts={appts} services={services} nav={nav}/>;
