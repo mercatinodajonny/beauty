@@ -1517,7 +1517,7 @@ function LoginScreen({onAuth}) {
 }
 
 /* HOME CLIENTE */
-function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,avatarConfig}) {
+function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,avatarUrl}) {
   const [city,setCity] = useState("Milano");
   const [userCoords,setUserCoords] = useState(DEFAULT_COORDS);
   const futuri = myAppts.filter(a=>a.status==="confermato"||a.status==="in attesa");
@@ -1634,8 +1634,8 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
   // Avatar header: custom SVG se configurato, altrimenti mascotte donna/uomo
   const AvatarBtn = () => (
     <button onClick={()=>nav("cl_profilo")} style={{width:44,height:44,borderRadius:"50%",overflow:"hidden",border:`2.5px solid ${T.brand}`,padding:0,cursor:"pointer",background:T.brandBg,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 3px 10px ${T.brand}33`}}>
-      {avatarConfig
-        ? <AvatarSVG config={avatarConfig} size={40} animate={false}/>
+      {avatarUrl
+        ? <AvatarDisplay url={avatarUrl} size={40} style={{objectFit:"cover",objectPosition:"top center"}}/>
         : gender==="donna"
           ? <img src="/beauty/donna-final.png" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center"}} alt="profilo"/>
           : gender==="uomo"
@@ -2529,183 +2529,144 @@ function AvColorDot({color,active,onClick,size}) {
 }
 const AV_HAIR_EMOJI = ["✂️","〰️","💁","🌀","💆","🪒"];
 
-// ── AvatarEditorScreen — UI premium istantanea ───────────────
+// ── AvatarEditorScreen ────────────────────────────────────────
 function AvatarEditorScreen({ nav, avatarConfig, setAvatarConfig }) {
-  const [cfg, setCfg] = useState(Object.assign({}, AVATAR_DEFAULT, avatarConfig || {}));
+  const [cfg, setCfg] = useState({...AVATAR_DEFAULT,...avatarConfig});
   const [tab, setTab] = useState("viso");
-  const up = (k,v) => setCfg(function(c){ return Object.assign({},c,{[k]:v}); });
-  const save = function() { setAvatarConfig(cfg); nav("cl_profilo"); };
+  const update = (k,v) => setCfg(c=>({...c,[k]:v}));
+  const save = () => { setAvatarConfig(cfg); nav("cl_profilo"); };
 
   const TABS = [
-    {id:"viso",    label:"Viso",     emoji:"🧑"},
-    {id:"capelli", label:"Capelli",  emoji:"💇"},
-    {id:"occhi",   label:"Occhi",    emoji:"👁️"},
-    {id:"barba",   label:"Barba",    emoji:"🧔"},
-    {id:"access",  label:"Accessori",emoji:"👓"},
-    {id:"vestiti", label:"Vestiti",  emoji:"👕"},
+    {id:"viso",    label:"Viso",      emoji:"🧑"},
+    {id:"capelli", label:"Capelli",   emoji:"💇"},
+    {id:"occhi",   label:"Occhi",     emoji:"👁️"},
+    {id:"barba",   label:"Barba",     emoji:"🧔"},
+    {id:"access",  label:"Accessori", emoji:"👓"},
+    {id:"vestiti", label:"Vestiti",   emoji:"👕"},
   ];
 
-  const SectionTitle = function({children}) {
-    return <p style={{fontSize:13,fontWeight:800,color:"#888",margin:"0 0 14px",textTransform:"uppercase",letterSpacing:1.1}}>{children}</p>;
-  };
-
-  const ColorGrid = function({colors, active, onSelect, size, labels}) {
-    return (
-      <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:4}}>
-        {colors.map(function(c,i) {
-          const isActive = active===c;
-          return (
-            <div key={c} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:5}}>
-              <button onClick={function(){onSelect(c);}} style={{width:size||48,height:size||48,borderRadius:"50%",background:c,border:isActive?`3.5px solid ${T.brand}`:"3.5px solid transparent",cursor:"pointer",padding:0,flexShrink:0,boxShadow:isActive?`0 0 0 2.5px white,0 4px 14px ${c}99`:`0 2px 8px rgba(0,0,0,.15)`,transition:"all .18s ease"}}/>
-              {labels && <span style={{fontSize:9,fontWeight:700,color:isActive?T.brand:"#AAA"}}>{labels[i]}</span>}
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
-  const StyleGrid = function({options, active, onSelect, emojis}) {
-    return (
-      <div style={{display:"flex",gap:10,overflowX:"auto",paddingBottom:4,scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
-        {options.map(function(label,i) {
-          const isActive = active===i;
-          return (
-            <button key={i} onClick={function(){onSelect(i);}} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,padding:"16px 14px",minWidth:76,borderRadius:20,border:"none",cursor:"pointer",fontFamily:"inherit",background:isActive?T.brand:"#F2F2F5",transition:"all .2s cubic-bezier(.34,1.56,.64,1)",transform:isActive?"scale(1.06)":"scale(1)",boxShadow:isActive?`0 6px 20px ${T.brand}44`:"0 2px 6px rgba(0,0,0,.06)"}}>
-              {emojis && <span style={{fontSize:26,lineHeight:1}}>{emojis[i]}</span>}
-              <span style={{fontSize:11,fontWeight:800,color:isActive?"#fff":"#666",letterSpacing:.2}}>{label}</span>
-            </button>
-          );
-        })}
-      </div>
-    );
-  };
-
-  const PillRow = function({options, active, onSelect}) {
-    return (
-      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-        {options.map(function(label,i) {
-          const isActive = active===i;
-          return (
-            <button key={i} onClick={function(){onSelect(i);}} style={{padding:"10px 18px",borderRadius:999,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700,background:isActive?T.brand:"#F2F2F5",color:isActive?"#fff":"#555",boxShadow:isActive?`0 4px 12px ${T.brand}44`:"none",transition:"all .2s ease"}}>
-              {label}
-            </button>
-          );
-        })}
-      </div>
-    );
-  };
-
   return (
-    <div style={{background:"#F5F5F8",minHeight:"100dvh",paddingBottom:110}}>
+    <div style={{background:"#F8F8FA",minHeight:"100dvh",paddingBottom:120}}>
 
-      {/* ── Top bar ── */}
-      <div style={{position:"sticky",top:0,zIndex:10,background:"rgba(245,245,248,.95)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"52px 20px 0"}}>
-          <button onClick={()=>nav("cl_profilo")} style={{width:36,height:36,borderRadius:12,background:"#EAEAEA",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2.5" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          </button>
-          <span style={{fontSize:16,fontWeight:900,color:"#0D0D0E",letterSpacing:"-.03em"}}>Il tuo Avatar</span>
-          <button onClick={save} style={{padding:"9px 22px",borderRadius:999,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:800,background:T.brand,color:"#fff",boxShadow:`0 4px 16px ${T.brand}55`,letterSpacing:.2}}>Salva</button>
+      {/* ── Header ── */}
+      <div style={{background:"#FFFFFF",boxShadow:"0 1px 0 rgba(0,0,0,.05)"}}>
+        <div style={{padding:"60px 20px 0",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <button onClick={()=>nav("cl_profilo")} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:600,color:"#ADADAD",padding:"8px 0"}}>Annulla</button>
+          <span style={{fontSize:16,fontWeight:800,color:"#0D0D0E",letterSpacing:"-.02em"}}>Il tuo Avatar</span>
+          <button onClick={save} style={{background:T.brand,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:700,color:"#fff",padding:"8px 18px",borderRadius:999,boxShadow:`0 4px 14px ${T.brand}44`}}>Salva</button>
         </div>
 
-        {/* Avatar preview */}
-        <div style={{display:"flex",justifyContent:"center",padding:"20px 0 8px"}}>
-          <div className="av-float" style={{width:160,height:160,borderRadius:"50%",background:`radial-gradient(ellipse at 35% 30%, ${T.brandBg} 0%, #FFFFFF 70%)`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 20px 60px ${T.brand}22, 0 4px 20px rgba(0,0,0,.07), inset 0 1px 0 rgba(255,255,255,.8)`}}>
-            <AvatarSVG config={cfg} size={136} animate={true}/>
+        {/* Avatar preview grande + floating */}
+        <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"24px 0 20px"}}>
+          <div className="av-float" style={{width:180,height:180,borderRadius:"50%",background:`linear-gradient(145deg,${T.brandBg},#FFFFFF)`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 16px 48px ${T.brand}28, 0 4px 16px rgba(0,0,0,.06)`}}>
+            <AvatarSVG config={cfg} size={148} animate={true}/>
           </div>
+          <p style={{marginTop:10,fontSize:12,color:"#ADADAD",fontWeight:500}}>Si aggiorna in tempo reale ✨</p>
         </div>
 
-        {/* Tab pills */}
-        <div style={{display:"flex",gap:6,overflowX:"auto",padding:"10px 16px 16px",scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
-          {TABS.map(function(t) {
-            const active = tab===t.id;
-            return (
-              <button key={t.id} onClick={()=>setTab(t.id)} style={{flexShrink:0,display:"flex",alignItems:"center",gap:5,padding:"9px 14px",borderRadius:999,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:12,fontWeight:800,background:active?T.brand:"#EAEAEA",color:active?"#fff":"#666",boxShadow:active?`0 3px 12px ${T.brand}44`:"none",transition:"all .22s ease"}}>
-                <span style={{fontSize:14}}>{t.emoji}</span>{t.label}
-              </button>
-            );
-          })}
+        {/* Tab bar */}
+        <div style={{display:"flex",gap:8,overflowX:"auto",padding:"0 20px 18px",scrollbarWidth:"none"}}>
+          {TABS.map(t=>(
+            <button key={t.id} onClick={()=>setTab(t.id)} style={{flexShrink:0,display:"flex",alignItems:"center",gap:6,padding:"10px 16px",borderRadius:999,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:12,fontWeight:700,background:tab===t.id?T.brand:"#F0F0F0",color:tab===t.id?"#fff":"#666",boxShadow:tab===t.id?`0 3px 10px ${T.brand}44`:"none",transition:"all .2s ease"}}>
+              {t.emoji} {t.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* ── Pannello opzioni ── */}
-      <div style={{padding:"20px 20px 0"}}>
+      {/* ── Opzioni ── */}
+      <div style={{padding:"24px 20px"}}>
 
         {tab==="viso" && (
-          <div className="av-pop" style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-            <SectionTitle>Carnagione</SectionTitle>
-            <ColorGrid colors={AV_SKINS.map(function(s){return s.v;})} labels={AV_SKINS.map(function(s){return s.l;})} active={cfg.skin} onSelect={function(c){up("skin",c);}} size={50}/>
+          <div className="av-pop">
+            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 16px",letterSpacing:"-.02em"}}>Carnagione</p>
+            <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+              {AV_SKINS.map(s=>(
+                <div key={s.v} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+                  <AvColorDot color={s.v} active={cfg.skin===s.v} onClick={()=>update("skin",s.v)}/>
+                  <span style={{fontSize:9,fontWeight:600,color:"#999"}}>{s.l}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
         {tab==="capelli" && (
-          <div className="av-pop" style={{display:"flex",flexDirection:"column",gap:20}}>
-            <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <SectionTitle>Taglio</SectionTitle>
-              <StyleGrid options={AV_HAIR_LABELS} emojis={AV_HAIR_EMOJI} active={cfg.hairStyle} onSelect={function(i){up("hairStyle",i);}}/>
+          <div className="av-pop">
+            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Taglio</p>
+            <div style={{display:"flex",gap:10,overflowX:"auto",paddingBottom:16,scrollbarWidth:"none"}}>
+              {AV_HAIR_LABELS.map((l,i)=>(
+                <button key={i} onClick={()=>update("hairStyle",i)} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:8,background:cfg.hairStyle===i?T.brandBg:"#F0F0F0",border:cfg.hairStyle===i?`2px solid ${T.brand}`:"2px solid transparent",borderRadius:16,padding:"14px 12px",cursor:"pointer",minWidth:72,transition:"all .18s ease",fontFamily:"inherit"}}>
+                  <span style={{fontSize:28}}>{AV_HAIR_EMOJI[i]}</span>
+                  <span style={{fontSize:10,fontWeight:700,color:cfg.hairStyle===i?T.brand:"#666"}}>{l}</span>
+                </button>
+              ))}
             </div>
-            <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <SectionTitle>Colore capelli</SectionTitle>
-              <ColorGrid colors={AV_HAIR_COLORS} active={cfg.hairColor} onSelect={function(c){up("hairColor",c);}} size={44}/>
+            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"8px 0 14px",letterSpacing:"-.02em"}}>Colore</p>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+              {AV_HAIR_COLORS.map(c=><AvColorDot key={c} color={c} active={cfg.hairColor===c} onClick={()=>update("hairColor",c)} size={42}/>)}
             </div>
           </div>
         )}
 
         {tab==="occhi" && (
-          <div className="av-pop" style={{display:"flex",flexDirection:"column",gap:20}}>
-            <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <SectionTitle>Colore occhi</SectionTitle>
-              <ColorGrid colors={AV_EYE_COLORS} active={cfg.eyeColor} onSelect={function(c){up("eyeColor",c);}} size={52}/>
+          <div className="av-pop">
+            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Colore occhi</p>
+            <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+              {AV_EYE_COLORS.map(c=><AvColorDot key={c} color={c} active={cfg.eyeColor===c} onClick={()=>update("eyeColor",c)}/>)}
             </div>
-            <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <SectionTitle>Sopracciglia</SectionTitle>
-              <PillRow options={["Naturali","Sottili","Spesse","Alzate"]} active={cfg.browStyle} onSelect={function(i){up("browStyle",i);}}/>
+            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"20px 0 14px",letterSpacing:"-.02em"}}>Sopracciglia</p>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              {["Naturali","Sottili","Spesse","Alzate"].map((l,i)=><AvSelPill key={i} label={l} active={cfg.browStyle===i} onClick={()=>update("browStyle",i)}/>)}
             </div>
           </div>
         )}
 
         {tab==="barba" && (
-          <div className="av-pop" style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-            <SectionTitle>Barba & Baffi</SectionTitle>
-            <StyleGrid options={AV_BEARD_LABELS} emojis={["🚫","✏️","🪒","🧔","👨"]} active={cfg.beardStyle} onSelect={function(i){up("beardStyle",i);}}/>
+          <div className="av-pop">
+            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Barba & Baffi</p>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              {AV_BEARD_LABELS.map((l,i)=><AvSelPill key={i} label={l} active={cfg.beardStyle===i} onClick={()=>update("beardStyle",i)}/>)}
+            </div>
           </div>
         )}
 
         {tab==="access" && (
-          <div className="av-pop" style={{display:"flex",flexDirection:"column",gap:20}}>
-            <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <SectionTitle>Occhiali</SectionTitle>
-              <StyleGrid options={AV_GLASSES_LABELS} emojis={["🚫","🕶️","👓","😻"]} active={cfg.glasses} onSelect={function(i){up("glasses",i);}}/>
+          <div className="av-pop">
+            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Occhiali</p>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
+              {AV_GLASSES_LABELS.map((l,i)=><AvSelPill key={i} label={l} active={cfg.glasses===i} onClick={()=>update("glasses",i)}/>)}
             </div>
-            <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <SectionTitle>Orecchini</SectionTitle>
-              <StyleGrid options={AV_EARRING_LABELS} emojis={["🚫","💎","⭕","✨"]} active={cfg.earrings} onSelect={function(i){up("earrings",i);}}/>
+            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Orecchini</p>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
+              {AV_EARRING_LABELS.map((l,i)=><AvSelPill key={i} label={l} active={cfg.earrings===i} onClick={()=>update("earrings",i)}/>)}
             </div>
-            <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <SectionTitle>Cappello</SectionTitle>
-              <StyleGrid options={AV_HAT_LABELS} emojis={["🚫","🧢","🎓"]} active={cfg.hat} onSelect={function(i){up("hat",i);}}/>
+            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Cappello</p>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              {AV_HAT_LABELS.map((l,i)=><AvSelPill key={i} label={l} active={cfg.hat===i} onClick={()=>update("hat",i)}/>)}
             </div>
           </div>
         )}
 
         {tab==="vestiti" && (
-          <div className="av-pop" style={{display:"flex",flexDirection:"column",gap:20}}>
-            <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <SectionTitle>Stile vestito</SectionTitle>
-              <StyleGrid options={AV_OUTFIT_LABELS} emojis={["👕","🥼","🧥","👗"]} active={cfg.outfit} onSelect={function(i){up("outfit",i);}}/>
+          <div className="av-pop">
+            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Stile</p>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
+              {AV_OUTFIT_LABELS.map((l,i)=><AvSelPill key={i} label={l} active={cfg.outfit===i} onClick={()=>update("outfit",i)}/>)}
             </div>
-            <div style={{background:"#FFF",borderRadius:24,padding:20,boxShadow:"0 4px 20px rgba(0,0,0,.05)"}}>
-              <SectionTitle>Colore</SectionTitle>
-              <ColorGrid colors={AV_OUTFIT_COLORS} active={cfg.outfitColor} onSelect={function(c){up("outfitColor",c);}} size={52}/>
+            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:"0 0 14px",letterSpacing:"-.02em"}}>Colore</p>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+              {AV_OUTFIT_COLORS.map(c=><AvColorDot key={c} color={c} active={cfg.outfitColor===c} onClick={()=>update("outfitColor",c)}/>)}
             </div>
           </div>
         )}
 
-        {/* Pulsante salva bottom */}
-        <button onClick={save} style={{width:"100%",marginTop:24,padding:"16px 0",borderRadius:20,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:16,fontWeight:800,background:`linear-gradient(135deg,${T.brand},${T.brand}CC)`,color:"#fff",boxShadow:`0 8px 24px ${T.brand}44`,letterSpacing:.3}}>
-          Salva il mio Avatar ✨
-        </button>
+        {/* Slot AI futuro */}
+        <div style={{marginTop:32,borderRadius:20,background:"#FFFFFF",border:`1.5px dashed ${T.brand}44`,padding:"20px",textAlign:"center",boxShadow:"0 2px 12px rgba(0,0,0,.04)"}}>
+          <span style={{fontSize:28}}>✨</span>
+          <p style={{fontSize:14,fontWeight:700,color:"#0D0D0E",margin:"8px 0 4px"}}>Crea da selfie — Prossimamente</p>
+          <p style={{fontSize:12,color:"#ADADAD",margin:0}}>Carica una foto e l'IA genererà il tuo avatar automaticamente</p>
+        </div>
       </div>
     </div>
   );
@@ -2889,7 +2850,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
 }
 
 /* PROFILO CLIENTE — stile Instagram */
-function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig}) {
+function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarUrl}) {
   const [tab,setTab] = useState("griglia"); // griglia | recensioni | impostazioni
   const [info,setInfo] = useState({name:user.name,handle:(user.name||"utente").toLowerCase().replace(/\s+/g,"_"),email:"alessio@email.it",city:"Dolcedo, Liguria",phone:""});
   const [editInfo,setEditInfo] = useState(false);
@@ -2937,8 +2898,8 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
         <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
           {/* Avatar — SVG se configurato, altrimenti iniziale */}
           <div style={{width:80,height:80,borderRadius:"50%",background:`linear-gradient(145deg,${T.brandBg},#fff)`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 6px 20px ${T.brand}30`,overflow:"hidden",cursor:"pointer"}} onClick={()=>nav("cl_avatar_editor")}>
-            {avatarConfig
-              ? <AvatarSVG config={avatarConfig} size={72} animate={false}/>
+            {avatarUrl
+              ? <AvatarDisplay url={avatarUrl} size={72} scene="bust-front-v1" style={{borderRadius:"50%"}}/>
               : <span style={{fontSize:30,fontWeight:700,color:T.brand,fontFamily:"'Fraunces',serif"}}>{info.name[0]}</span>}
           </div>
           <div style={{flex:1,display:"flex",justifyContent:"space-around",textAlign:"center"}}>
@@ -2961,16 +2922,16 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
           <div style={{position:"absolute",top:-10,right:-10,width:100,height:100,borderRadius:"50%",background:T.brand,opacity:.06}}/>
           <div style={{display:"flex",alignItems:"center",gap:16}}>
             <div style={{width:88,height:88,flexShrink:0,marginBottom:-8}}>
-              {avatarConfig
-                ? <AvatarSVG config={avatarConfig} size={88} animate={true}/>
+              {avatarUrl
+                ? <AvatarDisplay url={avatarUrl} size={88} scene="bust-front-v1" style={{borderRadius:16}}/>
                 : <div style={{width:88,height:88,display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>🧑</div>}
             </div>
             <div style={{flex:1}}>
               <p style={{fontSize:10,fontWeight:700,color:T.brand,margin:"18px 0 4px",textTransform:"uppercase",letterSpacing:1.2}}>✨ Avatar Beauty</p>
-              <p style={{fontSize:16,fontWeight:800,color:"#0D0D0E",margin:"0 0 4px",letterSpacing:"-.02em"}}>{avatarConfig?"Il tuo avatar":"Crea il tuo avatar"}</p>
-              <p style={{fontSize:12,color:"#ADADAD",margin:"0 0 12px"}}>{avatarConfig?"Tocca per personalizzarlo":"La tua identità digitale su Beauty"}</p>
+              <p style={{fontSize:16,fontWeight:800,color:"#0D0D0E",margin:"0 0 4px",letterSpacing:"-.02em"}}>{avatarUrl?"Il tuo avatar 3D":"Crea il tuo avatar 3D"}</p>
+              <p style={{fontSize:12,color:"#ADADAD",margin:"0 0 12px"}}>{avatarUrl?"Tocca per modificarlo":"La tua identità digitale su Beauty"}</p>
               <button type="button" onClick={(e)=>{e.stopPropagation();nav("cl_avatar_editor");}} style={{padding:"9px 18px",borderRadius:999,border:"none",background:T.brand,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 3px 10px ${T.brand}44`}}>
-                {avatarConfig?"Personalizza →":"Inizia ora →"}
+                {avatarUrl?"Modifica →":"Inizia ora →"}
               </button>
             </div>
           </div>
@@ -4326,7 +4287,8 @@ export default function App() {
   const [myAppts,setMyAppts] = useState(MY_APPTS0);
   const [conversations,setConversations] = useState(CONVERSATIONS0);
   const [savedPosts,setSavedPosts] = useState(new Set());
-  const [avatarConfig,setAvatarConfig] = useState(null);
+  const [avatarUrl,setAvatarUrlState] = useState(function(){ try{return localStorage.getItem("ba-avatar")||null;}catch(e){return null;} });
+  const saveAvatar = function(url){ setAvatarUrlState(url); try{localStorage.setItem("ba-avatar",url);}catch(e){} };
 
   useEffect(()=>{injectFont();},[]);
 
@@ -4426,8 +4388,8 @@ export default function App() {
   }}/></W>;
 
   const render = () => {
-    if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarConfig={avatarConfig}/>;
-    if(screen==="cl_avatar_editor") return <AvatarEditorScreen nav={nav} avatarConfig={avatarConfig} setAvatarConfig={setAvatarConfig}/>;
+    if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarUrl={avatarUrl}/>;
+    if(screen==="cl_avatar_editor") return <AvatarCreatorScreen nav={nav} onAvatarSaved={saveAvatar}/>;
     if(screen==="cl_explore")    return <ClExplore nav={nav} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={sendPostToPro}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
@@ -4441,7 +4403,7 @@ export default function App() {
       return <ChatScreen conv={conv} role={sData?.role||"client"} nav={nav}
         onSendMessage={sendMessage} onSendOffer={sendOffer} onAccept={acceptOffer} onDecline={declineOffer}/>;
     }
-    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig}/>;
+    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)} accent={accent} setAccent={setAccent} avatarUrl={avatarUrl}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav}/>;
     if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav}/>;
     if(screen==="pro_cliente")   return <ProCliente client={sData} setClients={setClients} appts={appts} services={services} nav={nav}/>;
