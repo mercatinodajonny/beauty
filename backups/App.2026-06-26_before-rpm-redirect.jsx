@@ -1227,12 +1227,7 @@ function AvatarSVG({ config, size, animate }) {
 }
 
 // ── Ready Player Me — helpers ─────────────────────────────────
-const RPM_REDIRECT_BASE = "https://mercatinodajonny.github.io/beauty/";
-
-function rpmCreatorUrl() {
-  var redirect = encodeURIComponent(RPM_REDIRECT_BASE);
-  return "https://demo.readyplayer.me/avatar?redirectUrl=" + redirect + "&bodyType=halfbody&quickStart=false";
-}
+const RPM_CREATOR_URL = "https://demo.readyplayer.me/avatar?frameApi&bodyType=fullbody&quickStart=true&clearCache";
 
 function rpmImg(url, w, scene) {
   if (!url) return "";
@@ -1251,45 +1246,46 @@ function AvatarDisplay({ url, size, scene, style }) {
   );
 }
 
-// ── AvatarCreatorScreen — apre RPM nella stessa tab ───────────
-function AvatarCreatorScreen({ nav, avatarUrl }) {
+// ── AvatarCreatorScreen — Ready Player Me fullscreen ──────────
+function AvatarCreatorScreen({ nav, onAvatarSaved, avatarUrl }) {
+  useEffect(function() {
+    function onMsg(e) {
+      if (!e.data || e.data.source !== "readyplayerme") return;
+      if (e.data.eventName === "v1.avatar.exported") {
+        var url = e.data.data && e.data.data.url;
+        if (url) { onAvatarSaved(url); nav("cl_profilo"); }
+      }
+    }
+    window.addEventListener("message", onMsg);
+    return function() { window.removeEventListener("message", onMsg); };
+  }, []);
+
   return (
-    <div style={{background:"#0D0D16",minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:32,gap:24}}>
-      {/* Preview avatar corrente */}
-      {avatarUrl && (
-        <div style={{width:120,height:120,borderRadius:"50%",overflow:"hidden",border:`3px solid ${T.brand}`,boxShadow:`0 0 32px ${T.brand}66`}}>
-          <AvatarDisplay url={avatarUrl} size={114} scene="bust-front-v1"/>
+    <div style={{position:"fixed",inset:0,zIndex:500,background:"#000",display:"flex",flexDirection:"column"}}>
+      {/* Header sottile */}
+      <div style={{display:"flex",alignItems:"center",gap:12,padding:"calc(env(safe-area-inset-top,0px) + 10px) 16px 10px",background:"rgba(0,0,0,.85)",backdropFilter:"blur(10px)",flexShrink:0}}>
+        <button onClick={()=>nav("cl_profilo")} style={{width:34,height:34,borderRadius:999,background:"rgba(255,255,255,.12)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <div style={{flex:1}}>
+          <p style={{margin:0,fontSize:14,fontWeight:800,color:"#fff",letterSpacing:"-.01em"}}>Avatar 3D</p>
+          <p style={{margin:0,fontSize:10,color:"rgba(255,255,255,.5)",marginTop:1}}>Powered by Ready Player Me</p>
         </div>
-      )}
-      {!avatarUrl && (
-        <div style={{width:100,height:100,borderRadius:"50%",background:`linear-gradient(135deg,${T.brand},${T.brand}88)`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 0 40px ${T.brand}55`}}>
-          <span style={{fontSize:44}}>🧑</span>
-        </div>
-      )}
-
-      <div style={{textAlign:"center"}}>
-        <p style={{fontSize:24,fontWeight:900,color:"#fff",margin:"0 0 8px",letterSpacing:"-.03em"}}>
-          {avatarUrl ? "Modifica il tuo Avatar" : "Crea il tuo Avatar 3D"}
-        </p>
-        <p style={{fontSize:14,color:"rgba(255,255,255,.5)",margin:0,lineHeight:1.5}}>
-          Verrai reindirizzato all'editor 3D.<br/>Al salvataggio tornerai automaticamente.
-        </p>
+        {avatarUrl && (
+          <div style={{width:32,height:32,borderRadius:"50%",overflow:"hidden",border:"2px solid "+T.brand}}>
+            <AvatarDisplay url={avatarUrl} size={28} scene="bust-front-v1"/>
+          </div>
+        )}
       </div>
 
-      {/* Pulsante principale */}
-      <a href={rpmCreatorUrl()}
-        style={{display:"block",width:"100%",maxWidth:320,padding:"17px 0",borderRadius:999,background:`linear-gradient(135deg,${T.brand},${T.brand}BB)`,color:"#fff",fontSize:16,fontWeight:800,textAlign:"center",textDecoration:"none",boxShadow:`0 8px 28px ${T.brand}55`,letterSpacing:.3}}>
-        {avatarUrl ? "✏️  Modifica Avatar" : "✨  Crea il mio Avatar"}
-      </a>
-
-      <button onClick={()=>nav("cl_profilo")} style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:"rgba(255,255,255,.4)",fontFamily:"inherit",fontWeight:600,padding:"8px 0"}}>
-        ← Torna al profilo
-      </button>
-
-      {/* Badge RPM */}
-      <div style={{position:"absolute",bottom:32,display:"flex",alignItems:"center",gap:6,opacity:.4}}>
-        <span style={{fontSize:11,color:"#fff",fontWeight:600}}>Powered by Ready Player Me</span>
-      </div>
+      {/* Iframe — visibile subito, RPM ha il suo loading interno */}
+      <iframe
+        src={RPM_CREATOR_URL}
+        allow="camera *; microphone *; xr-spatial-tracking *; accelerometer *; gyroscope *"
+        allowFullScreen
+        style={{flex:1,border:"none",width:"100%",display:"block",background:"#1a1a2e"}}
+        title="Ready Player Me"
+      />
     </div>
   );
 }
@@ -4305,19 +4301,6 @@ export default function App() {
 
   useEffect(()=>{injectFont();},[]);
 
-  // Intercetta il ritorno da Ready Player Me (?avatarUrl=...)
-  useEffect(function(){
-    try {
-      var params = new URLSearchParams(window.location.search);
-      var rpmUrl = params.get("avatarUrl");
-      if (rpmUrl) {
-        saveRpmAvatar(rpmUrl);
-        window.history.replaceState({}, "", window.location.pathname);
-        nav("cl_profilo");
-      }
-    } catch(e) {}
-  }, []);
-
   const nav = (to,data=null) => {setScreen(to);setSD(data);window.scrollTo({top:0});};
 
   /* ---- CHAT / OFFERTE ---- */
@@ -4415,7 +4398,7 @@ export default function App() {
 
   const render = () => {
     if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarConfig={avatarConfig} avatarUrl={avatarUrl}/>;
-    if(screen==="cl_avatar_editor") return <AvatarCreatorScreen nav={nav} avatarUrl={avatarUrl}/>;
+    if(screen==="cl_avatar_editor") return <AvatarCreatorScreen nav={nav} onAvatarSaved={saveRpmAvatar} avatarUrl={avatarUrl}/>;
     if(screen==="cl_explore")    return <ClExplore nav={nav} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={sendPostToPro}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
