@@ -1227,65 +1227,102 @@ function AvatarSVG({ config, size, animate }) {
 }
 
 // ── Ready Player Me — helpers ─────────────────────────────────
-const RPM_CREATOR_URL = "https://demo.readyplayer.me/avatar?frameApi&bodyType=fullbody&quickStart=true&clearCache";
+const RPM_SUBDOMAIN = "demo";
+const RPM_CREATOR_URL = "https://" + RPM_SUBDOMAIN + ".readyplayer.me/avatar?frameApi";
 
-function rpmImg(url, w, scene) {
-  if (!url) return "";
-  var id = url.replace(".glb","").split("/").pop();
-  var src = "https://models.readyplayer.me/" + id + ".png?w=" + (w||256) + "&h=" + (w||256);
-  if (scene) src += "&scene=" + scene;
-  return src;
+function rpmImg(avatarUrl, w, scene) {
+  if (!avatarUrl) return "";
+  var id = avatarUrl.replace(".glb","").split("/").pop();
+  var url = "https://models.readyplayer.me/" + id + ".png?w=" + (w||256) + "&h=" + (w||256) + "&background=transparent";
+  if (scene) url += "&scene=" + scene;
+  return url;
 }
 
+// Componente display avatar RPM — sostituisce AvatarSVG ovunque
 function AvatarDisplay({ url, size, scene, style }) {
+  const sz = size || 80;
   if (!url) return null;
-  var sz = size || 80;
   return (
-    <img src={rpmImg(url, sz*2, scene)} alt="avatar"
-      style={Object.assign({width:sz,height:sz,objectFit:"cover",display:"block"}, style||{})}/>
+    <img
+      src={rpmImg(url, sz * 2, scene)}
+      alt="avatar"
+      style={Object.assign({ width:sz, height:sz, objectFit:"cover", display:"block" }, style || {})}
+    />
   );
 }
 
-// ── AvatarCreatorScreen — Ready Player Me fullscreen ──────────
-function AvatarCreatorScreen({ nav, onAvatarSaved, avatarUrl }) {
+// ── AvatarCreatorScreen — iframe Ready Player Me ──────────────
+function AvatarCreatorScreen({ nav, onAvatarSaved }) {
+  const [loading, setLoading] = useState(true);
+  const [error,   setError]   = useState(false);
+
   useEffect(function() {
+    // Nascondi loader dopo 5s anche se onLoad non scatta (iOS Safari)
+    var t = setTimeout(function() { setLoading(false); }, 5000);
     function onMsg(e) {
       if (!e.data || e.data.source !== "readyplayerme") return;
       if (e.data.eventName === "v1.avatar.exported") {
         var url = e.data.data && e.data.data.url;
         if (url) { onAvatarSaved(url); nav("cl_profilo"); }
       }
+      // Nascondi loader non appena arriva qualsiasi evento RPM
+      setLoading(false);
     }
     window.addEventListener("message", onMsg);
-    return function() { window.removeEventListener("message", onMsg); };
+    return function() { window.removeEventListener("message", onMsg); clearTimeout(t); };
   }, []);
 
   return (
-    <div style={{position:"fixed",inset:0,zIndex:500,background:"#000",display:"flex",flexDirection:"column"}}>
-      {/* Header sottile */}
-      <div style={{display:"flex",alignItems:"center",gap:12,padding:"calc(env(safe-area-inset-top,0px) + 10px) 16px 10px",background:"rgba(0,0,0,.85)",backdropFilter:"blur(10px)",flexShrink:0}}>
-        <button onClick={()=>nav("cl_profilo")} style={{width:34,height:34,borderRadius:999,background:"rgba(255,255,255,.12)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <div style={{position:"fixed",inset:0,zIndex:500,background:"#FFFFFF",display:"flex",flexDirection:"column"}}>
+      {/* Header */}
+      <div style={{display:"flex",alignItems:"center",gap:12,padding:"env(safe-area-inset-top,0px) 20px 0",paddingTop:"calc(env(safe-area-inset-top,0px) + 14px)",paddingBottom:14,background:"#FFFFFF",boxShadow:"0 1px 0 rgba(0,0,0,.06)",flexShrink:0}}>
+        <button onClick={()=>nav("cl_profilo")} style={{width:36,height:36,borderRadius:999,background:"#F0F0F0",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2.5" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         </button>
         <div style={{flex:1}}>
-          <p style={{margin:0,fontSize:14,fontWeight:800,color:"#fff",letterSpacing:"-.01em"}}>Avatar 3D</p>
-          <p style={{margin:0,fontSize:10,color:"rgba(255,255,255,.5)",marginTop:1}}>Powered by Ready Player Me</p>
+          <p style={{margin:0,fontSize:16,fontWeight:800,color:"#0D0D0E",letterSpacing:"-.02em"}}>Crea il tuo Avatar 3D</p>
+          <p style={{margin:0,fontSize:11,color:"#ADADAD",fontWeight:500,marginTop:1}}>Personalizzalo e tocca "Salva" per continuare</p>
         </div>
-        {avatarUrl && (
-          <div style={{width:32,height:32,borderRadius:"50%",overflow:"hidden",border:"2px solid "+T.brand}}>
-            <AvatarDisplay url={avatarUrl} size={28} scene="bust-front-v1"/>
-          </div>
-        )}
+        <div style={{width:8,height:8,borderRadius:"50%",background:T.brand,boxShadow:`0 0 8px ${T.brand}`}}/>
       </div>
 
-      {/* Iframe — visibile subito, RPM ha il suo loading interno */}
-      <iframe
-        src={RPM_CREATOR_URL}
-        allow="camera *; microphone *; xr-spatial-tracking *; accelerometer *; gyroscope *"
-        allowFullScreen
-        style={{flex:1,border:"none",width:"100%",display:"block",background:"#1a1a2e"}}
-        title="Ready Player Me"
-      />
+      {/* Loading overlay */}
+      {loading && !error && (
+        <div style={{position:"absolute",inset:0,zIndex:10,background:"#FAFAFA",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16,paddingTop:64}}>
+          <div style={{width:72,height:72,borderRadius:"50%",background:`linear-gradient(135deg,${T.brand},${T.brand}88)`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 8px 28px ${T.brand}44`}}>
+            <span style={{fontSize:32}}>✨</span>
+          </div>
+          <p style={{fontSize:16,fontWeight:800,color:"#0D0D0E",margin:0,letterSpacing:"-.02em"}}>Avvio l'editor Avatar…</p>
+          <p style={{fontSize:12,color:"#ADADAD",margin:0}}>Connessione a Ready Player Me</p>
+          <div style={{width:40,height:3,borderRadius:99,background:"#F0F0F0",overflow:"hidden",marginTop:4}}>
+            <div style={{height:"100%",background:T.brand,borderRadius:99,animation:"baRise 1.2s ease-in-out infinite alternate"}}/>
+          </div>
+        </div>
+      )}
+
+      {/* Error state */}
+      {error && (
+        <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16,padding:32}}>
+          <span style={{fontSize:48}}>😔</span>
+          <p style={{fontSize:16,fontWeight:700,color:"#0D0D0E",margin:0,textAlign:"center"}}>Impossibile caricare l'editor</p>
+          <p style={{fontSize:13,color:"#ADADAD",margin:0,textAlign:"center"}}>Controlla la connessione e riprova</p>
+          <button onClick={()=>setError(false)} style={{padding:"12px 28px",borderRadius:14,border:"none",background:T.brand,color:"#fff",fontWeight:700,fontSize:14,cursor:"pointer",fontFamily:"inherit"}}>Riprova</button>
+        </div>
+      )}
+
+      {/* Iframe RPM — sempre nel DOM, nascosta solo dalla overlay */}
+      {!error && (
+        <iframe
+          src={RPM_CREATOR_URL}
+          allow="camera; microphone; xr-spatial-tracking; accelerometer; gyroscope"
+          allowFullScreen
+          onLoad={()=>setLoading(false)}
+          onError={()=>{setLoading(false);setError(true);}}
+          style={{flex:1,border:"none",width:"100%",display:"block",minHeight:0}}
+          title="Ready Player Me Avatar Creator"
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"
+        />
+      )}
     </div>
   );
 }
@@ -1480,7 +1517,7 @@ function LoginScreen({onAuth}) {
 }
 
 /* HOME CLIENTE */
-function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,avatarConfig,avatarUrl}) {
+function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,avatarConfig}) {
   const [city,setCity] = useState("Milano");
   const [userCoords,setUserCoords] = useState(DEFAULT_COORDS);
   const futuri = myAppts.filter(a=>a.status==="confermato"||a.status==="in attesa");
@@ -1597,9 +1634,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
   // Avatar header: custom SVG se configurato, altrimenti mascotte donna/uomo
   const AvatarBtn = () => (
     <button onClick={()=>nav("cl_profilo")} style={{width:44,height:44,borderRadius:"50%",overflow:"hidden",border:`2.5px solid ${T.brand}`,padding:0,cursor:"pointer",background:T.brandBg,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 3px 10px ${T.brand}33`}}>
-      {avatarUrl
-        ? <AvatarDisplay url={avatarUrl} size={40} scene="bust-front-v1" style={{borderRadius:"50%"}}/>
-        : avatarConfig
+      {avatarConfig
         ? <AvatarSVG config={avatarConfig} size={40} animate={false}/>
         : gender==="donna"
           ? <img src="/beauty/donna-final.png" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center"}} alt="profilo"/>
@@ -2854,7 +2889,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
 }
 
 /* PROFILO CLIENTE — stile Instagram */
-function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig,avatarUrl}) {
+function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig}) {
   const [tab,setTab] = useState("griglia"); // griglia | recensioni | impostazioni
   const [info,setInfo] = useState({name:user.name,handle:(user.name||"utente").toLowerCase().replace(/\s+/g,"_"),email:"alessio@email.it",city:"Dolcedo, Liguria",phone:""});
   const [editInfo,setEditInfo] = useState(false);
@@ -2902,9 +2937,7 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
         <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
           {/* Avatar — SVG se configurato, altrimenti iniziale */}
           <div style={{width:80,height:80,borderRadius:"50%",background:`linear-gradient(145deg,${T.brandBg},#fff)`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 6px 20px ${T.brand}30`,overflow:"hidden",cursor:"pointer"}} onClick={()=>nav("cl_avatar_editor")}>
-            {avatarUrl
-              ? <AvatarDisplay url={avatarUrl} size={72} scene="bust-front-v1" style={{borderRadius:"50%"}}/>
-              : avatarConfig
+            {avatarConfig
               ? <AvatarSVG config={avatarConfig} size={72} animate={false}/>
               : <span style={{fontSize:30,fontWeight:700,color:T.brand,fontFamily:"'Fraunces',serif"}}>{info.name[0]}</span>}
           </div>
@@ -2928,18 +2961,16 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
           <div style={{position:"absolute",top:-10,right:-10,width:100,height:100,borderRadius:"50%",background:T.brand,opacity:.06}}/>
           <div style={{display:"flex",alignItems:"center",gap:16}}>
             <div style={{width:88,height:88,flexShrink:0,marginBottom:-8}}>
-              {avatarUrl
-                ? <AvatarDisplay url={avatarUrl} size={88} scene="fullbody-portrait-v1" style={{borderRadius:16,objectFit:"cover"}}/>
-                : avatarConfig
+              {avatarConfig
                 ? <AvatarSVG config={avatarConfig} size={88} animate={true}/>
                 : <div style={{width:88,height:88,display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>🧑</div>}
             </div>
             <div style={{flex:1}}>
               <p style={{fontSize:10,fontWeight:700,color:T.brand,margin:"18px 0 4px",textTransform:"uppercase",letterSpacing:1.2}}>✨ Avatar Beauty</p>
-              <p style={{fontSize:16,fontWeight:800,color:"#0D0D0E",margin:"0 0 4px",letterSpacing:"-.02em"}}>{(avatarUrl||avatarConfig)?"Il tuo avatar 3D":"Crea il tuo avatar 3D"}</p>
-              <p style={{fontSize:12,color:"#ADADAD",margin:"0 0 12px"}}>{(avatarUrl||avatarConfig)?"Tocca per modificarlo":"La tua identità digitale su Beauty"}</p>
+              <p style={{fontSize:16,fontWeight:800,color:"#0D0D0E",margin:"0 0 4px",letterSpacing:"-.02em"}}>{avatarConfig?"Il tuo avatar":"Crea il tuo avatar"}</p>
+              <p style={{fontSize:12,color:"#ADADAD",margin:"0 0 12px"}}>{avatarConfig?"Tocca per personalizzarlo":"La tua identità digitale su Beauty"}</p>
               <button type="button" onClick={(e)=>{e.stopPropagation();nav("cl_avatar_editor");}} style={{padding:"9px 18px",borderRadius:999,border:"none",background:T.brand,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 3px 10px ${T.brand}44`}}>
-                {(avatarUrl||avatarConfig)?"Modifica →":"Inizia ora →"}
+                {avatarConfig?"Personalizza →":"Inizia ora →"}
               </button>
             </div>
           </div>
@@ -4296,8 +4327,6 @@ export default function App() {
   const [conversations,setConversations] = useState(CONVERSATIONS0);
   const [savedPosts,setSavedPosts] = useState(new Set());
   const [avatarConfig,setAvatarConfig] = useState(null);
-  const [avatarUrl,setAvatarUrlState] = useState(function(){ try{return localStorage.getItem("ba-rpm-url")||null;}catch(e){return null;} });
-  const saveRpmAvatar = function(url){ setAvatarUrlState(url); try{localStorage.setItem("ba-rpm-url",url);}catch(e){} };
 
   useEffect(()=>{injectFont();},[]);
 
@@ -4397,8 +4426,8 @@ export default function App() {
   }}/></W>;
 
   const render = () => {
-    if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarConfig={avatarConfig} avatarUrl={avatarUrl}/>;
-    if(screen==="cl_avatar_editor") return <AvatarCreatorScreen nav={nav} onAvatarSaved={saveRpmAvatar} avatarUrl={avatarUrl}/>;
+    if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarConfig={avatarConfig}/>;
+    if(screen==="cl_avatar_editor") return <AvatarEditorScreen nav={nav} avatarConfig={avatarConfig} setAvatarConfig={setAvatarConfig}/>;
     if(screen==="cl_explore")    return <ClExplore nav={nav} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={sendPostToPro}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
@@ -4412,7 +4441,7 @@ export default function App() {
       return <ChatScreen conv={conv} role={sData?.role||"client"} nav={nav}
         onSendMessage={sendMessage} onSendOffer={sendOffer} onAccept={acceptOffer} onDecline={declineOffer}/>;
     }
-    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig} avatarUrl={avatarUrl}/>;
+    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav}/>;
     if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav}/>;
     if(screen==="pro_cliente")   return <ProCliente client={sData} setClients={setClients} appts={appts} services={services} nav={nav}/>;
