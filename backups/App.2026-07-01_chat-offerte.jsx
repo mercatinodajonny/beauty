@@ -4031,7 +4031,7 @@ function ChatList({conversations,role,nav}) {
           {sorted.map(c => {
             const pro = ALL_PROS.find(p=>p.id===c.proId)||ALL_PROS[0];
             const last = c.messages[c.messages.length-1];
-            const preview = last.type==="offer"?`💼 Offerta: ${last.offer.service} · ${last.offer.price}€`:last.type==="photo"?(last.text||"📷 Foto"):last.text;
+            const preview = last.type==="offer"?`💼 Offerta: ${last.offer.service} · ${last.offer.price}€`:last.text;
             const name = role==="client"?pro.name:c.clientName;
             return (
               <div key={c.id} onClick={()=>nav("chat",{convId:c.id,role})} className="ba-lift clay" style={{display:"flex",alignItems:"center",gap:12,padding:"13px 15px",cursor:"pointer",background:T.white,borderRadius:20,marginBottom:12}}>
@@ -4051,95 +4051,47 @@ function ChatList({conversations,role,nav}) {
 }
 
 /* Card offerta dentro la chat — stile Vinted */
-function OfferCard({offer,msgFrom,role,proName,onAccept,onDecline,onEdit}) {
+function OfferCard({offer,msgFrom,role,onPick,onDecline}) {
   const isMine = msgFrom===role;
-  const st = offer.status || "pending";
-  // Stato: pending 🟡 · accepted 🟢 · declined 🔴 · expired ⚪
-  const STY = {
-    pending:  {c:T.amber, bg:T.amberBg, dot:"🟡", label:"In attesa"},
-    accepted: {c:T.green, bg:T.greenBg, dot:"🟢", label:"Accettata"},
-    declined: {c:T.red,   bg:T.redBg,   dot:"🔴", label:"Rifiutata"},
-    expired:  {c:T.inkSoft,bg:T.surface,dot:"⚪", label:"Scaduta"},
-  };
-  const S = STY[st] || STY.pending;
-  const hasWhen = offer.date;
+  const st = offer.status;
+  const stColor = st==="accepted"?T.green:st==="declined"?T.red:T.brand;
+  const stLabel = st==="accepted"?"Accettata ✓":st==="declined"?"Rifiutata":"In attesa di risposta";
 
   return (
-    <div style={{maxWidth:"88%",alignSelf:isMine?"flex-end":"flex-start",background:T.white,borderRadius:22,overflow:"hidden",margin:"4px 0",boxShadow:"0 6px 24px rgba(0,0,0,.09)",border:`1px solid ${T.line}`}}>
-      {/* Barra colorata superiore */}
-      <div style={{height:4,background:`linear-gradient(90deg,${T.brand},${T.blue||"#4A7BF7"})`}}/>
-      {/* Header: etichetta + stato */}
-      <div style={{padding:"11px 15px 0",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-        <div style={{display:"flex",alignItems:"center",gap:7}}>
-          <div style={{width:26,height:26,borderRadius:9,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
-          </div>
-          <span style={{fontSize:10.5,fontWeight:800,color:T.inkMid,textTransform:"uppercase",letterSpacing:.6}}>Offerta</span>
-        </div>
-        <div style={{display:"flex",alignItems:"center",gap:5,background:S.bg,padding:"4px 10px",borderRadius:99}}>
-          <span style={{fontSize:9}}>{S.dot}</span>
-          <span style={{fontSize:10.5,fontWeight:800,color:S.c}}>{S.label}</span>
-        </div>
+    <div className="clay" style={{maxWidth:"86%",alignSelf:isMine?"flex-end":"flex-start",background:T.white,borderRadius:20,overflow:"hidden",margin:"4px 0"}}>
+      <div style={{background:`${stColor}14`,padding:"8px 14px",display:"flex",alignItems:"center",gap:7}}>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={stColor} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+        <span style={{fontSize:11,fontWeight:800,color:stColor,textTransform:"uppercase",letterSpacing:.6}}>Proposta di appuntamento</span>
       </div>
-
-      <div style={{padding:"10px 15px 14px"}}>
-        {/* Nome servizio + prezzo grande */}
-        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10,marginBottom:offer.description?4:10}}>
-          <p style={{fontSize:16,fontWeight:800,color:T.ink,margin:0,letterSpacing:"-.02em",flex:1}}>{offer.service}</p>
-          <p style={{fontSize:20,fontWeight:900,color:T.brand,margin:0,letterSpacing:"-.03em",whiteSpace:"nowrap"}}>{offer.price}€</p>
-        </div>
-        {offer.description && <p style={{fontSize:12.5,color:T.inkMid,margin:"0 0 10px",lineHeight:1.45}}>{offer.description}</p>}
-
-        {/* Meta: durata · professionista · quando */}
-        <div style={{display:"flex",gap:7,marginBottom:offer.note?10:12}}>
-          <div style={{flex:1,background:T.surface,borderRadius:10,padding:"8px 6px",textAlign:"center"}}>
-            <p style={{fontSize:8,color:T.inkSoft,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>Durata</p>
-            <p style={{fontSize:12,fontWeight:800,color:T.ink,margin:0}}>{offer.min} min</p>
-          </div>
-          <div style={{flex:1.3,background:T.surface,borderRadius:10,padding:"8px 6px",textAlign:"center",minWidth:0}}>
-            <p style={{fontSize:8,color:T.inkSoft,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>Professionista</p>
-            <p style={{fontSize:12,fontWeight:800,color:T.ink,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{proName||"—"}</p>
-          </div>
-          {hasWhen && (
-            <div style={{flex:1.1,background:T.brandBg,borderRadius:10,padding:"8px 6px",textAlign:"center"}}>
-              <p style={{fontSize:8,color:T.brand,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>Quando</p>
-              <p style={{fontSize:11,fontWeight:800,color:T.brandDeep,margin:0}}>{offer.date}{offer.slot?` · ${offer.slot}`:""}</p>
+      <div style={{padding:"12px 14px"}}>
+        <p style={{fontSize:15,fontWeight:800,color:T.ink,margin:"0 0 8px"}}>{offer.service}</p>
+        <div style={{display:"flex",gap:7,marginBottom:10}}>
+          {[["Prezzo",`${offer.price}€`],["Durata",`${offer.min} min`]].map(([k,v])=>(
+            <div key={k} style={{flex:1,background:T.surface,borderRadius:9,padding:"7px 4px",textAlign:"center"}}>
+              <p style={{fontSize:8,color:T.inkSoft,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>{k}</p>
+              <p style={{fontSize:11,fontWeight:800,color:T.ink,margin:0}}>{v}</p>
+            </div>
+          ))}
+          {offer.date && (
+            <div style={{flex:1,background:T.surface,borderRadius:9,padding:"7px 4px",textAlign:"center"}}>
+              <p style={{fontSize:8,color:T.inkSoft,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>Quando</p>
+              <p style={{fontSize:11,fontWeight:800,color:T.ink,margin:0}}>{offer.date} {offer.slot}</p>
             </div>
           )}
         </div>
 
-        {offer.note && (
-          <div style={{background:T.amberBg,borderRadius:10,padding:"8px 11px",marginBottom:12,display:"flex",gap:7}}>
-            <span style={{fontSize:12}}>📝</span>
-            <p style={{fontSize:11.5,color:"#8A6D1E",margin:0,lineHeight:1.4}}>{offer.note}</p>
-          </div>
-        )}
-
-        {/* Azioni cliente */}
         {st==="pending" && !isMine && (
           <div style={{display:"flex",gap:8}}>
-            <button onClick={onDecline} style={{flex:1,padding:"12px 0",borderRadius:13,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",touchAction:"manipulation"}}>Rifiuta</button>
-            <button onClick={onAccept} style={{flex:2,padding:"12px 0",borderRadius:13,border:"none",background:`linear-gradient(135deg,${T.brand},${T.brandDeep})`,color:"#fff",fontSize:15,fontWeight:800,cursor:"pointer",fontFamily:"inherit",touchAction:"manipulation",boxShadow:`0 4px 14px ${T.brand}55`}}>{hasWhen?"Accetta":"Accetta e scegli orario"}</button>
+            <button onClick={onDecline} style={{flex:1,padding:"10px 0",borderRadius:11,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Rifiuta</button>
+            <button onClick={onPick} style={{flex:2,padding:"11px 0",borderRadius:11,border:"none",background:"linear-gradient(135deg,#7A9669,#5E7A4F)",color:"#fff",fontSize:16,fontWeight:800,cursor:"pointer",fontFamily:"inherit",touchAction:"manipulation"}}>Accetta e scegli orario</button>
           </div>
         )}
-        {/* Azioni pro sulla propria offerta in attesa */}
-        {st==="pending" && isMine && role==="pro" && (
-          <div style={{display:"flex",gap:8,alignItems:"center"}}>
-            <button onClick={onEdit} style={{flex:1,padding:"11px 0",borderRadius:13,border:`1.5px solid ${T.line}`,background:T.white,color:T.ink,fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>✏️ Modifica</button>
-            <span style={{flex:1,fontSize:11.5,color:T.inkSoft,textAlign:"center",fontStyle:"italic"}}>In attesa di risposta…</span>
-          </div>
-        )}
-        {st==="pending" && isMine && role!=="pro" && (
+        {st==="pending" && isMine && (
           <p style={{fontSize:12,color:T.inkSoft,margin:0,textAlign:"center",fontStyle:"italic"}}>In attesa di risposta…</p>
         )}
-        {st==="accepted" && (
-          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:7,padding:"10px 0",background:T.greenBg,borderRadius:13}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.green} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-            <span style={{fontSize:13.5,fontWeight:800,color:T.green}}>Prenotazione confermata</span>
-          </div>
+        {st!=="pending" && (
+          <p style={{fontSize:13,fontWeight:800,color:stColor,margin:0,textAlign:"center"}}>{stLabel}</p>
         )}
-        {st==="declined" && <p style={{fontSize:13,fontWeight:800,color:T.red,margin:0,textAlign:"center"}}>Offerta rifiutata</p>}
-        {st==="expired" && <p style={{fontSize:13,fontWeight:800,color:T.inkSoft,margin:0,textAlign:"center"}}>Offerta scaduta</p>}
       </div>
     </div>
   );
@@ -4184,31 +4136,16 @@ function SlotPickerModal({offer,onClose,onConfirm}) {
 }
 
 /* Schermata singola chat */
-function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onEditOffer,onAccept,onDecline}) {
+function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onAccept,onDecline}) {
   const pro = ALL_PROS.find(p=>p.id===conv.proId)||ALL_PROS[0];
   const [text,setText] = useState("");
   const [showOffer,setShowOffer] = useState(false);
-  const [editMsg,setEditMsg] = useState(null);    // offerta che il pro sta modificando
   const [pickMsg,setPickMsg] = useState(null);   // offerta che il cliente sta prenotando
   const scrollRef = useRef(null);
-  const fileRef = useRef(null);
   useEffect(()=>{ if(scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; },[conv.messages.length]);
 
   const otherName = role==="client"?pro.name:conv.clientName;
   const send = () => { if(!text.trim()) return; const t=text.trim(); setText(""); onSendMessage(conv.id,{from:role,type:"text",text:t,_dedup:Date.now()+""+Math.random()}); };
-  const onPickPhoto = (e) => {
-    const files = Array.from(e.target.files||[]);
-    files.forEach(f=>{
-      const url = URL.createObjectURL(f);
-      onSendMessage(conv.id,{from:role,type:"photo",img:url,_dedup:Date.now()+""+Math.random()+f.name});
-    });
-    e.target.value = "";
-  };
-  // Accettazione: se il pro ha già proposto data+ora → accetta diretto, altrimenti apri lo slot picker
-  const acceptOffer = (m) => {
-    if(m.offer.date && m.offer.slot) onAccept(conv.id,m.id,m.offer.date,m.offer.slot);
-    else setPickMsg(m);
-  };
 
   return (
     <div style={{display:"flex",flexDirection:"column",height:"100dvh",background:T.paper}}>
@@ -4231,8 +4168,8 @@ function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onEditOffer,onAccep
         </div>
         {conv.messages.map(m => {
           if(m.type==="offer") return (
-            <OfferCard key={m.id} offer={m.offer} msgFrom={m.from} role={role} proName={pro.name}
-              onAccept={()=>acceptOffer(m)} onDecline={()=>onDecline(conv.id,m.id)} onEdit={()=>setEditMsg(m)}/>
+            <OfferCard key={m.id} offer={m.offer} msgFrom={m.from} role={role}
+              onPick={()=>setPickMsg(m)} onDecline={()=>onDecline(conv.id,m.id)}/>
           );
           if(m.type==="photo") {
             const mineP = m.from===role;
@@ -4262,35 +4199,24 @@ function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onEditOffer,onAccep
 
       {/* Barra invio */}
       <div style={{background:T.white,borderTop:`1px solid ${T.line}`,padding:"10px 12px 26px",flexShrink:0}}>
-        {/* Pulsante Crea offerta — solo pro, ben visibile stile Vinted */}
-        {role==="pro" && (
-          <button onClick={()=>setShowOffer(true)} style={{width:"100%",marginBottom:10,padding:"12px 0",borderRadius:14,border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:800,color:"#fff",background:`linear-gradient(135deg,${T.brand},${T.brandDeep})`,boxShadow:`0 4px 16px ${T.brand}44`,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M12 12v4M10 14h4"/></svg>
-            Crea offerta
-          </button>
-        )}
-        <input ref={fileRef} type="file" accept="image/*" multiple onChange={onPickPhoto} style={{display:"none"}}/>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          {/* Allega foto — per tutti (il cliente invia ispirazioni) */}
-          <button onClick={()=>fileRef.current&&fileRef.current.click()} title="Invia foto" className="clay-soft" style={{width:42,height:42,borderRadius:"50%",border:"none",background:T.surface,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="M21 15l-5-5L5 21"/></svg>
-          </button>
+          {role==="pro" && (
+            <button onClick={()=>setShowOffer(true)} title="Proponi appuntamento" className="clay-soft" style={{width:42,height:42,borderRadius:"50%",border:"none",background:T.brandBg,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><path d="M12 12v4M10 14h4"/></svg>
+            </button>
+          )}
           <input value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Scrivi un messaggio…"
             className="clay-inset" style={{flex:1,border:"none",outline:"none",background:T.surface,borderRadius:99,padding:"13px 17px",fontSize:14,color:T.ink,fontFamily:"inherit"}}/>
           <button onClick={send} disabled={!text.trim()} className={text.trim()?"clay-btn":""} style={{width:42,height:42,borderRadius:"50%",border:"none",background:text.trim()?T.brand:T.line,cursor:text.trim()?"pointer":"default",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           </button>
         </div>
-        {role==="client" && <p style={{fontSize:10,color:T.inkSoft,margin:"7px 0 0",textAlign:"center"}}>📷 Invia una foto e spiega cosa desideri fare</p>}
+        {role==="pro" && <p style={{fontSize:10,color:T.inkSoft,margin:"7px 0 0",textAlign:"center"}}>💼 Tocca la valigetta per inviare una proposta al cliente</p>}
       </div>
 
       {/* Modal crea offerta — solo pro */}
       {showOffer && role==="pro" && <OfferModal pro={pro} onClose={()=>setShowOffer(false)}
         onSend={(offer)=>{const dedup=Date.now()+""+Math.random();onSendOffer(conv.id,{from:"pro",type:"offer",_dedup:dedup,offer:{...offer,status:"pending"}});setShowOffer(false);}}/>}
-
-      {/* Modal modifica offerta — solo pro */}
-      {editMsg && role==="pro" && <OfferModal pro={pro} initial={editMsg.offer} onClose={()=>setEditMsg(null)}
-        onSend={(offer)=>{onEditOffer(conv.id,editMsg.id,offer);setEditMsg(null);}}/>}
 
       {/* Bottom-sheet scelta slot — solo cliente */}
       {pickMsg && <SlotPickerModal offer={pickMsg.offer} onClose={()=>setPickMsg(null)}
@@ -4299,66 +4225,40 @@ function ChatScreen({conv,role,nav,onSendMessage,onSendOffer,onEditOffer,onAccep
   );
 }
 
-/* Modal per comporre / modificare un'offerta — solo per il PRO */
-function OfferModal({pro,initial,onClose,onSend}) {
-  const editing = !!initial;
-  const [service,setService] = useState(initial?.service||"");
-  const [description,setDescription] = useState(initial?.description||"");
-  const [price,setPrice] = useState(initial?.price!=null?String(initial.price):"");
-  const [min,setMin] = useState(initial?.min!=null?String(initial.min):"60");
-  const [date,setDate] = useState(initial?.date||"");
-  const [slot,setSlot] = useState(initial?.slot||"");
-  const [note,setNote] = useState(initial?.note||"");
+/* Modal per comporre un'offerta — solo per il PRO */
+function OfferModal({pro,onClose,onSend}) {
+  const [service,setService] = useState("");
+  const [price,setPrice] = useState("");
+  const [min,setMin] = useState("60");
   const valid = service.trim() && price && min;
-
-  const lbl = {fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6};
-  const inp = {width:"100%",border:`1.5px solid ${T.line}`,outline:"none",background:T.white,borderRadius:12,padding:"12px 14px",fontSize:14,color:T.ink,fontFamily:"inherit",boxSizing:"border-box"};
-
   return (
     <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(43,34,24,.45)",zIndex:400,display:"flex",alignItems:"flex-end",backdropFilter:"blur(3px)"}}>
-      <div onClick={e=>e.stopPropagation()} className="ba-pop" style={{background:T.paper,borderRadius:"26px 26px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 18px 32px",maxHeight:"92dvh",overflowY:"auto"}}>
+      <div onClick={e=>e.stopPropagation()} className="ba-pop" style={{background:T.paper,borderRadius:"26px 26px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 18px 32px",maxHeight:"90dvh",overflowY:"auto"}}>
         <div style={{width:40,height:4,borderRadius:99,background:T.line,margin:"0 auto 16px"}}/>
-        <h2 style={{fontSize:19,fontWeight:800,color:T.ink,margin:"0 0 4px"}}>{editing?"Modifica offerta":"Crea offerta"}</h2>
-        <p style={{fontSize:13,color:T.inkMid,margin:"0 0 18px"}}>{editing?"Aggiorna i dettagli. Il cliente vedrà l'offerta aggiornata.":"Compila i dettagli del lavoro su misura per il cliente."}</p>
+        <h2 style={{fontSize:19,fontWeight:800,color:T.ink,margin:"0 0 4px"}}>Proponi un lavoro su misura</h2>
+        <p style={{fontSize:13,color:T.inkMid,margin:"0 0 18px"}}>Imposta servizio, prezzo e durata. Il cliente sceglierà il giorno e l'orario.</p>
 
-        <label style={lbl}>Nome del servizio</label>
+        <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Lavoro / servizio</label>
         <input value={service} onChange={e=>setService(e.target.value)} placeholder="Es. Balayage + tonalizzante"
-          style={{...inp,marginBottom:14}}/>
+          style={{width:"100%",border:`1.5px solid ${T.line}`,outline:"none",background:T.white,borderRadius:12,padding:"12px 14px",fontSize:14,color:T.ink,fontFamily:"inherit",marginBottom:14,boxSizing:"border-box"}}/>
 
-        <label style={lbl}>Descrizione</label>
-        <textarea value={description} onChange={e=>setDescription(e.target.value)} rows={2} placeholder="Cosa include il servizio…"
-          style={{...inp,marginBottom:14,resize:"none",lineHeight:1.4}}/>
-
-        <div style={{display:"flex",gap:10,marginBottom:14}}>
+        <div style={{display:"flex",gap:10,marginBottom:22}}>
           <div style={{flex:1}}>
-            <label style={lbl}>Prezzo (€)</label>
-            <input value={price} onChange={e=>setPrice(e.target.value.replace(/[^0-9]/g,""))} inputMode="numeric" placeholder="120" style={inp}/>
+            <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Prezzo (€)</label>
+            <input value={price} onChange={e=>setPrice(e.target.value.replace(/[^0-9]/g,""))} inputMode="numeric" placeholder="120"
+              style={{width:"100%",border:`1.5px solid ${T.line}`,outline:"none",background:T.white,borderRadius:12,padding:"12px 14px",fontSize:14,color:T.ink,fontFamily:"inherit",boxSizing:"border-box"}}/>
           </div>
           <div style={{flex:1}}>
-            <label style={lbl}>Durata (min)</label>
-            <input value={min} onChange={e=>setMin(e.target.value.replace(/[^0-9]/g,""))} inputMode="numeric" placeholder="60" style={inp}/>
+            <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:6}}>Durata (min)</label>
+            <input value={min} onChange={e=>setMin(e.target.value.replace(/[^0-9]/g,""))} inputMode="numeric" placeholder="60"
+              style={{width:"100%",border:`1.5px solid ${T.line}`,outline:"none",background:T.white,borderRadius:12,padding:"12px 14px",fontSize:14,color:T.ink,fontFamily:"inherit",boxSizing:"border-box"}}/>
           </div>
         </div>
 
-        <div style={{display:"flex",gap:10,marginBottom:14}}>
-          <div style={{flex:1.4}}>
-            <label style={lbl}>Data proposta <span style={{color:T.inkSoft,fontWeight:600}}>(facolt.)</span></label>
-            <input value={date} onChange={e=>setDate(e.target.value)} placeholder="Es. Sab 12 lug" style={inp}/>
-          </div>
-          <div style={{flex:1}}>
-            <label style={lbl}>Ora <span style={{color:T.inkSoft,fontWeight:600}}>(facolt.)</span></label>
-            <input value={slot} onChange={e=>setSlot(e.target.value)} placeholder="15:30" style={inp}/>
-          </div>
-        </div>
-
-        <label style={lbl}>Note <span style={{color:T.inkSoft,fontWeight:600}}>(facolt.)</span></label>
-        <textarea value={note} onChange={e=>setNote(e.target.value)} rows={2} placeholder="Eventuali note per il cliente…"
-          style={{...inp,marginBottom:22,resize:"none",lineHeight:1.4}}/>
-
-        <button onClick={()=>valid&&onSend({service:service.trim(),description:description.trim(),price:parseInt(price),min:parseInt(min)||60,date:date.trim(),slot:slot.trim(),note:note.trim()})} disabled={!valid}
+        <button onClick={()=>valid&&onSend({service:service.trim(),price:parseInt(price),min:parseInt(min)||60})} disabled={!valid}
           style={{width:"100%",padding:"15px 0",borderRadius:14,border:"none",cursor:valid?"pointer":"default",fontSize:15,fontWeight:800,fontFamily:"inherit",
-            background:valid?`linear-gradient(135deg,${T.brand},${T.brandDeep})`:T.line,color:valid?"#fff":T.inkSoft,boxShadow:valid?`0 4px 16px ${T.brand}55`:"none"}}>
-          {editing?"Aggiorna offerta":"Invia offerta al cliente"}
+            background:valid?T.grad:T.line,color:valid?"#fff":T.inkSoft}}>
+          Invia proposta al cliente
         </button>
       </div>
     </div>
@@ -4738,13 +4638,6 @@ export default function App() {
       : c));
   };
 
-  // Modifica un'offerta non ancora accettata (resta in attesa)
-  const editOffer = (convId,msgId,offer) => {
-    setConversations(p=>p.map(c=>c.id===convId
-      ? {...c,messages:c.messages.map(m=>m.id===msgId?{...m,offer:{...offer,status:"pending"}}:m)}
-      : c));
-  };
-
   // Accetta offerta → il cliente ha scelto data+slot → crea appuntamento in entrambe le agende
   const acceptOffer = (convId,msgId,date,slot) => {
     const conv = conversations.find(c=>c.id===convId);
@@ -4802,7 +4695,7 @@ export default function App() {
       const conv = conversations.find(c=>c.id===sData?.convId);
       if(!conv) return <ChatList conversations={conversations} role={sData?.role||"client"} nav={nav}/>;
       return <ChatScreen conv={conv} role={sData?.role||"client"} nav={nav}
-        onSendMessage={sendMessage} onSendOffer={sendOffer} onEditOffer={editOffer} onAccept={acceptOffer} onDecline={declineOffer}/>;
+        onSendMessage={sendMessage} onSendOffer={sendOffer} onAccept={acceptOffer} onDecline={declineOffer}/>;
     }
     if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav}/>;
