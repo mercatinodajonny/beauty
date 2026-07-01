@@ -1914,7 +1914,9 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
   // Avatar header: custom SVG se configurato, altrimenti mascotte donna/uomo
   const AvatarBtn = () => (
     <button onClick={()=>nav("cl_profilo")} style={{width:44,height:44,borderRadius:"50%",overflow:"hidden",border:`2.5px solid ${T.brand}`,padding:0,cursor:"pointer",background:T.brandBg,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 3px 10px ${T.brand}33`}}>
-      {gender==="donna"
+      {avatarConfig
+        ? <AvatarSVG config={avatarConfig} size={40} animate={false}/>
+        : gender==="donna"
           ? <img src="/beauty/donna-final.png" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center"}} alt="profilo"/>
           : gender==="uomo"
             ? <img src="/beauty/uomo-new.png" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"top center"}} alt="profilo"/>
@@ -3211,9 +3213,11 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
       {/* Header profilo */}
       <div style={{background:T.white,padding:"50px 18px 0"}}>
         <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
-          {/* Avatar — iniziale */}
-          <div style={{width:80,height:80,borderRadius:"50%",background:`linear-gradient(145deg,${T.brandBg},#fff)`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 6px 20px ${T.brand}30`,overflow:"hidden"}}>
-            <span style={{fontSize:30,fontWeight:700,color:T.brand,fontFamily:"'Fraunces',serif"}}>{info.name[0]}</span>
+          {/* Avatar — SVG se configurato, altrimenti iniziale */}
+          <div style={{width:80,height:80,borderRadius:"50%",background:`linear-gradient(145deg,${T.brandBg},#fff)`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,boxShadow:`0 6px 20px ${T.brand}30`,overflow:"hidden",cursor:"pointer"}} onClick={()=>nav("cl_avatar_editor")}>
+            {avatarConfig
+              ? <AvatarSVG config={avatarConfig} size={72} animate={false}/>
+              : <span style={{fontSize:30,fontWeight:700,color:T.brand,fontFamily:"'Fraunces',serif"}}>{info.name[0]}</span>}
           </div>
           <div style={{flex:1,display:"flex",justifyContent:"space-around",textAlign:"center"}}>
             {[[savedPros.length,"Salvati"],[likedFeed.length,"Mi piace"],[foll.size,"Seguiti"]].map(([v,l])=>(
@@ -3230,6 +3234,25 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
           </button>
         </div>
 
+        {/* ✨ Card Avatar Beauty */}
+        <div onClick={()=>nav("cl_avatar_editor")} style={{borderRadius:22,background:`linear-gradient(135deg,${T.brandBg},#FFFFFF)`,border:`1.5px solid ${T.brand}22`,padding:"0 18px 18px",marginBottom:18,cursor:"pointer",overflow:"hidden",position:"relative",boxShadow:`0 6px 24px ${T.brand}18`}}>
+          <div style={{position:"absolute",top:-10,right:-10,width:100,height:100,borderRadius:"50%",background:T.brand,opacity:.06}}/>
+          <div style={{display:"flex",alignItems:"center",gap:16}}>
+            <div style={{width:88,height:88,flexShrink:0,marginBottom:-8}}>
+              {avatarConfig
+                ? <Avatar3D config={avatarConfig} size={88}/>
+                : <div style={{width:88,height:88,display:"flex",alignItems:"center",justifyContent:"center",fontSize:48}}>🧑</div>}
+            </div>
+            <div style={{flex:1}}>
+              <p style={{fontSize:10,fontWeight:700,color:T.brand,margin:"18px 0 4px",textTransform:"uppercase",letterSpacing:1.2}}>✨ Avatar Beauty</p>
+              <p style={{fontSize:16,fontWeight:800,color:"#0D0D0E",margin:"0 0 4px",letterSpacing:"-.02em"}}>{avatarConfig?"Il tuo avatar":"Crea il tuo avatar"}</p>
+              <p style={{fontSize:12,color:"#ADADAD",margin:"0 0 12px"}}>{avatarConfig?"Tocca per modificarlo":"La tua identità digitale su Beauty"}</p>
+              <button type="button" onClick={(e)=>{e.stopPropagation();nav("cl_avatar_editor");}} style={{padding:"9px 18px",borderRadius:999,border:"none",background:T.brand,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 3px 10px ${T.brand}44`}}>
+                {avatarConfig?"Modifica →":"Inizia ora →"}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Persone che potresti conoscere — IA */}
@@ -4681,6 +4704,7 @@ export default function App() {
 
   const render = () => {
     if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarConfig={avatarConfig}/>;
+    if(screen==="cl_avatar_editor") return <AvatarEditorScreen nav={nav} avatarConfig={avatarConfig} setAvatarConfig={setAvatarConfig}/>;
     if(screen==="cl_explore")    return <ClExplore nav={nav} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={sendPostToPro}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
