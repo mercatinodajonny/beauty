@@ -4919,6 +4919,12 @@ export default function App() {
   const [sharePost,setSharePost] = useState(null);   // post da inoltrare a un professionista
   const [msgReads,setMsgReads] = useState({});       // convId -> n. messaggi già visti dal cliente
   const [notifSeenId,setNotifSeenId] = useState(0);  // id massimo notifica già vista
+  const [showOnboarding,setShowOnboarding] = useState(false);
+  const [myAppts,setMyAppts] = useState(MY_APPTS0);
+  const [conversations,setConversations] = useState(CONVERSATIONS0);
+  const [savedPosts,setSavedPosts] = useState(new Set());
+  const [feed,setFeed] = useState(FEED);
+  const [avatarConfig,setAvatarConfig] = useState(null);
 
   // All'avvio: segna come già letto tutto lo storico (il puntino apparirà solo per il nuovo)
   useEffect(()=>{
@@ -4934,12 +4940,6 @@ export default function App() {
   const maxNotifId = allNotifs.reduce((m,n)=>Math.max(m,n.id),0);
   const unseenNotifs = allNotifs.filter(n=>n.id>notifSeenId).length;
   const markConvRead = (convId,len)=> setMsgReads(r=>({...r,[convId]:len}));
-  const [showOnboarding,setShowOnboarding] = useState(false);
-  const [myAppts,setMyAppts] = useState(MY_APPTS0);
-  const [conversations,setConversations] = useState(CONVERSATIONS0);
-  const [savedPosts,setSavedPosts] = useState(new Set());
-  const [feed,setFeed] = useState(FEED);
-  const [avatarConfig,setAvatarConfig] = useState(null);
   useEffect(()=>{injectFont();},[]);
 
   const nav = (to,data=null) => {setScreen(to);setSD(data);window.scrollTo({top:0});};
