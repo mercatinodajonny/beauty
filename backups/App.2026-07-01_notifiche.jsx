@@ -2456,28 +2456,13 @@ function ClExplore({nav,user,feed=FEED,setFeed,likedPosts,setLikedPosts,savedPos
 /* COMPOSER POST ESPLORA — il cliente pubblica un contenuto nel feed */
 function ComposePost({user,onClose,onPublish}) {
   const [cat,setCat] = useState(POST_CATS[0]);
-  const [imgData,setImgData] = useState("");   // foto caricata dal dispositivo (data URL)
-  const [imgKw,setImgKw] = useState("");        // in alternativa: genera da descrizione
-  const [imgErr,setImgErr] = useState("");
+  const [imgKw,setImgKw] = useState("");
   const [caption,setCaption] = useState("");
   const [tags,setTags] = useState("");
-  const fileRef = useRef(null);
-  const preview = imgData || (imgKw.trim() ? U(imgKw.trim()) : "");
+  const preview = imgKw.trim() ? U(imgKw.trim()) : "";
   const name = user?.name || "Tu";
   const handle = name.toLowerCase().replace(/[^a-z0-9]/g,"") || "tu";
-  const canPublish = !!imgData || caption.trim().length > 0 || imgKw.trim().length > 0;
-
-  const pickFile = (e) => {
-    const file = e.target.files && e.target.files[0];
-    if(!file) return;
-    if(!file.type.startsWith("image/")){ setImgErr("Seleziona un file immagine."); return; }
-    if(file.size > 8*1024*1024){ setImgErr("Immagine troppo grande (max 8MB)."); return; }
-    setImgErr("");
-    const reader = new FileReader();
-    reader.onload = () => { setImgData(reader.result); setImgKw(""); };
-    reader.onerror = () => setImgErr("Impossibile leggere il file.");
-    reader.readAsDataURL(file);
-  };
+  const canPublish = caption.trim().length > 0 || imgKw.trim().length > 0;
 
   const submit = () => {
     if(!canPublish) return;
@@ -2498,34 +2483,18 @@ function ComposePost({user,onClose,onPublish}) {
 
   return (
     <Modal title="Nuovo post" onClose={onClose}>
-      <input ref={fileRef} type="file" accept="image/*" onChange={pickFile} style={{display:"none"}}/>
-      <div style={{marginBottom:14,position:"relative"}}>
-        <div onClick={()=>fileRef.current&&fileRef.current.click()} style={{cursor:"pointer"}}>
-          {preview
-            ? <Photo src={preview} style={{width:"100%",aspectRatio:"4/5",borderRadius:16}}/>
-            : <div style={{width:"100%",aspectRatio:"4/5",borderRadius:16,background:T.surface,border:`1.5px dashed ${T.line}`,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:8,color:T.inkSoft}}>
-                <span style={{fontSize:34}}>📷</span>
-                <span style={{fontSize:13,fontWeight:700,color:T.inkMid}}>Tocca per caricare una foto</span>
-                <span style={{fontSize:11,fontWeight:600}}>dalla galleria o dalla fotocamera</span>
-              </div>}
-        </div>
-        {imgData && (
-          <button onClick={()=>{setImgData("");if(fileRef.current)fileRef.current.value="";}} style={{position:"absolute",top:10,right:10,background:"rgba(0,0,0,.55)",border:"none",borderRadius:99,padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:700,color:"#fff",fontFamily:"inherit"}}>Rimuovi</button>
-        )}
+      <div style={{marginBottom:14}}>
+        {preview
+          ? <Photo src={preview} style={{width:"100%",aspectRatio:"4/5",borderRadius:16}}/>
+          : <div style={{width:"100%",aspectRatio:"4/5",borderRadius:16,background:T.surface,border:`1.5px dashed ${T.line}`,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:8,color:T.inkSoft}}>
+              <span style={{fontSize:34}}>📷</span>
+              <span style={{fontSize:12,fontWeight:600}}>Anteprima immagine</span>
+            </div>}
       </div>
       <div style={{marginBottom:14}}>
-        <button onClick={()=>fileRef.current&&fileRef.current.click()} className="clay-soft" style={{width:"100%",padding:"12px 0",borderRadius:14,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontSize:14,fontWeight:700,color:T.ink,fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
-          {imgData ? "Cambia foto" : "Carica foto"}
-        </button>
-        {imgErr && <p style={{fontSize:11,color:"#E5484D",margin:"6px 2px 0",fontWeight:600}}>{imgErr}</p>}
+        <label style={lbl}>Immagine</label>
+        <input value={imgKw} onChange={e=>setImgKw(e.target.value)} placeholder="Descrivi l'immagine (es. nail art rosa)" style={inp}/>
       </div>
-      {!imgData && (
-        <div style={{marginBottom:14}}>
-          <label style={lbl}>Oppure genera da descrizione</label>
-          <input value={imgKw} onChange={e=>setImgKw(e.target.value)} placeholder="es. nail art rosa" style={inp}/>
-        </div>
-      )}
       <div style={{marginBottom:14}}>
         <label style={lbl}>Categoria</label>
         <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
