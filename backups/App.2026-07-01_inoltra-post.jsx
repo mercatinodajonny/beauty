@@ -2340,19 +2340,16 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
 }
 
 /* ESPLORA */
-const POST_CATS = ["Nail Art","Capelli","Barba","Estetica","Make-up","Altro"];
-function ClExplore({nav,user,feed=FEED,setFeed,likedPosts,setLikedPosts,savedPosts,setSavedPosts,onSendPost}) {
+function ClExplore({nav,likedPosts,setLikedPosts,savedPosts,setSavedPosts,onSendPost}) {
   const [cat,setCat] = useState("Tutti");
   const [q,setQ] = useState("");
   const [searchMode,setSearchMode] = useState(false);
-  const [showCompose,setShowCompose] = useState(false);
   const liked = likedPosts||new Set(), saved = savedPosts||new Set();
   const [sentPost,setSentPost] = useState(null);   // post appena inviato (per il dialog di conferma)
   const toggleLike = (id) => setLikedPosts && setLikedPosts(s=>{const n=new Set(s); n.has(id)?n.delete(id):n.add(id); return n;});
   const toggleSave = (id) => setSavedPosts && setSavedPosts(s=>{const n=new Set(s); n.has(id)?n.delete(id):n.add(id); return n;});
   const CATS = ["Tutti","Nail Art","Capelli","Barba"];
-  const posts = cat==="Tutti" ? feed : feed.filter(p=>p.cat===cat);
-  const publish = (post) => { setFeed && setFeed(f=>[post,...f]); setShowCompose(false); setCat("Tutti"); };
+  const posts = cat==="Tutti" ? FEED : FEED.filter(p=>p.cat===cat);
   const accountResults = q.length >= 1
     ? ALL_PROS.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())||p.handle.toLowerCase().includes(q.toLowerCase())||p.city.toLowerCase().includes(q.toLowerCase()))
     : ALL_PROS;
@@ -2367,10 +2364,8 @@ function ClExplore({nav,user,feed=FEED,setFeed,likedPosts,setLikedPosts,savedPos
               <input value={q} onChange={e=>setQ(e.target.value)} onFocus={()=>setSearchMode(true)} placeholder="Cerca account, citta..." style={{flex:1,border:"none",outline:"none",background:"none",fontSize:14,color:T.ink,fontFamily:"inherit"}}/>
               {q && <button onClick={()=>setQ("")} style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:T.inkSoft,padding:0}}>x</button>}
             </div>
-            {searchMode ? (
+            {searchMode && (
               <button onClick={()=>{setSearchMode(false);setQ("");}} style={{background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:600,color:T.ink,fontFamily:"inherit",flexShrink:0}}>Annulla</button>
-            ) : (
-              <button onClick={()=>setShowCompose(true)} aria-label="Nuovo post" className="clay-btn" style={{flexShrink:0,width:38,height:38,borderRadius:12,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",background:T.brand,color:T.white,fontFamily:"inherit"}}><IPlus/></button>
             )}
           </div>
           {!searchMode && (
@@ -2409,22 +2404,16 @@ function ClExplore({nav,user,feed=FEED,setFeed,likedPosts,setLikedPosts,savedPos
         </div>
       ) : (
         posts.map(post => {
-          const pro = post.author ? null : (ALL_PROS.find(p=>p.id===post.proId)||ALL_PROS[0]);
-          const av = pro || {emoji:post.author.emoji,accent:post.author.accent,verified:false};
-          const handle = pro ? pro.handle : post.author.handle;
-          const sub = pro ? `${pro.city} - ${post.cat}` : `Tu - ${post.cat}`;
-          const openPro = pro ? ()=>nav("cl_pro",pro) : undefined;
+          const pro = ALL_PROS.find(p=>p.id===post.proId)||ALL_PROS[0];
           return (
             <div key={post.id} className="clay" style={{background:T.white,borderRadius:22,overflow:"hidden",margin:"0 16px 16px"}}>
               <div style={{display:"flex",alignItems:"center",gap:9,padding:"10px 13px"}}>
-                <div onClick={openPro} style={{cursor:pro?"pointer":"default"}}><Av pro={av} size={33} fs={15}/></div>
-                <div style={{flex:1,cursor:pro?"pointer":"default"}} onClick={openPro}>
-                  <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:0}}>@{handle}</p>
-                  <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{sub}</p>
+                <div onClick={()=>nav("cl_pro",pro)} style={{cursor:"pointer"}}><Av pro={pro} size={33} fs={15}/></div>
+                <div style={{flex:1,cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
+                  <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:0}}>@{pro.handle}</p>
+                  <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{pro.city} - {post.cat}</p>
                 </div>
-                {pro
-                  ? <button onClick={()=>nav("cl_prenota",{pro})} style={{padding:"6px 12px",borderRadius:99,border:"none",background:T.brand,cursor:"pointer",fontSize:12,fontWeight:600,color:T.white,fontFamily:"inherit"}}>Prenota</button>
-                  : <span style={{padding:"6px 12px",borderRadius:99,background:T.surface,fontSize:12,fontWeight:600,color:T.inkSoft}}>Il tuo post</span>}
+                <button onClick={()=>nav("cl_prenota",{pro})} style={{padding:"6px 12px",borderRadius:99,border:"none",background:T.brand,cursor:"pointer",fontSize:12,fontWeight:600,color:T.white,fontFamily:"inherit"}}>Prenota</button>
               </div>
               <Photo src={post.img} style={{width:"100%",aspectRatio:"4/5"}}/>
               {/* Barra azioni: like · salva · invia al pro */}
@@ -2433,89 +2422,23 @@ function ClExplore({nav,user,feed=FEED,setFeed,likedPosts,setLikedPosts,savedPos
                   <svg width="23" height="23" viewBox="0 0 24 24" fill={liked.has(post.id)?T.brand:"none"} stroke={liked.has(post.id)?T.brand:T.ink} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1.1-1a5.5 5.5 0 00-7.8 7.8l1.1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>
                   <span style={{fontSize:13,fontWeight:700,color:T.inkMid}}>{post.likes+(liked.has(post.id)?1:0)}</span>
                 </button>
-                {pro && (
-                  <button onClick={()=>{onSendPost&&onSendPost(post);}} title="Invia al professionista" style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:5,fontFamily:"inherit"}}>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-                    <span style={{fontSize:12,fontWeight:600,color:T.inkMid}}>Invia</span>
-                  </button>
-                )}
+                <button onClick={()=>{onSendPost&&onSendPost(post);}} title="Invia al professionista" style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:5,fontFamily:"inherit"}}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                  <span style={{fontSize:12,fontWeight:600,color:T.inkMid}}>Invia</span>
+                </button>
                 <button onClick={()=>toggleSave(post.id)} title="Salva" style={{marginLeft:"auto",background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",fontFamily:"inherit"}}>
                   <svg width="22" height="22" viewBox="0 0 24 24" fill={saved.has(post.id)?T.ink:"none"} stroke={T.ink} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
                 </button>
               </div>
               <div style={{padding:"4px 14px 12px"}}>
-                <p style={{fontSize:13,color:T.ink,margin:"0 0 3px",lineHeight:1.5}}><span style={{fontWeight:700,marginRight:3}}>@{handle}</span>{post.caption}</p>
+                <p style={{fontSize:13,color:T.ink,margin:"0 0 3px",lineHeight:1.5}}><span style={{fontWeight:700,marginRight:3}}>@{pro.handle}</span>{post.caption}</p>
                 <p style={{fontSize:11,color:T.brand,margin:0}}>{post.tags.map(t=><span key={t} style={{marginRight:4}}>{t}</span>)}</p>
               </div>
             </div>
           );
         })
       )}
-      {showCompose && <ComposePost user={user} onClose={()=>setShowCompose(false)} onPublish={publish}/>}
     </div>
-  );
-}
-
-/* COMPOSER POST ESPLORA — il cliente pubblica un contenuto nel feed */
-function ComposePost({user,onClose,onPublish}) {
-  const [cat,setCat] = useState(POST_CATS[0]);
-  const [imgKw,setImgKw] = useState("");
-  const [caption,setCaption] = useState("");
-  const [tags,setTags] = useState("");
-  const preview = imgKw.trim() ? U(imgKw.trim()) : "";
-  const name = user?.name || "Tu";
-  const handle = name.toLowerCase().replace(/[^a-z0-9]/g,"") || "tu";
-  const canPublish = caption.trim().length > 0 || imgKw.trim().length > 0;
-
-  const submit = () => {
-    if(!canPublish) return;
-    const parsedTags = tags.split(/[\s,]+/).map(t=>t.trim()).filter(Boolean).map(t=>t.startsWith("#")?t:`#${t}`);
-    onPublish({
-      id: Date.now(),
-      cat,
-      img: preview || U(caption.trim()||"beauty"),
-      caption: caption.trim(),
-      tags: parsedTags,
-      likes: 0,
-      author: {name, handle, emoji: name.trim()[0]?.toUpperCase()||"🙂", accent: T.brand},
-    });
-  };
-
-  const lbl = {fontSize:10,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:5,textTransform:"uppercase",letterSpacing:.6};
-  const inp = {width:"100%",boxSizing:"border-box",border:`1.5px solid ${T.line}`,borderRadius:12,padding:"11px 12px",fontSize:14,color:T.ink,fontFamily:"inherit",background:T.white,outline:"none"};
-
-  return (
-    <Modal title="Nuovo post" onClose={onClose}>
-      <div style={{marginBottom:14}}>
-        {preview
-          ? <Photo src={preview} style={{width:"100%",aspectRatio:"4/5",borderRadius:16}}/>
-          : <div style={{width:"100%",aspectRatio:"4/5",borderRadius:16,background:T.surface,border:`1.5px dashed ${T.line}`,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:8,color:T.inkSoft}}>
-              <span style={{fontSize:34}}>📷</span>
-              <span style={{fontSize:12,fontWeight:600}}>Anteprima immagine</span>
-            </div>}
-      </div>
-      <div style={{marginBottom:14}}>
-        <label style={lbl}>Immagine</label>
-        <input value={imgKw} onChange={e=>setImgKw(e.target.value)} placeholder="Descrivi l'immagine (es. nail art rosa)" style={inp}/>
-      </div>
-      <div style={{marginBottom:14}}>
-        <label style={lbl}>Categoria</label>
-        <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-          {POST_CATS.map(c => (
-            <button key={c} onClick={()=>setCat(c)} style={{padding:"7px 13px",borderRadius:99,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,background:cat===c?T.ink:T.surface,color:cat===c?T.white:T.inkMid,fontFamily:"inherit"}}>{c}</button>
-          ))}
-        </div>
-      </div>
-      <div style={{marginBottom:14}}>
-        <label style={lbl}>Didascalia</label>
-        <textarea value={caption} onChange={e=>setCaption(e.target.value)} placeholder="Scrivi qualcosa..." rows={3} style={{...inp,resize:"vertical",lineHeight:1.5}}/>
-      </div>
-      <div style={{marginBottom:20}}>
-        <label style={lbl}>Tag</label>
-        <input value={tags} onChange={e=>setTags(e.target.value)} placeholder="es. nailart estate glow" style={inp}/>
-      </div>
-      <BigBtn label="Pubblica" onClick={submit} disabled={!canPublish}/>
-    </Modal>
   );
 }
 
@@ -4841,7 +4764,6 @@ export default function App() {
   const [myAppts,setMyAppts] = useState(MY_APPTS0);
   const [conversations,setConversations] = useState(CONVERSATIONS0);
   const [savedPosts,setSavedPosts] = useState(new Set());
-  const [feed,setFeed] = useState(FEED);
   const [avatarConfig,setAvatarConfig] = useState(null);
   useEffect(()=>{injectFont();},[]);
 
@@ -4945,7 +4867,7 @@ export default function App() {
 
   const render = () => {
     if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarConfig={avatarConfig}/>;
-    if(screen==="cl_explore")    return <ClExplore nav={nav} user={user} feed={feed} setFeed={setFeed} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={(post)=>setSharePost(post)}/>;
+    if(screen==="cl_explore")    return <ClExplore nav={nav} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={(post)=>setSharePost(post)}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
     if(screen==="cl_prenota")    return <ClPrenota data={sData} nav={nav}/>;
