@@ -246,52 +246,41 @@ const injectFont = () => {
     .ob-fadeup{animation:obFadeUp 320ms cubic-bezier(.4,0,.2,1) both}
     .ob-fadein{animation:obFadeIn 280ms ease both}
 
-    /* ── Sfondo Beauty — bianco illuminato con macchie rosa/blu che si muovono (stile Fresha) ── */
+    /* ── Sfondo Beauty — bianco #FAFAFA con due macchie appena percettibili (rosa/blu) ── */
     .bg-alive{ background:#FAFAFA; position:relative; }
     .bg-alive::before, .bg-alive::after{
       content:""; position:fixed; border-radius:50%;
-      width:95vw; height:95vw; max-width:680px; max-height:680px;
-      filter:blur(90px); pointer-events:none; z-index:0;
+      width:70vw; height:70vw; max-width:520px; max-height:520px;
+      filter:blur(80px); pointer-events:none; z-index:0;
       will-change:transform,opacity;
     }
-    /* Macchia rosa — sale/scende, illumina l'alto */
+    /* Macchia rosa — sale/scende, un po' più visibile e viva */
     .bg-alive::before{
-      top:-20%; left:-22%;
-      background:radial-gradient(circle, rgba(255,122,200,0.22), rgba(255,122,200,0) 68%);
-      animation:blobPink 20s ease-in-out infinite;
+      top:-12%; left:-18%;
+      background:radial-gradient(circle, rgba(255,122,200,0.15), rgba(255,122,200,0) 70%);
+      animation:blobPink 22s ease-in-out infinite;
     }
-    /* Macchia blu — deriva opposta, illumina il basso */
+    /* Macchia blu — deriva opposta */
     .bg-alive::after{
-      bottom:-20%; right:-22%;
-      background:radial-gradient(circle, rgba(91,124,255,0.22), rgba(91,124,255,0) 68%);
-      animation:blobBlue 25s ease-in-out infinite;
-    }
-    /* Terza sfumatura lilla soffusa che respira al centro-alto */
-    .bg-glow{
-      content:""; position:fixed; top:-10%; left:50%; transform:translateX(-50%);
-      width:120vw; height:70vh; pointer-events:none; z-index:0;
-      background:radial-gradient(ellipse at 50% 0%, rgba(170,140,255,0.14), rgba(170,140,255,0) 60%);
-      animation:glowBreathe 16s ease-in-out infinite;
+      bottom:-12%; right:-18%;
+      background:radial-gradient(circle, rgba(91,124,255,0.15), rgba(91,124,255,0) 70%);
+      animation:blobBlue 27s ease-in-out infinite;
     }
     /* Il contenuto della home sopra le macchie */
     .bg-alive > *{ position:relative; z-index:1; }
     @keyframes blobPink{
-      0%  {transform:translate(0,0) scale(1);       opacity:.55;}
+      0%  {transform:translate(0,0) scale(1);      opacity:.35;}
       15% {opacity:1;}
-      50% {transform:translate(12vw,14vh) scale(1.2); opacity:1;}
-      85% {opacity:.75;}
-      100%{transform:translate(0,0) scale(1);       opacity:.55;}
+      50% {transform:translate(9vw,11vh) scale(1.18); opacity:1;}
+      85% {opacity:.8;}
+      100%{transform:translate(0,0) scale(1);      opacity:.35;}
     }
     @keyframes blobBlue{
-      0%  {transform:translate(0,0) scale(1);          opacity:.55;}
+      0%  {transform:translate(0,0) scale(1);         opacity:.35;}
       18% {opacity:1;}
-      50% {transform:translate(-13vw,-12vh) scale(1.25); opacity:1;}
-      82% {opacity:.8;}
-      100%{transform:translate(0,0) scale(1);          opacity:.55;}
-    }
-    @keyframes glowBreathe{
-      0%,100%{opacity:.5;transform:translateX(-50%) scale(1);}
-      50%    {opacity:1; transform:translateX(-50%) scale(1.1);}
+      50% {transform:translate(-10vw,-9vh) scale(1.22); opacity:1;}
+      82% {opacity:.85;}
+      100%{transform:translate(0,0) scale(1);         opacity:.35;}
     }
     /* Card minimal — bianca, bordo chiarissimo, ombra quasi assente */
     .glass-card{
@@ -2101,7 +2090,6 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
 
   return (
     <div className="bg-alive" style={{paddingBottom:100,minHeight:"100dvh",fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
-      <div className="bg-glow" aria-hidden="true"/>
 
       {/* ── HEADER — saluto personalizzato ── */}
       <div style={{background:"transparent",paddingTop:56,paddingBottom:0}}>
@@ -2313,35 +2301,44 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
                     const isOpen = pro.id % 3 !== 0;
                     const services = ["Taglio","Colore","Piega","Manicure","Trattamento"].slice(0,3);
                     return (
-                      <div key={pro.id} className="glass-card" style={{flexShrink:0,width:236,borderRadius:26,overflow:"hidden",cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
-                        {/* Foto grande con angoli arrotondati (stile Fresha) */}
-                        <div style={{padding:8}}>
-                          <div style={{height:150,borderRadius:20,background:"#F0F0F0",position:"relative",overflow:"hidden"}}>
-                            {photoUrl
-                              ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
-                              : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{pro.emoji}</div>}
-                            {/* Badge stato in alto-sinistra */}
-                            {isOpen && <div style={{position:"absolute",top:9,left:9,display:"flex",alignItems:"center",gap:4,background:"rgba(255,255,255,.96)",borderRadius:999,padding:"4px 10px",backdropFilter:"blur(4px)"}}>
-                              <span style={{width:6,height:6,borderRadius:"50%",background:"#22C483",display:"inline-block"}}/>
-                              <span style={{fontSize:10,fontWeight:700,color:"#111111"}}>Aperto ora</span>
-                            </div>}
-                            {/* Cuore */}
-                            <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{position:"absolute",top:9,right:9,width:34,height:34,borderRadius:"50%",background:"rgba(255,255,255,.92)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}}>
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill={isFav?"#FF5A8A":"none"} stroke={isFav?"#FF5A8A":"#8A8A8E"} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84 1-1a5.5 5.5 0 000-7.78z"/></svg>
-                            </button>
+                      <div key={pro.id} style={{flexShrink:0,width:226,borderRadius:24,overflow:"hidden",background:"#FFFFFF",boxShadow:"0 6px 28px rgba(0,0,0,.09)",cursor:"pointer"}} onClick={()=>nav("cl_pro",pro)}>
+                        {/* Foto grande */}
+                        <div style={{height:158,background:"#F0F0F0",position:"relative",overflow:"hidden"}}>
+                          {photoUrl
+                            ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/>
+                            : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:52}}>{pro.emoji}</div>}
+                          {/* Overlay sfumato in basso */}
+                          <div style={{position:"absolute",bottom:0,left:0,right:0,height:60,background:"linear-gradient(transparent,rgba(0,0,0,.35))"}}/>
+                          {/* Badge aperto in alto-sinistra */}
+                          <div style={{position:"absolute",top:10,left:10,display:"flex",alignItems:"center",gap:4,background:"rgba(255,255,255,.96)",borderRadius:999,padding:"4px 10px",backdropFilter:"blur(4px)"}}>
+                            <span style={{width:6,height:6,borderRadius:"50%",background:isOpen?"#22C483":"#F59E0B",display:"inline-block"}}/>
+                            <span style={{fontSize:10,fontWeight:700,color:"#0D0D0E"}}>{isOpen?"Aperto":"Chiuso"}</span>
                           </div>
+                          {/* Cuore */}
+                          <button onClick={e=>{e.stopPropagation();setFavorites&&setFavorites(f=>{const n=new Set(f);n.has(pro.id)?n.delete(pro.id):n.add(pro.id);return n;});}} style={{position:"absolute",top:10,right:10,width:34,height:34,borderRadius:"50%",background:"rgba(255,255,255,.92)",border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill={isFav?T.brand:"none"} stroke={isFav?T.brand:"#ADADAD"} strokeWidth="2" strokeLinecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84 1-1a5.5 5.5 0 000-7.78z"/></svg>
+                          </button>
+                          {/* Distanza in basso-destra */}
+                          <span style={{position:"absolute",bottom:8,right:10,fontSize:10,fontWeight:700,color:"#fff",textShadow:"0 1px 4px rgba(0,0,0,.5)"}}>{distLabel}</span>
+                          {/* Badge verificato in basso-sinistra */}
+                          {pro.verified && <div style={{position:"absolute",bottom:8,left:10,display:"flex",alignItems:"center",gap:3,background:T.brand,borderRadius:999,padding:"3px 8px"}}>
+                            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+                            <span style={{fontSize:9,fontWeight:700,color:"#fff"}}>Verificato</span>
+                          </div>}
                         </div>
-                        {/* Info — pulita stile Fresha */}
-                        <div style={{padding:"4px 16px 16px"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:4}}>
-                            <p style={{fontSize:15.5,fontWeight:800,color:"#111111",margin:0,letterSpacing:"-.02em",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
-                            {pro.verified && <svg width="15" height="15" viewBox="0 0 24 24" fill="#5B7CFF" style={{flexShrink:0}}><path d="M12 2l2.4 2.1 3.1-.5 1 3 2.7 1.6-1.2 2.9 1.2 2.9-2.7 1.6-1 3-3.1-.5L12 22l-2.4-2.1-3.1.5-1-3L2.8 15l1.2-2.9L2.8 9.2l2.7-1.6 1-3 3.1.5z"/><path d="M8.5 12.5l2 2 4-4.5" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                        {/* Info */}
+                        <div style={{padding:"14px 16px 16px"}}>
+                          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:4}}>
+                            <p style={{fontSize:15,fontWeight:800,color:"#0D0D0E",margin:0,letterSpacing:"-.02em",flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
+                            <span style={{fontSize:13,fontWeight:700,color:"#F59E0B",flexShrink:0,marginLeft:8}}>★ {pro.rating}</span>
                           </div>
-                          <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:6}}>
-                            <span style={{fontSize:13,fontWeight:800,color:"#111111"}}>★ {pro.rating}</span>
-                            <span style={{fontSize:12,color:"#ADADAD",fontWeight:500}}>({pro.reviews})</span>
+                          <p style={{fontSize:11,color:"#ADADAD",margin:"0 0 10px",fontWeight:500}}>{pro.cat} · {pro.reviews} recensioni</p>
+                          {/* Servizi pill */}
+                          <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:12}}>
+                            {services.map(s=>(
+                              <span key={s} style={{fontSize:10,fontWeight:600,color:T.brand,background:T.brandBg,borderRadius:999,padding:"3px 9px"}}>{s}</span>
+                            ))}
                           </div>
-                          <p style={{fontSize:12,color:"#8A8A8E",margin:"0 0 13px",fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.cat} · {distLabel}</p>
                           <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} className="btn-apple" style={{...BTN_APPLE,width:"100%",padding:"12px 0",borderRadius:14,fontSize:13,fontWeight:700,letterSpacing:.2}}>Prenota ora</button>
                         </div>
                       </div>
