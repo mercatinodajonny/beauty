@@ -3278,7 +3278,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
 }
 
 /* PROFILO CLIENTE — stile Instagram */
-function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig}) {
+function ClProfilo({user,onSwitch,nav,feed=FEED,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig}) {
   const [tab,setTab] = useState("griglia"); // griglia | recensioni | impostazioni
   const [info,setInfo] = useState({name:user.name,handle:(user.name||"utente").toLowerCase().replace(/\s+/g,"_"),email:"alessio@email.it",city:"Dolcedo, Liguria",phone:""});
   const [editInfo,setEditInfo] = useState(false);
@@ -3299,6 +3299,8 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
   const fav = favorites||new Set(), foll = following||new Set(), liked = likedPosts||new Set();
   const savedPros = ALL_PROS.filter(p=>fav.has(p.id));
   const likedFeed = FEED.filter(p=>liked.has(p.id));
+  // Solo i post pubblicati dall'utente stesso (creati dal compositore Esplora)
+  const myPosts = (feed||[]).filter(p=>p.author && p.author.name===user.name);
   // Suggerimenti "IA": professionisti non ancora seguiti, ordinati per popolarità
   const suggested = ALL_PROS.filter(p=>!foll.has(p.id)).sort((a,b)=>b.followers-a.followers).slice(0,6);
 
@@ -3381,43 +3383,24 @@ function ClProfilo({user,onSwitch,nav,favorites,setFavorites,following,setFollow
         ))}
       </div>
 
-      {/* TAB griglia: post che ti piacciono + salvati */}
+      {/* TAB griglia: solo i post pubblicati dall'utente */}
       {tab==="griglia" && (
         <div>
-          {likedFeed.length===0 && savedPros.length===0 ? (
+          {myPosts.length===0 ? (
             <div style={{textAlign:"center",padding:"60px 30px"}}>
-              <div style={{fontSize:40,marginBottom:10}}>🤍</div>
-              <p style={{fontSize:15,fontWeight:700,color:T.ink,marginBottom:6}}>Niente qui per ora</p>
-              <p style={{fontSize:13,color:T.inkSoft}}>Metti like ai post e salva i tuoi professionisti preferiti.</p>
+              <div style={{fontSize:40,marginBottom:10}}>📷</div>
+              <p style={{fontSize:15,fontWeight:700,color:T.ink,marginBottom:6}}>Nessun post</p>
+              <p style={{fontSize:13,color:T.inkSoft,marginBottom:18}}>I contenuti che pubblichi in Esplora appariranno qui.</p>
+              <button onClick={()=>nav("cl_explore")} style={{padding:"11px 22px",borderRadius:99,border:"none",background:T.grad,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Crea un post</button>
             </div>
           ) : (
-            <>
-              {likedFeed.length>0 && (
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3,padding:3}}>
-                  {likedFeed.map(post=>(
-                    <div key={post.id} style={{position:"relative",aspectRatio:"1",overflow:"hidden",borderRadius:4}}>
-                      <Photo src={post.img} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-                      <button onClick={()=>unlikePost(post.id)} style={{position:"absolute",top:6,right:6,width:26,height:26,borderRadius:"50%",border:"none",background:"rgba(43,34,24,.45)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#E91E8C" stroke="#E91E8C" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-                      </button>
-                    </div>
-                  ))}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3,padding:3}}>
+              {myPosts.map(post=>(
+                <div key={post.id} style={{position:"relative",aspectRatio:"1",overflow:"hidden",borderRadius:4}}>
+                  <Photo src={post.img} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
                 </div>
-              )}
-              {savedPros.length>0 && (
-                <div style={{padding:"16px 18px 4px"}}>
-                  <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:"0 0 12px"}}>Professionisti salvati</p>
-                  <div style={{display:"flex",gap:14,overflowX:"auto",scrollbarWidth:"none",paddingBottom:6}} className="ba-noscroll">
-                    {savedPros.map(pro=>(
-                      <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:66,textAlign:"center",cursor:"pointer"}}>
-                        <div className="clay-soft" style={{width:62,height:62,borderRadius:"50%",margin:"0 auto 5px",background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>
-                        <p style={{fontSize:11,color:T.inkMid,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontWeight:600}}>{pro.name}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>
+              ))}
+            </div>
           )}
         </div>
       )}
@@ -5074,7 +5057,7 @@ export default function App() {
         onSeen={(len)=>markConvRead(conv.id,len)}
         onSendMessage={sendMessage} onSendOffer={sendOffer} onEditOffer={editOffer} onAccept={acceptOffer} onDecline={declineOffer}/>;
     }
-    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig}/>;
+    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} feed={feed} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={()=>setUser(null)} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav}/>;
     if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav}/>;
     if(screen==="pro_cliente")   return <ProCliente client={sData} setClients={setClients} appts={appts} services={services} nav={nav}/>;
