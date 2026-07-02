@@ -1669,7 +1669,7 @@ function TopBar() {
       paddingTop:"env(safe-area-inset-top,0px)",
       maxWidth:430,margin:"0 auto",
     }}>
-      <img src="/beauty/logo.png" alt="beauty"
+      <img src={`${import.meta.env.BASE_URL}logo-b.png`} alt="beauty"
         style={{height:28,width:"auto",display:"block",objectFit:"contain"}}/>
     </div>
   );
@@ -1738,7 +1738,7 @@ function LoginScreen({onAuth}) {
         paddingLeft:24, paddingRight:24,
         animation:"dsFadeIn .45s ease both",
       }}>
-        <img src="/beauty/logo.png" alt="beauty"
+        <img src={`${import.meta.env.BASE_URL}logo-b.png`} alt="beauty"
           style={{height:80, width:"auto", display:"block", margin:"0 auto 32px", objectFit:"contain"}}/>
         <h1 style={{
           fontSize:34, fontWeight:800, color:"#0D0D0E",
@@ -5133,7 +5133,7 @@ function OnboardingScreen({onComplete}){
     }}>
       {/* ── HEADER ── */}
       <div style={{textAlign:"center",padding:"56px 28px 20px",flexShrink:0}}>
-        <img src="/beauty/logo.png" alt="beauty" style={{height:44,width:"auto",display:"block",margin:"0 auto 20px",objectFit:"contain"}}/>
+        <img src={`${import.meta.env.BASE_URL}logo-b.png`} alt="beauty" style={{height:44,width:"auto",display:"block",margin:"0 auto 20px",objectFit:"contain"}}/>
         <h1 style={{fontSize:30,fontWeight:800,color:"#111",margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.15}}>
           Ciao, benvenuto!
         </h1>
