@@ -1960,14 +1960,6 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
   const [selectedPro,setSelectedPro] = useState(null);
   const [darkMap,setDarkMap] = useState(false);
   const [showMap,setShowMap] = useState(false);
-  // Card di ricerca principale: filtro categoria + data/ora
-  const [filterCat,setFilterCat] = useState(null);   // macro id | null = qualsiasi
-  const [filterDate,setFilterDate] = useState(null);  // etichetta giorno | null
-  const [filterTime,setFilterTime] = useState(null);  // orario | null
-  const [showCatPick,setShowCatPick] = useState(false);
-  const [showDatePick,setShowDatePick] = useState(false);
-  const [tmpDate,setTmpDate] = useState(null);
-  const [tmpTime,setTmpTime] = useState(null);
 
   // Solo professionisti registrati e abbonati alla piattaforma: nessun dato esterno o da Google
   const platformPros = useMemo(() => ALL_PROS.filter(p=>p.subscribed), []);
@@ -2129,49 +2121,19 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
         {/* Sottotitolo */}
         <p style={{padding:"12px 20px 0",margin:0,fontSize:15,color:"#8A8A8E",fontWeight:500}}>Cosa vuoi fare oggi?</p>
 
-        {/* ── CARD RICERCA PRINCIPALE — cerca + categoria + data/ora ── */}
+        {/* ── SEARCH BAR floating ── */}
         <div style={{padding:"12px 20px 20px"}}>
-          <div style={{borderRadius:24,background:"#FFFFFF",overflow:"hidden",border:`1.5px solid ${T.brand}26`,boxShadow:`0 12px 36px ${T.brand}22, 0 3px 10px rgba(0,0,0,.05)`}}>
-            {/* Barra ricerca professionisti */}
-            <div style={{display:"flex",alignItems:"center",gap:12,padding:"16px 18px 13px"}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-              <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
-                placeholder="Cerca un professionista (o lascia vuoto)…"
-                style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:"#0D0D0E",fontFamily:"inherit",fontWeight:500}}/>
-              {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"#EFEFEF",border:"none",cursor:"pointer",width:24,height:24,borderRadius:"50%",color:"#666",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,padding:0,flexShrink:0}}>×</button>}
-            </div>
-            <div style={{height:1,background:"#F0F0F0",margin:"0 16px"}}/>
-            {/* Selettore categoria */}
-            <button onClick={()=>setShowCatPick(true)} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"13px 18px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
-              <div style={{width:34,height:34,borderRadius:11,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-              </div>
-              <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:10.5,fontWeight:700,color:"#ADADAD",margin:"0 0 1px",textTransform:"uppercase",letterSpacing:.6}}>Categoria</p>
-                <p style={{fontSize:14.5,fontWeight:700,color:"#0D0D0E",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{filterCat ? (MACRO_CATS.find(c=>c.id===filterCat)?.label.replace("\n"," ")) : "Qualsiasi"}</p>
-              </div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-            <div style={{height:1,background:"#F0F0F0",margin:"0 16px"}}/>
-            {/* Selettore data e ora */}
-            <button onClick={()=>{setTmpDate(filterDate);setTmpTime(filterTime);setShowDatePick(true);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"13px 18px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
-              <div style={{width:34,height:34,borderRadius:11,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-              </div>
-              <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:10.5,fontWeight:700,color:"#ADADAD",margin:"0 0 1px",textTransform:"uppercase",letterSpacing:.6}}>Data e ora</p>
-                <p style={{fontSize:14.5,fontWeight:700,color:"#0D0D0E",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{filterDate ? `${filterDate}${filterTime?` · ${filterTime}`:""}` : "Qualsiasi"}</p>
-              </div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-            {/* CTA cerca */}
-            <div style={{padding:"6px 16px 16px"}}>
-              <button onClick={()=>{ if(q.trim().length>=2){setSearching(true);} else {openCategory(filterCat||"altro");} }}
-                style={{width:"100%",padding:"15px 0",borderRadius:15,border:"none",cursor:"pointer",fontFamily:"inherit",background:T.brand,color:"#fff",fontSize:15,fontWeight:800,letterSpacing:.2,boxShadow:`0 6px 18px ${T.brand}44`,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                Cerca professionisti
-              </button>
-            </div>
+          <div style={{display:"flex",alignItems:"center",gap:12,background:"#FFFFFF",border:"1.5px solid #EFEFEF",borderRadius:999,padding:"15px 20px",boxShadow:"0 4px 20px rgba(0,0,0,.08)"}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
+              placeholder="Cerca servizi o professionisti…"
+              style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:"#0D0D0E",fontFamily:"inherit",fontWeight:500}}/>
+            {q
+              ? <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"#EFEFEF",border:"none",cursor:"pointer",width:24,height:24,borderRadius:"50%",color:"#666",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,padding:0}}>×</button>
+              : <div style={{width:32,height:32,borderRadius:10,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/></svg>
+                </div>
+            }
           </div>
         </div>
       </div>
@@ -2272,6 +2234,31 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
         <div>
           {!selCat && (
             <>
+              {/* ❤️ I TUOI PROFESSIONISTI — salvati / prenotati più spesso / preferiti */}
+              {myPros.length>0 && (
+                <div style={{marginTop:24}}>
+                  <div style={{padding:"0 20px",marginBottom:14}}>
+                    <p style={{fontSize:18,fontWeight:900,color:"#0D0D0E",margin:0,letterSpacing:"-.04em"}}>I tuoi professionisti ❤️</p>
+                    <p style={{fontSize:12.5,color:"#ADADAD",margin:"3px 0 0",fontWeight:500}}>Prenota in pochi secondi da chi ti fidi</p>
+                  </div>
+                  <div style={{display:"flex",gap:12,overflowX:"auto",padding:"4px 20px 8px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+                    {myPros.slice(0,10).map(pro=>{
+                      const photoUrl = proImg(pro);
+                      return (
+                        <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:150,borderRadius:20,background:"#FFFFFF",boxShadow:"0 4px 20px rgba(0,0,0,.07)",cursor:"pointer",overflow:"hidden",padding:14,display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
+                          <div style={{width:60,height:60,borderRadius:"50%",overflow:"hidden",background:"#F5F5F5",border:`2.5px solid ${T.brand}`,marginBottom:10}}>
+                            {photoUrl ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/> : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>}
+                          </div>
+                          <p style={{fontSize:13.5,fontWeight:800,color:"#0D0D0E",margin:"0 0 2px",width:"100%",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
+                          <p style={{fontSize:11,color:"#ADADAD",margin:"0 0 12px"}}>{pro.cat}</p>
+                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} className="btn-apple" style={{...BTN_APPLE,width:"100%",padding:"10px 0",borderRadius:12,fontSize:12.5,fontWeight:700}}>Prenota</button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* ✨ CATEGORIE — card con illustrazione emoji grande */}
               <div style={{marginTop:24}}>
                 <div style={{padding:"0 20px",marginBottom:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -2430,6 +2417,13 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
                 </div>
               )}
 
+              {/* 📊 STATISTICHE APP — numeri animati stile Fresha */}
+              <div style={{marginTop:28}}>
+                <AppStats/>
+              </div>
+
+              {/* ⭐ RECENSIONI */}
+              <HomeReviews/>
             </>
           )}
         </div>
@@ -2546,67 +2540,6 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
           </div>
         </div>
       )}
-
-      {/* Modal selettore categoria */}
-      {showCatPick && (
-        <div onClick={()=>setShowCatPick(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
-          <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 40px",maxHeight:"80dvh",overflowY:"auto"}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli categoria</h2>
-              <button onClick={()=>setShowCatPick(false)} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>×</button>
-            </div>
-            <button onClick={()=>{setFilterCat(null);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===null?T.brand:T.line}`,background:filterCat===null?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",marginBottom:8,textAlign:"left"}}>
-              <div style={{width:38,height:38,borderRadius:11,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>🔎</div>
-              <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>Qualsiasi categoria</span>
-              {filterCat===null && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
-            </button>
-            <div style={{display:"flex",flexDirection:"column",gap:8}}>
-              {MACRO_CATS.filter(c=>c.id!=="altro").map(cat=>(
-                <button key={cat.id} onClick={()=>{setFilterCat(cat.id);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===cat.id?T.brand:T.line}`,background:filterCat===cat.id?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
-                  <div style={{width:38,height:38,borderRadius:11,background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{cat.emoji}</div>
-                  <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>{cat.label.replace("\n"," ")}</span>
-                  {filterCat===cat.id && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal selettore data e ora */}
-      {showDatePick && (()=>{
-        const days = Array.from({length:14},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()+i); return {key:i, label:i===0?"Oggi":i===1?"Domani":`${DAYS[d.getDay()]} ${d.getDate()}`, dow:DAYS[d.getDay()], dnum:d.getDate()}; });
-        const times = ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00"];
-        return (
-        <div onClick={()=>setShowDatePick(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
-          <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 40px",maxHeight:"85dvh",overflowY:"auto"}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli data e ora</h2>
-              <button onClick={()=>setShowDatePick(false)} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>×</button>
-            </div>
-            <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.7,margin:"0 0 10px"}}>Giorno</p>
-            <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:6,marginBottom:16,scrollbarWidth:"none"}}>
-              {days.map(d=>{const sel=tmpDate===d.label; return (
-                <button key={d.key} onClick={()=>setTmpDate(d.label)} style={{flexShrink:0,minWidth:58,padding:"10px 6px",borderRadius:14,border:`1.5px solid ${sel?T.brand:T.line}`,background:sel?T.brand:T.white,cursor:"pointer",fontFamily:"inherit",display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
-                  <span style={{fontSize:10,fontWeight:700,color:sel?"rgba(255,255,255,.85)":T.inkSoft,textTransform:"uppercase"}}>{d.key===0?"Oggi":d.dow}</span>
-                  <span style={{fontSize:16,fontWeight:800,color:sel?"#fff":T.ink}}>{d.dnum}</span>
-                </button>
-              );})}
-            </div>
-            <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.7,margin:"0 0 10px"}}>Orario</p>
-            <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:20}}>
-              {times.map(t=>{const sel=tmpTime===t; return (
-                <button key={t} onClick={()=>setTmpTime(t)} style={{padding:"9px 14px",borderRadius:12,border:`1.5px solid ${sel?T.brand:T.line}`,background:sel?T.brand:T.white,color:sel?"#fff":T.ink,cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700}}>{t}</button>
-              );})}
-            </div>
-            <div style={{display:"flex",gap:10}}>
-              <button onClick={()=>{setTmpDate(null);setTmpTime(null);setFilterDate(null);setFilterTime(null);setShowDatePick(false);}} style={{flex:1,padding:"14px 0",borderRadius:14,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Qualsiasi</button>
-              <button onClick={()=>{setFilterDate(tmpDate);setFilterTime(tmpTime);setShowDatePick(false);}} style={{flex:2,padding:"14px 0",borderRadius:14,border:"none",background:T.brand,color:"#fff",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 6px 18px ${T.brand}44`}}>Conferma</button>
-            </div>
-          </div>
-        </div>
-        );
-      })()}
     </div>
   );
 }
