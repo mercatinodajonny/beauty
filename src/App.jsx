@@ -289,6 +289,8 @@ const injectFont = () => {
     /* Pulsante stile Apple/Fresha */
     .btn-apple{ background:#FFFFFF; border:1.5px solid #E5E5EA; color:#111111; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer; font-family:inherit; transition:background .18s ease, transform .18s ease; }
     .btn-apple:active{ background:#F5F5F7; transform:scale(.98); }
+    .no-scrollbar::-webkit-scrollbar{ display:none; }
+    .no-scrollbar{ scrollbar-width:none; -ms-overflow-style:none; }
     @keyframes countPop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     .count-in{animation:countPop .5s cubic-bezier(.22,1,.36,1) both}
 
@@ -1938,6 +1940,121 @@ function HomeReviews() {
   );
 }
 
+/* Data formattata breve, es. "Sab 4 lug" */
+const DOW_IT = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
+const MON_IT_SHORT = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+const MON_IT_FULL = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+const fmtDateShort = (d) => `${DOW_IT[d.getDay()]} ${d.getDate()} ${MON_IT_SHORT[d.getMonth()]}`;
+
+/* Colonna scrollabile stile ruota (time picker iOS) */
+function WheelColumn({values, value, onChange, ITEM=44}) {
+  const ref = useRef(null);
+  const timer = useRef(null);
+  useEffect(() => {
+    const i = values.indexOf(value);
+    if (ref.current && i >= 0) ref.current.scrollTop = i * ITEM;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const handleScroll = () => {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      if (!ref.current) return;
+      let i = Math.round(ref.current.scrollTop / ITEM);
+      i = Math.max(0, Math.min(values.length - 1, i));
+      ref.current.scrollTo({ top: i * ITEM, behavior: "smooth" });
+      if (values[i] !== value) onChange(values[i]);
+    }, 100);
+  };
+  return (
+    <div ref={ref} onScroll={handleScroll} className="no-scrollbar"
+      style={{ height: ITEM*5, overflowY: "scroll", scrollSnapType: "y mandatory", WebkitOverflowScrolling: "touch", flex: 1, position: "relative", zIndex: 1 }}>
+      <div style={{ height: ITEM*2 }} />
+      {values.map(v => (
+        <div key={v} onClick={()=>{ const i=values.indexOf(v); ref.current&&ref.current.scrollTo({top:i*ITEM,behavior:"smooth"}); onChange(v); }}
+          style={{ height: ITEM, scrollSnapAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, fontWeight: v===value?800:500, color: v===value?T.ink:"#C7C7CC", cursor: "pointer", fontVariantNumeric: "tabular-nums", transition: "color .15s ease" }}>
+          {v}
+        </div>
+      ))}
+      <div style={{ height: ITEM*2 }} />
+    </div>
+  );
+}
+
+/* Sheet Data (calendario) + Ora (ruota) */
+function DateTimeSheet({ initialDate, initialTime, onClose, onConfirm, onClear }) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const base = initialDate || today;
+  const [viewM, setViewM] = useState(new Date(base.getFullYear(), base.getMonth(), 1));
+  const [sel, setSel] = useState(initialDate || null);
+  const [hh, setHh] = useState(initialTime ? initialTime.split(":")[0] : "10");
+  const [mm, setMm] = useState(initialTime ? initialTime.split(":")[1] : "00");
+  const hours = Array.from({length:24}, (_,i)=>String(i).padStart(2,"0"));
+  const mins  = Array.from({length:12}, (_,i)=>String(i*5).padStart(2,"0"));
+  const WEEK = ["Lun","Mar","Mer","Gio","Ven","Sab","Dom"];
+  const first = new Date(viewM.getFullYear(), viewM.getMonth(), 1);
+  const startOffset = (first.getDay()+6)%7; // lunedì = 0
+  const daysInMonth = new Date(viewM.getFullYear(), viewM.getMonth()+1, 0).getDate();
+  const cells = [];
+  for (let i=0;i<startOffset;i++) cells.push(null);
+  for (let d=1;d<=daysInMonth;d++) cells.push(new Date(viewM.getFullYear(), viewM.getMonth(), d));
+  const canPrev = viewM > new Date(today.getFullYear(), today.getMonth(), 1);
+  const same = (a,b)=>a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+  const ITEM = 44;
+  return (
+    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
+      <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 40px",maxHeight:"90dvh",overflowY:"auto"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+          <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli data e ora</h2>
+          <button onClick={onClose} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>×</button>
+        </div>
+
+        {/* Calendario */}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
+          <button onClick={()=>canPrev&&setViewM(new Date(viewM.getFullYear(),viewM.getMonth()-1,1))} disabled={!canPrev} style={{width:34,height:34,borderRadius:"50%",border:"none",background:canPrev?T.surface:"transparent",cursor:canPrev?"pointer":"default",opacity:canPrev?1:.35,display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2.4" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <span style={{fontSize:15,fontWeight:800,color:T.ink}}>{MON_IT_FULL[viewM.getMonth()]} {viewM.getFullYear()}</span>
+          <button onClick={()=>setViewM(new Date(viewM.getFullYear(),viewM.getMonth()+1,1))} style={{width:34,height:34,borderRadius:"50%",border:"none",background:T.surface,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:2,marginBottom:6}}>
+          {WEEK.map(w=><div key={w} style={{textAlign:"center",fontSize:10.5,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",padding:"2px 0"}}>{w}</div>)}
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:2,marginBottom:20}}>
+          {cells.map((d,i)=>{
+            if(!d) return <div key={"e"+i}/>;
+            const past = d < today;
+            const isSel = same(d,sel);
+            const isToday = same(d,today);
+            return (
+              <button key={i} disabled={past} onClick={()=>setSel(d)} style={{aspectRatio:"1",borderRadius:"50%",border:"none",cursor:past?"default":"pointer",background:isSel?T.brand:"transparent",color:isSel?"#fff":past?"#D5D5DA":T.ink,fontSize:14,fontWeight:isSel||isToday?800:500,fontFamily:"inherit",position:"relative",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                {d.getDate()}
+                {isToday&&!isSel&&<span style={{position:"absolute",bottom:5,width:4,height:4,borderRadius:"50%",background:T.brand}}/>}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Ora — ruota stile sveglia iPhone */}
+        <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.7,margin:"0 0 8px"}}>Orario</p>
+        <div style={{position:"relative",display:"flex",alignItems:"stretch",justifyContent:"center",gap:0,marginBottom:22,borderRadius:18,background:"#F7F7F9",overflow:"hidden"}}>
+          {/* banda selezione centrale */}
+          <div style={{position:"absolute",top:ITEM*2,left:12,right:12,height:ITEM,borderRadius:12,background:"#FFFFFF",boxShadow:"0 1px 4px rgba(0,0,0,.06)",zIndex:0,pointerEvents:"none"}}/>
+          <WheelColumn values={hours} value={hh} onChange={setHh} ITEM={ITEM}/>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,fontWeight:800,color:T.ink,zIndex:1}}>:</div>
+          <WheelColumn values={mins} value={mm} onChange={setMm} ITEM={ITEM}/>
+        </div>
+
+        <div style={{display:"flex",gap:10}}>
+          <button onClick={onClear} style={{flex:1,padding:"14px 0",borderRadius:14,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Qualsiasi</button>
+          <button onClick={()=>onConfirm(sel, sel?`${hh}:${mm}`:null)} style={{flex:2,padding:"14px 0",borderRadius:14,border:"none",background:T.brand,color:"#fff",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 6px 18px ${T.brand}44`}}>Conferma</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,avatarConfig,unreadChats=0,unseenNotifs=0}) {
   const [city,setCity] = useState("Milano");
   const [userCoords,setUserCoords] = useState(DEFAULT_COORDS);
@@ -1966,8 +2083,6 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
   const [filterTime,setFilterTime] = useState(null);  // orario | null
   const [showCatPick,setShowCatPick] = useState(false);
   const [showDatePick,setShowDatePick] = useState(false);
-  const [tmpDate,setTmpDate] = useState(null);
-  const [tmpTime,setTmpTime] = useState(null);
 
   // Solo professionisti registrati e abbonati alla piattaforma: nessun dato esterno o da Google
   const platformPros = useMemo(() => ALL_PROS.filter(p=>p.subscribed), []);
@@ -2154,13 +2269,13 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
             </button>
             <div style={{height:1,background:"#F0F0F0",margin:"0 16px"}}/>
             {/* Selettore data e ora */}
-            <button onClick={()=>{setTmpDate(filterDate);setTmpTime(filterTime);setShowDatePick(true);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"13px 18px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
+            <button onClick={()=>setShowDatePick(true)} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"13px 18px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
               <div style={{width:34,height:34,borderRadius:11,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
               </div>
               <div style={{flex:1,minWidth:0}}>
                 <p style={{fontSize:10.5,fontWeight:700,color:"#ADADAD",margin:"0 0 1px",textTransform:"uppercase",letterSpacing:.6}}>Data e ora</p>
-                <p style={{fontSize:14.5,fontWeight:700,color:"#0D0D0E",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{filterDate ? `${filterDate}${filterTime?` · ${filterTime}`:""}` : "Qualsiasi"}</p>
+                <p style={{fontSize:14.5,fontWeight:700,color:"#0D0D0E",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{filterDate ? `${fmtDateShort(filterDate)}${filterTime?` · ${filterTime}`:""}` : "Qualsiasi"}</p>
               </div>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
             </button>
@@ -2573,40 +2688,16 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
         </div>
       )}
 
-      {/* Modal selettore data e ora */}
-      {showDatePick && (()=>{
-        const days = Array.from({length:14},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()+i); return {key:i, label:i===0?"Oggi":i===1?"Domani":`${DAYS[d.getDay()]} ${d.getDate()}`, dow:DAYS[d.getDay()], dnum:d.getDate()}; });
-        const times = ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00"];
-        return (
-        <div onClick={()=>setShowDatePick(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
-          <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 40px",maxHeight:"85dvh",overflowY:"auto"}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli data e ora</h2>
-              <button onClick={()=>setShowDatePick(false)} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>×</button>
-            </div>
-            <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.7,margin:"0 0 10px"}}>Giorno</p>
-            <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:6,marginBottom:16,scrollbarWidth:"none"}}>
-              {days.map(d=>{const sel=tmpDate===d.label; return (
-                <button key={d.key} onClick={()=>setTmpDate(d.label)} style={{flexShrink:0,minWidth:58,padding:"10px 6px",borderRadius:14,border:`1.5px solid ${sel?T.brand:T.line}`,background:sel?T.brand:T.white,cursor:"pointer",fontFamily:"inherit",display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
-                  <span style={{fontSize:10,fontWeight:700,color:sel?"rgba(255,255,255,.85)":T.inkSoft,textTransform:"uppercase"}}>{d.key===0?"Oggi":d.dow}</span>
-                  <span style={{fontSize:16,fontWeight:800,color:sel?"#fff":T.ink}}>{d.dnum}</span>
-                </button>
-              );})}
-            </div>
-            <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.7,margin:"0 0 10px"}}>Orario</p>
-            <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:20}}>
-              {times.map(t=>{const sel=tmpTime===t; return (
-                <button key={t} onClick={()=>setTmpTime(t)} style={{padding:"9px 14px",borderRadius:12,border:`1.5px solid ${sel?T.brand:T.line}`,background:sel?T.brand:T.white,color:sel?"#fff":T.ink,cursor:"pointer",fontFamily:"inherit",fontSize:13,fontWeight:700}}>{t}</button>
-              );})}
-            </div>
-            <div style={{display:"flex",gap:10}}>
-              <button onClick={()=>{setTmpDate(null);setTmpTime(null);setFilterDate(null);setFilterTime(null);setShowDatePick(false);}} style={{flex:1,padding:"14px 0",borderRadius:14,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Qualsiasi</button>
-              <button onClick={()=>{setFilterDate(tmpDate);setFilterTime(tmpTime);setShowDatePick(false);}} style={{flex:2,padding:"14px 0",borderRadius:14,border:"none",background:T.brand,color:"#fff",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 6px 18px ${T.brand}44`}}>Conferma</button>
-            </div>
-          </div>
-        </div>
-        );
-      })()}
+      {/* Modal selettore data e ora — calendario + ruota ora */}
+      {showDatePick && (
+        <DateTimeSheet
+          initialDate={filterDate}
+          initialTime={filterTime}
+          onClose={()=>setShowDatePick(false)}
+          onClear={()=>{setFilterDate(null);setFilterTime(null);setShowDatePick(false);}}
+          onConfirm={(d,t)=>{setFilterDate(d);setFilterTime(t);setShowDatePick(false);}}
+        />
+      )}
     </div>
   );
 }
