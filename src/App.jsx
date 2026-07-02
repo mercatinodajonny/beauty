@@ -2297,9 +2297,9 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
             </button>
             {/* CTA cerca */}
             <div style={{padding:"6px 16px 16px"}}>
-              <button onClick={()=>{ if(q.trim().length>=2){setSearching(true);} else {openCategory(filterCat||"altro");} }}
-                style={{width:"100%",padding:"15px 0",borderRadius:15,border:"none",cursor:"pointer",fontFamily:"inherit",background:T.brand,color:"#fff",fontSize:15,fontWeight:800,letterSpacing:.2,boxShadow:`0 6px 18px ${T.brand}44`,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <button onClick={()=>{ if(q.trim().length>=2){setSearching(true);} else {openCategory(filterCat||"altro");} }} className="btn-apple"
+                style={{...BTN_APPLE,width:"100%",padding:"15px 0",borderRadius:15,fontSize:15,fontWeight:800,letterSpacing:.2,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#111111" strokeWidth="2.4" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
                 Cerca professionisti
               </button>
             </div>
