@@ -2133,22 +2133,25 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
 
   const useMyLocation = () => {
     if (!navigator.geolocation) { setGeoStatus("error"); return; }
+    if (!window.isSecureContext) { setGeoStatus("insecure"); return; }
     setGeoStatus("loading");
-    const request = () => navigator.geolocation.getCurrentPosition(
-      (pos) => {
+    // Chiamata diretta: fa comparire il popup del browser (niente pre-check che blocca)
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
         const coords = {lat:pos.coords.latitude,lng:pos.coords.longitude};
         setUserCoords(coords);setSearchCenter(coords);
-        setCity("La mia posizione");
+        // reverse geocoding → nome città reale
+        let label = "La mia posizione";
+        try {
+          const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}&zoom=12&accept-language=it`);
+          if (r.ok) { const j = await r.json(); const a = j.address||{}; label = a.city||a.town||a.village||a.municipality||a.county||label; }
+        } catch(e) {}
+        setCity(label);
         setGeoStatus(null);setShowCity(false);setSelCat(null);
       },
-      (err) => setGeoStatus(err.code===1?"denied":"error"),
-      {enableHighAccuracy:true,timeout:10000}
+      (err) => setGeoStatus(err.code===1?"denied":err.code===3?"timeout":"error"),
+      {enableHighAccuracy:true,timeout:12000,maximumAge:0}
     );
-    if (navigator.permissions?.query) {
-      navigator.permissions.query({name:"geolocation"})
-        .then(status => { if (status.state==="denied") setGeoStatus("denied"); else request(); })
-        .catch(request);
-    } else request();
   };
 
   const searchResults = q.length >= 2
@@ -2629,8 +2632,14 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
             {geoStatus==="error" && (
               <p style={{fontSize:12,color:T.red,margin:"-8px 0 14px"}}>Non è stato possibile rilevare la posizione. Riprova.</p>
             )}
+            {geoStatus==="timeout" && (
+              <p style={{fontSize:12,color:T.red,margin:"-8px 0 14px"}}>Rilevamento troppo lento. Riprova o cerca la città manualmente.</p>
+            )}
+            {geoStatus==="insecure" && (
+              <p style={{fontSize:12,color:T.red,margin:"-8px 0 14px"}}>La localizzazione richiede una connessione sicura (https). Apri l'app dal link ufficiale.</p>
+            )}
             {geoStatus==="denied" && (
-              <p style={{fontSize:12,color:T.red,margin:"-8px 0 14px"}}>Permesso di localizzazione negato. Abilitalo nelle impostazioni del browser per usare questa funzione.</p>
+              <p style={{fontSize:12,color:T.red,margin:"-8px 0 14px",lineHeight:1.5}}>Permesso negato. Attivalo così: tocca il lucchetto 🔒 accanto all'indirizzo → Posizione → Consenti; su Mac verifica anche Impostazioni di sistema → Privacy e sicurezza → Localizzazione (attiva per il browser). Poi riprova.</p>
             )}
 
             {citySearch.length < 2 ? (
