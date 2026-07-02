@@ -73,8 +73,9 @@ const loadThree = () => {
 };
 
 const TILE_LAYERS = {
-  light: {url:"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'},
-  dark: {url:"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'},
+  // Stile "Apple-like" — CARTO Positron: chiaro, minimale, etichette leggere (gratuito, nessuna API key)
+  light: {url:"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>', subdomains:"abcd"},
+  dark: {url:"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>', subdomains:"abcd"},
 };
 
 const proPinIcon = (L,pro) => L.divIcon({
@@ -656,7 +657,7 @@ function MapView({pros,center,onSelectPro,onMapMove,dark,height=320}) {
       const map = L.map(ref.current, {zoomControl:true, attributionControl:true}).setView([center.lat,center.lng], 12);
       mapRef.current = map;
       const tiles = dark ? TILE_LAYERS.dark : TILE_LAYERS.light;
-      tileRef.current = L.tileLayer(tiles.url, {maxZoom:19, attribution:tiles.attribution}).addTo(map);
+      tileRef.current = L.tileLayer(tiles.url, {maxZoom:20, attribution:tiles.attribution, subdomains:tiles.subdomains||"abc"}).addTo(map);
       clusterRef.current = L.markerClusterGroup({
         maxClusterRadius:50,
         iconCreateFunction: cluster => L.divIcon({
@@ -688,7 +689,7 @@ function MapView({pros,center,onSelectPro,onMapMove,dark,height=320}) {
     loadLeaflet().then(L => {
       if (tileRef.current) mapRef.current.removeLayer(tileRef.current);
       const tiles = dark ? TILE_LAYERS.dark : TILE_LAYERS.light;
-      tileRef.current = L.tileLayer(tiles.url, {maxZoom:19, attribution:tiles.attribution});
+      tileRef.current = L.tileLayer(tiles.url, {maxZoom:20, attribution:tiles.attribution, subdomains:tiles.subdomains||"abc"});
       tileRef.current.addTo(mapRef.current);
     });
   }, [dark]);
@@ -2256,6 +2257,18 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
               {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"#EFEFEF",border:"none",cursor:"pointer",width:24,height:24,borderRadius:"50%",color:"#666",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,padding:0,flexShrink:0}}>×</button>}
             </div>
             <div style={{height:1,background:"#F0F0F0",margin:"0 16px"}}/>
+            {/* Selettore luogo */}
+            <button onClick={()=>setShowCity(true)} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"13px 18px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
+              <div style={{width:34,height:34,borderRadius:11,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div style={{flex:1,minWidth:0}}>
+                <p style={{fontSize:10.5,fontWeight:700,color:"#ADADAD",margin:"0 0 1px",textTransform:"uppercase",letterSpacing:.6}}>Luogo</p>
+                <p style={{fontSize:14.5,fontWeight:700,color:"#0D0D0E",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{city}</p>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <div style={{height:1,background:"#F0F0F0",margin:"0 16px"}}/>
             {/* Selettore categoria */}
             <button onClick={()=>setShowCatPick(true)} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"13px 18px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
               <div style={{width:34,height:34,borderRadius:11,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
@@ -2580,8 +2593,16 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
           <div style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 50px",maxHeight:"85dvh",overflowY:"auto"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Imposta posizione</h2>
+              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli il luogo</h2>
               <button onClick={()=>{setShowCity(false);setCitySearch("");setGeoStatus(null);}} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>x</button>
+            </div>
+
+            {/* Mappa (stile Apple) del luogo selezionato */}
+            <div style={{borderRadius:18,overflow:"hidden",height:170,position:"relative",zIndex:0,isolation:"isolate",marginBottom:16,boxShadow:"0 2px 12px rgba(0,0,0,.08)"}}>
+              <MapView pros={[]} center={userCoords} onSelectPro={()=>{}} onMapMove={c=>{setUserCoords(c);setSearchCenter(c);}} dark={false} height="170px"/>
+              <div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-100%)",zIndex:5,pointerEvents:"none",filter:"drop-shadow(0 3px 5px rgba(0,0,0,.35))"}}>
+                <svg width="30" height="38" viewBox="0 0 36 44"><path d="M18 0C8 0 0 8 0 18c0 12 18 26 18 26s18-14 18-26C36 8 28 0 18 0z" fill={T.brand}/><circle cx="18" cy="17" r="6" fill="#fff"/></svg>
+              </div>
             </div>
 
             {/* Barra di ricerca città */}
