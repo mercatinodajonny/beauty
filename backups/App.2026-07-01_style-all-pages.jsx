@@ -73,9 +73,8 @@ const loadThree = () => {
 };
 
 const TILE_LAYERS = {
-  // Stile "Apple-like" — CARTO Positron: chiaro, minimale, etichette leggere (gratuito, nessuna API key)
-  light: {url:"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>', subdomains:"abcd"},
-  dark: {url:"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>', subdomains:"abcd"},
+  light: {url:"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'},
+  dark: {url:"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'},
 };
 
 const proPinIcon = (L,pro) => L.divIcon({
@@ -290,8 +289,6 @@ const injectFont = () => {
     /* Pulsante stile Apple/Fresha */
     .btn-apple{ background:#FFFFFF; border:1.5px solid #E5E5EA; color:#111111; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer; font-family:inherit; transition:background .18s ease, transform .18s ease; }
     .btn-apple:active{ background:#F5F5F7; transform:scale(.98); }
-    .no-scrollbar::-webkit-scrollbar{ display:none; }
-    .no-scrollbar{ scrollbar-width:none; -ms-overflow-style:none; }
     @keyframes countPop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     .count-in{animation:countPop .5s cubic-bezier(.22,1,.36,1) both}
 
@@ -657,7 +654,7 @@ function MapView({pros,center,onSelectPro,onMapMove,dark,height=320}) {
       const map = L.map(ref.current, {zoomControl:true, attributionControl:true}).setView([center.lat,center.lng], 12);
       mapRef.current = map;
       const tiles = dark ? TILE_LAYERS.dark : TILE_LAYERS.light;
-      tileRef.current = L.tileLayer(tiles.url, {maxZoom:20, attribution:tiles.attribution, subdomains:tiles.subdomains||"abc"}).addTo(map);
+      tileRef.current = L.tileLayer(tiles.url, {maxZoom:19, attribution:tiles.attribution}).addTo(map);
       clusterRef.current = L.markerClusterGroup({
         maxClusterRadius:50,
         iconCreateFunction: cluster => L.divIcon({
@@ -689,7 +686,7 @@ function MapView({pros,center,onSelectPro,onMapMove,dark,height=320}) {
     loadLeaflet().then(L => {
       if (tileRef.current) mapRef.current.removeLayer(tileRef.current);
       const tiles = dark ? TILE_LAYERS.dark : TILE_LAYERS.light;
-      tileRef.current = L.tileLayer(tiles.url, {maxZoom:20, attribution:tiles.attribution, subdomains:tiles.subdomains||"abc"});
+      tileRef.current = L.tileLayer(tiles.url, {maxZoom:19, attribution:tiles.attribution});
       tileRef.current.addTo(mapRef.current);
     });
   }, [dark]);
@@ -1669,7 +1666,7 @@ function TopBar() {
       paddingTop:"env(safe-area-inset-top,0px)",
       maxWidth:430,margin:"0 auto",
     }}>
-      <img src={`${import.meta.env.BASE_URL}logo-b.png`} alt="beauty"
+      <img src="/beauty/logo.png" alt="beauty"
         style={{height:28,width:"auto",display:"block",objectFit:"contain"}}/>
     </div>
   );
@@ -1738,7 +1735,7 @@ function LoginScreen({onAuth}) {
         paddingLeft:24, paddingRight:24,
         animation:"dsFadeIn .45s ease both",
       }}>
-        <img src={`${import.meta.env.BASE_URL}logo-b.png`} alt="beauty"
+        <img src="/beauty/logo.png" alt="beauty"
           style={{height:80, width:"auto", display:"block", margin:"0 auto 32px", objectFit:"contain"}}/>
         <h1 style={{
           fontSize:34, fontWeight:800, color:"#0D0D0E",
@@ -1941,121 +1938,6 @@ function HomeReviews() {
   );
 }
 
-/* Data formattata breve, es. "Sab 4 lug" */
-const DOW_IT = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
-const MON_IT_SHORT = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
-const MON_IT_FULL = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
-const fmtDateShort = (d) => `${DOW_IT[d.getDay()]} ${d.getDate()} ${MON_IT_SHORT[d.getMonth()]}`;
-
-/* Colonna scrollabile stile ruota (time picker iOS) */
-function WheelColumn({values, value, onChange, ITEM=44}) {
-  const ref = useRef(null);
-  const timer = useRef(null);
-  useEffect(() => {
-    const i = values.indexOf(value);
-    if (ref.current && i >= 0) ref.current.scrollTop = i * ITEM;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const handleScroll = () => {
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      if (!ref.current) return;
-      let i = Math.round(ref.current.scrollTop / ITEM);
-      i = Math.max(0, Math.min(values.length - 1, i));
-      ref.current.scrollTo({ top: i * ITEM, behavior: "smooth" });
-      if (values[i] !== value) onChange(values[i]);
-    }, 100);
-  };
-  return (
-    <div ref={ref} onScroll={handleScroll} className="no-scrollbar"
-      style={{ height: ITEM*5, overflowY: "scroll", scrollSnapType: "y mandatory", WebkitOverflowScrolling: "touch", flex: 1, position: "relative", zIndex: 1 }}>
-      <div style={{ height: ITEM*2 }} />
-      {values.map(v => (
-        <div key={v} onClick={()=>{ const i=values.indexOf(v); ref.current&&ref.current.scrollTo({top:i*ITEM,behavior:"smooth"}); onChange(v); }}
-          style={{ height: ITEM, scrollSnapAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, fontWeight: v===value?800:500, color: v===value?T.ink:"#C7C7CC", cursor: "pointer", fontVariantNumeric: "tabular-nums", transition: "color .15s ease" }}>
-          {v}
-        </div>
-      ))}
-      <div style={{ height: ITEM*2 }} />
-    </div>
-  );
-}
-
-/* Sheet Data (calendario) + Ora (ruota) */
-function DateTimeSheet({ initialDate, initialTime, onClose, onConfirm, onClear }) {
-  const today = new Date(); today.setHours(0,0,0,0);
-  const base = initialDate || today;
-  const [viewM, setViewM] = useState(new Date(base.getFullYear(), base.getMonth(), 1));
-  const [sel, setSel] = useState(initialDate || null);
-  const [hh, setHh] = useState(initialTime ? initialTime.split(":")[0] : "10");
-  const [mm, setMm] = useState(initialTime ? initialTime.split(":")[1] : "00");
-  const hours = Array.from({length:24}, (_,i)=>String(i).padStart(2,"0"));
-  const mins  = Array.from({length:12}, (_,i)=>String(i*5).padStart(2,"0"));
-  const WEEK = ["Lun","Mar","Mer","Gio","Ven","Sab","Dom"];
-  const first = new Date(viewM.getFullYear(), viewM.getMonth(), 1);
-  const startOffset = (first.getDay()+6)%7; // lunedì = 0
-  const daysInMonth = new Date(viewM.getFullYear(), viewM.getMonth()+1, 0).getDate();
-  const cells = [];
-  for (let i=0;i<startOffset;i++) cells.push(null);
-  for (let d=1;d<=daysInMonth;d++) cells.push(new Date(viewM.getFullYear(), viewM.getMonth(), d));
-  const canPrev = viewM > new Date(today.getFullYear(), today.getMonth(), 1);
-  const same = (a,b)=>a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
-  const ITEM = 44;
-  return (
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
-      <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 40px",maxHeight:"90dvh",overflowY:"auto"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-          <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli data e ora</h2>
-          <button onClick={onClose} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>×</button>
-        </div>
-
-        {/* Calendario */}
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
-          <button onClick={()=>canPrev&&setViewM(new Date(viewM.getFullYear(),viewM.getMonth()-1,1))} disabled={!canPrev} style={{width:34,height:34,borderRadius:"50%",border:"none",background:canPrev?T.surface:"transparent",cursor:canPrev?"pointer":"default",opacity:canPrev?1:.35,display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2.4" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
-          </button>
-          <span style={{fontSize:15,fontWeight:800,color:T.ink}}>{MON_IT_FULL[viewM.getMonth()]} {viewM.getFullYear()}</span>
-          <button onClick={()=>setViewM(new Date(viewM.getFullYear(),viewM.getMonth()+1,1))} style={{width:34,height:34,borderRadius:"50%",border:"none",background:T.surface,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:2,marginBottom:6}}>
-          {WEEK.map(w=><div key={w} style={{textAlign:"center",fontSize:10.5,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",padding:"2px 0"}}>{w}</div>)}
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:2,marginBottom:20}}>
-          {cells.map((d,i)=>{
-            if(!d) return <div key={"e"+i}/>;
-            const past = d < today;
-            const isSel = same(d,sel);
-            const isToday = same(d,today);
-            return (
-              <button key={i} disabled={past} onClick={()=>setSel(d)} style={{aspectRatio:"1",borderRadius:"50%",border:"none",cursor:past?"default":"pointer",background:isSel?T.brand:"transparent",color:isSel?"#fff":past?"#D5D5DA":T.ink,fontSize:14,fontWeight:isSel||isToday?800:500,fontFamily:"inherit",position:"relative",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                {d.getDate()}
-                {isToday&&!isSel&&<span style={{position:"absolute",bottom:5,width:4,height:4,borderRadius:"50%",background:T.brand}}/>}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Ora — ruota stile sveglia iPhone */}
-        <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.7,margin:"0 0 8px"}}>Orario</p>
-        <div style={{position:"relative",display:"flex",alignItems:"stretch",justifyContent:"center",gap:0,marginBottom:22,borderRadius:18,background:"#F7F7F9",overflow:"hidden"}}>
-          {/* banda selezione centrale */}
-          <div style={{position:"absolute",top:ITEM*2,left:12,right:12,height:ITEM,borderRadius:12,background:"#FFFFFF",boxShadow:"0 1px 4px rgba(0,0,0,.06)",zIndex:0,pointerEvents:"none"}}/>
-          <WheelColumn values={hours} value={hh} onChange={setHh} ITEM={ITEM}/>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,fontWeight:800,color:T.ink,zIndex:1}}>:</div>
-          <WheelColumn values={mins} value={mm} onChange={setMm} ITEM={ITEM}/>
-        </div>
-
-        <div style={{display:"flex",gap:10}}>
-          <button onClick={onClear} style={{flex:1,padding:"14px 0",borderRadius:14,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Qualsiasi</button>
-          <button onClick={()=>onConfirm(sel, sel?`${hh}:${mm}`:null)} style={{flex:2,padding:"14px 0",borderRadius:14,border:"none",background:T.brand,color:"#fff",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 6px 18px ${T.brand}44`}}>Conferma</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,avatarConfig,unreadChats=0,unseenNotifs=0}) {
   const [city,setCity] = useState("Milano");
   const [userCoords,setUserCoords] = useState(DEFAULT_COORDS);
@@ -2078,12 +1960,6 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
   const [selectedPro,setSelectedPro] = useState(null);
   const [darkMap,setDarkMap] = useState(false);
   const [showMap,setShowMap] = useState(false);
-  // Card di ricerca principale: filtro categoria + data/ora
-  const [filterCat,setFilterCat] = useState(null);   // macro id | null = qualsiasi
-  const [filterDate,setFilterDate] = useState(null);  // etichetta giorno | null
-  const [filterTime,setFilterTime] = useState(null);  // orario | null
-  const [showCatPick,setShowCatPick] = useState(false);
-  const [showDatePick,setShowDatePick] = useState(false);
 
   // Solo professionisti registrati e abbonati alla piattaforma: nessun dato esterno o da Google
   const platformPros = useMemo(() => ALL_PROS.filter(p=>p.subscribed), []);
@@ -2133,25 +2009,22 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
 
   const useMyLocation = () => {
     if (!navigator.geolocation) { setGeoStatus("error"); return; }
-    if (!window.isSecureContext) { setGeoStatus("insecure"); return; }
     setGeoStatus("loading");
-    // Chiamata diretta: fa comparire il popup del browser (niente pre-check che blocca)
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
+    const request = () => navigator.geolocation.getCurrentPosition(
+      (pos) => {
         const coords = {lat:pos.coords.latitude,lng:pos.coords.longitude};
         setUserCoords(coords);setSearchCenter(coords);
-        // reverse geocoding → nome città reale
-        let label = "La mia posizione";
-        try {
-          const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}&zoom=12&accept-language=it`);
-          if (r.ok) { const j = await r.json(); const a = j.address||{}; label = a.city||a.town||a.village||a.municipality||a.county||label; }
-        } catch(e) {}
-        setCity(label);
+        setCity("La mia posizione");
         setGeoStatus(null);setShowCity(false);setSelCat(null);
       },
-      (err) => setGeoStatus(err.code===1?"denied":err.code===3?"timeout":"error"),
-      {enableHighAccuracy:true,timeout:12000,maximumAge:0}
+      (err) => setGeoStatus(err.code===1?"denied":"error"),
+      {enableHighAccuracy:true,timeout:10000}
     );
+    if (navigator.permissions?.query) {
+      navigator.permissions.query({name:"geolocation"})
+        .then(status => { if (status.state==="denied") setGeoStatus("denied"); else request(); })
+        .catch(request);
+    } else request();
   };
 
   const searchResults = q.length >= 2
@@ -2248,61 +2121,19 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
         {/* Sottotitolo */}
         <p style={{padding:"12px 20px 0",margin:0,fontSize:15,color:"#8A8A8E",fontWeight:500}}>Cosa vuoi fare oggi?</p>
 
-        {/* ── CARD RICERCA PRINCIPALE — cerca + categoria + data/ora ── */}
+        {/* ── SEARCH BAR floating ── */}
         <div style={{padding:"12px 20px 20px"}}>
-          <div style={{borderRadius:24,background:"#FFFFFF",overflow:"hidden",border:`1.5px solid ${T.brand}26`,boxShadow:`0 12px 36px ${T.brand}22, 0 3px 10px rgba(0,0,0,.05)`}}>
-            {/* Barra ricerca professionisti */}
-            <div style={{display:"flex",alignItems:"center",gap:12,padding:"16px 18px 13px"}}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-              <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
-                placeholder="Cerca un professionista (o lascia vuoto)…"
-                style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:"#0D0D0E",fontFamily:"inherit",fontWeight:500}}/>
-              {q && <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"#EFEFEF",border:"none",cursor:"pointer",width:24,height:24,borderRadius:"50%",color:"#666",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,padding:0,flexShrink:0}}>×</button>}
-            </div>
-            <div style={{height:1,background:"#F0F0F0",margin:"0 16px"}}/>
-            {/* Selettore luogo */}
-            <button onClick={()=>setShowCity(true)} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"13px 18px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
-              <div style={{width:34,height:34,borderRadius:11,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              </div>
-              <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:10.5,fontWeight:700,color:"#ADADAD",margin:"0 0 1px",textTransform:"uppercase",letterSpacing:.6}}>Luogo</p>
-                <p style={{fontSize:14.5,fontWeight:700,color:"#0D0D0E",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{city}</p>
-              </div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-            <div style={{height:1,background:"#F0F0F0",margin:"0 16px"}}/>
-            {/* Selettore categoria */}
-            <button onClick={()=>setShowCatPick(true)} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"13px 18px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
-              <div style={{width:34,height:34,borderRadius:11,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-              </div>
-              <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:10.5,fontWeight:700,color:"#ADADAD",margin:"0 0 1px",textTransform:"uppercase",letterSpacing:.6}}>Categoria</p>
-                <p style={{fontSize:14.5,fontWeight:700,color:"#0D0D0E",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{filterCat ? (MACRO_CATS.find(c=>c.id===filterCat)?.label.replace("\n"," ")) : "Qualsiasi"}</p>
-              </div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-            <div style={{height:1,background:"#F0F0F0",margin:"0 16px"}}/>
-            {/* Selettore data e ora */}
-            <button onClick={()=>setShowDatePick(true)} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"13px 18px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
-              <div style={{width:34,height:34,borderRadius:11,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-              </div>
-              <div style={{flex:1,minWidth:0}}>
-                <p style={{fontSize:10.5,fontWeight:700,color:"#ADADAD",margin:"0 0 1px",textTransform:"uppercase",letterSpacing:.6}}>Data e ora</p>
-                <p style={{fontSize:14.5,fontWeight:700,color:"#0D0D0E",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{filterDate ? `${fmtDateShort(filterDate)}${filterTime?` · ${filterTime}`:""}` : "Qualsiasi"}</p>
-              </div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ADADAD" strokeWidth="2.5" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-            {/* CTA cerca */}
-            <div style={{padding:"6px 16px 16px"}}>
-              <button onClick={()=>{ if(q.trim().length>=2){setSearching(true);} else {openCategory(filterCat||"altro");} }} className="btn-apple"
-                style={{...BTN_APPLE,width:"100%",padding:"15px 0",borderRadius:15,fontSize:15,fontWeight:800,letterSpacing:.2,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#111111" strokeWidth="2.4" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                Cerca professionisti
-              </button>
-            </div>
+          <div style={{display:"flex",alignItems:"center",gap:12,background:"#FFFFFF",border:"1.5px solid #EFEFEF",borderRadius:999,padding:"15px 20px",boxShadow:"0 4px 20px rgba(0,0,0,.08)"}}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input value={q} onChange={e=>{setQ(e.target.value);setSearching(true);}} onFocus={()=>setSearching(true)}
+              placeholder="Cerca servizi o professionisti…"
+              style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:"#0D0D0E",fontFamily:"inherit",fontWeight:500}}/>
+            {q
+              ? <button onClick={()=>{setQ("");setSearching(false);}} style={{background:"#EFEFEF",border:"none",cursor:"pointer",width:24,height:24,borderRadius:"50%",color:"#666",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,padding:0}}>×</button>
+              : <div style={{width:32,height:32,borderRadius:10,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/></svg>
+                </div>
+            }
           </div>
         </div>
       </div>
@@ -2403,6 +2234,31 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
         <div>
           {!selCat && (
             <>
+              {/* ❤️ I TUOI PROFESSIONISTI — salvati / prenotati più spesso / preferiti */}
+              {myPros.length>0 && (
+                <div style={{marginTop:24}}>
+                  <div style={{padding:"0 20px",marginBottom:14}}>
+                    <p style={{fontSize:18,fontWeight:900,color:"#0D0D0E",margin:0,letterSpacing:"-.04em"}}>I tuoi professionisti ❤️</p>
+                    <p style={{fontSize:12.5,color:"#ADADAD",margin:"3px 0 0",fontWeight:500}}>Prenota in pochi secondi da chi ti fidi</p>
+                  </div>
+                  <div style={{display:"flex",gap:12,overflowX:"auto",padding:"4px 20px 8px",WebkitOverflowScrolling:"touch",scrollbarWidth:"none"}}>
+                    {myPros.slice(0,10).map(pro=>{
+                      const photoUrl = proImg(pro);
+                      return (
+                        <div key={pro.id} onClick={()=>nav("cl_pro",pro)} style={{flexShrink:0,width:150,borderRadius:20,background:"#FFFFFF",boxShadow:"0 4px 20px rgba(0,0,0,.07)",cursor:"pointer",overflow:"hidden",padding:14,display:"flex",flexDirection:"column",alignItems:"center",textAlign:"center"}}>
+                          <div style={{width:60,height:60,borderRadius:"50%",overflow:"hidden",background:"#F5F5F5",border:`2.5px solid ${T.brand}`,marginBottom:10}}>
+                            {photoUrl ? <img src={photoUrl} alt={pro.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.currentTarget.style.display="none";}}/> : <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26}}>{pro.emoji}</div>}
+                          </div>
+                          <p style={{fontSize:13.5,fontWeight:800,color:"#0D0D0E",margin:"0 0 2px",width:"100%",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{pro.name}</p>
+                          <p style={{fontSize:11,color:"#ADADAD",margin:"0 0 12px"}}>{pro.cat}</p>
+                          <button onClick={e=>{e.stopPropagation();nav("cl_prenota",{pro});}} className="btn-apple" style={{...BTN_APPLE,width:"100%",padding:"10px 0",borderRadius:12,fontSize:12.5,fontWeight:700}}>Prenota</button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* ✨ CATEGORIE — card con illustrazione emoji grande */}
               <div style={{marginTop:24}}>
                 <div style={{padding:"0 20px",marginBottom:14,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -2561,6 +2417,13 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
                 </div>
               )}
 
+              {/* 📊 STATISTICHE APP — numeri animati stile Fresha */}
+              <div style={{marginTop:28}}>
+                <AppStats/>
+              </div>
+
+              {/* ⭐ RECENSIONI */}
+              <HomeReviews/>
             </>
           )}
         </div>
@@ -2596,16 +2459,8 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
           <div style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 50px",maxHeight:"85dvh",overflowY:"auto"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli il luogo</h2>
+              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Imposta posizione</h2>
               <button onClick={()=>{setShowCity(false);setCitySearch("");setGeoStatus(null);}} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>x</button>
-            </div>
-
-            {/* Mappa (stile Apple) del luogo selezionato */}
-            <div style={{borderRadius:18,overflow:"hidden",height:170,position:"relative",zIndex:0,isolation:"isolate",marginBottom:16,boxShadow:"0 2px 12px rgba(0,0,0,.08)"}}>
-              <MapView pros={[]} center={userCoords} onSelectPro={()=>{}} onMapMove={c=>{setUserCoords(c);setSearchCenter(c);}} dark={false} height="170px"/>
-              <div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-100%)",zIndex:5,pointerEvents:"none",filter:"drop-shadow(0 3px 5px rgba(0,0,0,.35))"}}>
-                <svg width="30" height="38" viewBox="0 0 36 44"><path d="M18 0C8 0 0 8 0 18c0 12 18 26 18 26s18-14 18-26C36 8 28 0 18 0z" fill={T.brand}/><circle cx="18" cy="17" r="6" fill="#fff"/></svg>
-              </div>
             </div>
 
             {/* Barra di ricerca città */}
@@ -2632,14 +2487,8 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
             {geoStatus==="error" && (
               <p style={{fontSize:12,color:T.red,margin:"-8px 0 14px"}}>Non è stato possibile rilevare la posizione. Riprova.</p>
             )}
-            {geoStatus==="timeout" && (
-              <p style={{fontSize:12,color:T.red,margin:"-8px 0 14px"}}>Rilevamento troppo lento. Riprova o cerca la città manualmente.</p>
-            )}
-            {geoStatus==="insecure" && (
-              <p style={{fontSize:12,color:T.red,margin:"-8px 0 14px"}}>La localizzazione richiede una connessione sicura (https). Apri l'app dal link ufficiale.</p>
-            )}
             {geoStatus==="denied" && (
-              <p style={{fontSize:12,color:T.red,margin:"-8px 0 14px",lineHeight:1.5}}>Permesso negato. Attivalo così: tocca il lucchetto 🔒 accanto all'indirizzo → Posizione → Consenti; su Mac verifica anche Impostazioni di sistema → Privacy e sicurezza → Localizzazione (attiva per il browser). Poi riprova.</p>
+              <p style={{fontSize:12,color:T.red,margin:"-8px 0 14px"}}>Permesso di localizzazione negato. Abilitalo nelle impostazioni del browser per usare questa funzione.</p>
             )}
 
             {citySearch.length < 2 ? (
@@ -2690,43 +2539,6 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
             )}
           </div>
         </div>
-      )}
-
-      {/* Modal selettore categoria */}
-      {showCatPick && (
-        <div onClick={()=>setShowCatPick(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
-          <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 40px",maxHeight:"80dvh",overflowY:"auto"}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli categoria</h2>
-              <button onClick={()=>setShowCatPick(false)} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>×</button>
-            </div>
-            <button onClick={()=>{setFilterCat(null);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===null?T.brand:T.line}`,background:filterCat===null?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",marginBottom:8,textAlign:"left"}}>
-              <div style={{width:38,height:38,borderRadius:11,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>🔎</div>
-              <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>Qualsiasi categoria</span>
-              {filterCat===null && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
-            </button>
-            <div style={{display:"flex",flexDirection:"column",gap:8}}>
-              {MACRO_CATS.filter(c=>c.id!=="altro").map(cat=>(
-                <button key={cat.id} onClick={()=>{setFilterCat(cat.id);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===cat.id?T.brand:T.line}`,background:filterCat===cat.id?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
-                  <div style={{width:38,height:38,borderRadius:11,background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{cat.emoji}</div>
-                  <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>{cat.label.replace("\n"," ")}</span>
-                  {filterCat===cat.id && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal selettore data e ora — calendario + ruota ora */}
-      {showDatePick && (
-        <DateTimeSheet
-          initialDate={filterDate}
-          initialTime={filterTime}
-          onClose={()=>setShowDatePick(false)}
-          onClear={()=>{setFilterDate(null);setFilterTime(null);setShowDatePick(false);}}
-          onConfirm={(d,t)=>{setFilterDate(d);setFilterTime(t);setShowDatePick(false);}}
-        />
       )}
     </div>
   );
@@ -5133,7 +4945,7 @@ function OnboardingScreen({onComplete}){
     }}>
       {/* ── HEADER ── */}
       <div style={{textAlign:"center",padding:"56px 28px 20px",flexShrink:0}}>
-        <img src={`${import.meta.env.BASE_URL}logo-b.png`} alt="beauty" style={{height:44,width:"auto",display:"block",margin:"0 auto 20px",objectFit:"contain"}}/>
+        <img src="/beauty/logo.png" alt="beauty" style={{height:44,width:"auto",display:"block",margin:"0 auto 20px",objectFit:"contain"}}/>
         <h1 style={{fontSize:30,fontWeight:800,color:"#111",margin:"0 0 10px",letterSpacing:"-.04em",lineHeight:1.15}}>
           Ciao, benvenuto!
         </h1>
