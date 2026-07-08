@@ -4920,13 +4920,21 @@ function ProProfilo({user,onSwitch,onLogout,accent,setAccent,nav}) {
       </div>
 
       <div style={{padding:"14px 16px"}}>
+        <div className="clay" style={{background:T.white,borderRadius:20,padding:"16px",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div>
+            <p style={{fontSize:11,fontWeight:800,color:T.brand,margin:"0 0 3px",textTransform:"uppercase",letterSpacing:.8}}>Il tuo piano</p>
+            <p style={{fontSize:16,fontWeight:800,color:T.ink,margin:0}}>{plan}</p>
+          </div>
+          <button onClick={()=>nav("pro_piani")} className="btn-apple" style={{padding:"10px 16px",borderRadius:12,border:"1.5px solid #E5E5EA",background:"#fff",color:"#111",fontSize:12.5,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Gestisci</button>
+        </div>
+
         <p style={{fontSize:12,fontWeight:800,color:T.inkSoft,textTransform:"uppercase",letterSpacing:1,margin:"6px 0 10px 4px"}}>Gestione attivita</p>
         <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
           {[
             {ic:"🛍️",t:"Servizi",s:"Nome, prezzo, durata, categoria",go:()=>nav("pro_servizi")},
             {ic:"🕒",t:"Orari & Ferie",s:"Giorni e fasce di apertura",go:()=>nav("pro_servizi")},
             {ic:"👥",t:"Dipendenti",s:"Staff e agende separate",go:()=>nav("pro_servizi")},
-            {ic:"💎",t:"Il tuo piano",s:"Abbonamento e fatturazione",go:()=>nav("pro_piani")},
+            {ic:"💳",t:"Pagamenti & Incassi",s:"Metodi e resoconti",go:()=>nav("pro_piani")},
           ].map((r,i,arr)=>(
             <button key={i} onClick={r.go} style={{width:"100%",display:"flex",alignItems:"center",gap:13,padding:"13px 16px",border:"none",borderBottom:i<arr.length-1?`1px solid ${T.line}`:"none",background:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
               <span style={{fontSize:20,width:26,textAlign:"center"}}>{r.ic}</span>
