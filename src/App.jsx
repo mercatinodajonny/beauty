@@ -4892,14 +4892,6 @@ function ProProfilo({user,onSwitch,onLogout,accent,setAccent,nav}) {
       </div>
 
       <div style={{padding:"14px 16px"}}>
-        <div className="clay" style={{background:T.white,borderRadius:20,padding:"16px",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div>
-            <p style={{fontSize:11,fontWeight:800,color:T.brand,margin:"0 0 3px",textTransform:"uppercase",letterSpacing:.8}}>Il tuo piano</p>
-            <p style={{fontSize:16,fontWeight:800,color:T.ink,margin:0}}>{plan}</p>
-          </div>
-          <button onClick={()=>nav("pro_piani")} className="btn-apple" style={{padding:"10px 16px",borderRadius:12,border:"1.5px solid #E5E5EA",background:"#fff",color:"#111",fontSize:12.5,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Gestisci</button>
-        </div>
-
         <p style={{fontSize:12,fontWeight:800,color:T.inkSoft,textTransform:"uppercase",letterSpacing:1,margin:"6px 0 10px 4px"}}>Gestione attivita</p>
         <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
           {[
