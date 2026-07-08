@@ -608,17 +608,27 @@ const BackBtn = ({onClick}) => (
     Indietro
   </button>
 );
-const Modal = ({title,onClose,children}) => (
-  <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
-    <div style={{background:T.paper,borderRadius:"32px 32px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"20px 20px 44px",maxHeight:"90dvh",overflowY:"auto"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-        <h2 style={{fontSize:18,fontWeight:900,color:T.ink,margin:0}}>{title}</h2>
-        <button onClick={onClose} className="clay-soft" style={{background:T.white,border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",fontSize:15,color:T.inkMid}}>x</button>
+function Modal({title,onClose,children}) {
+  // Blocca lo scroll dello sfondo mentre il modale è aperto
+  useEffect(()=>{
+    const prevBody = document.body.style.overflow;
+    const prevHtml = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    return ()=>{ document.body.style.overflow = prevBody; document.documentElement.style.overflow = prevHtml; };
+  },[]);
+  return (
+    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end",overscrollBehavior:"contain"}}>
+      <div onClick={e=>e.stopPropagation()} style={{background:T.paper,borderRadius:"32px 32px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"20px 20px 44px",maxHeight:"90dvh",overflowY:"auto",WebkitOverflowScrolling:"touch",overscrollBehavior:"contain"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+          <h2 style={{fontSize:18,fontWeight:900,color:T.ink,margin:0}}>{title}</h2>
+          <button onClick={onClose} className="clay-soft" style={{background:T.white,border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",fontSize:15,color:T.inkMid}}>x</button>
+        </div>
+        {children}
       </div>
-      {children}
     </div>
-  </div>
-);
+  );
+}
 /* Dialog di conferma compatto e minimal — centrato */
 const ConfirmDialog = ({title,message,confirmLabel="Conferma",cancelLabel="Annulla",danger=false,onConfirm,onCancel}) => (
   <div onClick={onCancel} style={{position:"fixed",inset:0,background:"rgba(43,34,24,.4)",zIndex:500,display:"flex",alignItems:"center",justifyContent:"center",padding:24,backdropFilter:"blur(3px)"}}>
@@ -4362,18 +4372,20 @@ function ClProfilo({user,onSwitch,nav,feed=FEED,favorites,setFavorites,following
 }
 
 /* PRO - AGENDA */
-function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,openAdd,onConsumeAdd}) {
+function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,openAdd,onConsumeAdd,onModalOpenChange}) {
   const [selStaff,setSelS] = useState(0);
   const [selAppt,setSelAppt] = useState(null);
   const [showAdd,setShowAdd] = useState(false);
   const [dateView,setDateView] = useState("oggi");
   const [view,setView] = useState("giorno");
   const [calMonth,setCalMonth] = useState({y:2026,m:5});
-  const [newA,setNewA] = useState({time:"",clientSearch:"",clientId:null,serviceId:1,staffId:1,note:"",source:"app"});
+  const [newA,setNewA] = useState({date:"oggi",time:"",clientSearch:"",clientId:null,serviceId:1,staffId:1,note:"",source:"app"});
   const [suggest,setSuggest] = useState([]);
   const [showLM,setShowLM] = useState(false);
   // Apertura automatica dal pulsante "+" (nuovo appuntamento / blocca orario)
-  useEffect(()=>{ if(openAdd==="appt"||openAdd==="block"){ setShowAdd(true); onConsumeAdd&&onConsumeAdd(); } },[openAdd]);
+  useEffect(()=>{ if(openAdd==="appt"||openAdd==="block"){ setNewA(p=>({...p,date:dateView})); setShowAdd(true); onConsumeAdd&&onConsumeAdd(); } },[openAdd]);
+  // Informa l'App quando il modale di creazione è aperto (per nascondere il FAB)
+  useEffect(()=>{ onModalOpenChange&&onModalOpenChange(showAdd); return ()=>onModalOpenChange&&onModalOpenChange(false); },[showAdd]);
 
   const getSvc = id => services.find(s=>s.id===id)||{name:"?",price:0,min:0};
   const getCl = id => clients.find(c=>c.id===id)||null;
@@ -4388,18 +4400,19 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
     setSuggest(clients.filter(c=>c.name.toLowerCase().includes(q.toLowerCase())||c.phone?.includes(q)).slice(0,4));
   };
 
-  const checkConflict = (time,serviceId,staffId,excludeId) => {
+  const checkConflict = (time,serviceId,staffId,excludeId,date=dateView) => {
     const start = toMin(time); const dur = getSvc(parseInt(serviceId)).min; const end = start+dur;
-    return appts.find(a=>a.id!==excludeId&&a.staffId===parseInt(staffId)&&a.date===dateView&&a.status!=="cancellato"&&toMin(a.time)<end&&toMin(a.time)+getSvc(a.serviceId).min>start)||null;
+    return appts.find(a=>a.id!==excludeId&&a.staffId===parseInt(staffId)&&a.date===date&&a.status!=="cancellato"&&toMin(a.time)<end&&toMin(a.time)+getSvc(a.serviceId).min>start)||null;
   };
 
   const addAppt = () => {
     if(!newA.time||(!newA.clientId&&!newA.clientSearch)) return;
-    if(checkConflict(newA.time,newA.serviceId,newA.staffId,null)) return;
+    if(checkConflict(newA.time,newA.serviceId,newA.staffId,null,newA.date)) return;
     let cid = newA.clientId;
     if(!cid){const nc={id:Date.now(),name:newA.clientSearch,phone:"",visits:0,lastVisit:"Oggi",totalSpent:0,note:"",rating:0};setClients(p=>[...p,nc]);cid=nc.id;}
-    setAppts(p=>[...p,{id:Date.now(),staffId:parseInt(newA.staffId),date:dateView,time:newA.time,clientId:cid,serviceId:parseInt(newA.serviceId),status:"confermato",source:newA.source,note:newA.note}]);
-    setNewA({time:"",clientSearch:"",clientId:null,serviceId:1,staffId:1,note:"",source:"app"});
+    setAppts(p=>[...p,{id:Date.now(),staffId:parseInt(newA.staffId),date:newA.date,time:newA.time,clientId:cid,serviceId:parseInt(newA.serviceId),status:"confermato",source:newA.source,note:newA.note}]);
+    setDateView(newA.date); // porta l'agenda sul giorno scelto così il nuovo appuntamento è visibile
+    setNewA({date:newA.date,time:"",clientSearch:"",clientId:null,serviceId:1,staffId:1,note:"",source:"app"});
     setSuggest([]);setShowAdd(false);
   };
 
@@ -4458,7 +4471,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
             </button>
             <button onClick={()=>setShowLM(true)} style={{width:32,height:32,borderRadius:8,background:T.amberBg,border:"none",cursor:"pointer",fontSize:16}}>⚡</button>
-            <button onClick={()=>setShowAdd(true)} style={{width:32,height:32,borderRadius:8,background:T.ink,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"white"}}><IPlus/></button>
+            <button onClick={()=>{setNewA(p=>({...p,date:dateView}));setShowAdd(true);}} style={{width:32,height:32,borderRadius:8,background:T.ink,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"white"}}><IPlus/></button>
           </div>
         </div>
         <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:13,padding:4,gap:2,marginBottom:9}}>
@@ -4526,7 +4539,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
                   </div>
                 ) : (
                   slot.endsWith(":00") && (
-                    <div onClick={()=>{setNewA(p=>({...p,time:slot}));setShowAdd(true);}} style={{flex:1,borderRadius:9,border:`1.5px dashed ${T.line}`,padding:"8px 11px",cursor:"pointer",marginBottom:3}}>
+                    <div onClick={()=>{setNewA(p=>({...p,time:slot,date:dateView}));setShowAdd(true);}} style={{flex:1,borderRadius:9,border:`1.5px dashed ${T.line}`,padding:"8px 11px",cursor:"pointer",marginBottom:3}}>
                       <p style={{fontSize:10,color:T.line,margin:0}}>+ aggiungi</p>
                     </div>
                   )
@@ -4540,6 +4553,14 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
       {showAdd && (
         <Modal title="Nuovo appuntamento" onClose={()=>{setShowAdd(false);setSuggest([]);}}>
           <div style={{display:"flex",flexDirection:"column",gap:11}}>
+            <div>
+              <label style={{fontSize:10,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:4,textTransform:"uppercase",letterSpacing:.6}}>Giorno</label>
+              <div style={{display:"flex",gap:6}}>
+                {[["oggi","Oggi"],["ieri","Ieri"]].map(([v,l])=>(
+                  <button key={v} onClick={()=>setNewA(p=>({...p,date:v}))} style={{flex:1,padding:"9px 0",borderRadius:8,border:`1.5px solid ${newA.date===v?T.ink:T.line}`,background:newA.date===v?T.ink:T.white,color:newA.date===v?T.white:T.inkMid,cursor:"pointer",fontSize:12,fontWeight:600,fontFamily:"inherit"}}>{l}</button>
+                ))}
+              </div>
+            </div>
             <div>
               <label style={{fontSize:10,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:4,textTransform:"uppercase",letterSpacing:.6}}>Orario</label>
               <select value={newA.time} onChange={e=>setNewA(p=>({...p,time:e.target.value}))} style={{width:"100%",padding:"10px 12px",borderRadius:9,border:`1.5px solid ${T.line}`,fontSize:14,color:T.ink,fontFamily:"inherit",outline:"none",background:T.white}}>
@@ -4571,12 +4592,12 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
             </div>
             {newA.time&&newA.serviceId&&(()=>{
               const svc = getSvc(parseInt(newA.serviceId));
-              const cf = checkConflict(newA.time,newA.serviceId,newA.staffId,null);
+              const cf = checkConflict(newA.time,newA.serviceId,newA.staffId,null,newA.date);
               return <div style={{padding:"8px 10px",background:cf?T.redBg:T.blueBg,borderRadius:8}}><p style={{fontSize:11,color:cf?T.red:T.blue,margin:0,fontWeight:600}}>{cf?`Conflitto con ${getCl(cf.clientId)?.name||"?"} alle ${cf.time}`:`${newA.time} - ${toTime(toMin(newA.time)+svc.min)} - ${svc.min} min - ${svc.price}€`}</p></div>;
             })()}
             <div style={{display:"flex",gap:7}}>
               <Btn label="Annulla" onClick={()=>{setShowAdd(false);setSuggest([]);}} style={{flex:1,padding:"11px 0",textAlign:"center"}}/>
-              <button onClick={addAppt} disabled={!newA.time||(!newA.clientId&&!newA.clientSearch)||!!checkConflict(newA.time,newA.serviceId,newA.staffId,null)} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.brand,cursor:"pointer",fontSize:14,fontWeight:600,color:T.white,fontFamily:"inherit",opacity:(!newA.time||(!newA.clientId&&!newA.clientSearch)||!!checkConflict(newA.time,newA.serviceId,newA.staffId,null))?.4:1}}>Aggiungi</button>
+              <button onClick={addAppt} disabled={!newA.time||(!newA.clientId&&!newA.clientSearch)||!!checkConflict(newA.time,newA.serviceId,newA.staffId,null,newA.date)} style={{flex:2,padding:"11px 0",borderRadius:9,border:"none",background:T.brand,cursor:"pointer",fontSize:14,fontWeight:600,color:T.white,fontFamily:"inherit",opacity:(!newA.time||(!newA.clientId&&!newA.clientSearch)||!!checkConflict(newA.time,newA.serviceId,newA.staffId,null,newA.date))?.4:1}}>Aggiungi</button>
             </div>
           </div>
         </Modal>
@@ -4598,11 +4619,12 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
 }
 
 /* PRO - CLIENTI */
-function ProClienti({clients,setClients,appts,services,nav,openAdd,onConsumeAdd}) {
+function ProClienti({clients,setClients,appts,services,nav,openAdd,onConsumeAdd,onModalOpenChange}) {
   const [q,setQ] = useState("");
   const [showAdd,setShowAdd] = useState(false);
   const [newC,setNewC] = useState({name:"",phone:"",email:"",birth:"",note:""});
   useEffect(()=>{ if(openAdd==="client"){ setShowAdd(true); onConsumeAdd&&onConsumeAdd(); } },[openAdd]);
+  useEffect(()=>{ onModalOpenChange&&onModalOpenChange(showAdd); return ()=>onModalOpenChange&&onModalOpenChange(false); },[showAdd]);
   const saveClient = () => {
     if(!newC.name.trim()) return;
     setClients(p=>[{id:Date.now(),name:newC.name.trim(),phone:newC.phone.trim(),email:newC.email.trim(),birth:newC.birth,note:newC.note.trim(),visits:0,lastVisit:"Mai",totalSpent:0,rating:0},...p]);
@@ -4703,13 +4725,14 @@ function ProCliente({client,setClients,appts,services,nav}) {
 }
 
 /* PRO - SERVIZI + STAFF + ORARI */
-function ProServizi({services,setServices,staff,setStaff,hours,setHours,openAdd,onConsumeAdd}) {
+function ProServizi({services,setServices,staff,setStaff,hours,setHours,openAdd,onConsumeAdd,onModalOpenChange}) {
   const [tab,setTab] = useState("servizi");
   const [showAddSvc,setShowAddSvc] = useState(false);
   const [newSvc,setNewSvc] = useState({name:"",price:"",min:""});
   const [editSvc,setEditSvc] = useState(null);
   const [editVals,setEditVals] = useState({name:"",price:"",min:""});
   useEffect(()=>{ if(openAdd==="service"){ setTab("servizi"); setShowAddSvc(true); onConsumeAdd&&onConsumeAdd(); } },[openAdd]);
+  useEffect(()=>{ onModalOpenChange&&onModalOpenChange(showAddSvc); return ()=>onModalOpenChange&&onModalOpenChange(false); },[showAddSvc]);
   const startEdit = s => {setEditSvc(s.id);setEditVals({name:s.name,price:String(s.price),min:String(s.min)});};
   const saveEdit = s => {setServices(p=>p.map(x=>x.id===s.id?{...x,name:editVals.name,price:parseInt(editVals.price)||0,min:parseInt(editVals.min)||0}:x));setEditSvc(null);};
   return (
@@ -5975,6 +5998,7 @@ export default function App() {
   const [showBetaWelcome,setShowBetaWelcome] = useState(false);
   const [sharePost,setSharePost] = useState(null);   // post da inoltrare a un professionista
   const [pendingAdd,setPendingAdd] = useState(null); // azione FAB da aprire nella schermata pro
+  const [proAddOpen,setProAddOpen] = useState(false); // un modale di creazione pro è aperto → nascondi il FAB
   const [msgReads,setMsgReads] = useState({});       // convId -> n. messaggi già visti dal cliente
   const [notifSeenId,setNotifSeenId] = useState(0);  // id massimo notifica già vista
   const [showOnboarding,setShowOnboarding] = useState(false);
@@ -6218,10 +6242,10 @@ export default function App() {
         onSendMessage={sendMessage} onSendOffer={sendOffer} onEditOffer={editOffer} onAccept={acceptOffer} onDecline={declineOffer}/>;
     }
     if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} feed={feed} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={doLogout} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig}/>;
-    if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)}/>;
-    if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)}/>;
+    if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
+    if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
     if(screen==="pro_cliente")   return <ProCliente client={sData} setClients={setClients} appts={appts} services={services} nav={nav}/>;
-    if(screen==="pro_servizi")   return <ProServizi services={services} setServices={setServices} staff={staff} setStaff={setStaff} hours={hours} setHours={setHours} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)}/>;
+    if(screen==="pro_servizi")   return <ProServizi services={services} setServices={setServices} staff={staff} setStaff={setStaff} hours={hours} setHours={setHours} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
     if(screen==="pro_stats")     return <ProStats appts={appts} clients={clients} services={services} staff={staff} onSwitch={switchMode} nav={nav}/>;
     if(screen==="pro_profilo")   return <ProProfilo user={user} onSwitch={switchMode} onLogout={doLogout} accent={accent} setAccent={setAccent} nav={nav}/>;
     if(screen==="pro_piani")     return <PianiScreen nav={nav}/>;
@@ -6237,7 +6261,7 @@ export default function App() {
         {render()}
       </div>
       {!fullscreen && mode==="pro" && screen!=="pro_piani" && screen!=="pro_stats" && <BetaBanner nav={nav}/>}
-      {!fullscreen && mode==="pro" && <ProFab nav={nav} onAction={(scr,act)=>{ setPendingAdd(act); nav(scr); }}/>}
+      {!fullscreen && mode==="pro" && !proAddOpen && <ProFab nav={nav} onAction={(scr,act)=>{ setPendingAdd(act); nav(scr); }}/>}
       {!fullscreen && (mode==="pro" ? <NavPro s={screen} nav={nav} dmDot={conversations.some(c=>c.messages.some(m=>m.from==="client"))}/> : <NavCl s={screen} nav={nav}/>)}
       {showBetaWelcome && <BetaWelcome onClose={()=>setShowBetaWelcome(false)}/>}
       {sharePost && <SharePostSheet post={sharePost} onClose={()=>setSharePost(null)} onPick={(proId)=>sendPostToPro(sharePost,proId)}/>}
