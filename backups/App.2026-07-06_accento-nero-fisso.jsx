@@ -609,25 +609,22 @@ const BackBtn = ({onClick}) => (
   </button>
 );
 function Modal({title,onClose,children}) {
-  // Lock robusto dello sfondo per iOS: fisso il body così NON può scorrere dietro,
-  // e lascio scorrere solo il contenuto del modale. Ripristino la posizione alla chiusura.
+  // Blocca lo scroll dello sfondo mentre il modale è aperto
   useEffect(()=>{
-    const y = window.scrollY || document.documentElement.scrollTop || 0;
-    const b = document.body.style;
-    const prev = {position:b.position, top:b.top, left:b.left, right:b.right, width:b.width, overflow:b.overflow};
-    b.position="fixed"; b.top=`-${y}px`; b.left="0"; b.right="0"; b.width="100%"; b.overflow="hidden";
-    return ()=>{ Object.assign(b, prev); window.scrollTo(0, y); };
+    const prevBody = document.body.style.overflow;
+    const prevHtml = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    return ()=>{ document.body.style.overflow = prevBody; document.documentElement.style.overflow = prevHtml; };
   },[]);
   return (
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
-      <div onClick={e=>e.stopPropagation()} style={{background:T.paper,borderRadius:"32px 32px 0 0",width:"100%",maxWidth:430,margin:"0 auto",maxHeight:"85vh",overflowY:"auto",WebkitOverflowScrolling:"touch",overscrollBehavior:"contain"}}>
-        <div style={{position:"sticky",top:0,background:T.paper,zIndex:2,display:"flex",justifyContent:"space-between",alignItems:"center",padding:"20px 20px 12px"}}>
+    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end",overscrollBehavior:"contain"}}>
+      <div onClick={e=>e.stopPropagation()} style={{background:T.paper,borderRadius:"32px 32px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"20px 20px 44px",maxHeight:"90dvh",overflowY:"auto",WebkitOverflowScrolling:"touch",overscrollBehavior:"contain"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
           <h2 style={{fontSize:18,fontWeight:900,color:T.ink,margin:0}}>{title}</h2>
           <button onClick={onClose} className="clay-soft" style={{background:T.white,border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",fontSize:15,color:T.inkMid}}>x</button>
         </div>
-        <div style={{padding:"0 20px calc(28px + env(safe-area-inset-bottom,0px))"}}>
-          {children}
-        </div>
+        {children}
       </div>
     </div>
   );
@@ -2347,84 +2344,6 @@ const DOW_IT = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
 const MON_IT_SHORT = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
 const MON_IT_FULL = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
 const fmtDateShort = (d) => `${DOW_IT[d.getDay()]} ${d.getDate()} ${MON_IT_SHORT[d.getMonth()]}`;
-// Elenco dei giorni prenotabili: da oggi in poi. "oggi" resta la chiave del giorno corrente
-// (compatibile con i dati esistenti); i giorni successivi usano la data ISO come chiave.
-const upcomingDays = (n=21) => {
-  const out = []; const base = new Date(); base.setHours(0,0,0,0);
-  for(let i=0;i<n;i++){
-    const d = new Date(base); d.setDate(base.getDate()+i);
-    const key = i===0 ? "oggi" : `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-    const label = i===0 ? "Oggi" : i===1 ? "Domani" : DOW_IT[d.getDay()];
-    out.push({key,label,num:d.getDate(),mon:MON_IT_SHORT[d.getMonth()]});
-  }
-  return out;
-};
-// Data odierna a mezzanotte
-const startOfToday = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
-// Chiave giorno: "oggi" per la data corrente, altrimenti ISO YYYY-MM-DD
-const dayKeyOf = (d) => { const t=startOfToday(); const x=new Date(d); x.setHours(0,0,0,0); return x.getTime()===t.getTime() ? "oggi" : `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`; };
-// Data (Date) da una chiave giorno
-const dateFromKey = (key) => { if(key==="oggi"||!key) return startOfToday(); if(key==="ieri"){const d=startOfToday();d.setDate(d.getDate()-1);return d;} const [y,m,dd]=key.split("-").map(Number); return new Date(y,m-1,dd); };
-// Etichetta leggibile di una chiave giorno
-const fmtDayKey = (key) => {
-  if(key==="oggi") return "Oggi";
-  if(key==="ieri") return "Ieri";
-  const d = dateFromKey(key); const t=startOfToday();
-  const diff = Math.round((d - t)/86400000);
-  if(diff===1) return "Domani";
-  return `${DOW_IT[d.getDay()]} ${d.getDate()} ${MON_IT_SHORT[d.getMonth()]} ${d.getFullYear()!==t.getFullYear()?d.getFullYear():""}`.trim();
-};
-
-/* Calendario a comparsa per scegliere un giorno (anche mesi in avanti) */
-function DayPickerSheet({value, onPick, onClose}) {
-  const today = startOfToday();
-  const sel = dateFromKey(value);
-  const [vm,setVm] = useState(new Date(sel.getFullYear(), sel.getMonth(), 1));
-  const y=vm.getFullYear(), m=vm.getMonth();
-  const firstDow = (new Date(y,m,1).getDay()+6)%7; // lunedì-first
-  const days = new Date(y,m+1,0).getDate();
-  const cells=[]; for(let i=0;i<firstDow;i++) cells.push(null); for(let d=1;d<=days;d++) cells.push(d);
-  const canPrev = (y>today.getFullYear())||(y===today.getFullYear()&&m>today.getMonth());
-  const sameDay = (d)=> sel.getFullYear()===y && sel.getMonth()===m && sel.getDate()===d;
-  const isToday = (d)=> today.getFullYear()===y && today.getMonth()===m && today.getDate()===d;
-  const isPast = (d)=> new Date(y,m,d) < today;
-  return (
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:360,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
-      <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"26px 26px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 18px calc(24px + env(safe-area-inset-bottom,0px))"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-          <h3 style={{fontSize:16,fontWeight:800,color:T.ink,margin:0}}>Scegli il giorno</h3>
-          <button onClick={onClose} className="clay-soft" style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:14,color:T.inkMid}}>×</button>
-        </div>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
-          <button onClick={()=>canPrev&&setVm(new Date(y,m-1,1))} disabled={!canPrev} style={{width:34,height:34,borderRadius:"50%",border:"none",background:canPrev?T.surface:"transparent",cursor:canPrev?"pointer":"default",opacity:canPrev?1:.3,display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2.4" strokeLinecap="round"><path d="M15 18l-6-6 6-6"/></svg>
-          </button>
-          <span style={{fontSize:15,fontWeight:800,color:T.ink}}>{MON_IT_FULL[m]} {y}</span>
-          <button onClick={()=>setVm(new Date(y,m+1,1))} style={{width:34,height:34,borderRadius:"50%",border:"none",background:T.surface,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:3,marginBottom:5}}>
-          {["L","M","M","G","V","S","D"].map((d,i)=><div key={i} style={{textAlign:"center",fontSize:10,fontWeight:700,color:T.inkSoft,padding:"3px 0"}}>{d}</div>)}
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4}}>
-          {cells.map((d,i)=>{
-            if(!d) return <div key={i}/>;
-            const past = isPast(d), selq = sameDay(d), tod = isToday(d);
-            return (
-              <button key={i} disabled={past} onClick={()=>{ onPick(dayKeyOf(new Date(y,m,d))); onClose(); }}
-                style={{aspectRatio:"1",borderRadius:11,border:tod&&!selq?`1.5px solid ${T.ink}`:"none",cursor:past?"default":"pointer",
-                  background:selq?T.ink:(past?"transparent":T.surface),color:selq?T.white:(past?"#CFCFCF":T.ink),
-                  fontSize:13,fontWeight:selq||tod?800:500,fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",opacity:past?.5:1}}>
-                {d}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* Colonna scrollabile stile ruota (time picker iOS) */
 function WheelColumn({values, value, onChange, ITEM=44}) {
@@ -4469,13 +4388,12 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
   const [showAdd,setShowAdd] = useState(false);
   const [dateView,setDateView] = useState("oggi");
   const [view,setView] = useState("giorno");
-  const [calMonth,setCalMonth] = useState({y:new Date().getFullYear(),m:new Date().getMonth()});
+  const [calMonth,setCalMonth] = useState({y:2026,m:5});
   const [newA,setNewA] = useState({date:"oggi",time:"",clientSearch:"",clientId:null,serviceId:1,staffId:1,note:"",source:"app"});
   const [suggest,setSuggest] = useState([]);
   const [showLM,setShowLM] = useState(false);
-  const [showCal,setShowCal] = useState(false); // calendario per scegliere il giorno dell'appuntamento
   // Apertura automatica dal pulsante "+" (nuovo appuntamento / blocca orario)
-  useEffect(()=>{ if(openAdd==="appt"||openAdd==="block"){ setNewA(p=>({...p,date:(dateView==="ieri"?"oggi":dateView)})); setShowAdd(true); onConsumeAdd&&onConsumeAdd(); } },[openAdd]);
+  useEffect(()=>{ if(openAdd==="appt"||openAdd==="block"){ setNewA(p=>({...p,date:dateView})); setShowAdd(true); onConsumeAdd&&onConsumeAdd(); } },[openAdd]);
   // Informa l'App quando il modale di creazione è aperto (per nascondere il FAB)
   useEffect(()=>{ onModalOpenChange&&onModalOpenChange(showAdd); return ()=>onModalOpenChange&&onModalOpenChange(false); },[showAdd]);
 
@@ -4524,8 +4442,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
     const {y,m} = calMonth;
     const first = new Date(y,m,1).getDay(); const days = new Date(y,m+1,0).getDate();
     const cells = []; for(let i=0;i<first;i++) cells.push(null); for(let d=1;d<=days;d++) cells.push(d);
-    const apptsByDay = {}; appts.filter(a=>a.status!=="cancellato").forEach(a=>{const dt=dateFromKey(a.date);if(dt.getFullYear()===y&&dt.getMonth()===m) apptsByDay[dt.getDate()]=(apptsByDay[dt.getDate()]||0)+1;});
-    const tdy = startOfToday();
+    const apptsByDay = {}; appts.filter(a=>a.status!=="cancellato").forEach(a=>{const d=a.date==="oggi"?14:a.date==="ieri"?13:null;if(d) apptsByDay[d]=(apptsByDay[d]||0)+1;});
     return (
       <div style={{padding:"10px 14px"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
@@ -4539,9 +4456,9 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
         <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:3}}>
           {cells.map((d,i)=>{
             if(!d) return <div key={i}/>;
-            const isToday = d===tdy.getDate()&&m===tdy.getMonth()&&y===tdy.getFullYear(); const count = apptsByDay[d]||0;
+            const isToday = d===14&&m===5; const count = apptsByDay[d]||0;
             return (
-              <div key={i} onClick={()=>{setDateView(dayKeyOf(new Date(y,m,d)));setView("giorno");}} style={{aspectRatio:"1",borderRadius:9,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",cursor:"pointer",background:isToday?T.ink:T.white,border:`1px solid ${T.line}`}}>
+              <div key={i} onClick={()=>{setDateView(d===14?"oggi":d===13?"ieri":"oggi");setView("giorno");}} style={{aspectRatio:"1",borderRadius:9,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",cursor:"pointer",background:isToday?T.ink:T.white,border:`1px solid ${T.line}`}}>
                 <span style={{fontSize:12,fontWeight:isToday?700:400,color:isToday?T.white:T.ink}}>{d}</span>
                 {count>0 && <div style={{width:4,height:4,borderRadius:2,background:isToday?T.gold:T.green,marginTop:1}}/>}
               </div>
@@ -4564,7 +4481,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={T.brandDeep} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
             </button>
             <button onClick={()=>setShowLM(true)} style={{width:32,height:32,borderRadius:8,background:T.amberBg,border:"none",cursor:"pointer",fontSize:16}}>⚡</button>
-            <button onClick={()=>{setNewA(p=>({...p,date:(dateView==="ieri"?"oggi":dateView)}));setShowAdd(true);}} style={{width:32,height:32,borderRadius:8,background:T.ink,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"white"}}><IPlus/></button>
+            <button onClick={()=>{setNewA(p=>({...p,date:dateView}));setShowAdd(true);}} style={{width:32,height:32,borderRadius:8,background:T.ink,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",color:"white"}}><IPlus/></button>
           </div>
         </div>
         <div className="clay-inset" style={{display:"flex",background:T.surface,borderRadius:13,padding:4,gap:2,marginBottom:9}}>
@@ -4572,12 +4489,8 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
         </div>
         {view==="giorno" && (
           <>
-            <div style={{display:"flex",gap:5,marginBottom:8,overflowX:"auto",scrollbarWidth:"none",paddingBottom:2}} className="ba-noscroll">
-              <button onClick={()=>setDateView("ieri")} style={{flexShrink:0,padding:"5px 12px",borderRadius:99,border:"none",cursor:"pointer",fontSize:11,fontWeight:600,background:dateView==="ieri"?T.ink:T.surface,color:dateView==="ieri"?T.white:T.inkSoft,fontFamily:"inherit"}}>Ieri</button>
-              {upcomingDays(21).map(d=>{
-                const sel = dateView===d.key;
-                return <button key={d.key} onClick={()=>setDateView(d.key)} style={{flexShrink:0,padding:"5px 12px",borderRadius:99,border:"none",cursor:"pointer",fontSize:11,fontWeight:600,background:sel?T.ink:T.surface,color:sel?T.white:T.inkSoft,fontFamily:"inherit"}}>{d.label==="Oggi"||d.label==="Domani"?d.label:`${d.label} ${d.num}`}</button>;
-              })}
+            <div style={{display:"flex",gap:5,marginBottom:8}}>
+              {[["oggi","Oggi"],["ieri","Ieri"]].map(([v,l])=><button key={v} onClick={()=>setDateView(v)} style={{padding:"5px 12px",borderRadius:99,border:"none",cursor:"pointer",fontSize:11,fontWeight:600,background:dateView===v?T.ink:T.surface,color:dateView===v?T.white:T.inkSoft,fontFamily:"inherit"}}>{l}</button>)}
             </div>
             <div style={{display:"flex",gap:5,overflowX:"auto",scrollbarWidth:"none",paddingBottom:10}}>
               <button onClick={()=>setSelS(0)} style={{flexShrink:0,padding:"5px 11px",borderRadius:99,border:`1.5px solid ${selStaff===0?T.ink:T.line}`,background:selStaff===0?T.ink:T.white,color:selStaff===0?T.white:T.inkMid,cursor:"pointer",fontSize:11,fontWeight:600,fontFamily:"inherit"}}>Tutti</button>
@@ -4636,7 +4549,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
                   </div>
                 ) : (
                   slot.endsWith(":00") && (
-                    <div onClick={()=>{setNewA(p=>({...p,time:slot,date:(dateView==="ieri"?"oggi":dateView)}));setShowAdd(true);}} style={{flex:1,borderRadius:9,border:`1.5px dashed ${T.line}`,padding:"8px 11px",cursor:"pointer",marginBottom:3}}>
+                    <div onClick={()=>{setNewA(p=>({...p,time:slot,date:dateView}));setShowAdd(true);}} style={{flex:1,borderRadius:9,border:`1.5px dashed ${T.line}`,padding:"8px 11px",cursor:"pointer",marginBottom:3}}>
                       <p style={{fontSize:10,color:T.line,margin:0}}>+ aggiungi</p>
                     </div>
                   )
@@ -4652,11 +4565,11 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
           <div style={{display:"flex",flexDirection:"column",gap:11}}>
             <div>
               <label style={{fontSize:10,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:4,textTransform:"uppercase",letterSpacing:.6}}>Giorno</label>
-              <button onClick={()=>setShowCal(true)} style={{width:"100%",boxSizing:"border-box",display:"flex",alignItems:"center",gap:10,padding:"11px 12px",borderRadius:9,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}}><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                <span style={{flex:1,fontSize:14,fontWeight:600,color:T.ink}}>{fmtDayKey(newA.date)}</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-              </button>
+              <div style={{display:"flex",gap:6}}>
+                {[["oggi","Oggi"],["ieri","Ieri"]].map(([v,l])=>(
+                  <button key={v} onClick={()=>setNewA(p=>({...p,date:v}))} style={{flex:1,padding:"9px 0",borderRadius:8,border:`1.5px solid ${newA.date===v?T.ink:T.line}`,background:newA.date===v?T.ink:T.white,color:newA.date===v?T.white:T.inkMid,cursor:"pointer",fontSize:12,fontWeight:600,fontFamily:"inherit"}}>{l}</button>
+                ))}
+              </div>
             </div>
             <div>
               <label style={{fontSize:10,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:4,textTransform:"uppercase",letterSpacing:.6}}>Orario</label>
@@ -4698,10 +4611,6 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
             </div>
           </div>
         </Modal>
-      )}
-
-      {showCal && (
-        <DayPickerSheet value={newA.date} onPick={(k)=>setNewA(p=>({...p,date:k}))} onClose={()=>setShowCal(false)}/>
       )}
 
       {showLM && (
@@ -6383,7 +6292,7 @@ export default function App() {
       <div style={{paddingTop: fullscreen ? 0 : 52}}>
         {render()}
       </div>
-      {!fullscreen && mode==="pro" && !proAddOpen && screen!=="pro_piani" && screen!=="pro_stats" && <BetaBanner nav={nav}/>}
+      {!fullscreen && mode==="pro" && screen!=="pro_piani" && screen!=="pro_stats" && <BetaBanner nav={nav}/>}
       {!fullscreen && mode==="pro" && !proAddOpen && <ProFab nav={nav} onAction={(scr,act)=>{ setPendingAdd(act); nav(scr); }}/>}
       {!fullscreen && (mode==="pro" ? <NavPro s={screen} nav={nav} dmDot={conversations.some(c=>c.messages.some(m=>m.from==="client"))}/> : <NavCl s={screen} nav={nav}/>)}
       {showBetaWelcome && <BetaWelcome onClose={()=>setShowBetaWelcome(false)}/>}
