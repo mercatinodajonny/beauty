@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef, Component } from "react";
+import { createPortal } from "react-dom";
 
 /* ErrorBoundary — mostra l'errore su schermo invece di pagina bianca */
 class AvatarErrorBoundary extends Component {
@@ -618,8 +619,10 @@ function Modal({title,onClose,children}) {
     b.position="fixed"; b.top=`-${y}px`; b.left="0"; b.right="0"; b.width="100%"; b.overflow="hidden";
     return ()=>{ Object.assign(b, prev); window.scrollTo(0, y); };
   },[]);
-  return (
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+  // Portale su <body>: il modale esce dal contenitore .bg-alive (che schiaccia gli
+  // z-index dei figli a 1) così copre davvero nav, FAB e banner invece di finirci sotto.
+  return createPortal(
+    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:1000,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
       <div onClick={e=>e.stopPropagation()} style={{background:T.paper,borderRadius:"32px 32px 0 0",width:"100%",maxWidth:430,margin:"0 auto",maxHeight:"90dvh",display:"flex",flexDirection:"column",minHeight:0}}>
         <div style={{background:T.paper,flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center",padding:"18px 20px 10px",borderRadius:"32px 32px 0 0"}}>
           <h2 style={{fontSize:18,fontWeight:900,color:T.ink,margin:0}}>{title}</h2>
@@ -629,7 +632,8 @@ function Modal({title,onClose,children}) {
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 /* Dialog di conferma compatto e minimal — centrato */
@@ -2388,8 +2392,8 @@ function DayPickerSheet({value, onPick, onClose}) {
   const sameDay = (d)=> sel.getFullYear()===y && sel.getMonth()===m && sel.getDate()===d;
   const isToday = (d)=> today.getFullYear()===y && today.getMonth()===m && today.getDate()===d;
   const isPast = (d)=> new Date(y,m,d) < today;
-  return (
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:360,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+  return createPortal(
+    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:1100,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
       <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"26px 26px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 18px calc(24px + env(safe-area-inset-bottom,0px))"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
           <h3 style={{fontSize:16,fontWeight:800,color:T.ink,margin:0}}>Scegli il giorno</h3>
@@ -2422,7 +2426,8 @@ function DayPickerSheet({value, onPick, onClose}) {
           })}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
