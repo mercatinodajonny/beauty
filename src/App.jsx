@@ -4906,7 +4906,7 @@ function ProProfilo({user,onSwitch,onLogout,accent,setAccent,nav}) {
             {ic:"🛍️",t:"Servizi",s:"Nome, prezzo, durata, categoria",go:()=>nav("pro_servizi")},
             {ic:"🕒",t:"Orari & Ferie",s:"Giorni e fasce di apertura",go:()=>nav("pro_servizi")},
             {ic:"👥",t:"Dipendenti",s:"Staff e agende separate",go:()=>nav("pro_servizi")},
-            {ic:"💳",t:"Pagamenti & Incassi",s:"Metodi e resoconti",go:()=>nav("pro_piani")},
+            {ic:"💎",t:"Il tuo piano",s:"Abbonamento e fatturazione",go:()=>nav("pro_piani")},
           ].map((r,i,arr)=>(
             <button key={i} onClick={r.go} style={{width:"100%",display:"flex",alignItems:"center",gap:13,padding:"13px 16px",border:"none",borderBottom:i<arr.length-1?`1px solid ${T.line}`:"none",background:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
               <span style={{fontSize:20,width:26,textAlign:"center"}}>{r.ic}</span>
