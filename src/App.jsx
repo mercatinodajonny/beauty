@@ -497,7 +497,10 @@ const CLIENTS0 = [
   {id:4,name:"Giulia Ferrari",phone:"389 5554433",visits:5,lastVisit:"2 sett. fa",totalSpent:150,note:"",rating:5},
   {id:5,name:"Sara Conti",phone:"347 1122334",visits:15,lastVisit:"Ieri",totalSpent:890,note:"Allergia glutine.",rating:4},
 ];
+// Chiave data ISO relativa a oggi (n giorni fa) — usata per lo storico realistico
+const _dAgo = (n) => { const d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-n); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; };
 const APPTS0 = [
+  // Oggi / imminenti
   {id:1,staffId:1,date:"oggi",time:"09:00",clientId:1,serviceId:3,status:"completato",source:"app",note:""},
   {id:2,staffId:2,date:"oggi",time:"10:00",clientId:2,serviceId:5,status:"confermato",source:"telefono",note:"Taglio corto"},
   {id:3,staffId:1,date:"oggi",time:"11:00",clientId:3,serviceId:2,status:"confermato",source:"app",note:""},
@@ -505,6 +508,19 @@ const APPTS0 = [
   {id:5,staffId:2,date:"oggi",time:"14:00",clientId:5,serviceId:4,status:"confermato",source:"app",note:"Allergia glutine"},
   {id:6,staffId:1,date:"oggi",time:"16:00",clientId:1,serviceId:3,status:"in attesa",source:"passaparola",note:""},
   {id:8,staffId:1,date:"ieri",time:"09:30",clientId:2,serviceId:2,status:"completato",source:"app",note:""},
+  // Storico completato (visite passate) — così visite/speso/ultima sono coerenti
+  {id:101,staffId:1,date:_dAgo(9), time:"10:00",clientId:1,serviceId:2,status:"completato",source:"app",note:""},
+  {id:102,staffId:1,date:_dAgo(23),time:"11:30",clientId:1,serviceId:1,status:"completato",source:"telefono",note:""},
+  {id:103,staffId:1,date:_dAgo(44),time:"15:00",clientId:1,serviceId:3,status:"completato",source:"app",note:""},
+  {id:104,staffId:2,date:_dAgo(12),time:"09:30",clientId:2,serviceId:6,status:"completato",source:"app",note:""},
+  {id:105,staffId:2,date:_dAgo(27),time:"18:00",clientId:2,serviceId:5,status:"completato",source:"passaparola",note:""},
+  {id:106,staffId:1,date:_dAgo(6), time:"16:30",clientId:3,serviceId:1,status:"completato",source:"app",note:""},
+  {id:107,staffId:3,date:_dAgo(31),time:"14:00",clientId:3,serviceId:7,status:"completato",source:"app",note:""},
+  {id:108,staffId:3,date:_dAgo(18),time:"11:00",clientId:4,serviceId:7,status:"completato",source:"whatsapp",note:""},
+  {id:109,staffId:2,date:_dAgo(3), time:"10:30",clientId:5,serviceId:4,status:"completato",source:"app",note:""},
+  {id:110,staffId:2,date:_dAgo(20),time:"17:00",clientId:5,serviceId:2,status:"completato",source:"app",note:""},
+  {id:111,staffId:2,date:_dAgo(38),time:"09:00",clientId:5,serviceId:1,status:"completato",source:"telefono",note:""},
+  {id:112,staffId:2,date:_dAgo(55),time:"15:30",clientId:5,serviceId:4,status:"completato",source:"app",note:""},
 ];
 const HOURS0 = {open:"09:00",close:"19:00",days:[1,2,3,4,5,6],perDay:{}};
 
@@ -3199,7 +3215,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
             {filterCat===null && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
           </button>
           <div style={{display:"flex",flexDirection:"column",gap:8}}>
-            {MACRO_CATS.filter(c=>c.id!=="altro").map(cat=>(
+            {MACRO_CATS.map(cat=>(
               <button key={cat.id} onClick={()=>{setFilterCat(cat.id);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===cat.id?T.brand:T.line}`,background:filterCat===cat.id?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
                 <div style={{width:38,height:38,borderRadius:11,background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{cat.emoji}</div>
                 <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>{cat.label.replace("\n"," ")}</span>
@@ -4677,7 +4693,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
               <input value={newA.clientId?clients.find(c=>c.id===newA.clientId)?.name||"":newA.clientSearch} onChange={e=>{if(newA.clientId)setNewA(p=>({...p,clientId:null,clientSearch:e.target.value}));else setNewA(p=>({...p,clientSearch:e.target.value}));searchCl(e.target.value);}} placeholder="Cerca o scrivi nome..." style={{width:"100%",padding:"10px 12px",borderRadius:9,boxSizing:"border-box",border:`1.5px solid ${newA.clientId?T.green:T.line}`,fontSize:14,color:T.ink,fontFamily:"inherit",outline:"none"}}/>
               {suggest.length>0&&!newA.clientId && (
                 <div style={{background:T.white,border:`1px solid ${T.line}`,borderRadius:9,marginTop:3,overflow:"hidden"}}>
-                  {suggest.map((c,i)=><div key={c.id} onClick={()=>{setNewA(p=>({...p,clientId:c.id,clientSearch:""}));setSuggest([]);}} style={{padding:"8px 12px",cursor:"pointer",borderBottom:i<suggest.length-1?`1px solid ${T.line}`:"none"}}><p style={{fontSize:13,fontWeight:600,color:T.ink,margin:"0 0 1px"}}>{c.name}</p><p style={{fontSize:11,color:T.inkSoft,margin:0}}>{c.phone||"No tel"} - {c.visits} visite</p></div>)}
+                  {suggest.map((c,i)=><div key={c.id} onClick={()=>{setNewA(p=>({...p,clientId:c.id,clientSearch:""}));setSuggest([]);}} style={{padding:"8px 12px",cursor:"pointer",borderBottom:i<suggest.length-1?`1px solid ${T.line}`:"none"}}><p style={{fontSize:13,fontWeight:600,color:T.ink,margin:"0 0 1px"}}>{c.name}</p><p style={{fontSize:11,color:T.inkSoft,margin:0}}>{c.phone||"No tel"} - {clientStats(c.id,appts,services).visits} visite</p></div>)}
                 </div>
               )}
               {newA.clientId && <p style={{fontSize:10,color:T.green,margin:"3px 0 0",fontWeight:600}}>Cliente esistente</p>}
@@ -4727,6 +4743,21 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
 }
 
 /* PRO - CLIENTI */
+// Statistiche cliente derivate SEMPRE dagli appuntamenti reali (così visite, speso,
+// ultima visita e storico sono coerenti tra loro e si aggiornano da soli).
+function clientStats(clientId, appts, services){
+  const priceOf = id => (services.find(s=>s.id===id)||{price:0}).price;
+  const mine = appts.filter(a=>a.clientId===clientId);
+  const done = mine.filter(a=>a.status==="completato");
+  const upcoming = mine.filter(a=>a.status==="confermato"||a.status==="in attesa");
+  const spent = done.reduce((s,a)=>s+priceOf(a.serviceId),0);
+  let lastKey=null,lastD=null;
+  done.forEach(a=>{ const d=dateFromKey(a.date); if(!lastD||d>lastD){lastD=d;lastKey=a.date;} });
+  // storico ordinato dal più recente
+  const history = [...mine].sort((a,b)=>dateFromKey(b.date)-dateFromKey(a.date));
+  return {visits:done.length, spent, upcoming:upcoming.length, lastKey, history};
+}
+
 function ProClienti({clients,setClients,appts,services,nav,openAdd,onConsumeAdd,onModalOpenChange}) {
   const [q,setQ] = useState("");
   const [showAdd,setShowAdd] = useState(false);
@@ -4752,17 +4783,20 @@ function ProClienti({clients,setClients,appts,services,nav,openAdd,onConsumeAdd,
         </div>
       </div>
       <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:10}}>
-        {list.map(c => (
+        {list.map(c => {
+          const st = clientStats(c.id, appts, services);
+          return (
           <div key={c.id} onClick={()=>nav("pro_cliente",c)} className="clay ba-lift" style={{background:T.white,borderRadius:20,padding:"13px 15px",display:"flex",alignItems:"center",gap:12,cursor:"pointer"}}>
             <div style={{width:44,height:44,borderRadius:"50%",background:T.brand,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:800,color:T.white,flexShrink:0,boxShadow:"inset 2px 2px 4px rgba(255,255,255,.35), inset -2px -3px 5px rgba(180,83,9,.35)"}}>{c.name[0]}</div>
             <div style={{flex:1,minWidth:0}}>
               <p style={{fontSize:14,fontWeight:600,color:T.ink,margin:"0 0 2px"}}>{c.name}</p>
-              <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 4px"}}>{c.phone||"No telefono"} - {c.lastVisit}</p>
-              <div style={{display:"flex",gap:5}}><Pill label={`${c.visits} visite`} style={{background:T.surface,color:T.inkMid}}/><Pill label={`${c.totalSpent}€`} style={{background:T.greenBg,color:T.green,fontWeight:700}}/></div>
+              <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 4px"}}>{c.phone||"No telefono"} · {st.lastKey?`ultima ${fmtDayKey(st.lastKey)}`:"mai venuto"}</p>
+              <div style={{display:"flex",gap:5}}><Pill label={`${st.visits} visite`} style={{background:T.surface,color:T.inkMid}}/><Pill label={`${st.spent}€`} style={{background:T.greenBg,color:T.green,fontWeight:700}}/>{st.upcoming>0&&<Pill label={`${st.upcoming} in arrivo`} style={{background:T.blueBg,color:T.blue,fontWeight:700}}/>}</div>
             </div>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T.line} strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {showAdd && (
@@ -4788,7 +4822,8 @@ function ProCliente({client,setClients,appts,services,nav}) {
   const [note,setNote] = useState(client.note||"");
   const [editing,setEditing] = useState(false);
   const getSvc = id => services.find(s=>s.id===id)||{name:"?",price:0};
-  const cAppts = appts.filter(a=>a.clientId===client.id).slice(-8).reverse();
+  const st = clientStats(client.id, appts, services);
+  const cAppts = st.history;
   const saveNote = () => {setClients(p=>p.map(c=>c.id===client.id?{...c,note}:c));setEditing(false);};
   return (
     <div style={{paddingBottom:90,background:"transparent",minHeight:"100dvh"}}>
@@ -4800,7 +4835,7 @@ function ProCliente({client,setClients,appts,services,nav}) {
         </div>
       </div>
       <div style={{padding:"12px 14px",display:"flex",gap:10}}>
-        {[[client.visits,"Visite"],[`${client.totalSpent}€`,"Speso"],[client.lastVisit,"Ultima"]].map(([v,l]) => (
+        {[[st.visits,"Visite"],[`${st.spent}€`,"Speso"],[st.lastKey?fmtDayKey(st.lastKey):"Mai","Ultima"]].map(([v,l]) => (
           <div key={l} className="clay" style={{flex:1,background:T.white,borderRadius:18,padding:"12px 8px",textAlign:"center"}}>
             <p style={{fontSize:l==="Ultima"?11:16,fontWeight:700,color:T.ink,margin:"0 0 1px",lineHeight:1.2}}>{v}</p>
             <p style={{fontSize:9,color:T.inkSoft,margin:0}}>{l}</p>
@@ -4821,8 +4856,22 @@ function ProCliente({client,setClients,appts,services,nav}) {
         }
       </div>
       <div className="clay" style={{margin:"0 14px 12px",background:T.white,borderRadius:20,overflow:"hidden"}}>
-        <div style={{padding:"12px 16px"}}><p style={{fontSize:13,fontWeight:800,color:T.ink,margin:0}}>Storico</p></div>
-        {cAppts.length>0 ? cAppts.map((a,i)=>{const svc=getSvc(a.serviceId);return(<div key={a.id} style={{display:"flex",alignItems:"center",gap:9,padding:"10px 14px",borderBottom:i<cAppts.length-1?`1px solid ${T.line}`:"none"}}><div style={{width:8,height:8,borderRadius:4,background:ST[a.status]?.bar||"#ccc",flexShrink:0}}/><div style={{flex:1}}><p style={{fontSize:13,color:T.ink,margin:"0 0 1px",fontWeight:500}}>{svc.name}</p><p style={{fontSize:10,color:T.inkSoft,margin:0}}>{a.date} - {a.time}</p></div><p style={{fontSize:13,fontWeight:700,color:T.ink,margin:0}}>{svc.price}€</p></div>);})
+        <div style={{padding:"12px 16px",display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
+          <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:0}}>Storico</p>
+          <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{st.visits} {st.visits===1?"visita":"visite"}{st.upcoming>0?` · ${st.upcoming} in arrivo`:""}</p>
+        </div>
+        {cAppts.length>0 ? cAppts.map((a,i)=>{const svc=getSvc(a.serviceId);const stt=ST[a.status]||{};return(
+          <div key={a.id} style={{display:"flex",alignItems:"center",gap:9,padding:"10px 14px",borderBottom:i<cAppts.length-1?`1px solid ${T.line}`:"none"}}>
+            <div style={{width:8,height:8,borderRadius:4,background:stt.bar||"#ccc",flexShrink:0}}/>
+            <div style={{flex:1,minWidth:0}}>
+              <p style={{fontSize:13,color:T.ink,margin:"0 0 1px",fontWeight:500}}>{svc.name}</p>
+              <p style={{fontSize:10,color:T.inkSoft,margin:0}}>{fmtDayKey(a.date)} · {a.time}</p>
+            </div>
+            <div style={{textAlign:"right",flexShrink:0}}>
+              <p style={{fontSize:13,fontWeight:700,color:a.status==="cancellato"?T.inkSoft:T.ink,margin:"0 0 2px",textDecoration:a.status==="cancellato"?"line-through":"none"}}>{svc.price}€</p>
+              <Pill label={stt.label||a.status} style={{background:stt.bg,color:stt.text,fontSize:9}}/>
+            </div>
+          </div>);})
           : <p style={{fontSize:13,color:T.inkSoft,padding:"13px 14px",margin:0}}>Nessun appuntamento.</p>}
       </div>
       <div style={{padding:"0 14px",display:"flex",gap:7}}>
