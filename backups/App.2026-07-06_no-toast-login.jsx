@@ -497,10 +497,7 @@ const CLIENTS0 = [
   {id:4,name:"Giulia Ferrari",phone:"389 5554433",visits:5,lastVisit:"2 sett. fa",totalSpent:150,note:"",rating:5},
   {id:5,name:"Sara Conti",phone:"347 1122334",visits:15,lastVisit:"Ieri",totalSpent:890,note:"Allergia glutine.",rating:4},
 ];
-// Chiave data ISO relativa a oggi (n giorni fa) — usata per lo storico realistico
-const _dAgo = (n) => { const d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-n); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; };
 const APPTS0 = [
-  // Oggi / imminenti
   {id:1,staffId:1,date:"oggi",time:"09:00",clientId:1,serviceId:3,status:"completato",source:"app",note:""},
   {id:2,staffId:2,date:"oggi",time:"10:00",clientId:2,serviceId:5,status:"confermato",source:"telefono",note:"Taglio corto"},
   {id:3,staffId:1,date:"oggi",time:"11:00",clientId:3,serviceId:2,status:"confermato",source:"app",note:""},
@@ -508,19 +505,6 @@ const APPTS0 = [
   {id:5,staffId:2,date:"oggi",time:"14:00",clientId:5,serviceId:4,status:"confermato",source:"app",note:"Allergia glutine"},
   {id:6,staffId:1,date:"oggi",time:"16:00",clientId:1,serviceId:3,status:"in attesa",source:"passaparola",note:""},
   {id:8,staffId:1,date:"ieri",time:"09:30",clientId:2,serviceId:2,status:"completato",source:"app",note:""},
-  // Storico completato (visite passate) — così visite/speso/ultima sono coerenti
-  {id:101,staffId:1,date:_dAgo(9), time:"10:00",clientId:1,serviceId:2,status:"completato",source:"app",note:""},
-  {id:102,staffId:1,date:_dAgo(23),time:"11:30",clientId:1,serviceId:1,status:"completato",source:"telefono",note:""},
-  {id:103,staffId:1,date:_dAgo(44),time:"15:00",clientId:1,serviceId:3,status:"completato",source:"app",note:""},
-  {id:104,staffId:2,date:_dAgo(12),time:"09:30",clientId:2,serviceId:6,status:"completato",source:"app",note:""},
-  {id:105,staffId:2,date:_dAgo(27),time:"18:00",clientId:2,serviceId:5,status:"completato",source:"passaparola",note:""},
-  {id:106,staffId:1,date:_dAgo(6), time:"16:30",clientId:3,serviceId:1,status:"completato",source:"app",note:""},
-  {id:107,staffId:3,date:_dAgo(31),time:"14:00",clientId:3,serviceId:7,status:"completato",source:"app",note:""},
-  {id:108,staffId:3,date:_dAgo(18),time:"11:00",clientId:4,serviceId:7,status:"completato",source:"whatsapp",note:""},
-  {id:109,staffId:2,date:_dAgo(3), time:"10:30",clientId:5,serviceId:4,status:"completato",source:"app",note:""},
-  {id:110,staffId:2,date:_dAgo(20),time:"17:00",clientId:5,serviceId:2,status:"completato",source:"app",note:""},
-  {id:111,staffId:2,date:_dAgo(38),time:"09:00",clientId:5,serviceId:1,status:"completato",source:"telefono",note:""},
-  {id:112,staffId:2,date:_dAgo(55),time:"15:30",clientId:5,serviceId:4,status:"completato",source:"app",note:""},
 ];
 const HOURS0 = {open:"09:00",close:"19:00",days:[1,2,3,4,5,6],perDay:{}};
 
@@ -2527,7 +2511,13 @@ function DateTimeSheet({ initialDate, initialTime, onClose, onConfirm, onClear }
   const same = (a,b)=>a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
   const ITEM = 44;
   return (
-    <Modal title="Scegli data e ora" onClose={onClose}>
+    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
+      <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 40px",maxHeight:"90dvh",overflowY:"auto"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+          <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli data e ora</h2>
+          <button onClick={onClose} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>×</button>
+        </div>
+
         {/* Calendario */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
           <button onClick={()=>canPrev&&setViewM(new Date(viewM.getFullYear(),viewM.getMonth()-1,1))} disabled={!canPrev} style={{width:34,height:34,borderRadius:"50%",border:"none",background:canPrev?T.surface:"transparent",cursor:canPrev?"pointer":"default",opacity:canPrev?1:.35,display:"flex",alignItems:"center",justifyContent:"center"}}>
@@ -2570,7 +2560,8 @@ function DateTimeSheet({ initialDate, initialTime, onClose, onConfirm, onClear }
           <button onClick={onClear} style={{flex:1,padding:"14px 0",borderRadius:14,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Qualsiasi</button>
           <button onClick={()=>onConfirm(sel, sel?`${hh}:${mm}`:null)} style={{flex:2,padding:"14px 0",borderRadius:14,border:"none",background:T.brand,color:"#fff",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 6px 18px ${T.brand}44`}}>Conferma</button>
         </div>
-    </Modal>
+      </div>
+    </div>
   );
 }
 
@@ -3114,7 +3105,13 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
 
       {/* Modal scelta posizione */}
       {showCity && (
-        <Modal title="Scegli il luogo" onClose={()=>{setShowCity(false);setCitySearch("");setGeoStatus(null);}}>
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
+          <div style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 50px",maxHeight:"85dvh",overflowY:"auto"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli il luogo</h2>
+              <button onClick={()=>{setShowCity(false);setCitySearch("");setGeoStatus(null);}} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>x</button>
+            </div>
+
             {/* Mappa (stile Apple) del luogo selezionato */}
             <div style={{borderRadius:18,overflow:"hidden",height:170,position:"relative",zIndex:0,isolation:"isolate",marginBottom:16,boxShadow:"0 2px 12px rgba(0,0,0,.08)"}}>
               <MapView pros={[]} center={userCoords} onSelectPro={()=>{}} onMapMove={c=>{setUserCoords(c);setSearchCenter(c);}} dark={false} height="170px"/>
@@ -3203,27 +3200,34 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
                 <p style={{fontSize:9,color:T.inkSoft,margin:"10px 0 0",textAlign:"center"}}>Ricerca fornita da OpenStreetMap / Nominatim</p>
               </>
             )}
-        </Modal>
+          </div>
+        </div>
       )}
 
       {/* Modal selettore categoria */}
       {showCatPick && (
-        <Modal title="Scegli categoria" onClose={()=>setShowCatPick(false)}>
-          <button onClick={()=>{setFilterCat(null);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===null?T.brand:T.line}`,background:filterCat===null?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",marginBottom:8,textAlign:"left"}}>
-            <div style={{width:38,height:38,borderRadius:11,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>🔎</div>
-            <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>Qualsiasi categoria</span>
-            {filterCat===null && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
-          </button>
-          <div style={{display:"flex",flexDirection:"column",gap:8}}>
-            {MACRO_CATS.map(cat=>(
-              <button key={cat.id} onClick={()=>{setFilterCat(cat.id);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===cat.id?T.brand:T.line}`,background:filterCat===cat.id?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
-                <div style={{width:38,height:38,borderRadius:11,background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{cat.emoji}</div>
-                <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>{cat.label.replace("\n"," ")}</span>
-                {filterCat===cat.id && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
-              </button>
-            ))}
+        <div onClick={()=>setShowCatPick(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 40px",maxHeight:"80dvh",overflowY:"auto"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli categoria</h2>
+              <button onClick={()=>setShowCatPick(false)} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>×</button>
+            </div>
+            <button onClick={()=>{setFilterCat(null);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===null?T.brand:T.line}`,background:filterCat===null?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",marginBottom:8,textAlign:"left"}}>
+              <div style={{width:38,height:38,borderRadius:11,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>🔎</div>
+              <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>Qualsiasi categoria</span>
+              {filterCat===null && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
+            </button>
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              {MACRO_CATS.filter(c=>c.id!=="altro").map(cat=>(
+                <button key={cat.id} onClick={()=>{setFilterCat(cat.id);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===cat.id?T.brand:T.line}`,background:filterCat===cat.id?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
+                  <div style={{width:38,height:38,borderRadius:11,background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{cat.emoji}</div>
+                  <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>{cat.label.replace("\n"," ")}</span>
+                  {filterCat===cat.id && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
+                </button>
+              ))}
+            </div>
           </div>
-        </Modal>
+        </div>
       )}
 
       {/* Modal selettore data e ora — calendario + ruota ora */}
@@ -3702,10 +3706,10 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing,onMessage}
 const DAY_N = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
 const MON_N = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
 function genDates(count){
-  const today = new Date(); today.setHours(0,0,0,0);
+  const today = new Date(2026,5,14);
   return Array.from({length:count},(_,i)=>{
     const d = new Date(today); d.setDate(today.getDate()+i);
-    return {label:i===0?"Oggi":i===1?"Domani":`${DAY_N[d.getDay()]} ${d.getDate()} ${MON_N[d.getMonth()]}`,day:d.getDate(),dayName:DAY_N[d.getDay()],key:dayKeyOf(d)};
+    return {label:i===0?"Oggi":i===1?"Domani":`${DAY_N[d.getDay()]} ${d.getDate()} ${MON_N[d.getMonth()]}`,day:d.getDate(),dayName:DAY_N[d.getDay()]};
   });
 }
 const BOOKING_TIMES = ["08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","12:00","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30"];
@@ -3724,12 +3728,11 @@ function ClPrenota({data,nav,isBooked,onBook}) {
 
   if (done) return (
     <div style={{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"40px 26px",textAlign:"center"}}>
-      <div style={{width:68,height:68,borderRadius:34,background:T.amberBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,marginBottom:16}}>📨</div>
-      <h1 style={{fontSize:22,fontWeight:700,color:T.ink,marginBottom:8}}>Richiesta inviata!</h1>
-      <p style={{fontSize:13,color:T.inkMid,marginBottom:8,lineHeight:1.6}}>{svc.name} - {pro.name}<br/>{selDate?.label} alle {selTime}</p>
-      <p style={{fontSize:12.5,color:T.inkSoft,marginBottom:22,lineHeight:1.6,maxWidth:300}}>Il professionista deve confermare. Riceverai la risposta in <b>Messaggi</b> e la trovi tra i tuoi appuntamenti come <b>“In attesa”</b>.</p>
+      <div style={{width:68,height:68,borderRadius:34,background:T.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,marginBottom:16}}>✓</div>
+      <h1 style={{fontSize:22,fontWeight:700,color:T.ink,marginBottom:8}}>Prenotazione confermata!</h1>
+      <p style={{fontSize:13,color:T.inkMid,marginBottom:22,lineHeight:1.6}}>{svc.name} - {pro.name}<br/>{selDate?.label} alle {selTime}</p>
       <BigBtn label="Vedi appuntamenti" onClick={()=>nav("cl_appts")}/>
-      <button onClick={()=>nav("cl_chats")} style={{marginTop:9,background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.inkSoft,padding:"9px 0",fontFamily:"inherit"}}>Vai ai messaggi</button>
+      <button onClick={()=>nav("cl_pro",pro)} style={{marginTop:9,background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.inkSoft,padding:"9px 0",fontFamily:"inherit"}}>Torna al profilo</button>
     </div>
   );
 
@@ -3827,7 +3830,7 @@ function ClPrenota({data,nav,isBooked,onBook}) {
           <div style={{padding:"10px 12px",background:T.amberBg,borderRadius:9,marginBottom:14}}>
             <p style={{fontSize:12,color:T.amber,margin:0}}>Promemoria 1 ora prima</p>
           </div>
-          <BigBtn label="Invia richiesta" onClick={()=>{ onBook&&onBook(pro.id,selDate,selTime,svc); setDone(true); }}/>
+          <BigBtn label="Conferma prenotazione" onClick={()=>{ onBook&&onBook(pro.id,selDate.label,selTime,svc); setDone(true); }}/>
           <button onClick={()=>setStep(2)} style={{width:"100%",marginTop:9,background:"none",border:"none",cursor:"pointer",fontSize:12,color:T.inkSoft,padding:"9px 0",fontFamily:"inherit"}}>Modifica data e orario</button>
         </div>
       )}
@@ -4118,7 +4121,6 @@ function ClAppts({nav,allAppts,setAllAppts}) {
                   </div>
                   {!isPast&&!isCancelled && (
                     <>
-                      {a.status==="in attesa" && <div style={{padding:"7px 10px",background:T.amberBg,borderRadius:7,marginBottom:8,display:"flex",gap:6,alignItems:"center"}}><span style={{fontSize:13}}>⏳</span><p style={{fontSize:11,color:T.amber,margin:0}}>In attesa di conferma dal professionista</p></div>}
                       {locked && <div style={{padding:"7px 10px",background:T.amberBg,borderRadius:7,marginBottom:8,display:"flex",gap:6,alignItems:"center"}}><span style={{fontSize:13}}>⏰</span><p style={{fontSize:11,color:T.amber,margin:0}}>Non modificabile - meno di 24 ore</p></div>}
                       <div style={{display:"flex",gap:7}}>
                         <button onClick={()=>{if(!locked){setSpostaId(a.id);setNewDate(a.date);setNewTime(a.time);}}} disabled={locked} style={{flex:1,padding:"10px 0",borderRadius:9,border:`1.5px solid ${T.line}`,background:locked?T.surface:T.white,cursor:locked?"default":"pointer",fontSize:12,fontWeight:600,color:locked?T.inkSoft:T.inkMid,fontFamily:"inherit",opacity:locked?.5:1}}>Sposta</button>
@@ -4695,7 +4697,7 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
               <input value={newA.clientId?clients.find(c=>c.id===newA.clientId)?.name||"":newA.clientSearch} onChange={e=>{if(newA.clientId)setNewA(p=>({...p,clientId:null,clientSearch:e.target.value}));else setNewA(p=>({...p,clientSearch:e.target.value}));searchCl(e.target.value);}} placeholder="Cerca o scrivi nome..." style={{width:"100%",padding:"10px 12px",borderRadius:9,boxSizing:"border-box",border:`1.5px solid ${newA.clientId?T.green:T.line}`,fontSize:14,color:T.ink,fontFamily:"inherit",outline:"none"}}/>
               {suggest.length>0&&!newA.clientId && (
                 <div style={{background:T.white,border:`1px solid ${T.line}`,borderRadius:9,marginTop:3,overflow:"hidden"}}>
-                  {suggest.map((c,i)=><div key={c.id} onClick={()=>{setNewA(p=>({...p,clientId:c.id,clientSearch:""}));setSuggest([]);}} style={{padding:"8px 12px",cursor:"pointer",borderBottom:i<suggest.length-1?`1px solid ${T.line}`:"none"}}><p style={{fontSize:13,fontWeight:600,color:T.ink,margin:"0 0 1px"}}>{c.name}</p><p style={{fontSize:11,color:T.inkSoft,margin:0}}>{c.phone||"No tel"} - {clientStats(c.id,appts,services).visits} visite</p></div>)}
+                  {suggest.map((c,i)=><div key={c.id} onClick={()=>{setNewA(p=>({...p,clientId:c.id,clientSearch:""}));setSuggest([]);}} style={{padding:"8px 12px",cursor:"pointer",borderBottom:i<suggest.length-1?`1px solid ${T.line}`:"none"}}><p style={{fontSize:13,fontWeight:600,color:T.ink,margin:"0 0 1px"}}>{c.name}</p><p style={{fontSize:11,color:T.inkSoft,margin:0}}>{c.phone||"No tel"} - {c.visits} visite</p></div>)}
                 </div>
               )}
               {newA.clientId && <p style={{fontSize:10,color:T.green,margin:"3px 0 0",fontWeight:600}}>Cliente esistente</p>}
@@ -4745,21 +4747,6 @@ function ProAgenda({appts,setAppts,clients,setClients,services,staff,hours,nav,o
 }
 
 /* PRO - CLIENTI */
-// Statistiche cliente derivate SEMPRE dagli appuntamenti reali (così visite, speso,
-// ultima visita e storico sono coerenti tra loro e si aggiornano da soli).
-function clientStats(clientId, appts, services){
-  const priceOf = id => (services.find(s=>s.id===id)||{price:0}).price;
-  const mine = appts.filter(a=>a.clientId===clientId);
-  const done = mine.filter(a=>a.status==="completato");
-  const upcoming = mine.filter(a=>a.status==="confermato"||a.status==="in attesa");
-  const spent = done.reduce((s,a)=>s+priceOf(a.serviceId),0);
-  let lastKey=null,lastD=null;
-  done.forEach(a=>{ const d=dateFromKey(a.date); if(!lastD||d>lastD){lastD=d;lastKey=a.date;} });
-  // storico ordinato dal più recente
-  const history = [...mine].sort((a,b)=>dateFromKey(b.date)-dateFromKey(a.date));
-  return {visits:done.length, spent, upcoming:upcoming.length, lastKey, history};
-}
-
 function ProClienti({clients,setClients,appts,services,nav,openAdd,onConsumeAdd,onModalOpenChange}) {
   const [q,setQ] = useState("");
   const [showAdd,setShowAdd] = useState(false);
@@ -4785,20 +4772,17 @@ function ProClienti({clients,setClients,appts,services,nav,openAdd,onConsumeAdd,
         </div>
       </div>
       <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:10}}>
-        {list.map(c => {
-          const st = clientStats(c.id, appts, services);
-          return (
+        {list.map(c => (
           <div key={c.id} onClick={()=>nav("pro_cliente",c)} className="clay ba-lift" style={{background:T.white,borderRadius:20,padding:"13px 15px",display:"flex",alignItems:"center",gap:12,cursor:"pointer"}}>
             <div style={{width:44,height:44,borderRadius:"50%",background:T.brand,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:800,color:T.white,flexShrink:0,boxShadow:"inset 2px 2px 4px rgba(255,255,255,.35), inset -2px -3px 5px rgba(180,83,9,.35)"}}>{c.name[0]}</div>
             <div style={{flex:1,minWidth:0}}>
               <p style={{fontSize:14,fontWeight:600,color:T.ink,margin:"0 0 2px"}}>{c.name}</p>
-              <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 4px"}}>{c.phone||"No telefono"} · {st.lastKey?`ultima ${fmtDayKey(st.lastKey)}`:"mai venuto"}</p>
-              <div style={{display:"flex",gap:5}}><Pill label={`${st.visits} visite`} style={{background:T.surface,color:T.inkMid}}/><Pill label={`${st.spent}€`} style={{background:T.greenBg,color:T.green,fontWeight:700}}/>{st.upcoming>0&&<Pill label={`${st.upcoming} in arrivo`} style={{background:T.blueBg,color:T.blue,fontWeight:700}}/>}</div>
+              <p style={{fontSize:11,color:T.inkSoft,margin:"0 0 4px"}}>{c.phone||"No telefono"} - {c.lastVisit}</p>
+              <div style={{display:"flex",gap:5}}><Pill label={`${c.visits} visite`} style={{background:T.surface,color:T.inkMid}}/><Pill label={`${c.totalSpent}€`} style={{background:T.greenBg,color:T.green,fontWeight:700}}/></div>
             </div>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T.line} strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </div>
-          );
-        })}
+        ))}
       </div>
 
       {showAdd && (
@@ -4824,8 +4808,7 @@ function ProCliente({client,setClients,appts,services,nav}) {
   const [note,setNote] = useState(client.note||"");
   const [editing,setEditing] = useState(false);
   const getSvc = id => services.find(s=>s.id===id)||{name:"?",price:0};
-  const st = clientStats(client.id, appts, services);
-  const cAppts = st.history;
+  const cAppts = appts.filter(a=>a.clientId===client.id).slice(-8).reverse();
   const saveNote = () => {setClients(p=>p.map(c=>c.id===client.id?{...c,note}:c));setEditing(false);};
   return (
     <div style={{paddingBottom:90,background:"transparent",minHeight:"100dvh"}}>
@@ -4837,7 +4820,7 @@ function ProCliente({client,setClients,appts,services,nav}) {
         </div>
       </div>
       <div style={{padding:"12px 14px",display:"flex",gap:10}}>
-        {[[st.visits,"Visite"],[`${st.spent}€`,"Speso"],[st.lastKey?fmtDayKey(st.lastKey):"Mai","Ultima"]].map(([v,l]) => (
+        {[[client.visits,"Visite"],[`${client.totalSpent}€`,"Speso"],[client.lastVisit,"Ultima"]].map(([v,l]) => (
           <div key={l} className="clay" style={{flex:1,background:T.white,borderRadius:18,padding:"12px 8px",textAlign:"center"}}>
             <p style={{fontSize:l==="Ultima"?11:16,fontWeight:700,color:T.ink,margin:"0 0 1px",lineHeight:1.2}}>{v}</p>
             <p style={{fontSize:9,color:T.inkSoft,margin:0}}>{l}</p>
@@ -4858,22 +4841,8 @@ function ProCliente({client,setClients,appts,services,nav}) {
         }
       </div>
       <div className="clay" style={{margin:"0 14px 12px",background:T.white,borderRadius:20,overflow:"hidden"}}>
-        <div style={{padding:"12px 16px",display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
-          <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:0}}>Storico</p>
-          <p style={{fontSize:11,color:T.inkSoft,margin:0}}>{st.visits} {st.visits===1?"visita":"visite"}{st.upcoming>0?` · ${st.upcoming} in arrivo`:""}</p>
-        </div>
-        {cAppts.length>0 ? cAppts.map((a,i)=>{const svc=getSvc(a.serviceId);const stt=ST[a.status]||{};return(
-          <div key={a.id} style={{display:"flex",alignItems:"center",gap:9,padding:"10px 14px",borderBottom:i<cAppts.length-1?`1px solid ${T.line}`:"none"}}>
-            <div style={{width:8,height:8,borderRadius:4,background:stt.bar||"#ccc",flexShrink:0}}/>
-            <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:13,color:T.ink,margin:"0 0 1px",fontWeight:500}}>{svc.name}</p>
-              <p style={{fontSize:10,color:T.inkSoft,margin:0}}>{fmtDayKey(a.date)} · {a.time}</p>
-            </div>
-            <div style={{textAlign:"right",flexShrink:0}}>
-              <p style={{fontSize:13,fontWeight:700,color:a.status==="cancellato"?T.inkSoft:T.ink,margin:"0 0 2px",textDecoration:a.status==="cancellato"?"line-through":"none"}}>{svc.price}€</p>
-              <Pill label={stt.label||a.status} style={{background:stt.bg,color:stt.text,fontSize:9}}/>
-            </div>
-          </div>);})
+        <div style={{padding:"12px 16px"}}><p style={{fontSize:13,fontWeight:800,color:T.ink,margin:0}}>Storico</p></div>
+        {cAppts.length>0 ? cAppts.map((a,i)=>{const svc=getSvc(a.serviceId);return(<div key={a.id} style={{display:"flex",alignItems:"center",gap:9,padding:"10px 14px",borderBottom:i<cAppts.length-1?`1px solid ${T.line}`:"none"}}><div style={{width:8,height:8,borderRadius:4,background:ST[a.status]?.bar||"#ccc",flexShrink:0}}/><div style={{flex:1}}><p style={{fontSize:13,color:T.ink,margin:"0 0 1px",fontWeight:500}}>{svc.name}</p><p style={{fontSize:10,color:T.inkSoft,margin:0}}>{a.date} - {a.time}</p></div><p style={{fontSize:13,fontWeight:700,color:T.ink,margin:0}}>{svc.price}€</p></div>);})
           : <p style={{fontSize:13,color:T.inkSoft,padding:"13px 14px",margin:0}}>Nessun appuntamento.</p>}
       </div>
       <div style={{padding:"0 14px",display:"flex",gap:7}}>
@@ -5288,7 +5257,7 @@ function ChatList({conversations,role,nav,unreadFor}) {
           {sorted.map(c => {
             const pro = ALL_PROS.find(p=>p.id===c.proId)||ALL_PROS[0];
             const last = c.messages[c.messages.length-1];
-            const preview = last.type==="request"?`📅 Richiesta: ${last.request.service} · ${last.request.dateLabel} ${last.request.time}`:last.type==="offer"?`💼 Offerta: ${last.offer.service} · ${last.offer.price}€`:last.type==="photo"?(last.text||"📷 Foto"):last.type==="video"?"🎬 Video":last.type==="location"?"📍 Posizione":last.text;
+            const preview = last.type==="offer"?`💼 Offerta: ${last.offer.service} · ${last.offer.price}€`:last.type==="photo"?(last.text||"📷 Foto"):last.type==="video"?"🎬 Video":last.type==="location"?"📍 Posizione":last.text;
             const name = role==="client"?pro.name:c.clientName;
             const unread = unreadFor ? unreadFor(c) : 0;
             return (
@@ -5465,73 +5434,6 @@ function OfferCard({offer,msgFrom,role,proName,onAccept,onDecline,onEdit}) {
   );
 }
 
-/* Card RICHIESTA DI PRENOTAZIONE — il cliente chiede, il pro Accetta/Rifiuta.
-   Solo dopo Accetta l'appuntamento entra nell'agenda. */
-function RequestCard({request,msgFrom,role,clientName,proName,onAccept,onDecline}) {
-  const isMine = msgFrom===role; // true = l'ho mandata io (lato cliente)
-  const st = request.status || "pending";
-  const STY = {
-    pending:  {c:T.amber, bg:T.amberBg, dot:"🟡", label:"Da confermare"},
-    accepted: {c:T.green, bg:T.greenBg, dot:"🟢", label:"Confermata"},
-    declined: {c:T.red,   bg:T.redBg,   dot:"🔴", label:"Rifiutata"},
-  };
-  const S = STY[st] || STY.pending;
-  return (
-    <div style={{maxWidth:"88%",alignSelf:isMine?"flex-end":"flex-start",background:T.white,borderRadius:22,overflow:"hidden",margin:"4px 0",boxShadow:"0 6px 24px rgba(0,0,0,.09)",border:`1px solid ${T.line}`}}>
-      <div style={{height:4,background:`linear-gradient(90deg,${T.brand},${T.brandDeep})`}}/>
-      <div style={{padding:"11px 15px 0",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-        <div style={{display:"flex",alignItems:"center",gap:7}}>
-          <div style={{width:26,height:26,borderRadius:9,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-          </div>
-          <span style={{fontSize:10.5,fontWeight:800,color:T.inkMid,textTransform:"uppercase",letterSpacing:.6}}>Richiesta prenotazione</span>
-        </div>
-        <div style={{display:"flex",alignItems:"center",gap:5,background:S.bg,padding:"4px 10px",borderRadius:99}}>
-          <span style={{fontSize:9}}>{S.dot}</span>
-          <span style={{fontSize:10.5,fontWeight:800,color:S.c}}>{S.label}</span>
-        </div>
-      </div>
-      <div style={{padding:"10px 15px 14px"}}>
-        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10,marginBottom:10}}>
-          <p style={{fontSize:16,fontWeight:800,color:T.ink,margin:0,letterSpacing:"-.02em",flex:1}}>{request.service}</p>
-          <p style={{fontSize:20,fontWeight:900,color:T.brand,margin:0,letterSpacing:"-.03em",whiteSpace:"nowrap"}}>{request.price}€</p>
-        </div>
-        <div style={{display:"flex",gap:7,marginBottom:12}}>
-          <div style={{flex:1.2,background:T.brandBg,borderRadius:10,padding:"8px 6px",textAlign:"center"}}>
-            <p style={{fontSize:8,color:T.brand,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>Quando</p>
-            <p style={{fontSize:11,fontWeight:800,color:T.brandDeep,margin:0}}>{request.dateLabel} · {request.time}</p>
-          </div>
-          <div style={{flex:1,background:T.surface,borderRadius:10,padding:"8px 6px",textAlign:"center"}}>
-            <p style={{fontSize:8,color:T.inkSoft,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>Durata</p>
-            <p style={{fontSize:12,fontWeight:800,color:T.ink,margin:0}}>{request.min} min</p>
-          </div>
-          <div style={{flex:1.3,background:T.surface,borderRadius:10,padding:"8px 6px",textAlign:"center",minWidth:0}}>
-            <p style={{fontSize:8,color:T.inkSoft,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>Cliente</p>
-            <p style={{fontSize:12,fontWeight:800,color:T.ink,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{clientName||"—"}</p>
-          </div>
-        </div>
-        {/* Azioni PRO: accetta/rifiuta la richiesta in attesa */}
-        {st==="pending" && role==="pro" && (
-          <div style={{display:"flex",gap:8}}>
-            <button onClick={onDecline} style={{flex:1,padding:"12px 0",borderRadius:13,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",touchAction:"manipulation"}}>Rifiuta</button>
-            <button onClick={onAccept} style={{flex:2,padding:"12px 0",borderRadius:13,border:"none",background:`linear-gradient(135deg,${T.brand},${T.brandDeep})`,color:"#fff",fontSize:15,fontWeight:800,cursor:"pointer",fontFamily:"inherit",touchAction:"manipulation",boxShadow:`0 4px 14px ${T.brand}55`}}>Accetta</button>
-          </div>
-        )}
-        {st==="pending" && role!=="pro" && (
-          <p style={{fontSize:12,color:T.inkSoft,margin:0,textAlign:"center",fontStyle:"italic"}}>In attesa di conferma dal professionista…</p>
-        )}
-        {st==="accepted" && (
-          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:7,padding:"10px 0",background:T.greenBg,borderRadius:13}}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.green} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-            <span style={{fontSize:13.5,fontWeight:800,color:T.green}}>{role==="pro"?"Aggiunta all'agenda":"Prenotazione confermata"}</span>
-          </div>
-        )}
-        {st==="declined" && <p style={{fontSize:13,fontWeight:800,color:T.red,margin:0,textAlign:"center"}}>Richiesta rifiutata</p>}
-      </div>
-    </div>
-  );
-}
-
 /* Bottom-sheet per il cliente: scelta giorno + orario disponibile */
 function SlotPickerModal({offer,proId,isBooked,onClose,onConfirm}) {
   const [selDate,setSelDate] = useState("");
@@ -5584,7 +5486,7 @@ function SlotPickerModal({offer,proId,isBooked,onClose,onConfirm}) {
 }
 
 /* Schermata singola chat */
-function ChatScreen({conv,role,nav,onSeen,isBooked,onSendMessage,onSendOffer,onEditOffer,onAccept,onDecline,onAcceptRequest,onDeclineRequest}) {
+function ChatScreen({conv,role,nav,onSeen,isBooked,onSendMessage,onSendOffer,onEditOffer,onAccept,onDecline}) {
   const pro = ALL_PROS.find(p=>p.id===conv.proId)||ALL_PROS[0];
   const [text,setText] = useState("");
   const [showOffer,setShowOffer] = useState(false);
@@ -5655,10 +5557,6 @@ function ChatScreen({conv,role,nav,onSeen,isBooked,onSendMessage,onSendOffer,onE
           <span style={{fontSize:11,color:T.inkSoft,background:T.surface,padding:"4px 12px",borderRadius:99}}>Accordatevi su prezzo e durata, poi prenota con un tap</span>
         </div>
         {conv.messages.map(m => {
-          if(m.type==="request") return (
-            <RequestCard key={m.id} request={m.request} msgFrom={m.from} role={role} clientName={conv.clientName} proName={pro.name}
-              onAccept={()=>onAcceptRequest&&onAcceptRequest(conv.id,m.id)} onDecline={()=>onDeclineRequest&&onDeclineRequest(conv.id,m.id)}/>
-          );
           if(m.type==="offer") return (
             <OfferCard key={m.id} offer={m.offer} msgFrom={m.from} role={role} proName={pro.name}
               onAccept={()=>acceptOffer(m)} onDecline={()=>onDecline(conv.id,m.id)} onEdit={()=>setEditMsg(m)}/>
@@ -6277,61 +6175,10 @@ export default function App() {
     if(day.includes(time)) return b;
     return {...b,[proId]:{...pd,[date]:[...day,time]}};
   });
-  const removeBooking = (proId,date,time)=> setBookings(b=>{
-    const pd=b[proId]||{}; const day=(pd[date]||[]).filter(t=>t!==time);
-    return {...b,[proId]:{...pd,[date]:day}};
-  });
-
-  // Il cliente NON conferma da solo: invia una RICHIESTA al professionista.
-  // L'appuntamento resta "in attesa" e non entra nell'agenda del pro finché non viene accettato.
-  const requestBooking = (proId, selDate, time, svc)=>{
+  const bookAppointment = (proId,date,time,svc)=>{
+    addBooking(proId,date,time);
     const pro=ALL_PROS.find(p=>p.id===proId);
-    const dateLabel = typeof selDate==="string" ? selDate : selDate.label;
-    const dateKey   = typeof selDate==="string" ? selDate : (selDate.key||selDate.label);
-    const myApptId = Date.now();
-    // lato CLIENTE: appuntamento in attesa di conferma
-    setMyAppts(prev=>[{id:myApptId,pro:pro?pro.name:"",service:svc?svc.name:"Servizio",date:dateLabel,dateKey,time,price:svc?svc.price:0,status:"in attesa",proObj:pro},...prev]);
-    addBooking(proId,dateLabel,time); // riserva lo slot tentativamente
-    // invia la richiesta nella chat col professionista
-    let conv = conversations.find(c=>c.proId===proId);
-    let convId;
-    if(!conv){ convId = myApptId+1; setConversations(p=>[{id:convId,proId,clientName:user?.name||"Cliente",messages:[]},...p]); }
-    else convId = conv.id;
-    sendMessage(convId,{from:"client",type:"request",_dedup:myApptId+""+Math.random(),
-      request:{status:"pending",service:svc?.name||"Servizio",serviceId:svc?.id,min:svc?.min||0,price:svc?.price||0,dateLabel,dateKey,time,myApptId}});
-  };
-
-  // Il PRO accetta la richiesta → SOLO ora entra in agenda (confermato) e il cliente è confermato
-  const acceptRequest = (convId,msgId)=>{
-    const conv = conversations.find(c=>c.id===convId); if(!conv) return;
-    const msg = conv.messages.find(m=>m.id===msgId); if(!msg||msg.type!=="request") return;
-    const r = msg.request;
-    setConversations(p=>p.map(c=>c.id===convId ? {...c,messages:[
-      ...c.messages.map(m=>m.id===msgId?{...m,request:{...m.request,status:"accepted"}}:m),
-      {id:Date.now(),from:"pro",type:"text",text:`Confermato! Ci vediamo ${r.dateLabel} alle ${r.time} ✨`,time:nowTime()},
-    ]} : c));
-    // lato CLIENTE: da "in attesa" a "confermato"
-    setMyAppts(p=>p.map(a=>a.id===r.myApptId?{...a,status:"confermato"}:a));
-    // lato PRO: crea (o riusa) cliente e servizio, poi aggiungi l'appuntamento all'agenda
-    const existCl = clients.find(c=>c.name===conv.clientName);
-    const clientId = existCl ? existCl.id : Date.now()+2;
-    if(!existCl) setClients(p=>[...p,{id:clientId,name:conv.clientName,phone:"",visits:0,lastVisit:"Oggi",totalSpent:0,note:"Prenotazione via app",rating:0}]);
-    const existSvc = services.find(s=>s.name===r.service);
-    const serviceId = existSvc ? existSvc.id : Date.now()+3;
-    if(!existSvc) setServices(p=>[...p,{id:serviceId,name:r.service,price:r.price,min:r.min,active:true}]);
-    setAppts(p=>[...p,{id:Date.now()+4,staffId:1,date:r.dateKey||"oggi",time:r.time,clientId,serviceId,status:"confermato",source:"app",note:"Prenotazione via app"}]);
-    addBooking(conv.proId,r.dateLabel,r.time);
-  };
-
-  // Il PRO rifiuta → la richiesta decade, il cliente viene avvisato, lo slot si libera
-  const declineRequest = (convId,msgId)=>{
-    const conv = conversations.find(c=>c.id===convId); const msg = conv?.messages.find(m=>m.id===msgId);
-    const r = msg?.request;
-    setConversations(p=>p.map(c=>c.id===convId ? {...c,messages:[
-      ...c.messages.map(m=>m.id===msgId?{...m,request:{...m.request,status:"declined"}}:m),
-      {id:Date.now(),from:"pro",type:"text",text:`Ciao! Purtroppo non sono disponibile in quel momento 🙏 Prova con un altro orario.`,time:nowTime()},
-    ]} : c));
-    if(r){ setMyAppts(p=>p.map(a=>a.id===r.myApptId?{...a,status:"cancellato"}:a)); removeBooking(conv.proId,r.dateLabel,r.time); }
+    setMyAppts(prev=>[{id:Date.now(),pro:pro?pro.name:"",service:svc?svc.name:"Servizio",date,time,price:svc?svc.price:0,status:"confermato",proObj:pro},...prev]);
   };
 
   // All'avvio: segna come già letto tutto lo storico (il puntino apparirà solo per il nuovo)
@@ -6604,7 +6451,7 @@ export default function App() {
     if(screen==="cl_explore")    return <ClExplore nav={nav} user={user} feed={feed} setFeed={setFeed} onPublishPost={publishPost} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={(post)=>setSharePost(post)}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
-    if(screen==="cl_prenota")    return <ClPrenota data={sData} nav={nav} isBooked={isBooked} onBook={requestBooking}/>;
+    if(screen==="cl_prenota")    return <ClPrenota data={sData} nav={nav} isBooked={isBooked} onBook={bookAppointment}/>;
     if(screen==="cl_appts")      return <ClAppts nav={nav} allAppts={myAppts} setAllAppts={setMyAppts}/>;
     if(screen==="cl_notifiche")  return <NotificheScreen conversations={conversations} nav={nav} notifSeenId={notifSeenId} onOpen={()=>setNotifSeenId(maxNotifId)}/>;
     if(screen==="cl_chats")      return <ChatList conversations={conversations} role="client" nav={nav} unreadFor={clientUnread}/>;
@@ -6614,8 +6461,7 @@ export default function App() {
       if(!conv) return <ChatList conversations={conversations} role={sData?.role||"client"} nav={nav}/>;
       return <ChatScreen conv={conv} role={sData?.role||"client"} nav={nav}
         onSeen={(len)=>markConvRead(conv.id,len)} isBooked={isBooked}
-        onSendMessage={sendMessage} onSendOffer={sendOffer} onEditOffer={editOffer} onAccept={acceptOffer} onDecline={declineOffer}
-        onAcceptRequest={acceptRequest} onDeclineRequest={declineRequest}/>;
+        onSendMessage={sendMessage} onSendOffer={sendOffer} onEditOffer={editOffer} onAccept={acceptOffer} onDecline={declineOffer}/>;
     }
     if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} feed={feed} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={doLogout} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig} photo={profilePhoto} onSavePhoto={(file)=>saveProfilePhoto(user?.uid,file)}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
