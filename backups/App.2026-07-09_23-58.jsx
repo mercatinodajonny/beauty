@@ -3242,12 +3242,11 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
 
 /* ESPLORA */
 const POST_CATS = ["Nail Art","Capelli","Barba","Estetica","Make-up","Altro"];
-function ClExplore({nav,user,feed=FEED,setFeed,onPublishPost,onDeletePost,onLikePost,onCommentPost,likedPosts,setLikedPosts,savedPosts,setSavedPosts,onSendPost}) {
+function ClExplore({nav,user,feed=FEED,setFeed,onPublishPost,likedPosts,setLikedPosts,savedPosts,setSavedPosts,onSendPost}) {
   const [cat,setCat] = useState("Tutti");
   const [q,setQ] = useState("");
   const [searchMode,setSearchMode] = useState(false);
   const [showCompose,setShowCompose] = useState(false);
-  const [viewId,setViewId] = useState(null); // post aperto nel visualizzatore a scorrimento
   const liked = likedPosts||new Set(), saved = savedPosts||new Set();
   const [sentPost,setSentPost] = useState(null);   // post appena inviato (per il dialog di conferma)
   const toggleLike = (id) => setLikedPosts && setLikedPosts(s=>{const n=new Set(s); n.has(id)?n.delete(id):n.add(id); return n;});
@@ -3337,16 +3336,12 @@ function ClExplore({nav,user,feed=FEED,setFeed,onPublishPost,onDeletePost,onLike
                   ? <button onClick={()=>nav("cl_prenota",{pro})} className="btn-apple" style={{padding:"7px 14px",borderRadius:99,border:"1.5px solid #E5E5EA",background:"#FFFFFF",cursor:"pointer",fontSize:12,fontWeight:700,color:"#111111",fontFamily:"inherit"}}>Prenota</button>
                   : <span style={{padding:"6px 12px",borderRadius:99,background:T.surface,fontSize:12,fontWeight:600,color:T.inkSoft}}>Il tuo post</span>}
               </div>
-              <div onClick={()=>setViewId(post.id)} style={{cursor:"pointer"}}><Photo src={post.img} style={{width:"100%",aspectRatio:"4/5"}}/></div>
+              <Photo src={post.img} style={{width:"100%",aspectRatio:"4/5"}}/>
               {/* Barra azioni: like · salva · invia al pro */}
               <div style={{display:"flex",alignItems:"center",gap:18,padding:"11px 14px 4px"}}>
-                <button onClick={()=> onLikePost ? onLikePost(post) : toggleLike(post.id)} style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:5,fontFamily:"inherit"}}>
+                <button onClick={()=>toggleLike(post.id)} style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:5,fontFamily:"inherit"}}>
                   <svg width="23" height="23" viewBox="0 0 24 24" fill={liked.has(post.id)?T.brand:"none"} stroke={liked.has(post.id)?T.brand:T.ink} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1.1-1a5.5 5.5 0 00-7.8 7.8l1.1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>
                   <span style={{fontSize:13,fontWeight:700,color:T.inkMid}}>{post.likes+(liked.has(post.id)?1:0)}</span>
-                </button>
-                <button onClick={()=>setViewId(post.id)} title="Commenti" style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:5,fontFamily:"inherit"}}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-                  {(post.comments&&post.comments.length>0) && <span style={{fontSize:13,fontWeight:700,color:T.inkMid}}>{post.comments.length}</span>}
                 </button>
                 {pro && (
                   <button onClick={()=>{onSendPost&&onSendPost(post);}} title="Invia al professionista" style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:5,fontFamily:"inherit"}}>
@@ -3367,16 +3362,6 @@ function ClExplore({nav,user,feed=FEED,setFeed,onPublishPost,onDeletePost,onLike
         })
       )}
       {showCompose && <ComposePost user={user} onClose={()=>setShowCompose(false)} onPublish={publish}/>}
-      {viewId!=null && (
-        <PostViewer posts={posts} startId={viewId}
-          isOwner={(p)=> !!(p.author && p.author.name===(user&&user.name))}
-          likedPosts={likedPosts}
-          onToggleLike={(p)=> onLikePost ? onLikePost(p) : toggleLike(p.id)}
-          onAddComment={(p,text)=> onCommentPost ? onCommentPost(p,text) : (setFeed&&setFeed(f=>f.map(x=>String(x.id)===String(p.id)?{...x,comments:[...(x.comments||[]),{id:Date.now(),by:(user&&user.name)||"Tu",text}]}:x)))}
-          onEditCaption={(id,text)=>setFeed&&setFeed(f=>f.map(x=>String(x.id)===String(id)?{...x,caption:text}:x))}
-          onDelete={(p)=>{onDeletePost&&onDeletePost(p);setViewId(null);}}
-          onClose={()=>setViewId(null)}/>
-      )}
     </div>
   );
 }
@@ -4230,8 +4215,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
 
 /* PROFILO CLIENTE — stile Instagram */
 /* Visualizzatore post stile Instagram: sfondo bianco, like, commenti, menu (modifica/elimina) */
-/* Singola card post dentro il feed a scorrimento (stile Instagram) */
-function PostCard({post,isOwner,liked,onToggleLike,onAddComment,onDelete,onEditCaption}) {
+function PostViewer({post,isOwner,liked,onToggleLike,onAddComment,onDelete,onEditCaption,onClose}) {
   const [txt,setTxt] = useState("");
   const [menu,setMenu] = useState(false);
   const [editing,setEditing] = useState(false);
@@ -4239,119 +4223,87 @@ function PostCard({post,isOwner,liked,onToggleLike,onAddComment,onDelete,onEditC
   const comments = post.comments||[];
   const likeCount = (post.likes||0)+(liked?1:0);
   const handle = (post.author&&post.author.handle)||"tu";
-  const name = (post.author&&(post.author.name||post.author.handle))||"Post";
-  const emoji = (post.author&&post.author.emoji)||"🧑";
-  const accent = (post.author&&post.author.accent)||"#888";
-  const send = () => { if(txt.trim()){ onAddComment&&onAddComment(post,txt.trim()); setTxt(""); } };
-  return (
-    <div id={"pv-"+post.id} style={{borderBottom:"8px solid #F5F5F7"}}>
-      {/* Autore */}
-      <div style={{display:"flex",alignItems:"center",gap:9,padding:"12px 14px 10px",position:"relative"}}>
-        <div style={{width:34,height:34,borderRadius:"50%",background:`${accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0}}>{emoji}</div>
-        <p style={{flex:1,minWidth:0,fontSize:14,fontWeight:700,color:"#111",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{name}</p>
+  return createPortal(
+    <div style={{position:"fixed",inset:0,background:"#FFFFFF",zIndex:1200,display:"flex",flexDirection:"column"}}>
+      {/* Top bar */}
+      <div style={{display:"flex",alignItems:"center",gap:12,padding:"calc(14px + env(safe-area-inset-top,0px)) 14px 12px",flexShrink:0,borderBottom:"1px solid #F0F0F2",position:"relative"}}>
+        <button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex"}}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        </button>
+        <div style={{display:"flex",alignItems:"center",gap:9,flex:1,minWidth:0}}>
+          <div style={{width:34,height:34,borderRadius:"50%",background:`${(post.author&&post.author.accent)||"#888"}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0}}>{(post.author&&post.author.emoji)||"🧑"}</div>
+          <p style={{fontSize:14,fontWeight:700,color:"#111",margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{(post.author&&(post.author.name||post.author.handle))||"Post"}</p>
+        </div>
         {isOwner && <button onClick={()=>setMenu(m=>!m)} style={{background:"none",border:"none",cursor:"pointer",padding:6,display:"flex"}}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="#111"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
         </button>}
         {menu && (
-          <div style={{position:"absolute",top:44,right:12,background:"#fff",borderRadius:14,boxShadow:"0 8px 30px rgba(0,0,0,.18)",border:"1px solid #EEE",overflow:"hidden",zIndex:5,minWidth:150}}>
+          <div style={{position:"absolute",top:"calc(52px + env(safe-area-inset-top,0px))",right:12,background:"#fff",borderRadius:14,boxShadow:"0 8px 30px rgba(0,0,0,.18)",border:"1px solid #EEE",overflow:"hidden",zIndex:5,minWidth:150}}>
             <button onClick={()=>{setMenu(false);setEditing(true);}} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"13px 16px",border:"none",borderBottom:"1px solid #F2F2F2",background:"none",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:600,color:"#111",textAlign:"left"}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>Modifica
             </button>
-            <button onClick={()=>{setMenu(false);onDelete&&onDelete(post);}} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"13px 16px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:700,color:"#E8506E",textAlign:"left"}}>
+            <button onClick={()=>{setMenu(false);onDelete(post);}} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"13px 16px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",fontSize:14,fontWeight:700,color:"#E8506E",textAlign:"left"}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8506E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg>Elimina
             </button>
           </div>
         )}
       </div>
 
-      {/* Immagine */}
-      <div onClick={()=>menu&&setMenu(false)} onDoubleClick={()=>{ if(!liked) onToggleLike&&onToggleLike(post); }} style={{width:"100%",background:"#FAFAFA"}}>
-        <img src={post.img} alt="" loading="lazy" decoding="async" style={{width:"100%",display:"block",maxHeight:"72vh",objectFit:"contain"}}/>
-      </div>
-
-      {/* Azioni */}
-      <div style={{padding:"12px 16px 4px",display:"flex",alignItems:"center",gap:20}}>
-        <button onClick={()=>onToggleLike&&onToggleLike(post)} style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:6}}>
-          <svg width="27" height="27" viewBox="0 0 24 24" fill={liked?"#FF3B5C":"none"} stroke={liked?"#FF3B5C":"#111"} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1.1-1a5.5 5.5 0 00-7.8 7.8l1.1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>
-        </button>
-        <div style={{display:"flex",alignItems:"center",gap:6,color:"#111"}}>
-          <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-          {comments.length>0 && <span style={{fontSize:13,fontWeight:600,color:"#111"}}>{comments.length}</span>}
+      {/* Contenuto scrollabile (scroll verso il basso) */}
+      <div onClick={()=>menu&&setMenu(false)} style={{flex:1,minHeight:0,overflowY:"auto",WebkitOverflowScrolling:"touch"}}>
+        <div style={{width:"100%",background:"#FAFAFA"}}>
+          <img src={post.img} alt="" style={{width:"100%",display:"block",maxHeight:"70vh",objectFit:"contain"}}/>
         </div>
-      </div>
-      <p style={{fontSize:13.5,fontWeight:700,color:"#111",margin:"0 16px 6px"}}>{likeCount} mi piace</p>
-
-      {/* Didascalia / modifica */}
-      {editing ? (
-        <div style={{margin:"0 16px 10px"}}>
-          <textarea value={cap} onChange={e=>setCap(e.target.value)} rows={3} style={{width:"100%",boxSizing:"border-box",border:"1.5px solid #E5E5EA",borderRadius:12,padding:"10px 12px",fontSize:14,fontFamily:"inherit",color:"#111",outline:"none",resize:"none",lineHeight:1.4}}/>
-          <div style={{display:"flex",gap:8,marginTop:8}}>
-            <button onClick={()=>{setEditing(false);setCap(post.caption||"");}} style={{flex:1,padding:"10px 0",borderRadius:10,border:"1.5px solid #E5E5EA",background:"#fff",color:"#111",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Annulla</button>
-            <button onClick={()=>{onEditCaption&&onEditCaption(post.id,cap.trim());setEditing(false);}} style={{flex:2,padding:"10px 0",borderRadius:10,border:"none",background:"#111",color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Salva</button>
+        {/* Azioni */}
+        <div style={{padding:"12px 16px 4px",display:"flex",alignItems:"center",gap:18}}>
+          <button onClick={()=>onToggleLike(post.id)} style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",alignItems:"center",gap:6}}>
+            <svg width="27" height="27" viewBox="0 0 24 24" fill={liked?"#FF3B5C":"none"} stroke={liked?"#FF3B5C":"#111"} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1.1-1a5.5 5.5 0 00-7.8 7.8l1.1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg>
+          </button>
+          <div style={{display:"flex",alignItems:"center",gap:6,color:"#111"}}>
+            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
           </div>
         </div>
-      ) : (
-        post.caption && <p style={{fontSize:14,color:"#111",margin:"0 16px 6px",lineHeight:1.45}}><span style={{fontWeight:700,marginRight:6}}>{handle}</span>{post.caption}</p>
-      )}
-      {post.tags&&post.tags.length>0 && <p style={{fontSize:12.5,color:"#5B7CFF",margin:"0 16px 10px"}}>{post.tags.map(t=><span key={t} style={{marginRight:5}}>{t}</span>)}</p>}
+        <p style={{fontSize:13.5,fontWeight:700,color:"#111",margin:"0 16px 6px"}}>{likeCount} {likeCount===1?"mi piace":"mi piace"}</p>
 
-      {/* Commenti */}
-      <div style={{margin:"6px 16px 0",paddingTop:4}}>
-        {comments.length>0 && comments.map((c,i)=>(
-          <div key={c.id||i} style={{display:"flex",gap:9,marginBottom:10}}>
-            <div style={{width:28,height:28,borderRadius:"50%",background:"#F0F0F2",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,flexShrink:0}}>{(c.by&&c.by[0])||"🙂"}</div>
-            <div><p style={{fontSize:13.5,color:"#111",margin:0,lineHeight:1.4}}><span style={{fontWeight:700,marginRight:6}}>{c.by||"Tu"}</span>{c.text}</p></div>
+        {/* Didascalia / modifica */}
+        {editing ? (
+          <div style={{margin:"0 16px 10px"}}>
+            <textarea value={cap} onChange={e=>setCap(e.target.value)} rows={3} style={{width:"100%",boxSizing:"border-box",border:"1.5px solid #E5E5EA",borderRadius:12,padding:"10px 12px",fontSize:14,fontFamily:"inherit",color:"#111",outline:"none",resize:"none",lineHeight:1.4}}/>
+            <div style={{display:"flex",gap:8,marginTop:8}}>
+              <button onClick={()=>{setEditing(false);setCap(post.caption||"");}} style={{flex:1,padding:"10px 0",borderRadius:10,border:"1.5px solid #E5E5EA",background:"#fff",color:"#111",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Annulla</button>
+              <button onClick={()=>{onEditCaption&&onEditCaption(post.id,cap.trim());setEditing(false);}} style={{flex:2,padding:"10px 0",borderRadius:10,border:"none",background:"#111",color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Salva</button>
+            </div>
           </div>
-        ))}
+        ) : (
+          post.caption && <p style={{fontSize:14,color:"#111",margin:"0 16px 6px",lineHeight:1.45}}><span style={{fontWeight:700,marginRight:6}}>{handle}</span>{post.caption}</p>
+        )}
+        {post.tags&&post.tags.length>0 && <p style={{fontSize:12.5,color:"#5B7CFF",margin:"0 16px 10px"}}>{post.tags.map(t=><span key={t} style={{marginRight:5}}>{t}</span>)}</p>}
+
+        {/* Commenti */}
+        <div style={{borderTop:"1px solid #F0F0F2",margin:"6px 16px 0",paddingTop:12}}>
+          <p style={{fontSize:12,fontWeight:700,color:"#ADADAD",textTransform:"uppercase",letterSpacing:.8,margin:"0 0 10px"}}>Commenti</p>
+          {comments.length===0 && <p style={{fontSize:13,color:"#ADADAD",margin:"0 0 12px"}}>Ancora nessun commento. Scrivi il primo!</p>}
+          {comments.map((c,i)=>(
+            <div key={c.id||i} style={{display:"flex",gap:9,marginBottom:12}}>
+              <div style={{width:30,height:30,borderRadius:"50%",background:"#F0F0F2",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0}}>{(c.by&&c.by[0])||"🙂"}</div>
+              <div><p style={{fontSize:13.5,color:"#111",margin:0,lineHeight:1.4}}><span style={{fontWeight:700,marginRight:6}}>{c.by||"Tu"}</span>{c.text}</p></div>
+            </div>
+          ))}
+        </div>
+        <div style={{height:20}}/>
       </div>
 
-      {/* Aggiungi commento */}
-      <div style={{display:"flex",alignItems:"center",gap:10,padding:"6px 16px 16px"}}>
-        <input value={txt} onChange={e=>setTxt(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")send();}} placeholder="Aggiungi un commento…" style={{flex:1,border:"none",outline:"none",background:"#F2F2F4",borderRadius:99,padding:"11px 15px",fontSize:14,color:"#111",fontFamily:"inherit"}}/>
-        <button onClick={send} disabled={!txt.trim()} style={{background:"none",border:"none",cursor:txt.trim()?"pointer":"default",fontSize:14,fontWeight:800,color:txt.trim()?"#5B7CFF":"#C8C8CE",fontFamily:"inherit"}}>Invia</button>
-      </div>
-    </div>
-  );
-}
-
-/* Visualizzatore post a scorrimento: apre il post scelto e scorri per vedere gli altri */
-function PostViewer({posts,startId,isOwner,likedPosts,onToggleLike,onAddComment,onDelete,onEditCaption,onClose}) {
-  const list = (posts&&posts.length) ? posts : [];
-  const likedSet = likedPosts||new Set();
-  const scrollRef = useRef(null);
-  useEffect(()=>{
-    if(startId==null) return;
-    // porta in cima il post selezionato (ma resta possibile scorrere agli altri)
-    const t = setTimeout(()=>{ const el=document.getElementById("pv-"+startId); if(el) el.scrollIntoView({block:"start"}); },30);
-    return ()=>clearTimeout(t);
-  },[startId]);
-  return createPortal(
-    <div style={{position:"fixed",inset:0,background:"#FFFFFF",zIndex:1200,display:"flex",flexDirection:"column"}}>
-      {/* Top bar */}
-      <div style={{display:"flex",alignItems:"center",gap:12,padding:"calc(12px + env(safe-area-inset-top,0px)) 14px 10px",flexShrink:0,borderBottom:"1px solid #F0F0F2"}}>
-        <button onClick={onClose} style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex"}}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        </button>
-        <p style={{flex:1,textAlign:"center",fontSize:16,fontWeight:800,color:"#111",margin:0,letterSpacing:"-.01em"}}>Post</p>
-        <div style={{width:26}}/>
-      </div>
-      {/* Feed scrollabile */}
-      <div ref={scrollRef} style={{flex:1,minHeight:0,overflowY:"auto",WebkitOverflowScrolling:"touch"}}>
-        {list.map(p=>(
-          <PostCard key={p.id} post={p}
-            isOwner={typeof isOwner==="function"?isOwner(p):!!isOwner}
-            liked={likedSet.has(p.id)}
-            onToggleLike={onToggleLike} onAddComment={onAddComment}
-            onDelete={onDelete} onEditCaption={onEditCaption}/>
-        ))}
-        <div style={{height:40}}/>
+      {/* Barra commento */}
+      <div style={{flexShrink:0,display:"flex",alignItems:"center",gap:10,padding:"10px 16px calc(16px + env(safe-area-inset-bottom,0px))",borderTop:"1px solid #F0F0F2"}}>
+        <input value={txt} onChange={e=>setTxt(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"&&txt.trim()){onAddComment(post.id,txt.trim());setTxt("");}}} placeholder="Aggiungi un commento…" style={{flex:1,border:"none",outline:"none",background:"#F2F2F4",borderRadius:99,padding:"12px 16px",fontSize:14,color:"#111",fontFamily:"inherit"}}/>
+        <button onClick={()=>{if(txt.trim()){onAddComment(post.id,txt.trim());setTxt("");}}} disabled={!txt.trim()} style={{background:"none",border:"none",cursor:txt.trim()?"pointer":"default",fontSize:14,fontWeight:800,color:txt.trim()?"#5B7CFF":"#C8C8CE",fontFamily:"inherit"}}>Invia</button>
       </div>
     </div>,
     document.body
   );
 }
 
-function ClProfilo({user,onSwitch,nav,feed=FEED,setFeed,onDeletePost,onLikePost,onCommentPost,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig,photo:photoProp,onSavePhoto}) {
+function ClProfilo({user,onSwitch,nav,feed=FEED,setFeed,onDeletePost,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig,photo:photoProp,onSavePhoto}) {
   const [tab,setTab] = useState("griglia"); // griglia | recensioni | impostazioni
   const [info,setInfo] = useState({name:user.name,handle:(user.name||"utente").toLowerCase().replace(/\s+/g,"_"),email:"alessio@email.it",city:"Dolcedo, Liguria",phone:""});
   const [editInfo,setEditInfo] = useState(false);
@@ -4596,15 +4548,15 @@ function ClProfilo({user,onSwitch,nav,feed=FEED,setFeed,onDeletePost,onLikePost,
       )}
 
       {/* Visualizzatore post stile Instagram */}
-      {viewPost && (
-        <PostViewer posts={myPosts} startId={viewPost.id} isOwner={()=>true}
-          likedPosts={likedPosts}
-          onToggleLike={(p)=> onLikePost ? onLikePost(p) : (setLikedPosts&&setLikedPosts(s=>{const n=new Set(s);n.has(p.id)?n.delete(p.id):n.add(p.id);return n;}))}
-          onAddComment={(p,text)=> onCommentPost ? onCommentPost(p,text) : (setFeed&&setFeed(f=>f.map(x=>String(x.id)===String(p.id)?{...x,comments:[...(x.comments||[]),{id:Date.now(),by:user.name,text}]}:x)))}
+      {viewPost && (()=>{ const live = (feed||[]).find(p=>String(p.id)===String(viewPost.id))||viewPost; return (
+        <PostViewer post={live} isOwner={true}
+          liked={likedPosts&&likedPosts.has(live.id)}
+          onToggleLike={(id)=>setLikedPosts&&setLikedPosts(s=>{const n=new Set(s);n.has(id)?n.delete(id):n.add(id);return n;})}
+          onAddComment={(id,text)=>setFeed&&setFeed(f=>f.map(p=>String(p.id)===String(id)?{...p,comments:[...(p.comments||[]),{id:Date.now(),by:user.name,text}]}:p))}
           onEditCaption={(id,text)=>setFeed&&setFeed(f=>f.map(p=>String(p.id)===String(id)?{...p,caption:text}:p))}
           onDelete={(p)=>{onDeletePost&&onDeletePost(p);setViewPost(null);}}
           onClose={()=>setViewPost(null)}/>
-      )}
+      ); })()}
 
       {/* Dialog di conferma generico */}
       {confirm && (
@@ -5483,15 +5435,9 @@ function buildNotifs(conversations){
 }
 
 /* Schermata Notifiche — activity feed stile Instagram */
-function NotificheScreen({conversations,nav,notifSeenId,onOpen,likeNotifs=[],likeSeenTs=0}){
-  const timeAgo=(ms)=>{ if(!ms)return""; const s=Math.floor((Date.now()-ms)/1000); if(s<60)return "ora"; const m=Math.floor(s/60); if(m<60)return m+"m"; const h=Math.floor(m/60); if(h<24)return h+"h"; const d=Math.floor(h/24); return d+"g"; };
-  // Unisci notifiche chat (dai professionisti) + like/commenti sui tuoi post, ordinate nel tempo
-  const items=[
-    ...buildNotifs(conversations).map(n=>({key:"c"+n.id,sort:n.id,kind:"conv",data:n,isNew:n.id>notifSeenId})),
-    ...(likeNotifs||[]).map(n=>({key:"l"+n.id,sort:n.time||0,kind:"like",data:n,isNew:(n.time||0)>likeSeenTs})),
-  ].sort((a,b)=>b.sort-a.sort);
+function NotificheScreen({conversations,nav,notifSeenId,onOpen}){
+  const notifs=buildNotifs(conversations);
   useEffect(()=>{ if(onOpen) onOpen(); },[]); // segna tutto come letto all'apertura
-  const notifs=items;
   return (
     <div style={{paddingBottom:110,background:"transparent",minHeight:"100dvh"}}>
       <div style={{background:T.white,padding:"54px 20px 16px",borderBottom:`1px solid ${T.line}`,display:"flex",alignItems:"center",gap:12}}>
@@ -5508,29 +5454,10 @@ function NotificheScreen({conversations,nav,notifSeenId,onOpen,likeNotifs=[],lik
         </div>
       ):(
         <div style={{padding:"8px 12px"}}>
-          {notifs.map(item=>{
-            const isNew = item.isNew;
-            if(item.kind==="like"){
-              const n=item.data;
-              const isLike = n.type==="like";
-              return (
-                <div key={item.key} onClick={()=>nav("cl_profilo")} className="ba-lift" style={{display:"flex",alignItems:"center",gap:12,padding:"12px",cursor:"pointer",borderRadius:16,marginBottom:2,background:isNew?T.brandBg:"transparent"}}>
-                  <div style={{position:"relative",flexShrink:0}}>
-                    <div style={{width:48,height:48,borderRadius:"50%",background:"#F0F0F2",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontWeight:800,color:T.ink}}>{(n.actor&&n.actor[0]&&n.actor[0].toUpperCase())||"🙂"}</div>
-                    <div style={{position:"absolute",bottom:-2,right:-2,width:20,height:20,borderRadius:"50%",background:T.white,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,boxShadow:"0 1px 4px rgba(0,0,0,.15)"}}>{isLike?"❤️":"💬"}</div>
-                  </div>
-                  <div style={{flex:1,minWidth:0}}>
-                    <p style={{fontSize:13.5,color:T.ink,margin:0,lineHeight:1.4}}><strong>{n.actor}</strong> {n.text} <span style={{color:T.inkSoft}}>· {timeAgo(n.time)}</span></p>
-                  </div>
-                  {n.postImg
-                    ? <div style={{width:44,height:44,borderRadius:8,overflow:"hidden",flexShrink:0,background:"#F0F0F2"}}><img src={n.postImg} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/></div>
-                    : (isNew && <span style={{width:9,height:9,borderRadius:"50%",background:T.brand,flexShrink:0}}/>)}
-                </div>
-              );
-            }
-            const n=item.data;
+          {notifs.map(n=>{
+            const isNew = n.id>notifSeenId;
             return (
-              <div key={item.key} onClick={()=>nav("chat",{convId:n.convId,role:"client"})} className="ba-lift" style={{display:"flex",alignItems:"center",gap:12,padding:"12px",cursor:"pointer",borderRadius:16,marginBottom:2,background:isNew?T.brandBg:"transparent"}}>
+              <div key={n.id} onClick={()=>nav("chat",{convId:n.convId,role:"client"})} className="ba-lift" style={{display:"flex",alignItems:"center",gap:12,padding:"12px",cursor:"pointer",borderRadius:16,marginBottom:2,background:isNew?T.brandBg:"transparent"}}>
                 <div style={{position:"relative",flexShrink:0}}>
                   <div style={{width:48,height:48,borderRadius:"50%",background:`${n.accent}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:23}}>{n.proEmoji}</div>
                   <div style={{position:"absolute",bottom:-2,right:-2,width:20,height:20,borderRadius:"50%",background:T.white,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,boxShadow:"0 1px 4px rgba(0,0,0,.15)"}}>{n.icon}</div>
@@ -6416,10 +6343,6 @@ export default function App() {
   const [myAppts,setMyAppts] = useState(MY_APPTS0);
   const [conversations,setConversations] = useState(CONVERSATIONS0);
   const [savedPosts,setSavedPosts] = useState(new Set());
-  // ── Notifiche like/commenti (stile Instagram) ──
-  const [notifs,setNotifs] = useState(()=>{ try{return JSON.parse(localStorage.getItem("ba-notifs")||"[]");}catch(e){return [];} });
-  const [notifSeenTs,setNotifSeenTs] = useState(()=>{ try{return Number(localStorage.getItem("ba-notifseen"))||0;}catch(e){return 0;} });
-  const persistNotifs = (list)=>{ try{localStorage.setItem("ba-notifs",JSON.stringify((list||[]).slice(0,120)));}catch(e){} };
   const [feed,setFeedState] = useState(()=>{
     let base = FEED;
     try{ const s=localStorage.getItem("ba-feed"); if(s) base = JSON.parse(s); }catch(e){}
@@ -6544,8 +6467,7 @@ export default function App() {
   const unreadChats = conversations.filter(c=>clientUnread(c)>0).length;
   const allNotifs = buildNotifs(conversations);
   const maxNotifId = allNotifs.reduce((m,n)=>Math.max(m,n.id),0);
-  const unseenLikes = (notifs||[]).filter(n=>n.time>notifSeenTs).length;
-  const unseenNotifs = allNotifs.filter(n=>n.id>notifSeenId).length + unseenLikes;
+  const unseenNotifs = allNotifs.filter(n=>n.id>notifSeenId).length;
   const markConvRead = (convId,len)=> setMsgReads(r=>({...r,[convId]:len}));
   useEffect(()=>{injectFont();},[]);
 
@@ -6681,9 +6603,9 @@ export default function App() {
       if(data && data.length){
         const mapped = data.map(r=>({
           id:r.id, remote:true, img:r.image_url, caption:r.caption||"", cat:r.cat||"Tutti",
-          tags:r.tags||[], likes:r.likes||0, comments:[], authorUid:r.user_id,
+          tags:r.tags||[], likes:r.likes||0, comments:[],
           created:r.created_at?new Date(r.created_at).getTime():Date.now(),
-          author:{name:(r.handle||"utente"),handle:(r.handle||"utente"),emoji:(r.emoji||"🧑"),accent:"#8A8A8E",uid:r.user_id},
+          author:{name:(r.handle||"utente"),handle:(r.handle||"utente"),emoji:(r.emoji||"🧑"),accent:"#8A8A8E"},
         }));
         setFeedState(prev=>{
           const existing = new Set(prev.map(p=>String(p.id)));
@@ -6732,52 +6654,6 @@ export default function App() {
     }
   };
 
-  // ── NOTIFICHE like/commenti ──────────────────────────────────────────
-  // Carica le notifiche ricevute dall'utente corrente (destinatario = uid)
-  const loadNotifs = async (sb,uid) => {
-    if(!uid) return;
-    try {
-      const { data } = await sb.from("notifications").select("*").eq("user_id",uid).order("created_at",{ascending:false}).limit(80);
-      if(data){
-        const mapped = data.map(r=>({
-          id:r.id, type:r.type, actor:r.actor_name||"Qualcuno", text:r.text||"",
-          postImg:r.post_image||null, postId:r.post_id||null,
-          time:r.created_at?new Date(r.created_at).getTime():Date.now(),
-        }));
-        setNotifs(mapped); persistNotifs(mapped);
-      }
-    } catch(e){ /* tabella notifications assente: si ignora */ }
-  };
-  // Crea una notifica per l'AUTORE del post (non per sé stessi)
-  const pushNotif = async (post,type,text) => {
-    const recipient = post && (post.authorUid || (post.author && post.author.uid));
-    const myUid = user && user.uid;
-    if(!recipient || recipient===myUid) return;   // niente notifica sui propri post o senza autore noto
-    const actor = (user && user.name) || "Qualcuno";
-    try {
-      const sb = await getSupabase();
-      await sb.from("notifications").insert({
-        user_id:recipient, actor_name:actor, type, text,
-        post_id:String(post.id),
-        post_image: (post.img && !String(post.img).startsWith("data:")) ? post.img : null,
-      });
-    } catch(e){ /* best-effort */ }
-  };
-  // Like con effetto notifica
-  const toggleLikePost = (post) => {
-    const id = post.id;
-    const wasLiked = likedPosts.has(id);
-    setLikedPosts(s=>{ const n=new Set(s); n.has(id)?n.delete(id):n.add(id); return n; });
-    if(!wasLiked) pushNotif(post,"like","ha messo like al tuo post ❤️");
-  };
-  // Commento con effetto notifica
-  const commentPost = (post,text) => {
-    setFeed(f=>f.map(p=>String(p.id)===String(post.id)?{...p,comments:[...(p.comments||[]),{id:Date.now(),by:(user&&user.name)||"Tu",text}]}:p));
-    pushNotif(post,"comment","ha commentato: "+text);
-  };
-  // Segna le notifiche come lette
-  const markNotifsSeen = () => { const t=Date.now(); setNotifSeenTs(t); try{localStorage.setItem("ba-notifseen",String(t));}catch(e){} };
-
   // Salva/aggiorna il profilo nel database (best-effort)
   const upsertProfile = async (sb,u,extra) => {
     try {
@@ -6803,9 +6679,9 @@ export default function App() {
     let sub=null;
     getSupabase().then(async sb=>{
       const { data } = await sb.auth.getSession();
-      if(data && data.session && data.session.user){ enterAs(userFromSb(data.session.user)); loadProfile(sb,data.session.user.id); loadNotifs(sb,data.session.user.id); }
+      if(data && data.session && data.session.user){ enterAs(userFromSb(data.session.user)); loadProfile(sb,data.session.user.id); }
       loadPosts(sb);
-      const r = sb.auth.onAuthStateChange((_e,session)=>{ if(session && session.user){ enterAs(userFromSb(session.user)); loadProfile(sb,session.user.id); loadNotifs(sb,session.user.id); } });
+      const r = sb.auth.onAuthStateChange((_e,session)=>{ if(session && session.user){ enterAs(userFromSb(session.user)); loadProfile(sb,session.user.id); } });
       sub = r && r.data && r.data.subscription;
       setBootDone(true);
     }).catch(()=>setBootDone(true));
@@ -6855,12 +6731,12 @@ export default function App() {
 
   const render = () => {
     if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarConfig={avatarConfig} unreadChats={unreadChats} unseenNotifs={unseenNotifs}/>;
-    if(screen==="cl_explore")    return <ClExplore nav={nav} user={user} feed={feed} setFeed={setFeed} onPublishPost={publishPost} onDeletePost={deletePost} onLikePost={toggleLikePost} onCommentPost={commentPost} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={(post)=>setSharePost(post)}/>;
+    if(screen==="cl_explore")    return <ClExplore nav={nav} user={user} feed={feed} setFeed={setFeed} onPublishPost={publishPost} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={(post)=>setSharePost(post)}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
     if(screen==="cl_prenota")    return <ClPrenota data={sData} nav={nav} isBooked={isBooked} onBook={requestBooking}/>;
     if(screen==="cl_appts")      return <ClAppts nav={nav} allAppts={myAppts} setAllAppts={setMyAppts}/>;
-    if(screen==="cl_notifiche")  return <NotificheScreen conversations={conversations} nav={nav} notifSeenId={notifSeenId} likeNotifs={notifs} likeSeenTs={notifSeenTs} onOpen={()=>{setNotifSeenId(maxNotifId);markNotifsSeen();}}/>;
+    if(screen==="cl_notifiche")  return <NotificheScreen conversations={conversations} nav={nav} notifSeenId={notifSeenId} onOpen={()=>setNotifSeenId(maxNotifId)}/>;
     if(screen==="cl_chats")      return <ChatList conversations={conversations} role="client" nav={nav} unreadFor={clientUnread}/>;
     if(screen==="pro_chats")     return <ChatList conversations={conversations} role="pro" nav={nav}/>;
     if(screen==="chat"){
@@ -6871,7 +6747,7 @@ export default function App() {
         onSendMessage={sendMessage} onSendOffer={sendOffer} onEditOffer={editOffer} onAccept={acceptOffer} onDecline={declineOffer}
         onAcceptRequest={acceptRequest} onDeclineRequest={declineRequest}/>;
     }
-    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} feed={feed} setFeed={setFeed} onDeletePost={deletePost} onLikePost={toggleLikePost} onCommentPost={commentPost} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={doLogout} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig} photo={profilePhoto} onSavePhoto={(file)=>saveProfilePhoto(user?.uid,file)}/>;
+    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} feed={feed} setFeed={setFeed} onDeletePost={deletePost} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={doLogout} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig} photo={profilePhoto} onSavePhoto={(file)=>saveProfilePhoto(user?.uid,file)}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
     if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
     if(screen==="pro_cliente")   return <ProCliente client={sData} setClients={setClients} appts={appts} services={services} nav={nav}/>;
