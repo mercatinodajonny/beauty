@@ -2511,13 +2511,7 @@ function DateTimeSheet({ initialDate, initialTime, onClose, onConfirm, onClear }
   const same = (a,b)=>a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
   const ITEM = 44;
   return (
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
-      <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 40px",maxHeight:"90dvh",overflowY:"auto"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-          <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli data e ora</h2>
-          <button onClick={onClose} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>×</button>
-        </div>
-
+    <Modal title="Scegli data e ora" onClose={onClose}>
         {/* Calendario */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
           <button onClick={()=>canPrev&&setViewM(new Date(viewM.getFullYear(),viewM.getMonth()-1,1))} disabled={!canPrev} style={{width:34,height:34,borderRadius:"50%",border:"none",background:canPrev?T.surface:"transparent",cursor:canPrev?"pointer":"default",opacity:canPrev?1:.35,display:"flex",alignItems:"center",justifyContent:"center"}}>
@@ -2560,8 +2554,7 @@ function DateTimeSheet({ initialDate, initialTime, onClose, onConfirm, onClear }
           <button onClick={onClear} style={{flex:1,padding:"14px 0",borderRadius:14,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Qualsiasi</button>
           <button onClick={()=>onConfirm(sel, sel?`${hh}:${mm}`:null)} style={{flex:2,padding:"14px 0",borderRadius:14,border:"none",background:T.brand,color:"#fff",fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",boxShadow:`0 6px 18px ${T.brand}44`}}>Conferma</button>
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 }
 
@@ -3105,13 +3098,7 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
 
       {/* Modal scelta posizione */}
       {showCity && (
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
-          <div style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 50px",maxHeight:"85dvh",overflowY:"auto"}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli il luogo</h2>
-              <button onClick={()=>{setShowCity(false);setCitySearch("");setGeoStatus(null);}} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>x</button>
-            </div>
-
+        <Modal title="Scegli il luogo" onClose={()=>{setShowCity(false);setCitySearch("");setGeoStatus(null);}}>
             {/* Mappa (stile Apple) del luogo selezionato */}
             <div style={{borderRadius:18,overflow:"hidden",height:170,position:"relative",zIndex:0,isolation:"isolate",marginBottom:16,boxShadow:"0 2px 12px rgba(0,0,0,.08)"}}>
               <MapView pros={[]} center={userCoords} onSelectPro={()=>{}} onMapMove={c=>{setUserCoords(c);setSearchCenter(c);}} dark={false} height="170px"/>
@@ -3200,34 +3187,27 @@ function ClHome({nav,favorites,setFavorites,myAppts=[],conversations=[],user,ava
                 <p style={{fontSize:9,color:T.inkSoft,margin:"10px 0 0",textAlign:"center"}}>Ricerca fornita da OpenStreetMap / Nominatim</p>
               </>
             )}
-          </div>
-        </div>
+        </Modal>
       )}
 
       {/* Modal selettore categoria */}
       {showCatPick && (
-        <div onClick={()=>setShowCatPick(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end"}}>
-          <div onClick={e=>e.stopPropagation()} style={{background:T.white,borderRadius:"22px 22px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 20px 40px",maxHeight:"80dvh",overflowY:"auto"}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-              <h2 style={{fontSize:17,fontWeight:700,color:T.ink,margin:0}}>Scegli categoria</h2>
-              <button onClick={()=>setShowCatPick(false)} style={{background:T.surface,border:"none",borderRadius:"50%",width:30,height:30,cursor:"pointer",fontSize:15}}>×</button>
-            </div>
-            <button onClick={()=>{setFilterCat(null);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===null?T.brand:T.line}`,background:filterCat===null?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",marginBottom:8,textAlign:"left"}}>
-              <div style={{width:38,height:38,borderRadius:11,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>🔎</div>
-              <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>Qualsiasi categoria</span>
-              {filterCat===null && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
-            </button>
-            <div style={{display:"flex",flexDirection:"column",gap:8}}>
-              {MACRO_CATS.filter(c=>c.id!=="altro").map(cat=>(
-                <button key={cat.id} onClick={()=>{setFilterCat(cat.id);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===cat.id?T.brand:T.line}`,background:filterCat===cat.id?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
-                  <div style={{width:38,height:38,borderRadius:11,background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{cat.emoji}</div>
-                  <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>{cat.label.replace("\n"," ")}</span>
-                  {filterCat===cat.id && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
-                </button>
-              ))}
-            </div>
+        <Modal title="Scegli categoria" onClose={()=>setShowCatPick(false)}>
+          <button onClick={()=>{setFilterCat(null);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===null?T.brand:T.line}`,background:filterCat===null?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",marginBottom:8,textAlign:"left"}}>
+            <div style={{width:38,height:38,borderRadius:11,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>🔎</div>
+            <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>Qualsiasi categoria</span>
+            {filterCat===null && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
+          </button>
+          <div style={{display:"flex",flexDirection:"column",gap:8}}>
+            {MACRO_CATS.filter(c=>c.id!=="altro").map(cat=>(
+              <button key={cat.id} onClick={()=>{setFilterCat(cat.id);setShowCatPick(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:12,padding:"14px 14px",borderRadius:14,border:`1.5px solid ${filterCat===cat.id?T.brand:T.line}`,background:filterCat===cat.id?T.brandBg:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
+                <div style={{width:38,height:38,borderRadius:11,background:cat.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{cat.emoji}</div>
+                <span style={{fontSize:15,fontWeight:700,color:T.ink,flex:1}}>{cat.label.replace("\n"," ")}</span>
+                {filterCat===cat.id && <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
+              </button>
+            ))}
           </div>
-        </div>
+        </Modal>
       )}
 
       {/* Modal selettore data e ora — calendario + ruota ora */}
