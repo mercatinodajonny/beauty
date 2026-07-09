@@ -3702,10 +3702,10 @@ function ClPro({pro,nav,favorites,setFavorites,following,setFollowing,onMessage}
 const DAY_N = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
 const MON_N = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
 function genDates(count){
-  const today = new Date(2026,5,14);
+  const today = new Date(); today.setHours(0,0,0,0);
   return Array.from({length:count},(_,i)=>{
     const d = new Date(today); d.setDate(today.getDate()+i);
-    return {label:i===0?"Oggi":i===1?"Domani":`${DAY_N[d.getDay()]} ${d.getDate()} ${MON_N[d.getMonth()]}`,day:d.getDate(),dayName:DAY_N[d.getDay()]};
+    return {label:i===0?"Oggi":i===1?"Domani":`${DAY_N[d.getDay()]} ${d.getDate()} ${MON_N[d.getMonth()]}`,day:d.getDate(),dayName:DAY_N[d.getDay()],key:dayKeyOf(d)};
   });
 }
 const BOOKING_TIMES = ["08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","12:00","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30"];
@@ -3724,11 +3724,12 @@ function ClPrenota({data,nav,isBooked,onBook}) {
 
   if (done) return (
     <div style={{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"40px 26px",textAlign:"center"}}>
-      <div style={{width:68,height:68,borderRadius:34,background:T.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,marginBottom:16}}>✓</div>
-      <h1 style={{fontSize:22,fontWeight:700,color:T.ink,marginBottom:8}}>Prenotazione confermata!</h1>
-      <p style={{fontSize:13,color:T.inkMid,marginBottom:22,lineHeight:1.6}}>{svc.name} - {pro.name}<br/>{selDate?.label} alle {selTime}</p>
+      <div style={{width:68,height:68,borderRadius:34,background:T.amberBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,marginBottom:16}}>📨</div>
+      <h1 style={{fontSize:22,fontWeight:700,color:T.ink,marginBottom:8}}>Richiesta inviata!</h1>
+      <p style={{fontSize:13,color:T.inkMid,marginBottom:8,lineHeight:1.6}}>{svc.name} - {pro.name}<br/>{selDate?.label} alle {selTime}</p>
+      <p style={{fontSize:12.5,color:T.inkSoft,marginBottom:22,lineHeight:1.6,maxWidth:300}}>Il professionista deve confermare. Riceverai la risposta in <b>Messaggi</b> e la trovi tra i tuoi appuntamenti come <b>“In attesa”</b>.</p>
       <BigBtn label="Vedi appuntamenti" onClick={()=>nav("cl_appts")}/>
-      <button onClick={()=>nav("cl_pro",pro)} style={{marginTop:9,background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.inkSoft,padding:"9px 0",fontFamily:"inherit"}}>Torna al profilo</button>
+      <button onClick={()=>nav("cl_chats")} style={{marginTop:9,background:"none",border:"none",cursor:"pointer",fontSize:13,color:T.inkSoft,padding:"9px 0",fontFamily:"inherit"}}>Vai ai messaggi</button>
     </div>
   );
 
@@ -3826,7 +3827,7 @@ function ClPrenota({data,nav,isBooked,onBook}) {
           <div style={{padding:"10px 12px",background:T.amberBg,borderRadius:9,marginBottom:14}}>
             <p style={{fontSize:12,color:T.amber,margin:0}}>Promemoria 1 ora prima</p>
           </div>
-          <BigBtn label="Conferma prenotazione" onClick={()=>{ onBook&&onBook(pro.id,selDate.label,selTime,svc); setDone(true); }}/>
+          <BigBtn label="Invia richiesta" onClick={()=>{ onBook&&onBook(pro.id,selDate,selTime,svc); setDone(true); }}/>
           <button onClick={()=>setStep(2)} style={{width:"100%",marginTop:9,background:"none",border:"none",cursor:"pointer",fontSize:12,color:T.inkSoft,padding:"9px 0",fontFamily:"inherit"}}>Modifica data e orario</button>
         </div>
       )}
@@ -4117,6 +4118,7 @@ function ClAppts({nav,allAppts,setAllAppts}) {
                   </div>
                   {!isPast&&!isCancelled && (
                     <>
+                      {a.status==="in attesa" && <div style={{padding:"7px 10px",background:T.amberBg,borderRadius:7,marginBottom:8,display:"flex",gap:6,alignItems:"center"}}><span style={{fontSize:13}}>⏳</span><p style={{fontSize:11,color:T.amber,margin:0}}>In attesa di conferma dal professionista</p></div>}
                       {locked && <div style={{padding:"7px 10px",background:T.amberBg,borderRadius:7,marginBottom:8,display:"flex",gap:6,alignItems:"center"}}><span style={{fontSize:13}}>⏰</span><p style={{fontSize:11,color:T.amber,margin:0}}>Non modificabile - meno di 24 ore</p></div>}
                       <div style={{display:"flex",gap:7}}>
                         <button onClick={()=>{if(!locked){setSpostaId(a.id);setNewDate(a.date);setNewTime(a.time);}}} disabled={locked} style={{flex:1,padding:"10px 0",borderRadius:9,border:`1.5px solid ${T.line}`,background:locked?T.surface:T.white,cursor:locked?"default":"pointer",fontSize:12,fontWeight:600,color:locked?T.inkSoft:T.inkMid,fontFamily:"inherit",opacity:locked?.5:1}}>Sposta</button>
@@ -5286,7 +5288,7 @@ function ChatList({conversations,role,nav,unreadFor}) {
           {sorted.map(c => {
             const pro = ALL_PROS.find(p=>p.id===c.proId)||ALL_PROS[0];
             const last = c.messages[c.messages.length-1];
-            const preview = last.type==="offer"?`💼 Offerta: ${last.offer.service} · ${last.offer.price}€`:last.type==="photo"?(last.text||"📷 Foto"):last.type==="video"?"🎬 Video":last.type==="location"?"📍 Posizione":last.text;
+            const preview = last.type==="request"?`📅 Richiesta: ${last.request.service} · ${last.request.dateLabel} ${last.request.time}`:last.type==="offer"?`💼 Offerta: ${last.offer.service} · ${last.offer.price}€`:last.type==="photo"?(last.text||"📷 Foto"):last.type==="video"?"🎬 Video":last.type==="location"?"📍 Posizione":last.text;
             const name = role==="client"?pro.name:c.clientName;
             const unread = unreadFor ? unreadFor(c) : 0;
             return (
@@ -5463,6 +5465,73 @@ function OfferCard({offer,msgFrom,role,proName,onAccept,onDecline,onEdit}) {
   );
 }
 
+/* Card RICHIESTA DI PRENOTAZIONE — il cliente chiede, il pro Accetta/Rifiuta.
+   Solo dopo Accetta l'appuntamento entra nell'agenda. */
+function RequestCard({request,msgFrom,role,clientName,proName,onAccept,onDecline}) {
+  const isMine = msgFrom===role; // true = l'ho mandata io (lato cliente)
+  const st = request.status || "pending";
+  const STY = {
+    pending:  {c:T.amber, bg:T.amberBg, dot:"🟡", label:"Da confermare"},
+    accepted: {c:T.green, bg:T.greenBg, dot:"🟢", label:"Confermata"},
+    declined: {c:T.red,   bg:T.redBg,   dot:"🔴", label:"Rifiutata"},
+  };
+  const S = STY[st] || STY.pending;
+  return (
+    <div style={{maxWidth:"88%",alignSelf:isMine?"flex-end":"flex-start",background:T.white,borderRadius:22,overflow:"hidden",margin:"4px 0",boxShadow:"0 6px 24px rgba(0,0,0,.09)",border:`1px solid ${T.line}`}}>
+      <div style={{height:4,background:`linear-gradient(90deg,${T.brand},${T.brandDeep})`}}/>
+      <div style={{padding:"11px 15px 0",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div style={{display:"flex",alignItems:"center",gap:7}}>
+          <div style={{width:26,height:26,borderRadius:9,background:T.brandBg,display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </div>
+          <span style={{fontSize:10.5,fontWeight:800,color:T.inkMid,textTransform:"uppercase",letterSpacing:.6}}>Richiesta prenotazione</span>
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:5,background:S.bg,padding:"4px 10px",borderRadius:99}}>
+          <span style={{fontSize:9}}>{S.dot}</span>
+          <span style={{fontSize:10.5,fontWeight:800,color:S.c}}>{S.label}</span>
+        </div>
+      </div>
+      <div style={{padding:"10px 15px 14px"}}>
+        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10,marginBottom:10}}>
+          <p style={{fontSize:16,fontWeight:800,color:T.ink,margin:0,letterSpacing:"-.02em",flex:1}}>{request.service}</p>
+          <p style={{fontSize:20,fontWeight:900,color:T.brand,margin:0,letterSpacing:"-.03em",whiteSpace:"nowrap"}}>{request.price}€</p>
+        </div>
+        <div style={{display:"flex",gap:7,marginBottom:12}}>
+          <div style={{flex:1.2,background:T.brandBg,borderRadius:10,padding:"8px 6px",textAlign:"center"}}>
+            <p style={{fontSize:8,color:T.brand,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>Quando</p>
+            <p style={{fontSize:11,fontWeight:800,color:T.brandDeep,margin:0}}>{request.dateLabel} · {request.time}</p>
+          </div>
+          <div style={{flex:1,background:T.surface,borderRadius:10,padding:"8px 6px",textAlign:"center"}}>
+            <p style={{fontSize:8,color:T.inkSoft,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>Durata</p>
+            <p style={{fontSize:12,fontWeight:800,color:T.ink,margin:0}}>{request.min} min</p>
+          </div>
+          <div style={{flex:1.3,background:T.surface,borderRadius:10,padding:"8px 6px",textAlign:"center",minWidth:0}}>
+            <p style={{fontSize:8,color:T.inkSoft,margin:"0 0 2px",fontWeight:700,textTransform:"uppercase",letterSpacing:.3}}>Cliente</p>
+            <p style={{fontSize:12,fontWeight:800,color:T.ink,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{clientName||"—"}</p>
+          </div>
+        </div>
+        {/* Azioni PRO: accetta/rifiuta la richiesta in attesa */}
+        {st==="pending" && role==="pro" && (
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={onDecline} style={{flex:1,padding:"12px 0",borderRadius:13,border:`1.5px solid ${T.line}`,background:T.white,color:T.inkMid,fontSize:14,fontWeight:800,cursor:"pointer",fontFamily:"inherit",touchAction:"manipulation"}}>Rifiuta</button>
+            <button onClick={onAccept} style={{flex:2,padding:"12px 0",borderRadius:13,border:"none",background:`linear-gradient(135deg,${T.brand},${T.brandDeep})`,color:"#fff",fontSize:15,fontWeight:800,cursor:"pointer",fontFamily:"inherit",touchAction:"manipulation",boxShadow:`0 4px 14px ${T.brand}55`}}>Accetta</button>
+          </div>
+        )}
+        {st==="pending" && role!=="pro" && (
+          <p style={{fontSize:12,color:T.inkSoft,margin:0,textAlign:"center",fontStyle:"italic"}}>In attesa di conferma dal professionista…</p>
+        )}
+        {st==="accepted" && (
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:7,padding:"10px 0",background:T.greenBg,borderRadius:13}}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.green} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span style={{fontSize:13.5,fontWeight:800,color:T.green}}>{role==="pro"?"Aggiunta all'agenda":"Prenotazione confermata"}</span>
+          </div>
+        )}
+        {st==="declined" && <p style={{fontSize:13,fontWeight:800,color:T.red,margin:0,textAlign:"center"}}>Richiesta rifiutata</p>}
+      </div>
+    </div>
+  );
+}
+
 /* Bottom-sheet per il cliente: scelta giorno + orario disponibile */
 function SlotPickerModal({offer,proId,isBooked,onClose,onConfirm}) {
   const [selDate,setSelDate] = useState("");
@@ -5515,7 +5584,7 @@ function SlotPickerModal({offer,proId,isBooked,onClose,onConfirm}) {
 }
 
 /* Schermata singola chat */
-function ChatScreen({conv,role,nav,onSeen,isBooked,onSendMessage,onSendOffer,onEditOffer,onAccept,onDecline}) {
+function ChatScreen({conv,role,nav,onSeen,isBooked,onSendMessage,onSendOffer,onEditOffer,onAccept,onDecline,onAcceptRequest,onDeclineRequest}) {
   const pro = ALL_PROS.find(p=>p.id===conv.proId)||ALL_PROS[0];
   const [text,setText] = useState("");
   const [showOffer,setShowOffer] = useState(false);
@@ -5586,6 +5655,10 @@ function ChatScreen({conv,role,nav,onSeen,isBooked,onSendMessage,onSendOffer,onE
           <span style={{fontSize:11,color:T.inkSoft,background:T.surface,padding:"4px 12px",borderRadius:99}}>Accordatevi su prezzo e durata, poi prenota con un tap</span>
         </div>
         {conv.messages.map(m => {
+          if(m.type==="request") return (
+            <RequestCard key={m.id} request={m.request} msgFrom={m.from} role={role} clientName={conv.clientName} proName={pro.name}
+              onAccept={()=>onAcceptRequest&&onAcceptRequest(conv.id,m.id)} onDecline={()=>onDeclineRequest&&onDeclineRequest(conv.id,m.id)}/>
+          );
           if(m.type==="offer") return (
             <OfferCard key={m.id} offer={m.offer} msgFrom={m.from} role={role} proName={pro.name}
               onAccept={()=>acceptOffer(m)} onDecline={()=>onDecline(conv.id,m.id)} onEdit={()=>setEditMsg(m)}/>
@@ -6204,10 +6277,61 @@ export default function App() {
     if(day.includes(time)) return b;
     return {...b,[proId]:{...pd,[date]:[...day,time]}};
   });
-  const bookAppointment = (proId,date,time,svc)=>{
-    addBooking(proId,date,time);
+  const removeBooking = (proId,date,time)=> setBookings(b=>{
+    const pd=b[proId]||{}; const day=(pd[date]||[]).filter(t=>t!==time);
+    return {...b,[proId]:{...pd,[date]:day}};
+  });
+
+  // Il cliente NON conferma da solo: invia una RICHIESTA al professionista.
+  // L'appuntamento resta "in attesa" e non entra nell'agenda del pro finché non viene accettato.
+  const requestBooking = (proId, selDate, time, svc)=>{
     const pro=ALL_PROS.find(p=>p.id===proId);
-    setMyAppts(prev=>[{id:Date.now(),pro:pro?pro.name:"",service:svc?svc.name:"Servizio",date,time,price:svc?svc.price:0,status:"confermato",proObj:pro},...prev]);
+    const dateLabel = typeof selDate==="string" ? selDate : selDate.label;
+    const dateKey   = typeof selDate==="string" ? selDate : (selDate.key||selDate.label);
+    const myApptId = Date.now();
+    // lato CLIENTE: appuntamento in attesa di conferma
+    setMyAppts(prev=>[{id:myApptId,pro:pro?pro.name:"",service:svc?svc.name:"Servizio",date:dateLabel,dateKey,time,price:svc?svc.price:0,status:"in attesa",proObj:pro},...prev]);
+    addBooking(proId,dateLabel,time); // riserva lo slot tentativamente
+    // invia la richiesta nella chat col professionista
+    let conv = conversations.find(c=>c.proId===proId);
+    let convId;
+    if(!conv){ convId = myApptId+1; setConversations(p=>[{id:convId,proId,clientName:user?.name||"Cliente",messages:[]},...p]); }
+    else convId = conv.id;
+    sendMessage(convId,{from:"client",type:"request",_dedup:myApptId+""+Math.random(),
+      request:{status:"pending",service:svc?.name||"Servizio",serviceId:svc?.id,min:svc?.min||0,price:svc?.price||0,dateLabel,dateKey,time,myApptId}});
+  };
+
+  // Il PRO accetta la richiesta → SOLO ora entra in agenda (confermato) e il cliente è confermato
+  const acceptRequest = (convId,msgId)=>{
+    const conv = conversations.find(c=>c.id===convId); if(!conv) return;
+    const msg = conv.messages.find(m=>m.id===msgId); if(!msg||msg.type!=="request") return;
+    const r = msg.request;
+    setConversations(p=>p.map(c=>c.id===convId ? {...c,messages:[
+      ...c.messages.map(m=>m.id===msgId?{...m,request:{...m.request,status:"accepted"}}:m),
+      {id:Date.now(),from:"pro",type:"text",text:`Confermato! Ci vediamo ${r.dateLabel} alle ${r.time} ✨`,time:nowTime()},
+    ]} : c));
+    // lato CLIENTE: da "in attesa" a "confermato"
+    setMyAppts(p=>p.map(a=>a.id===r.myApptId?{...a,status:"confermato"}:a));
+    // lato PRO: crea (o riusa) cliente e servizio, poi aggiungi l'appuntamento all'agenda
+    const existCl = clients.find(c=>c.name===conv.clientName);
+    const clientId = existCl ? existCl.id : Date.now()+2;
+    if(!existCl) setClients(p=>[...p,{id:clientId,name:conv.clientName,phone:"",visits:0,lastVisit:"Oggi",totalSpent:0,note:"Prenotazione via app",rating:0}]);
+    const existSvc = services.find(s=>s.name===r.service);
+    const serviceId = existSvc ? existSvc.id : Date.now()+3;
+    if(!existSvc) setServices(p=>[...p,{id:serviceId,name:r.service,price:r.price,min:r.min,active:true}]);
+    setAppts(p=>[...p,{id:Date.now()+4,staffId:1,date:r.dateKey||"oggi",time:r.time,clientId,serviceId,status:"confermato",source:"app",note:"Prenotazione via app"}]);
+    addBooking(conv.proId,r.dateLabel,r.time);
+  };
+
+  // Il PRO rifiuta → la richiesta decade, il cliente viene avvisato, lo slot si libera
+  const declineRequest = (convId,msgId)=>{
+    const conv = conversations.find(c=>c.id===convId); const msg = conv?.messages.find(m=>m.id===msgId);
+    const r = msg?.request;
+    setConversations(p=>p.map(c=>c.id===convId ? {...c,messages:[
+      ...c.messages.map(m=>m.id===msgId?{...m,request:{...m.request,status:"declined"}}:m),
+      {id:Date.now(),from:"pro",type:"text",text:`Ciao! Purtroppo non sono disponibile in quel momento 🙏 Prova con un altro orario.`,time:nowTime()},
+    ]} : c));
+    if(r){ setMyAppts(p=>p.map(a=>a.id===r.myApptId?{...a,status:"cancellato"}:a)); removeBooking(conv.proId,r.dateLabel,r.time); }
   };
 
   // All'avvio: segna come già letto tutto lo storico (il puntino apparirà solo per il nuovo)
@@ -6480,7 +6604,7 @@ export default function App() {
     if(screen==="cl_explore")    return <ClExplore nav={nav} user={user} feed={feed} setFeed={setFeed} onPublishPost={publishPost} likedPosts={likedPosts} setLikedPosts={setLikedPosts} savedPosts={savedPosts} setSavedPosts={setSavedPosts} onSendPost={(post)=>setSharePost(post)}/>;
     if(screen==="cl_preferiti")  return <ClPreferiti nav={nav} favorites={favorites} setFavorites={setFavorites}/>;
     if(screen==="cl_pro")        return <ClPro pro={sData} nav={nav} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} onMessage={()=>openChatWithPro(sData.id,"client")}/>;
-    if(screen==="cl_prenota")    return <ClPrenota data={sData} nav={nav} isBooked={isBooked} onBook={bookAppointment}/>;
+    if(screen==="cl_prenota")    return <ClPrenota data={sData} nav={nav} isBooked={isBooked} onBook={requestBooking}/>;
     if(screen==="cl_appts")      return <ClAppts nav={nav} allAppts={myAppts} setAllAppts={setMyAppts}/>;
     if(screen==="cl_notifiche")  return <NotificheScreen conversations={conversations} nav={nav} notifSeenId={notifSeenId} onOpen={()=>setNotifSeenId(maxNotifId)}/>;
     if(screen==="cl_chats")      return <ChatList conversations={conversations} role="client" nav={nav} unreadFor={clientUnread}/>;
@@ -6490,7 +6614,8 @@ export default function App() {
       if(!conv) return <ChatList conversations={conversations} role={sData?.role||"client"} nav={nav}/>;
       return <ChatScreen conv={conv} role={sData?.role||"client"} nav={nav}
         onSeen={(len)=>markConvRead(conv.id,len)} isBooked={isBooked}
-        onSendMessage={sendMessage} onSendOffer={sendOffer} onEditOffer={editOffer} onAccept={acceptOffer} onDecline={declineOffer}/>;
+        onSendMessage={sendMessage} onSendOffer={sendOffer} onEditOffer={editOffer} onAccept={acceptOffer} onDecline={declineOffer}
+        onAcceptRequest={acceptRequest} onDeclineRequest={declineRequest}/>;
     }
     if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} feed={feed} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={doLogout} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig} photo={profilePhoto} onSavePhoto={(file)=>saveProfilePhoto(user?.uid,file)}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
