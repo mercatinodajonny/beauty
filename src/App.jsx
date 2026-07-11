@@ -4293,7 +4293,13 @@ function ClAppts({nav,allAppts,setAllAppts}) {
               <div key={a.id} className="clay ba-zoom" style={{background:T.white,borderRadius:20,marginBottom:11,overflow:"hidden"}}>
                 <div style={{padding:"14px"}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:9}}>
-                    <div><p style={{fontSize:15,fontWeight:700,color:T.ink,margin:"0 0 2px"}}>{a.service}</p><p style={{fontSize:12,color:T.inkSoft,margin:0}}>{a.pro}</p></div>
+                    <div style={{minWidth:0}}><p style={{fontSize:15,fontWeight:700,color:T.ink,margin:"0 0 3px"}}>{a.service}</p>
+                      <button onClick={()=>a.proObj&&nav("cl_pro",a.proObj)} disabled={!a.proObj} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",padding:0,cursor:a.proObj?"pointer":"default",fontFamily:"inherit"}}>
+                        {a.proObj ? <Av pro={a.proObj} size={20} fs={10}/> : null}
+                        <span style={{fontSize:12,fontWeight:600,color:a.proObj?T.brand:T.inkSoft}}>{a.pro}</span>
+                        {a.proObj && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>}
+                      </button>
+                    </div>
                     <Pill label={ST[a.status]?.label} style={{background:ST[a.status]?.bg,color:ST[a.status]?.text,flexShrink:0}}/>
                   </div>
                   <div style={{display:"flex",gap:7,marginBottom:10}}>
@@ -4344,7 +4350,12 @@ function ClAppts({nav,allAppts,setAllAppts}) {
               <div key={a.id} style={{display:"flex",alignItems:"center",gap:11,padding:"12px 14px",borderBottom:i<selCalDay.appts.length-1?`1px solid ${T.line}`:"none"}}>
                 <p style={{fontSize:14,fontWeight:700,color:T.ink,margin:0,minWidth:40}}>{a.time}</p>
                 <div style={{width:3,height:38,borderRadius:2,background:ST[a.status]?.bar||T.line,flexShrink:0}}/>
-                <div style={{flex:1}}><p style={{fontSize:13,fontWeight:600,color:T.ink,margin:"0 0 1px"}}>{a.service}</p><p style={{fontSize:11,color:T.inkSoft,margin:0}}>{a.pro}</p></div>
+                <div style={{flex:1,minWidth:0}}><p style={{fontSize:13,fontWeight:600,color:T.ink,margin:"0 0 1px"}}>{a.service}</p>
+                  <button onClick={()=>a.proObj&&nav("cl_pro",a.proObj)} disabled={!a.proObj} style={{display:"flex",alignItems:"center",gap:4,background:"none",border:"none",padding:0,cursor:a.proObj?"pointer":"default",fontFamily:"inherit"}}>
+                    <span style={{fontSize:11,color:a.proObj?T.brand:T.inkSoft,fontWeight:600}}>{a.pro}</span>
+                    {a.proObj && <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>}
+                  </button>
+                </div>
                 <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:0}}>{a.price}€</p>
               </div>
             )) : (
