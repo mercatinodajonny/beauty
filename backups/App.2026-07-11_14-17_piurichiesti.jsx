@@ -676,8 +676,8 @@ const AV_EARRING_LABELS = ["Nessuno","Studs","Cerchi","Pendenti"];
 const AV_HAT_LABELS = ["Nessuno","Cappellino","Beanie"];
 const AV_OUTFIT_LABELS = ["T-shirt","Blazer","Felpa","Abito"];
 
-/* Accento app fisso sul nero (nessuna opzione di cambio colore) */
-try { applyAccent("nero"); } catch(e){ applyAccent("nero"); }
+/* applica l'accento salvato (o "oro") già al primo render */
+try { applyAccent((typeof localStorage!=="undefined" && localStorage.getItem("ba-accent")) || "nero"); } catch(e){ applyAccent("nero"); }
 
 const FEED = [
   {id:1,proId:3,cat:"Nail Art",img:U("nail art manicure"),caption:"Nail art floreale 🌸",tags:["#nailart"],likes:312},
@@ -4692,6 +4692,27 @@ function ClProfilo({user,onSwitch,nav,feed=FEED,setFeed,onDeletePost,onLikePost,
       {/* TAB impostazioni */}
       {tab==="impostazioni" && (
         <div style={{padding:"14px 16px"}}>
+          {/* Tema / colore app */}
+          <div className="clay" style={{background:T.white,borderRadius:20,padding:"15px 16px",marginBottom:12}}>
+            <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:"0 0 3px"}}>Colore dell'app</p>
+            <p style={{fontSize:11,color:T.inkMid,margin:"0 0 13px"}}>Scegli l'accento: card, pulsanti e dettagli si adattano da soli.</p>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:11}}>
+              {ACCENT_ORDER.map(name=>{
+                const sel = accent===name, base = ACCENTS[name].base;
+                return (
+                  <button key={name} onClick={()=>setAccent(name)} title={ACCENTS[name].label}
+                    className={sel?"clay-btn":"clay-soft"}
+                    style={{width:"100%",aspectRatio:"1",borderRadius:"50%",border:"none",cursor:"pointer",
+                      background:`linear-gradient(135deg,${lighten(base,0.1)},${darken(base,0.2)})`,
+                      outline:sel?`2.5px solid ${T.ink}`:"none",outlineOffset:2,
+                      display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    {sel && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>}
+                  </button>
+                );
+              })}
+            </div>
+            <p style={{fontSize:12,fontWeight:700,color:T.brandDeep,margin:"12px 0 0",textAlign:"center"}}>{ACCENTS[accent]?.label}</p>
+          </div>
           {/* Account */}
           <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"13px 16px",borderBottom:`1px solid ${T.line}`}}>
@@ -5433,6 +5454,22 @@ function ProProfilo({user,onSwitch,onLogout,accent,setAccent,nav,photo:photoProp
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
             </button>
           ))}
+        </div>
+
+        <div className="clay" style={{background:T.white,borderRadius:20,padding:"15px 16px",marginBottom:12}}>
+          <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:"0 0 3px"}}>Colore dell'app</p>
+          <p style={{fontSize:11,color:T.inkMid,margin:"0 0 13px"}}>Scegli l'accento: card, pulsanti e dettagli si adattano.</p>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:11}}>
+            {ACCENT_ORDER.map(name=>{
+              const sel = accent===name, base = ACCENTS[name].base;
+              return (
+                <button key={name} onClick={()=>setAccent(name)} title={ACCENTS[name].label} className={sel?"clay-btn":"clay-soft"}
+                  style={{width:"100%",aspectRatio:"1",borderRadius:"50%",border:"none",cursor:"pointer",background:`linear-gradient(135deg,${lighten(base,0.1)},${darken(base,0.2)})`,outline:sel?`2.5px solid ${T.ink}`:"none",outlineOffset:2,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  {sel && <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
@@ -6538,7 +6575,7 @@ function OnboardingScreen({onComplete}){
 /* ROOT */
 export default function App() {
   const [user,setUser] = useState(null);
-  const [accent,setAccentState] = useState("nero"); // accento fisso: nessuna scelta colore
+  const [accent,setAccentState] = useState(()=>{ try{return localStorage.getItem("ba-accent")||"nero";}catch(e){return "nero";} });
   applyAccent(accent); // garantisce che T sia coerente ad ogni render
   const setAccent = (name)=>{ applyAccent(name); try{localStorage.setItem("ba-accent",name);}catch(e){} setAccentState(name); };
   const [mode,setMode] = useState("cliente");
@@ -6788,8 +6825,8 @@ export default function App() {
 
   const handleAuth = ({name,type}) => {
     setUser({name,type});setMode(type==="pro"?"pro":"cliente");
-    if(type==="pro"){ setAccent("nero"); setShowBetaWelcome(true); nav("pro_agenda"); }
-    else { setAccent("nero"); nav("cl_home"); }
+    if(type==="pro"){ try{setAccent(localStorage.getItem("ba-accent")||"nero");}catch(e){setAccent("nero");} setShowBetaWelcome(true); nav("pro_agenda"); }
+    else { try{ setAccent(localStorage.getItem("ba-accent")||"nero"); }catch(e){ setAccent("nero"); } nav("cl_home"); }
   };
 
   // ── Autenticazione reale con Supabase ──
@@ -6995,8 +7032,8 @@ export default function App() {
     try{ const s=JSON.parse(localStorage.getItem("ba-identity-"+appUser.uid)||"null"); if(s){ if(s.name)m.name=s.name; if(s.username){m.username=s.username;m.handle=s.username;} } }catch(e){}
     try{ const b=JSON.parse(localStorage.getItem("ba-bizid-"+appUser.uid)||"null"); if(b){ if(b.name)m.bizName=b.name; if(b.username)m.bizUsername=b.username; } }catch(e){}
     setUser(m); setMode(appUser.type==="pro"?"pro":"cliente");
-    if(appUser.type==="pro"){ setAccent("nero"); nav("pro_agenda"); }
-    else { setAccent("nero"); nav("cl_home"); }
+    if(appUser.type==="pro"){ try{setAccent(localStorage.getItem("ba-accent")||"nero");}catch(e){setAccent("nero");} nav("pro_agenda"); }
+    else { try{ setAccent(localStorage.getItem("ba-accent")||"nero"); }catch(e){ setAccent("nero"); } nav("cl_home"); }
   };
 
   // Ripristina la sessione all'avvio
