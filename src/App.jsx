@@ -77,7 +77,8 @@ const userFromSb = (u) => {
   const username = md.username || (u && u.email ? u.email.split("@")[0] : "utente");
   const bizName = md.business_name || name;                                    // identità AZIENDA
   const bizUsername = md.business_username || username;
-  return { name, type, email: u && u.email, uid: u && u.id, username, handle: username, bizName, bizUsername };
+  const hasBiz = md.role === "pro" || !!md.business_name;                       // ha già un'attività registrata?
+  return { name, type, email: u && u.email, uid: u && u.id, username, handle: username, bizName, bizUsername, hasBiz };
 };
 
 // Ridimensiona e comprime un'immagine (evita dataURL enormi → scroll fluido, meno memoria)
@@ -4531,7 +4532,7 @@ function PostViewer({posts,startId,isOwner,likedPosts,onToggleLike,onAddComment,
   );
 }
 
-function ClProfilo({user,onSwitch,nav,feed=FEED,setFeed,onDeletePost,onLikePost,onCommentPost,onSaveAccount,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig,photo:photoProp,onSavePhoto}) {
+function ClProfilo({user,onSwitch,nav,hasBusiness,onCreateBusiness,feed=FEED,setFeed,onDeletePost,onLikePost,onCommentPost,onSaveAccount,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig,photo:photoProp,onSavePhoto}) {
   const [tab,setTab] = useState("griglia"); // griglia | recensioni | impostazioni
   const [info,setInfo] = useState({name:user.name,handle:user.username||user.handle||(user.name||"utente").toLowerCase().replace(/\s+/g,"_"),email:user.email||"",city:"",phone:""});
   const [editInfo,setEditInfo] = useState(false);
@@ -4624,6 +4625,23 @@ function ClProfilo({user,onSwitch,nav,feed=FEED,setFeed,onDeletePost,onLikePost,
         </div>
 
       </div>
+
+      {/* Banner: aggiungi la tua attività (solo se non hai ancora un'attività) */}
+      {!hasBusiness && (
+        <div style={{padding:"12px 16px 0"}}>
+          <button onClick={onCreateBusiness} style={{width:"100%",textAlign:"left",background:T.ink,border:"none",borderRadius:20,padding:"16px 16px",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",gap:13,boxShadow:"0 8px 24px rgba(0,0,0,.16)"}}>
+            <div style={{width:44,height:44,borderRadius:13,background:"rgba(255,255,255,.14)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>💼</div>
+            <div style={{flex:1,minWidth:0}}>
+              <p style={{fontSize:15,fontWeight:800,color:"#fff",margin:"0 0 2px"}}>Aggiungi la tua attività</p>
+              <p style={{fontSize:12,color:"rgba(255,255,255,.65)",margin:0,lineHeight:1.4}}>Hai un salone o sei un professionista? Crea il profilo pro e ricevi prenotazioni.</p>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      )}
+
+      {/* Switch modalità flottante — solo nelle IMPOSTAZIONI e solo se hai un'attività */}
+      {tab==="impostazioni" && hasBusiness && <ModeSwitchPill mode="cliente" onSwitch={onSwitch}/>}
 
       {/* Persone che potresti conoscere — IA */}
       {suggested.length>0 && (
@@ -4746,10 +4764,12 @@ function ClProfilo({user,onSwitch,nav,feed=FEED,setFeed,onDeletePost,onLikePost,
           </div>
           {/* Azioni */}
           <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
-            <button onClick={askSwitch} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"15px 16px",border:"none",borderBottom:`1px solid ${T.line}`,background:"none",cursor:"pointer",fontFamily:"inherit"}}>
-              <span style={{fontSize:14,fontWeight:600,color:T.ink}}>Passa a modalità Pro</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
+            {!hasBusiness && (
+              <button onClick={onCreateBusiness} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"15px 16px",border:"none",borderBottom:`1px solid ${T.line}`,background:"none",cursor:"pointer",fontFamily:"inherit"}}>
+                <span style={{fontSize:14,fontWeight:600,color:T.ink}}>Aggiungi la tua attività</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+            )}
             <button onClick={askLogout} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:8,padding:"15px 16px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit"}}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B5503A" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
               <span style={{fontSize:14,fontWeight:700,color:"#B5503A"}}>Esci dall'account</span>
@@ -5486,16 +5506,15 @@ function ProProfilo({user,onSwitch,onLogout,accent,setAccent,nav,photo:photoProp
         </div>
 
         <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
-          <button onClick={()=>setConfirm({title:"Passare a modalita Cliente?",message:"Potrai cercare e prenotare come cliente.",confirmLabel:"Passa a Cliente",onYes:onSwitch})} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"15px 16px",border:"none",borderBottom:`1px solid ${T.line}`,background:"none",cursor:"pointer",fontFamily:"inherit"}}>
-            <span style={{fontSize:14,fontWeight:600,color:T.ink}}>Passa a modalita Cliente</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
           <button onClick={()=>setConfirm({title:"Uscire dall'account?",message:"Dovrai effettuare di nuovo l'accesso.",confirmLabel:"Esci",danger:true,onYes:onLogout})} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:8,padding:"15px 16px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit"}}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B5503A" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
             <span style={{fontSize:14,fontWeight:700,color:"#B5503A"}}>Esci dall'account</span>
           </button>
         </div>
       </div>
+
+      {/* Switch modalità flottante — l'Account pro È la sezione impostazioni */}
+      <ModeSwitchPill mode="pro" onSwitch={onSwitch}/>
 
       {confirm && (
         <ConfirmDialog title={confirm.title} message={confirm.message} confirmLabel={confirm.confirmLabel} danger={confirm.danger}
@@ -5520,6 +5539,141 @@ function BetaBanner({nav}) {
       </div>
       <div style={{height:4,background:"rgba(255,255,255,.15)",borderRadius:2,overflow:"hidden"}}><div style={{height:"100%",background:T.gold,width:`${filled}%`,borderRadius:2}}/></div>
       <p style={{color:"rgba(255,255,255,.4)",fontSize:10,margin:"6px 0 0"}}>Tocca per vedere i piani</p>
+    </div>
+  );
+}
+
+/* CREA LA TUA ATTIVITÀ — onboarding multi-step: dati → servizi → collaboratori → abbonamento */
+function BusinessOnboarding({user, onCancel, onComplete}) {
+  const [step,setStep] = useState(1);
+  const [biz,setBiz] = useState({biz:"",username:(user?.username||""),catId:"",catLabel:"",city:"",address:"",phone:"",email:(user?.email||""),description:""});
+  const [services,setServices] = useState([]);
+  const [staff,setStaff] = useState([]);
+  const [svcForm,setSvcForm] = useState({name:"",price:"",min:""});
+  const [stfForm,setStfForm] = useState({name:"",emoji:"💇"});
+
+  const set = (k,v)=>setBiz(p=>({...p,[k]:v}));
+  const step1Valid = biz.biz.trim() && biz.catId && biz.city.trim() && biz.address.trim();
+  const STEPS = ["Dati","Servizi","Team","Piano"];
+  const lbl = {fontSize:10,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:5,textTransform:"uppercase",letterSpacing:.6};
+  const inp = {width:"100%",boxSizing:"border-box",border:`1.5px solid ${T.line}`,borderRadius:12,padding:"11px 12px",fontSize:14,color:T.ink,fontFamily:"inherit",background:T.white,outline:"none"};
+
+  const addSvc = ()=>{ if(!svcForm.name.trim())return; setServices(p=>[...p,{id:Date.now(),name:svcForm.name.trim(),price:parseInt(svcForm.price)||0,min:parseInt(svcForm.min)||30,active:true}]); setSvcForm({name:"",price:"",min:""}); };
+  const addStf = ()=>{ if(!stfForm.name.trim())return; setStaff(p=>[...p,{id:Date.now(),name:stfForm.name.trim(),emoji:stfForm.emoji}]); setStfForm({name:"",emoji:"💇"}); };
+
+  const PLANS = [
+    {id:"base",name:"Base",price:"12,90",desc:"Per chi inizia"},
+    {id:"pro",name:"Pro",price:"29",desc:"Per saloni con staff"},
+    {id:"premium",name:"Premium",price:"59",desc:"Massima visibilità"},
+  ];
+
+  return (
+    <div style={{minHeight:"100dvh",background:T.paper,paddingBottom:40}}>
+      {/* Header + progress */}
+      <div style={{background:T.white,padding:"48px 16px 12px",borderBottom:`1px solid ${T.line}`,position:"sticky",top:0,zIndex:5}}>
+        <button onClick={()=>step>1?setStep(s=>s-1):onCancel&&onCancel()} style={{background:"none",border:"none",cursor:"pointer",padding:"4px 0",display:"inline-flex",alignItems:"center",gap:6,color:T.ink,fontSize:14,fontWeight:600,fontFamily:"inherit",marginBottom:8}}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>Indietro
+        </button>
+        <h1 style={{fontSize:20,fontWeight:900,color:T.ink,margin:"0 0 10px"}}>Crea la tua attività</h1>
+        <div style={{display:"flex",gap:5}}>
+          {STEPS.map((l,i)=>(
+            <div key={l} style={{flex:1}}>
+              <div style={{height:3,borderRadius:2,background:step>i?T.ink:T.line,marginBottom:3}}/>
+              <p style={{fontSize:9,color:step>i?T.ink:T.inkSoft,margin:0,fontWeight:step===i+1?800:500}}>{l}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* STEP 1 — DATI */}
+      {step===1 && (
+        <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:13}}>
+          <div><label style={lbl}>Nome attività</label><input value={biz.biz} onChange={e=>set("biz",e.target.value)} placeholder="Es. Salon Elite" style={inp}/></div>
+          <div><label style={lbl}>Username pubblico (@)</label><input value={biz.username} onChange={e=>set("username",e.target.value.toLowerCase().replace(/[^a-z0-9._]/g,""))} placeholder="es. salonelite" style={inp}/></div>
+          <div>
+            <label style={lbl}>Categoria</label>
+            <div style={{display:"flex",gap:7,flexWrap:"wrap"}}>
+              {CAT_LIST.map(c=>{const sel=biz.catId===c.id;return(
+                <button key={c.id} onClick={()=>setBiz(p=>({...p,catId:c.id,catLabel:c.label}))} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 12px",borderRadius:99,border:`1.5px solid ${sel?T.ink:T.line}`,background:sel?T.ink:T.white,color:sel?T.white:T.inkMid,cursor:"pointer",fontSize:12.5,fontWeight:700,fontFamily:"inherit"}}>{c.emoji} {c.label}</button>
+              );})}
+            </div>
+          </div>
+          <div><label style={lbl}>Città</label><CityPicker value={biz.city} onChange={v=>set("city",v)}/></div>
+          <div><label style={lbl}>Indirizzo (via e civico)</label><input value={biz.address} onChange={e=>set("address",e.target.value)} placeholder="Es. Via Roma 12" style={inp}/></div>
+          <div><label style={lbl}>Telefono</label><input type="tel" value={biz.phone} onChange={e=>set("phone",e.target.value)} placeholder="333 1234567" style={inp}/></div>
+          <div><label style={lbl}>Email</label><input type="email" value={biz.email} onChange={e=>set("email",e.target.value)} placeholder="info@tuosalone.com" style={inp}/></div>
+          <div><label style={lbl}>Breve descrizione</label><textarea value={biz.description} onChange={e=>set("description",e.target.value)} placeholder="Racconta la tua attività in una riga…" rows={2} style={{...inp,resize:"vertical",lineHeight:1.5}}/></div>
+          <BigBtn label="Continua" disabled={!step1Valid} onClick={()=>setStep(2)}/>
+          {!step1Valid && <p style={{fontSize:11,color:T.inkSoft,textAlign:"center",margin:0}}>Nome, categoria, città e indirizzo sono obbligatori.</p>}
+        </div>
+      )}
+
+      {/* STEP 2 — SERVIZI */}
+      {step===2 && (
+        <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:12}}>
+          <p style={{fontSize:13,color:T.inkMid,margin:0}}>Aggiungi i servizi che offri (nome, prezzo, durata). Potrai modificarli in qualsiasi momento.</p>
+          {services.map(s=>(
+            <div key={s.id} className="clay" style={{background:T.white,borderRadius:14,padding:"11px 13px",display:"flex",alignItems:"center",gap:10}}>
+              <div style={{flex:1}}><p style={{fontSize:14,fontWeight:700,color:T.ink,margin:0}}>{s.name}</p><p style={{fontSize:11,color:T.inkSoft,margin:0}}>{s.min} min · {s.price}€</p></div>
+              <button onClick={()=>setServices(p=>p.filter(x=>x.id!==s.id))} style={{background:"none",border:"none",cursor:"pointer",color:T.red,fontSize:18,padding:4}}>×</button>
+            </div>
+          ))}
+          <div className="clay-inset" style={{background:T.white,borderRadius:14,padding:"12px 13px",display:"flex",flexDirection:"column",gap:8}}>
+            <input value={svcForm.name} onChange={e=>setSvcForm(p=>({...p,name:e.target.value}))} placeholder="Nome servizio (es. Taglio donna)" style={inp}/>
+            <div style={{display:"flex",gap:8}}>
+              <input value={svcForm.price} onChange={e=>setSvcForm(p=>({...p,price:e.target.value.replace(/[^0-9]/g,"")}))} placeholder="Prezzo €" inputMode="numeric" style={{...inp,flex:1}}/>
+              <input value={svcForm.min} onChange={e=>setSvcForm(p=>({...p,min:e.target.value.replace(/[^0-9]/g,"")}))} placeholder="Durata min" inputMode="numeric" style={{...inp,flex:1}}/>
+            </div>
+            <button onClick={addSvc} disabled={!svcForm.name.trim()} style={{padding:"11px 0",borderRadius:12,border:"none",background:svcForm.name.trim()?T.ink:T.line,color:"#fff",fontSize:14,fontWeight:700,cursor:svcForm.name.trim()?"pointer":"default",fontFamily:"inherit"}}>+ Aggiungi servizio</button>
+          </div>
+          <BigBtn label={services.length?"Continua":"Salta per ora"} onClick={()=>setStep(3)}/>
+        </div>
+      )}
+
+      {/* STEP 3 — COLLABORATORI (facoltativo) */}
+      {step===3 && (
+        <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:12}}>
+          <p style={{fontSize:13,color:T.inkMid,margin:0}}>Aggiungi i tuoi collaboratori <b>(facoltativo)</b>. Ognuno avrà la sua agenda.</p>
+          {staff.map(s=>(
+            <div key={s.id} className="clay" style={{background:T.white,borderRadius:14,padding:"11px 13px",display:"flex",alignItems:"center",gap:10}}>
+              <span style={{fontSize:22}}>{s.emoji}</span>
+              <p style={{flex:1,fontSize:14,fontWeight:700,color:T.ink,margin:0}}>{s.name}</p>
+              <button onClick={()=>setStaff(p=>p.filter(x=>x.id!==s.id))} style={{background:"none",border:"none",cursor:"pointer",color:T.red,fontSize:18,padding:4}}>×</button>
+            </div>
+          ))}
+          <div className="clay-inset" style={{background:T.white,borderRadius:14,padding:"12px 13px",display:"flex",flexDirection:"column",gap:8}}>
+            <div style={{display:"flex",gap:8}}>
+              <div style={{display:"flex",gap:4}}>{["💇","💈","💅","🧖","🖋"].map(e=>(<button key={e} onClick={()=>setStfForm(p=>({...p,emoji:e}))} style={{width:38,height:42,borderRadius:10,border:`1.5px solid ${stfForm.emoji===e?T.ink:T.line}`,background:T.white,cursor:"pointer",fontSize:18}}>{e}</button>))}</div>
+              <input value={stfForm.name} onChange={e=>setStfForm(p=>({...p,name:e.target.value}))} placeholder="Nome collaboratore" style={{...inp,flex:1}}/>
+            </div>
+            <button onClick={addStf} disabled={!stfForm.name.trim()} style={{padding:"11px 0",borderRadius:12,border:"none",background:stfForm.name.trim()?T.ink:T.line,color:"#fff",fontSize:14,fontWeight:700,cursor:stfForm.name.trim()?"pointer":"default",fontFamily:"inherit"}}>+ Aggiungi collaboratore</button>
+          </div>
+          <BigBtn label={staff.length?"Continua":"Salta, sono da solo/a"} onClick={()=>setStep(4)}/>
+        </div>
+      )}
+
+      {/* STEP 4 — ABBONAMENTO */}
+      {step===4 && (
+        <div style={{padding:"14px 16px",display:"flex",flexDirection:"column",gap:14}}>
+          {/* Beta gratis in cima */}
+          <div style={{background:T.ink,borderRadius:20,padding:"18px 18px",boxShadow:"0 10px 30px rgba(0,0,0,.18)"}}>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+              <span style={{fontSize:20}}>🚀</span>
+              <p style={{color:T.gold,fontSize:11,fontWeight:800,textTransform:"uppercase",letterSpacing:1,margin:0}}>Beta testing · Gratis</p>
+            </div>
+            <p style={{color:"#fff",fontSize:19,fontWeight:800,margin:"0 0 4px"}}>Accesso completo gratuito</p>
+            <p style={{color:"rgba(255,255,255,.6)",fontSize:12.5,margin:"0 0 14px",lineHeight:1.5}}>Attiva subito il tuo profilo professionale. Nessuna carta richiesta durante la beta.</p>
+            <button onClick={()=>onComplete&&onComplete({biz,services,staff,plan:"Beta testing (gratis)"})} style={{width:"100%",padding:"15px 0",borderRadius:14,border:"none",background:"#fff",color:"#111",fontSize:15.5,fontWeight:800,cursor:"pointer",fontFamily:"inherit"}}>Inizia gratis con la Beta</button>
+          </div>
+          <p style={{fontSize:11,fontWeight:700,color:T.inkSoft,textTransform:"uppercase",letterSpacing:.8,textAlign:"center",margin:"2px 0 0"}}>Piani a pagamento · Prossimamente</p>
+          {PLANS.map(p=>(
+            <div key={p.id} className="clay" style={{background:T.white,borderRadius:18,padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",opacity:.7}}>
+              <div><p style={{fontSize:15,fontWeight:800,color:T.ink,margin:"0 0 2px"}}>{p.name}</p><p style={{fontSize:11.5,color:T.inkSoft,margin:0}}>{p.desc}</p></div>
+              <div style={{textAlign:"right"}}><p style={{fontSize:18,fontWeight:800,color:T.ink,margin:0}}>€{p.price}<span style={{fontSize:11,fontWeight:600,color:T.inkSoft}}>/mese</span></p><span style={{fontSize:10,fontWeight:700,color:T.inkSoft}}>Prossimamente</span></div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -6574,6 +6728,7 @@ export default function App() {
   applyAccent(accent); // garantisce che T sia coerente ad ogni render
   const setAccent = (name)=>{ applyAccent(name); try{localStorage.setItem("ba-accent",name);}catch(e){} setAccentState(name); };
   const [mode,setMode] = useState("cliente");
+  const [hasBusiness,setHasBusiness] = useState(false); // l'utente ha registrato un'attività?
   const [screen,setScreen] = useState("cl_home");
   const [sData,setSD] = useState(null);
   // Account nuovi: si parte PULITI, senza dati finti (niente clienti/appuntamenti/preferiti demo)
@@ -6730,6 +6885,13 @@ export default function App() {
   const unseenNotifs = allNotifs.filter(n=>n.id>notifSeenId).length + unseenLikes;
   const markConvRead = (convId,len)=> setMsgReads(r=>({...r,[convId]:len}));
   useEffect(()=>{injectFont();},[]);
+  // Ha un'attività? Da metadati account (registrato come pro) o dal flag salvato dopo l'onboarding.
+  useEffect(()=>{
+    if(!user){ setHasBusiness(false); return; }
+    let v = !!user.hasBiz;
+    try{ if(localStorage.getItem("ba-hasbiz-"+(user.uid||"local"))==="1") v=true; }catch(e){}
+    setHasBusiness(v);
+  },[user]);
 
   const nav = (to,data=null) => {setScreen(to);setSD(data);window.scrollTo({top:0});};
 
@@ -7090,8 +7252,25 @@ export default function App() {
   };
 
   const switchMode = () => {
+    // Senza attività non si può passare a Pro: si va alla creazione attività
+    if(mode==="cliente" && !hasBusiness){ nav("crea_attivita"); return; }
     const next = mode==="cliente"?"pro":"cliente";
     setMode(next);nav(next==="pro"?"pro_agenda":"cl_home");
+  };
+
+  // Completamento onboarding attività → salva tutto, attiva Pro e apre il profilo pro
+  const createBusiness = ({biz,services:svc,staff:stf,plan}) => {
+    const info = {biz:biz.biz,username:biz.username,cat:biz.catLabel||biz.catId,catId:biz.catId,city:biz.city,address:biz.address,email:biz.email,phone:biz.phone,description:biz.description};
+    try{ localStorage.setItem("ba-pro-info",JSON.stringify(info)); }catch(e){}
+    try{ localStorage.setItem("ba-pro-plan",plan||"Beta testing (gratis)"); }catch(e){}
+    try{ localStorage.setItem("ba-hasbiz-"+(user?.uid||"local"),"1"); }catch(e){}
+    setServices(svc&&svc.length?svc:[]);
+    setStaff(stf&&stf.length?stf:[]);
+    setUser(u=>u?{...u,bizName:biz.biz||u.bizName,bizUsername:biz.username||u.bizUsername,hasBiz:true}:u);
+    setHasBusiness(true);
+    try{ saveAccount&&saveAccount({name:biz.biz,username:biz.username,phone:biz.phone,city:biz.city,scope:"business"}); }catch(e){}
+    setMode("pro"); nav("pro_profilo");
+    showToast("Attività creata! Benvenuto nella modalità Pro 🎉");
   };
 
   if(!user) return <W><LoginScreen onAuth={handleAuth} onSignup={onSignup} onLogin={onLogin} authBusy={authBusy} authErr={authErr} authInfo={authInfo} clearAuthMsg={()=>{setAuthErr("");setAuthInfo("");}}/></W>;
@@ -7114,7 +7293,8 @@ export default function App() {
         onSendMessage={sendMessage} onSendOffer={sendOffer} onEditOffer={editOffer} onAccept={acceptOffer} onDecline={declineOffer}
         onAcceptRequest={acceptRequest} onDeclineRequest={declineRequest}/>;
     }
-    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} feed={feed} setFeed={setFeed} onDeletePost={deletePost} onLikePost={toggleLikePost} onCommentPost={commentPost} onSaveAccount={saveAccount} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={doLogout} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig} photo={profilePhoto} onSavePhoto={(file)=>saveProfilePhoto(user?.uid,file)}/>;
+    if(screen==="crea_attivita") return <BusinessOnboarding user={user} onCancel={()=>nav("cl_profilo")} onComplete={createBusiness}/>;
+    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} hasBusiness={hasBusiness} onCreateBusiness={()=>nav("crea_attivita")} feed={feed} setFeed={setFeed} onDeletePost={deletePost} onLikePost={toggleLikePost} onCommentPost={commentPost} onSaveAccount={saveAccount} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={doLogout} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig} photo={profilePhoto} onSavePhoto={(file)=>saveProfilePhoto(user?.uid,file)}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
     if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
     if(screen==="pro_cliente")   return <ProCliente client={sData} setClients={setClients} appts={appts} services={services} nav={nav}/>;
@@ -7135,7 +7315,6 @@ export default function App() {
       </div>
       {!fullscreen && mode==="pro" && !proAddOpen && screen!=="pro_piani" && screen!=="pro_stats" && screen!=="pro_profilo" && <BetaBanner nav={nav}/>}
       {!fullscreen && mode==="pro" && !proAddOpen && screen!=="pro_profilo" && <ProFab nav={nav} onAction={(scr,act)=>{ setPendingAdd(act); nav(scr); }}/>}
-      {!fullscreen && (screen==="cl_profilo"||screen==="pro_profilo") && <ModeSwitchPill mode={mode} onSwitch={switchMode}/>}
       {!fullscreen && (mode==="pro" ? <NavPro s={screen} nav={nav} dmDot={conversations.some(c=>c.messages.some(m=>m.from==="client"))}/> : <NavCl s={screen} nav={nav}/>)}
       {showBetaWelcome && <BetaWelcome onClose={()=>setShowBetaWelcome(false)}/>}
       {sharePost && <SharePostSheet post={sharePost} onClose={()=>setSharePost(null)} onPick={(proId)=>sendPostToPro(sharePost,proId)}/>}
