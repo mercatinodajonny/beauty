@@ -574,6 +574,31 @@ const CONVERSATIONS0 = [
 ];
 
 const ALL_CITIES = ["Imperia","Milano","Roma","Torino","Bologna","Genova","Sanremo","Savona"];
+// Elenco città italiane selezionabili (no testo libero nel profilo).
+// Copre i capoluoghi e i comuni principali, con dettaglio sul Ponente ligure.
+const IT_CITIES = [
+  "Agrigento","Alessandria","Ancona","Aosta","Arezzo","Ascoli Piceno","Asti","Avellino","Bari","Barletta",
+  "Belluno","Benevento","Bergamo","Biella","Bologna","Bolzano","Brescia","Brindisi","Cagliari","Caltanissetta",
+  "Campobasso","Caserta","Catania","Catanzaro","Chieti","Como","Cosenza","Cremona","Crotone","Cuneo",
+  "Enna","Fermo","Ferrara","Firenze","Foggia","Forlì","Frosinone","Genova","Gorizia","Grosseto",
+  "Imperia","Isernia","La Spezia","L'Aquila","Latina","Lecce","Lecco","Livorno","Lodi","Lucca",
+  "Macerata","Mantova","Massa","Matera","Messina","Milano","Modena","Monza","Napoli","Novara",
+  "Nuoro","Oristano","Padova","Palermo","Parma","Pavia","Perugia","Pesaro","Pescara","Piacenza",
+  "Pisa","Pistoia","Pordenone","Potenza","Prato","Ragusa","Ravenna","Reggio Calabria","Reggio Emilia","Rieti",
+  "Rimini","Roma","Rovigo","Salerno","Sassari","Savona","Siena","Siracusa","Sondrio","Taranto",
+  "Teramo","Terni","Torino","Trapani","Trento","Treviso","Trieste","Udine","Varese","Venezia",
+  "Verbania","Vercelli","Verona","Vibo Valentia","Vicenza","Viterbo",
+  // Ponente ligure e zona Imperia
+  "Sanremo","Ventimiglia","Bordighera","Taggia","Arma di Taggia","Ospedaletti","Diano Marina","Dolcedo",
+  "Camporosso","Vallecrosia","Riva Ligure","Santo Stefano al Mare","San Bartolomeo al Mare","Cervo","Andora",
+  "Alassio","Albenga","Loano","Pietra Ligure","Finale Ligure","Varazze","Chiavari","Rapallo","Sestri Levante",
+  // Altri comuni molto popolati
+  "Giugliano in Campania","Sesto San Giovanni","Guidonia Montecelio","Cinisello Balsamo","Aprilia","Carpi",
+  "Pomezia","Bolzano","Quartu Sant'Elena","Marano di Napoli","Gela","Acireale","Bitonto","Ercolano",
+  "Portici","Casoria","Afragola","Marsala","Vittoria","Cesena","Faenza","Legnano","Rho","Gallarate",
+  "Busto Arsizio","Seregno","Desio","Lissone","San Giovanni in Persiceto","Fiumicino","Tivoli","Velletri",
+  "Anzio","Nettuno","Grugliasco","Moncalieri","Collegno","Rivoli","Settimo Torinese","Nichelino","Chieri",
+];
 
 const CAT_LIST = [
   {id:"barbiere",    emoji:"💈",label:"Barbiere",    color:"#5A4A3A",bg:"#EDE8E2",grad:"linear-gradient(145deg,#EDE8E2,#E0D8CE)"},
@@ -678,6 +703,45 @@ function Modal({title,onClose,children}) {
       </div>
     </div>,
     document.body
+  );
+}
+
+/* Selettore CITTÀ — solo città esistenti da elenco (niente testo libero).
+   Si apre come sheet con ricerca; il valore si imposta solo scegliendo dalla lista. */
+function CityPicker({value, onChange, placeholder="Seleziona città"}) {
+  const [open,setOpen] = useState(false);
+  const [q,setQ] = useState("");
+  const query = q.trim().toLowerCase();
+  const results = (query ? IT_CITIES.filter(c=>c.toLowerCase().includes(query)) : IT_CITIES).slice(0,80);
+  return (
+    <>
+      <button type="button" onClick={()=>{setQ("");setOpen(true);}} style={{width:"100%",boxSizing:"border-box",display:"flex",alignItems:"center",gap:8,padding:"9px 11px",borderRadius:8,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}}><path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        <span style={{flex:1,fontSize:14,color:value?T.ink:T.inkSoft,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{value||placeholder}</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      {open && (
+        <Modal title="Scegli città" onClose={()=>setOpen(false)}>
+          <div style={{display:"flex",alignItems:"center",gap:8,background:T.surface,borderRadius:12,padding:"11px 13px",marginBottom:12,border:`1.5px solid ${T.line}`}}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Cerca città…" style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:T.ink,fontFamily:"inherit"}}/>
+            {q && <button onClick={()=>setQ("")} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:T.inkSoft,padding:0}}>×</button>}
+          </div>
+          {results.length===0
+            ? <div style={{textAlign:"center",padding:"28px 0"}}><p style={{fontSize:28,marginBottom:6}}>🔎</p><p style={{fontSize:13,color:T.inkSoft,margin:0}}>Nessuna città in elenco. Prova un altro nome.</p></div>
+            : results.map((c,i)=>{
+                const sel = value===c;
+                return (
+                  <button key={c} onClick={()=>{onChange(c);setOpen(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"13px 12px",borderRadius:12,border:"none",background:sel?T.brandBg:"transparent",cursor:"pointer",fontFamily:"inherit",textAlign:"left",marginBottom:2}}>
+                    <span style={{fontSize:16}}>📍</span>
+                    <span style={{flex:1,fontSize:15,fontWeight:sel?800:600,color:T.ink}}>{c}</span>
+                    {sel && <svg width="17" height="17" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
+                  </button>
+                );
+              })}
+        </Modal>
+      )}
+    </>
   );
 }
 /* Dialog di conferma compatto e minimal — centrato */
@@ -4598,7 +4662,11 @@ function ClProfilo({user,onSwitch,nav,feed=FEED,setFeed,onDeletePost,onLikePost,
             {editInfo ? (
               <div style={{padding:"12px 14px",display:"flex",flexDirection:"column",gap:10}}>
                 {[{k:"name",l:"Nome",ph:"Il tuo nome"},{k:"handle",l:"Username",ph:"username"},{k:"email",l:"Email",t:"email",ph:"email@esempio.it"},{k:"city",l:"Città",ph:"Es. Milano"},{k:"phone",l:"Telefono",t:"tel",ph:"333 1234567"}].map(f => (
-                  <div key={f.k}><label style={{fontSize:10,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:4,textTransform:"uppercase",letterSpacing:.6}}>{f.l}</label><input type={f.t||"text"} placeholder={f.ph} value={tmp[f.k]} onChange={e=>setTmp(p=>({...p,[f.k]:e.target.value}))} style={{width:"100%",padding:"9px 11px",borderRadius:8,border:`1.5px solid ${T.line}`,fontSize:14,color:T.ink,fontFamily:"inherit",outline:"none",boxSizing:"border-box"}}/></div>
+                  <div key={f.k}><label style={{fontSize:10,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:4,textTransform:"uppercase",letterSpacing:.6}}>{f.l}</label>
+                    {f.k==="city"
+                      ? <CityPicker value={tmp.city} onChange={v=>setTmp(p=>({...p,city:v}))}/>
+                      : <input type={f.t||"text"} placeholder={f.ph} value={tmp[f.k]} onChange={e=>setTmp(p=>({...p,[f.k]:e.target.value}))} style={{width:"100%",padding:"9px 11px",borderRadius:8,border:`1.5px solid ${T.line}`,fontSize:14,color:T.ink,fontFamily:"inherit",outline:"none",boxSizing:"border-box"}}/>}
+                  </div>
                 ))}
               </div>
             ) : (
@@ -5351,7 +5419,11 @@ function ProProfilo({user,onSwitch,onLogout,accent,setAccent,nav,photo:photoProp
           {edit ? (
             <div style={{padding:"12px 14px",display:"flex",flexDirection:"column",gap:10}}>
               {[{k:"biz",l:"Nome attivita",ph:"Es. Salon Elite"},{k:"username",l:"Username (@ID pubblico)",ph:"es. salonelite"},{k:"cat",l:"Categoria",ph:"Es. Parrucchiere"},{k:"city",l:"Citta",ph:"Es. Milano"},{k:"email",l:"Email",t:"email",ph:"info@tuosalone.com"},{k:"phone",l:"Telefono",t:"tel",ph:"333 1234567"}].map(f=>(
-                <div key={f.k}><label style={{fontSize:10,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:4,textTransform:"uppercase",letterSpacing:.6}}>{f.l}</label><input type={f.t||"text"} placeholder={f.ph} value={tmp[f.k]} onChange={e=>setTmp(p=>({...p,[f.k]:e.target.value}))} style={{width:"100%",padding:"9px 11px",borderRadius:8,border:`1.5px solid ${T.line}`,fontSize:14,color:T.ink,fontFamily:"inherit",outline:"none",boxSizing:"border-box"}}/></div>
+                <div key={f.k}><label style={{fontSize:10,fontWeight:700,color:T.inkSoft,display:"block",marginBottom:4,textTransform:"uppercase",letterSpacing:.6}}>{f.l}</label>
+                  {f.k==="city"
+                    ? <CityPicker value={tmp.city} onChange={v=>setTmp(p=>({...p,city:v}))}/>
+                    : <input type={f.t||"text"} placeholder={f.ph} value={tmp[f.k]} onChange={e=>setTmp(p=>({...p,[f.k]:e.target.value}))} style={{width:"100%",padding:"9px 11px",borderRadius:8,border:`1.5px solid ${T.line}`,fontSize:14,color:T.ink,fontFamily:"inherit",outline:"none",boxSizing:"border-box"}}/>}
+                </div>
               ))}
             </div>
           ) : (
