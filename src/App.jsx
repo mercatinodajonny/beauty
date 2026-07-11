@@ -6037,7 +6037,7 @@ function SlotPickerModal({offer,proId,isBooked,onClose,onConfirm}) {
       <div onClick={e=>e.stopPropagation()} className="ba-pop" style={{background:T.paper,borderRadius:"26px 26px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"18px 18px 32px",maxHeight:"90dvh",overflowY:"auto"}}>
         <div style={{width:40,height:4,borderRadius:99,background:T.line,margin:"0 auto 16px"}}/>
         <h2 style={{fontSize:19,fontWeight:800,color:T.ink,margin:"0 0 4px"}}>Scegli giorno e orario</h2>
-        <p style={{fontSize:13,color:T.inkMid,margin:"0 0 18px"}}>{offer.service} · {offer.price}€ · {offer.min} min. Gli orari occupati sono barrati.</p>
+        <p style={{fontSize:13,color:T.inkMid,margin:"0 0 16px"}}>{offer.service} · {offer.price}€ · {offer.min} min. Seleziona un giorno, poi l'orario. Quelli occupati sono barrati.</p>
 
         <label style={{fontSize:12,fontWeight:700,color:T.inkMid,display:"block",marginBottom:8}}>Giorno</label>
         <div style={{display:"flex",gap:6,overflowX:"auto",scrollbarWidth:"none",marginBottom:18,paddingBottom:2}}>
