@@ -1908,239 +1908,20 @@ function Avatar3D({ config, size }) {
   );
 }
 
-function TopBar({account,onOpenSwitcher}) {
-  const initial = (account&&account.name&&account.name.trim()[0]&&account.name.trim()[0].toUpperCase())||"·";
-  const isBiz = account && account.kind==="business";
+function TopBar() {
   return (
     <div style={{
       position:"fixed",top:0,left:0,right:0,zIndex:300,
       background:"rgba(250,250,249,.92)",
       backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
       borderBottom:`1px solid ${T.line}`,
-      display:"flex",alignItems:"center",justifyContent:"space-between",
-      height:52,padding:"0 12px",
+      display:"flex",alignItems:"center",justifyContent:"center",
+      height:52,
       paddingTop:"env(safe-area-inset-top,0px)",
       maxWidth:430,margin:"0 auto",
     }}>
-      <div style={{width:34}}/>
       <img src={`${import.meta.env.BASE_URL}logo-b.png`} alt="beauty"
         style={{height:28,width:"auto",display:"block",objectFit:"contain"}}/>
-      {account
-        ? <button onClick={onOpenSwitcher} aria-label="Cambia account" style={{width:34,height:34,borderRadius:isBiz?10:"50%",border:"none",cursor:"pointer",padding:0,overflow:"hidden",background:account.photo?"#eee":(isBiz?"#111":T.brand),display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 8px rgba(0,0,0,.12)"}}>
-            {account.photo
-              ? <img src={account.photo} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-              : <span style={{fontSize:14,fontWeight:800,color:"#fff"}}>{initial}</span>}
-          </button>
-        : <div style={{width:34}}/>}
-    </div>
-  );
-}
-
-/* Tessera account riutilizzabile (avatar + nome + tipo) */
-function AccountTile({acc,active,onClick,big}){
-  const isBiz = acc.kind==="business";
-  const initial = (acc.name&&acc.name.trim()[0]&&acc.name.trim()[0].toUpperCase())||"·";
-  const sz = big?72:46;
-  return (
-    <button onClick={onClick} className="ba-lift" style={{display:"flex",flexDirection:big?"column":"row",alignItems:"center",gap:big?10:13,padding:big?"6px":"11px 12px",border:"none",background:big?"none":(active?T.brandBg:"transparent"),borderRadius:big?18:14,cursor:"pointer",fontFamily:"inherit",width:big?110:"100%",textAlign:big?"center":"left"}}>
-      <div style={{width:sz,height:sz,borderRadius:isBiz?(big?20:12):"50%",overflow:"hidden",flexShrink:0,background:acc.photo?"#eee":(isBiz?"#111":T.brand),display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 14px rgba(0,0,0,.12)"}}>
-        {acc.photo ? <img src={acc.photo} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/> : <span style={{fontSize:big?28:18,fontWeight:800,color:"#fff"}}>{initial}</span>}
-      </div>
-      <div style={{minWidth:0,flex:big?"none":1}}>
-        <p style={{fontSize:big?13.5:15,fontWeight:700,color:T.ink,margin:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:big?100:"none"}}>{acc.name}</p>
-        <p style={{fontSize:big?11:12,color:T.inkSoft,margin:"1px 0 0"}}>{isBiz?"Attività":"Personale"}</p>
-      </div>
-      {!big && active && <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={T.brand} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>}
-    </button>
-  );
-}
-
-/* Schermata selezione utenti (stile macOS) all'avvio */
-function AccountPicker({accounts,onPick,onAdd,onLogout}){
-  return (
-    <div className="ba-fade" style={{minHeight:"100dvh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"48px 22px 34px",fontFamily:"'Plus Jakarta Sans',sans-serif",textAlign:"center"}}>
-      <img src={`${import.meta.env.BASE_URL}logo-b.png`} alt="beauty" style={{height:40,width:"auto",marginBottom:26,filter:"drop-shadow(0 10px 26px rgba(138,107,255,.22))"}}/>
-      <h1 style={{fontSize:26,fontWeight:900,color:T.ink,margin:"0 0 6px",letterSpacing:"-.03em"}}>Ciao 👋</h1>
-      <p style={{fontSize:15,color:T.inkSoft,margin:"0 0 34px"}}>Con quale account vuoi entrare?</p>
-      <div style={{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:14,maxWidth:360,marginBottom:30}}>
-        {accounts.map(a=> <AccountTile key={a.id} acc={a} big onClick={()=>onPick(a.id)}/>)}
-        <button onClick={onAdd} className="ba-lift" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:10,padding:"6px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",width:110}}>
-          <div style={{width:72,height:72,borderRadius:20,background:T.surface,border:`1.5px dashed ${T.line}`,display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          </div>
-          <p style={{fontSize:13,fontWeight:700,color:T.inkMid,margin:0}}>Aggiungi</p>
-        </button>
-      </div>
-      <button onClick={onLogout} style={{background:"none",border:"none",cursor:"pointer",fontSize:13.5,fontWeight:600,color:T.inkSoft,fontFamily:"inherit"}}>Esci dall'account</button>
-    </div>
-  );
-}
-
-/* Popup cambio account (bottom sheet) */
-function AccountSwitcher({accounts,activeId,onPick,onAdd,onManage,onLogout,onClose}){
-  return createPortal(
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.4)",zIndex:1300,display:"flex",alignItems:"flex-end",backdropFilter:"blur(3px)"}}>
-      <div onClick={e=>e.stopPropagation()} className="ba-pop" style={{background:"#fff",borderRadius:"26px 26px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"14px 14px calc(20px + env(safe-area-inset-bottom,0px))",maxHeight:"80vh",overflowY:"auto"}}>
-        <div style={{width:40,height:4,borderRadius:99,background:"#E5E5EA",margin:"0 auto 14px"}}/>
-        <p style={{fontSize:17,fontWeight:900,color:T.ink,margin:"0 0 10px 4px",letterSpacing:"-.02em"}}>I tuoi account</p>
-        <div style={{display:"flex",flexDirection:"column",gap:2,marginBottom:8}}>
-          {accounts.map(a=> <AccountTile key={a.id} acc={a} active={a.id===activeId} onClick={()=>onPick(a.id)}/>)}
-        </div>
-        <div style={{borderTop:`1px solid ${T.line}`,paddingTop:8,display:"flex",flexDirection:"column",gap:2}}>
-          <button onClick={onAdd} style={{display:"flex",alignItems:"center",gap:13,padding:"12px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",borderRadius:14}}>
-            <div style={{width:38,height:38,borderRadius:12,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2.2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
-            <span style={{fontSize:15,fontWeight:700,color:T.ink}}>Apri una nuova attività</span>
-          </button>
-          <button onClick={onManage} style={{display:"flex",alignItems:"center",gap:13,padding:"12px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",borderRadius:14}}>
-            <div style={{width:38,height:38,borderRadius:12,background:T.surface,display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke={T.ink} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
-            <span style={{fontSize:15,fontWeight:700,color:T.ink}}>Gestisci account</span>
-          </button>
-          <button onClick={onLogout} style={{display:"flex",alignItems:"center",gap:13,padding:"12px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit",borderRadius:14}}>
-            <div style={{width:38,height:38,borderRadius:12,background:"#FFF1F4",display:"flex",alignItems:"center",justifyContent:"center"}}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8506E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></div>
-            <span style={{fontSize:15,fontWeight:700,color:"#E8506E"}}>Esci</span>
-          </button>
-        </div>
-      </div>
-    </div>,
-    document.body
-  );
-}
-
-/* Gestione account (rinomina / elimina attività) */
-function ManageAccounts({accounts,onRename,onDelete,onClose}){
-  return createPortal(
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.4)",zIndex:1350,display:"flex",alignItems:"flex-end",backdropFilter:"blur(3px)"}}>
-      <div onClick={e=>e.stopPropagation()} className="ba-pop" style={{background:"#fff",borderRadius:"26px 26px 0 0",width:"100%",maxWidth:430,margin:"0 auto",padding:"14px 16px calc(24px + env(safe-area-inset-bottom,0px))",maxHeight:"80vh",overflowY:"auto"}}>
-        <div style={{width:40,height:4,borderRadius:99,background:"#E5E5EA",margin:"0 auto 14px"}}/>
-        <p style={{fontSize:17,fontWeight:900,color:T.ink,margin:"0 0 12px 2px",letterSpacing:"-.02em"}}>Gestisci account</p>
-        {accounts.length===0 && <p style={{fontSize:13.5,color:T.inkSoft,padding:"10px 2px"}}>Non hai ancora attività. Creane una da "Apri una nuova attività".</p>}
-        {accounts.map(a=>(
-          <div key={a.id} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 0",borderBottom:`1px solid ${T.line}`}}>
-            <div style={{width:40,height:40,borderRadius:12,background:a.photo?"#eee":"#111",overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{a.photo?<img src={a.photo} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:16,fontWeight:800,color:"#fff"}}>{(a.name&&a.name[0]&&a.name[0].toUpperCase())||"·"}</span>}</div>
-            <input defaultValue={a.name} onBlur={e=>{const v=e.target.value.trim(); if(v&&v!==a.name) onRename(a.id,v);}} style={{flex:1,minWidth:0,padding:"9px 11px",borderRadius:9,border:`1.5px solid ${T.line}`,fontSize:14,color:T.ink,fontFamily:"inherit",outline:"none"}}/>
-            <button onClick={()=>{ if(window.confirm(`Eliminare "${a.name}"? I suoi dati (agenda, clienti, servizi) verranno rimossi.`)) onDelete(a.id); }} style={{background:"none",border:"none",cursor:"pointer",padding:8,display:"flex"}} aria-label="Elimina">
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E8506E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg>
-            </button>
-          </div>
-        ))}
-        <p style={{fontSize:11.5,color:T.inkSoft,margin:"14px 2px 0",lineHeight:1.5}}>Suggerimento: apri l'attività e vai su <strong>Profilo Attività</strong> per foto, orari, dipendenti e servizi.</p>
-      </div>
-    </div>,
-    document.body
-  );
-}
-
-/* Procedura guidata "Apri la tua attività" → crea un nuovo account professionale */
-function BusinessWizard({onDone,onCancel}){
-  const CATS = ["Parrucchiere","Barbiere","Nail Artist","Estetista","Tatuatore","Makeup","Spa & Massaggi","Altro"];
-  const PLANS = [
-    {id:"FREE",name:"Free",price:"0€",desc:"Agenda, clienti e servizi di base.",feat:["Agenda","Clienti","Fino a 10 servizi"]},
-    {id:"PLUS",name:"Plus",price:"12,99€/mese",desc:"Per attività in crescita.",feat:["Tutto di Free","Statistiche","Dipendenti illimitati"]},
-    {id:"PRO",name:"Pro",price:"29€/mese",desc:"Massima potenza.",feat:["Tutto di Plus","Promozioni","Priorità in ricerca"]},
-  ];
-  const [step,setStep] = useState(0);
-  const [d,setD] = useState({name:"",username:"",category:"",address:"",phone:"",photo:"",logo:"",plan:"FREE",services:[]});
-  const up = (k,v)=>setD(p=>({...p,[k]:v}));
-  const [svcName,setSvcName]=useState(""); const [svcPrice,setSvcPrice]=useState("");
-  const photoRef=useRef(null); const logoRef=useRef(null);
-  const pick = (e,key)=>{ const f=e.target.files&&e.target.files[0]; e.target.value=""; if(!f)return; downscaleImage(f,800,0.8).then(x=>{ if(x) up(key,x); }); };
-  const addSvc = ()=>{ if(!svcName.trim())return; up("services",[...d.services,{id:Date.now(),name:svcName.trim(),price:Number(svcPrice)||0,min:30,active:true}]); setSvcName(""); setSvcPrice(""); };
-  const inp = {width:"100%",border:"1.5px solid #E5E5EA",outline:"none",background:"#fff",borderRadius:12,padding:"13px 14px",fontSize:15,color:"#111",fontFamily:"inherit",boxSizing:"border-box"};
-  const lbl = {fontSize:12,fontWeight:700,color:"#8A8A8E",display:"block",marginBottom:6,marginLeft:2};
-  const steps = ["Attività","Contatti","Immagini","Servizi","Piano"];
-  const canNext = step===0 ? (d.name.trim() && d.category) : true;
-
-  const StepDots = () => (
-    <div style={{display:"flex",gap:6,justifyContent:"center",marginBottom:22}}>
-      {steps.map((_,i)=><div key={i} style={{width:i===step?22:7,height:7,borderRadius:99,background:i===step?"#111":(i<step?"#111":"#E5E5EA"),transition:"all .25s"}}/>)}
-    </div>
-  );
-
-  return (
-    <div className="ba-fade" style={{minHeight:"100dvh",display:"flex",flexDirection:"column",padding:"0 22px",fontFamily:"'Plus Jakarta Sans',sans-serif"}}>
-      <div style={{paddingTop:"calc(20px + env(safe-area-inset-top,0px))",paddingBottom:12,display:"flex",alignItems:"center",gap:12}}>
-        <button onClick={()=> step===0 ? onCancel() : setStep(s=>s-1)} style={{background:"none",border:"none",cursor:"pointer",padding:0,display:"flex",color:"#111"}}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.2" strokeLinecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        </button>
-        <p style={{fontSize:15,fontWeight:800,color:"#111",margin:0}}>{steps[step]}</p>
-      </div>
-      <StepDots/>
-      <div style={{flex:1,overflowY:"auto"}}>
-        {step===0 && (
-          <div style={{display:"flex",flexDirection:"column",gap:16}}>
-            <h1 style={{fontSize:26,fontWeight:900,color:"#111",margin:"0 0 2px",letterSpacing:"-.03em"}}>Apri la tua attività</h1>
-            <p style={{fontSize:14.5,color:"#8A8A8E",margin:"0 0 6px"}}>Creiamo un account professionale separato dal tuo personale.</p>
-            <div><label style={lbl}>Nome attività</label><input value={d.name} onChange={e=>up("name",e.target.value)} placeholder="Es. Salon Elite" style={inp}/></div>
-            <div><label style={lbl}>Username pubblico</label>
-              <div style={{position:"relative"}}><span style={{position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",fontSize:15,color:"#8A8A8E",fontWeight:700}}>@</span>
-                <input value={d.username} onChange={e=>up("username",e.target.value.toLowerCase().replace(/[^a-z0-9._]/g,""))} placeholder="salonelite" autoCapitalize="none" style={{...inp,padding:"13px 14px 13px 28px"}}/></div>
-            </div>
-            <div><label style={lbl}>Categoria</label>
-              <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
-                {CATS.map(c=><button key={c} onClick={()=>up("category",c)} style={{padding:"9px 14px",borderRadius:99,border:d.category===c?"none":"1.5px solid #E5E5EA",background:d.category===c?"#111":"#fff",color:d.category===c?"#fff":"#111",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>{c}</button>)}
-              </div>
-            </div>
-          </div>
-        )}
-        {step===1 && (
-          <div style={{display:"flex",flexDirection:"column",gap:16}}>
-            <h1 style={{fontSize:24,fontWeight:900,color:"#111",margin:"0 0 4px",letterSpacing:"-.03em"}}>Dove ti trovano</h1>
-            <div><label style={lbl}>Indirizzo</label><input value={d.address} onChange={e=>up("address",e.target.value)} placeholder="Via Roma 1, Milano" style={inp}/></div>
-            <div><label style={lbl}>Telefono</label><input value={d.phone} onChange={e=>up("phone",e.target.value)} type="tel" inputMode="tel" placeholder="+39 333 123 4567" style={inp}/></div>
-          </div>
-        )}
-        {step===2 && (
-          <div style={{display:"flex",flexDirection:"column",gap:18}}>
-            <h1 style={{fontSize:24,fontWeight:900,color:"#111",margin:"0 0 4px",letterSpacing:"-.03em"}}>Foto e logo</h1>
-            {[["photo","Foto copertina",photoRef],["logo","Logo",logoRef]].map(([k,l,ref])=>(
-              <div key={k}>
-                <label style={lbl}>{l}</label>
-                <input ref={ref} type="file" accept="image/*" onChange={e=>pick(e,k)} style={{display:"none"}}/>
-                <button onClick={()=>ref.current&&ref.current.click()} style={{width:"100%",height:d[k]?160:96,borderRadius:16,border:`1.5px dashed ${d[k]?"transparent":"#E5E5EA"}`,background:d[k]?"#000":"#FAFAFA",cursor:"pointer",overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>
-                  {d[k] ? <img src={d[k]} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/> : <span style={{fontSize:13,color:"#8A8A8E",fontWeight:600}}>+ Carica {l.toLowerCase()}</span>}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-        {step===3 && (
-          <div style={{display:"flex",flexDirection:"column",gap:14}}>
-            <h1 style={{fontSize:24,fontWeight:900,color:"#111",margin:"0 0 2px",letterSpacing:"-.03em"}}>I tuoi servizi</h1>
-            <p style={{fontSize:13.5,color:"#8A8A8E",margin:0}}>Aggiungine qualcuno ora (potrai completarli dopo). Opzionale.</p>
-            <div style={{display:"flex",gap:8}}>
-              <input value={svcName} onChange={e=>setSvcName(e.target.value)} placeholder="Es. Taglio uomo" style={{...inp,flex:1}}/>
-              <input value={svcPrice} onChange={e=>setSvcPrice(e.target.value)} type="number" inputMode="numeric" placeholder="€" style={{...inp,width:80}}/>
-              <button onClick={addSvc} style={{padding:"0 16px",borderRadius:12,border:"none",background:"#111",color:"#fff",fontSize:20,fontWeight:700,cursor:"pointer"}}>+</button>
-            </div>
-            {d.services.map(s=>(
-              <div key={s.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"11px 14px",background:"#FAFAFA",borderRadius:12}}>
-                <span style={{fontSize:14,fontWeight:600,color:"#111"}}>{s.name}</span>
-                <span style={{fontSize:14,color:"#8A8A8E"}}>{s.price?`${s.price}€`:"—"}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        {step===4 && (
-          <div style={{display:"flex",flexDirection:"column",gap:12}}>
-            <h1 style={{fontSize:24,fontWeight:900,color:"#111",margin:"0 0 4px",letterSpacing:"-.03em"}}>Scegli il piano</h1>
-            {PLANS.map(p=>(
-              <button key={p.id} onClick={()=>up("plan",p.id)} style={{textAlign:"left",padding:"16px",borderRadius:18,border:d.plan===p.id?"2px solid #111":"1.5px solid #E5E5EA",background:d.plan===p.id?"#fff":"#FAFAFA",cursor:"pointer",fontFamily:"inherit"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:4}}>
-                  <span style={{fontSize:17,fontWeight:800,color:"#111"}}>{p.name}</span>
-                  <span style={{fontSize:14,fontWeight:700,color:"#111"}}>{p.price}</span>
-                </div>
-                <p style={{fontSize:12.5,color:"#8A8A8E",margin:"0 0 8px"}}>{p.desc}</p>
-                <div style={{display:"flex",flexWrap:"wrap",gap:6}}>{p.feat.map(f=><span key={f} style={{fontSize:11,fontWeight:600,color:"#111",background:"#F0F0F2",borderRadius:99,padding:"3px 9px"}}>{f}</span>)}</div>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-      <div style={{padding:"14px 0 calc(24px + env(safe-area-inset-bottom,0px))"}}>
-        {step<4
-          ? <button disabled={!canNext} onClick={()=>setStep(s=>s+1)} style={{width:"100%",padding:"16px 0",borderRadius:14,border:"none",background:canNext?"#111":"#EDEDED",color:canNext?"#fff":"#B0B0B0",fontSize:16,fontWeight:700,cursor:canNext?"pointer":"default",fontFamily:"inherit"}}>Continua</button>
-          : <button onClick={()=>onDone(d)} style={{width:"100%",padding:"16px 0",borderRadius:14,border:"none",background:"#111",color:"#fff",fontSize:16,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Crea attività ✨</button>}
-      </div>
     </div>
   );
 }
@@ -4738,7 +4519,7 @@ function PostViewer({posts,startId,isOwner,likedPosts,onToggleLike,onAddComment,
   );
 }
 
-function ClProfilo({user,onOpenBusiness,onSwitchAccount,nav,feed=FEED,setFeed,onDeletePost,onLikePost,onCommentPost,onSaveAccount,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig,photo:photoProp,onSavePhoto}) {
+function ClProfilo({user,onSwitch,nav,feed=FEED,setFeed,onDeletePost,onLikePost,onCommentPost,onSaveAccount,favorites,setFavorites,following,setFollowing,likedPosts,setLikedPosts,onLogout,accent,setAccent,avatarConfig,photo:photoProp,onSavePhoto}) {
   const [tab,setTab] = useState("griglia"); // griglia | recensioni | impostazioni
   const [info,setInfo] = useState({name:user.name,handle:user.username||user.handle||(user.name||"utente").toLowerCase().replace(/\s+/g,"_"),email:user.email||"",city:"",phone:""});
   const [editInfo,setEditInfo] = useState(false);
@@ -4785,6 +4566,7 @@ function ClProfilo({user,onOpenBusiness,onSwitchAccount,nav,feed=FEED,setFeed,on
   const unlikePost = (id) => setConfirm({title:"Togliere il like?",message:"Il post verrà rimosso dai tuoi “Mi piace”.",confirmLabel:"Togli",danger:true,onYes:()=>{setLikedPosts(s=>{const n=new Set(s);n.delete(id);return n;});}});
   const doFollow = (id) => setFollowing(s=>{const n=new Set(s);n.add(id);return n;});
   const askLogout = () => setConfirm({title:"Uscire dall'account?",message:"Dovrai effettuare di nuovo l'accesso.",confirmLabel:"Esci",danger:true,onYes:onLogout});
+  const askSwitch = () => setConfirm({title:"Passare a modalità Pro?",message:"Gestirai agenda, clienti e servizi.",confirmLabel:"Passa a Pro",onYes:onSwitch});
 
   const TABS = [
     {id:"griglia", icon:<><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></>},
@@ -4909,17 +4691,6 @@ function ClProfilo({user,onOpenBusiness,onSwitchAccount,nav,feed=FEED,setFeed,on
       {/* TAB impostazioni */}
       {tab==="impostazioni" && (
         <div style={{padding:"14px 16px"}}>
-          {/* Apri la tua attività — crea un account professionale separato */}
-          <button onClick={onOpenBusiness} className="clay" style={{width:"100%",display:"flex",alignItems:"center",gap:14,background:"#111",borderRadius:20,padding:"16px",marginBottom:12,border:"none",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
-            <div style={{width:44,height:44,borderRadius:13,background:"rgba(255,255,255,.14)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l1.5-5h15L21 9M4 9v11h16V9M4 9a2.5 2.5 0 005 0 2.5 2.5 0 005 0 2.5 2.5 0 005 0M9 20v-5h6v5"/></svg>
-            </div>
-            <div style={{flex:1,minWidth:0}}>
-              <p style={{fontSize:15.5,fontWeight:800,color:"#fff",margin:"0 0 2px",letterSpacing:"-.01em"}}>Apri la tua attività</p>
-              <p style={{fontSize:12,color:"rgba(255,255,255,.65)",margin:0}}>Crea un account professionale separato</p>
-            </div>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
           {/* Tema / colore app */}
           <div className="clay" style={{background:T.white,borderRadius:20,padding:"15px 16px",marginBottom:12}}>
             <p style={{fontSize:13,fontWeight:700,color:T.ink,margin:"0 0 3px"}}>Colore dell'app</p>
@@ -4984,8 +4755,8 @@ function ClProfilo({user,onOpenBusiness,onSwitchAccount,nav,feed=FEED,setFeed,on
           </div>
           {/* Azioni */}
           <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
-            <button onClick={onSwitchAccount} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"15px 16px",border:"none",borderBottom:`1px solid ${T.line}`,background:"none",cursor:"pointer",fontFamily:"inherit"}}>
-              <span style={{fontSize:14,fontWeight:600,color:T.ink}}>Cambia account</span>
+            <button onClick={askSwitch} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"15px 16px",border:"none",borderBottom:`1px solid ${T.line}`,background:"none",cursor:"pointer",fontFamily:"inherit"}}>
+              <span style={{fontSize:14,fontWeight:600,color:T.ink}}>Passa a modalità Pro</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
             </button>
             <button onClick={askLogout} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:8,padding:"15px 16px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit"}}>
@@ -5556,7 +5327,7 @@ function ProServizi({services,setServices,staff,setStaff,hours,setHours,openAdd,
 }
 
 /* PRO - STATISTICHE */
-function ProStats({appts,clients,services,staff,onSwitchAccount,nav}) {
+function ProStats({appts,clients,services,staff,onSwitch,nav}) {
   const getSvc = id => services.find(s=>s.id===id)||{name:"?",price:0};
   const todayA = appts.filter(a=>a.date==="oggi"&&a.status!=="cancellato");
   const todayRev = todayA.reduce((s,a)=>s+getSvc(a.serviceId).price,0);
@@ -5606,9 +5377,9 @@ function ProStats({appts,clients,services,staff,onSwitchAccount,nav}) {
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" strokeWidth="2.4" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
         </div>
         <div className="clay" style={{padding:"15px",borderRadius:20,background:T.white}}>
-          <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:"0 0 3px"}}>Cambia account</p>
-          <p style={{fontSize:11,color:T.inkMid,margin:"0 0 10px"}}>Passa al tuo profilo personale o a un'altra attività.</p>
-          <BigBtn label="Cambia account" onClick={onSwitchAccount} variant="ghost" style={{fontSize:12,padding:"10px 0"}}/>
+          <p style={{fontSize:13,fontWeight:800,color:T.ink,margin:"0 0 3px"}}>Vuoi prenotare come cliente?</p>
+          <p style={{fontSize:11,color:T.inkMid,margin:"0 0 10px"}}>Passa alla modalita cliente.</p>
+          <BigBtn label="Passa a modalita Cliente" onClick={onSwitch} variant="ghost" style={{fontSize:12,padding:"10px 0"}}/>
         </div>
       </div>
     </div>
@@ -5616,24 +5387,26 @@ function ProStats({appts,clients,services,staff,onSwitchAccount,nav}) {
 }
 
 /* PRO — ACCOUNT / PROFILO ATTIVITÀ */
-function ProProfilo({user,account,onEditBusiness,onSwitchAccount,onLogout,accent,setAccent,nav,photo:photoProp,onSavePhoto,onSaveAccount}) {
-  const [photo,setPhoto] = useState((account&&account.photo)||"");
-  useEffect(()=>{ setPhoto((account&&account.photo)||""); },[account&&account.id]);
+function ProProfilo({user,onSwitch,onLogout,accent,setAccent,nav,photo:photoProp,onSavePhoto,onSaveAccount}) {
+  const [photo,setPhoto] = useState(photoProp||(()=>{ try{return localStorage.getItem("ba-pro-photo")||"";}catch(e){return "";} })());
+  useEffect(()=>{ if(photoProp) setPhoto(photoProp); },[photoProp]);
   const photoRef = useRef(null);
   const onPickPhoto = async (e) => {
     const f = e.target.files && e.target.files[0]; e.target.value="";
     if(!f) return;
-    downscaleImage(f,800,0.82).then(x=>{ if(x){ setPhoto(x); onEditBusiness&&onEditBusiness({photo:x}); } });
+    const rd = new FileReader(); rd.onload = () => { setPhoto(rd.result); try{localStorage.setItem("ba-pro-photo",rd.result);}catch(e){} }; rd.readAsDataURL(f);
+    if(onSavePhoto){ try{ await onSavePhoto(f); }catch(err){ /* bucket non pronto: resta la foto locale */ } }
   };
-  const biz = (account&&account.name) || "La tua attività";
-  const bizUser = (account&&account.username) || "";
+  const savedInfo = (()=>{ try{return JSON.parse(localStorage.getItem("ba-pro-info"))||null;}catch(e){return null;} })();
+  const biz = user?.bizName || (savedInfo&&savedInfo.biz) || "La tua attività";
+  const bizUser = user?.bizUsername || (savedInfo&&savedInfo.username) || "";
   const [edit,setEdit] = useState(false);
-  const [tmp,setTmp] = useState({biz:biz,username:bizUser,cat:(account&&account.category)||"Bellezza",city:(account&&account.address)||"",email:"",phone:(account&&account.phone)||""});
-  useEffect(()=>{ setTmp({biz:biz,username:bizUser,cat:(account&&account.category)||"Bellezza",city:(account&&account.address)||"",email:"",phone:(account&&account.phone)||""}); },[account&&account.id]);
+  const [tmp,setTmp] = useState({biz:biz,username:bizUser,cat:(savedInfo&&savedInfo.cat)||"Bellezza",city:(savedInfo&&savedInfo.city)||"",email:(savedInfo&&savedInfo.email)||"",phone:(savedInfo&&savedInfo.phone)||""});
   const saveInfo = () => {
     const clean = {...tmp, username:(tmp.username||"").toLowerCase().replace(/[^a-z0-9._]/g,"")};
     setTmp(clean);
-    onEditBusiness&&onEditBusiness({name:clean.biz,username:clean.username,category:clean.cat,address:clean.city,phone:clean.phone});
+    try{localStorage.setItem("ba-pro-info",JSON.stringify(clean));}catch(e){}
+    onSaveAccount&&onSaveAccount({name:clean.biz,username:clean.username,phone:clean.phone,city:clean.city,scope:"business"});
     setEdit(false);
   };
   const [notif,setNotif] = useState(true);
@@ -5738,8 +5511,8 @@ function ProProfilo({user,account,onEditBusiness,onSwitchAccount,onLogout,accent
         </div>
 
         <div className="clay" style={{background:T.white,borderRadius:20,overflow:"hidden",marginBottom:12}}>
-          <button onClick={onSwitchAccount} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"15px 16px",border:"none",borderBottom:`1px solid ${T.line}`,background:"none",cursor:"pointer",fontFamily:"inherit"}}>
-            <span style={{fontSize:14,fontWeight:600,color:T.ink}}>Cambia account</span>
+          <button onClick={()=>setConfirm({title:"Passare a modalita Cliente?",message:"Potrai cercare e prenotare come cliente.",confirmLabel:"Passa a Cliente",onYes:onSwitch})} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"15px 16px",border:"none",borderBottom:`1px solid ${T.line}`,background:"none",cursor:"pointer",fontFamily:"inherit"}}>
+            <span style={{fontSize:14,fontWeight:600,color:T.ink}}>Passa a modalita Cliente</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M9 18l6-6-6-6"/></svg>
           </button>
           <button onClick={()=>setConfirm({title:"Uscire dall'account?",message:"Dovrai effettuare di nuovo l'accesso.",confirmLabel:"Esci",danger:true,onYes:onLogout})} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:8,padding:"15px 16px",border:"none",background:"none",cursor:"pointer",fontFamily:"inherit"}}>
@@ -6832,14 +6605,6 @@ export default function App() {
   const [notifSeenTs,setNotifSeenTs] = useState(()=>{ try{return Number(localStorage.getItem("ba-notifseen"))||0;}catch(e){return 0;} });
   const persistNotifs = (list)=>{ try{localStorage.setItem("ba-notifs",JSON.stringify((list||[]).slice(0,120)));}catch(e){} };
   const lastUidRef = useRef(null); // ultimo utente entrato: evita rientri su update/refresh sessione
-  // ── MULTI-ACCOUNT (personale + attività indipendenti) ──
-  const [accounts,setAccounts] = useState([]);          // solo account attività; il personale è implicito
-  const [activeId,setActiveId] = useState("personal");  // "personal" | id attività
-  const activeRef = useRef("personal");
-  const [showPicker,setShowPicker] = useState(false);   // schermata selezione utenti all'avvio
-  const [showSwitcher,setShowSwitcher] = useState(false);// popup cambio account
-  const [showBizWizard,setShowBizWizard] = useState(false);
-  const [manageAccounts,setManageAccounts] = useState(false);
   const [feed,setFeedState] = useState(()=>{
     let base = FEED;
     try{ const s=localStorage.getItem("ba-feed"); if(s) base = JSON.parse(s); }catch(e){}
@@ -7245,53 +7010,6 @@ export default function App() {
     }catch(e){ showToast("Salvato sul dispositivo (offline)."); }
   };
 
-  // ── Gestione multi-account (localStorage per utente) ─────────────────
-  const accKey = (uid)=>"ba-accounts-"+uid;
-  const bizKey = (id)=>"ba-biz-"+id;
-  const loadAccounts = (uid)=>{ try{return JSON.parse(localStorage.getItem(accKey(uid))||"[]");}catch(e){return [];} };
-  const persistAccounts = (uid,list)=>{ try{localStorage.setItem(accKey(uid),JSON.stringify(list));}catch(e){} };
-  const loadBizData = (id)=>{ try{const s=JSON.parse(localStorage.getItem(bizKey(id))||"null"); if(s)return s;}catch(e){} return {appts:[],clients:[],services:[],staff:STAFF0,hours:HOURS0}; };
-  const persistBizData = (id)=>{ try{localStorage.setItem(bizKey(id),JSON.stringify({appts,clients,services,staff,hours}));}catch(e){} };
-  const personalAccount = ()=>({ id:"personal", kind:"personal", name:user?.name||"Personale", username:user?.username||"", photo:profilePhoto||"" });
-  const activeAccount = ()=> activeId==="personal" ? personalAccount() : (accounts.find(a=>a.id===activeId)||personalAccount());
-
-  // Attiva un account: salva i dati del business corrente e carica quelli del nuovo
-  const activateAccount = (id)=>{
-    if(activeRef.current && activeRef.current!=="personal") persistBizData(activeRef.current);
-    activeRef.current = id; setActiveId(id);
-    try{ if(user) localStorage.setItem("ba-active-"+user.uid,id); }catch(e){}
-    setShowSwitcher(false); setShowPicker(false); setManageAccounts(false);
-    if(id==="personal"){ setMode("cliente"); nav("cl_home"); }
-    else{
-      const d = loadBizData(id);
-      setAppts(d.appts||[]); setClients(d.clients||[]); setServices(d.services||[]); setStaff(d.staff||STAFF0); setHours(d.hours||HOURS0);
-      setMode("pro"); nav("pro_agenda");
-    }
-  };
-
-  // Crea un nuovo account attività (dal wizard) — non tocca il personale
-  const createBusiness = (data)=>{
-    const id = "biz_"+Date.now();
-    const acc = { id, kind:"business", name:data.name||"La mia attività", username:(data.username||"").toLowerCase().replace(/[^a-z0-9._]/g,""),
-      category:data.category||"Bellezza", address:data.address||"", phone:data.phone||"", photo:data.photo||"", logo:data.logo||"", plan:data.plan||"FREE" };
-    const next = [...accounts, acc]; setAccounts(next); if(user) persistAccounts(user.uid,next);
-    try{ localStorage.setItem(bizKey(id), JSON.stringify({appts:[],clients:[],services:data.services||[],staff:data.staff||STAFF0,hours:data.hours||HOURS0})); }catch(e){}
-    setShowBizWizard(false);
-    activateAccount(id);
-  };
-  // Modifica l'attività ATTIVA (nome, username, categoria, indirizzo, telefono, foto)
-  const editActiveBusiness = (fields)=>{
-    const id = activeRef.current; if(!id || id==="personal") return;
-    const clean = {...fields};
-    if(clean.username!=null) clean.username = clean.username.toLowerCase().replace(/[^a-z0-9._]/g,"");
-    const next = accounts.map(a=> a.id===id ? {...a, ...clean} : a);
-    setAccounts(next); if(user) persistAccounts(user.uid,next);
-  };
-  const renameAccount = (id,newName)=>{ const next=accounts.map(a=>a.id===id?{...a,name:newName}:a); setAccounts(next); if(user) persistAccounts(user.uid,next); };
-  const deleteAccount = (id)=>{ const next=accounts.filter(a=>a.id!==id); setAccounts(next); if(user) persistAccounts(user.uid,next); try{localStorage.removeItem(bizKey(id));}catch(e){} if(activeRef.current===id) activateAccount("personal"); };
-  // Salva automaticamente i dati dell'attività attiva quando cambiano
-  useEffect(()=>{ if(activeId!=="personal") persistBizData(activeId); },[appts,clients,services,staff,hours,activeId]);
-
   // Salva/aggiorna il profilo nel database (best-effort)
   const upsertProfile = async (sb,u,extra) => {
     try {
@@ -7312,19 +7030,9 @@ export default function App() {
     let m = {...appUser};
     try{ const s=JSON.parse(localStorage.getItem("ba-identity-"+appUser.uid)||"null"); if(s){ if(s.name)m.name=s.name; if(s.username){m.username=s.username;m.handle=s.username;} } }catch(e){}
     try{ const b=JSON.parse(localStorage.getItem("ba-bizid-"+appUser.uid)||"null"); if(b){ if(b.name)m.bizName=b.name; if(b.username)m.bizUsername=b.username; } }catch(e){}
-    setUser(m);
-    try{ setAccent(localStorage.getItem("ba-accent")||"nero"); }catch(e){ setAccent("nero"); }
-    // Carica gli account attività; se registrato come attività e non ne ha, ne semina uno dai metadati
-    let accs = loadAccounts(appUser.uid);
-    if(appUser.type==="pro" && accs.length===0){
-      accs = [{ id:"biz_"+appUser.uid, kind:"business", name:m.bizName||m.name, username:m.bizUsername||m.username, category:"Bellezza", plan:"FREE", photo:"", logo:"" }];
-      persistAccounts(appUser.uid,accs);
-    }
-    setAccounts(accs);
-    activeRef.current = "personal"; setActiveId("personal"); setMode("cliente");
-    // All'avvio: se esiste almeno un'attività (>1 account) mostra il selettore utenti; altrimenti entra nel personale
-    if(accs.length>=1){ setShowPicker(true); }
-    else { setShowPicker(false); nav("cl_home"); }
+    setUser(m); setMode(appUser.type==="pro"?"pro":"cliente");
+    if(appUser.type==="pro"){ try{setAccent(localStorage.getItem("ba-accent")||"nero");}catch(e){setAccent("nero");} nav("pro_agenda"); }
+    else { try{ setAccent(localStorage.getItem("ba-accent")||"nero"); }catch(e){ setAccent("nero"); } nav("cl_home"); }
   };
 
   // Ripristina la sessione all'avvio
@@ -7384,16 +7092,12 @@ export default function App() {
     lastUidRef.current=null; setUser(null); nav("cl_home");
   };
 
-  // Niente più "modalità": si cambia ACCOUNT. Queste aprono i pannelli multi-account.
-  const openSwitcher = () => setShowSwitcher(true);
-  const openBizWizard = () => { setShowSwitcher(false); setShowBizWizard(true); };
+  const switchMode = () => {
+    const next = mode==="cliente"?"pro":"cliente";
+    setMode(next);nav(next==="pro"?"pro_agenda":"cl_home");
+  };
 
   if(!user) return <W><LoginScreen onAuth={handleAuth} onSignup={onSignup} onLogin={onLogin} authBusy={authBusy} authErr={authErr} authInfo={authInfo} clearAuthMsg={()=>{setAuthErr("");setAuthInfo("");}}/></W>;
-
-  // Wizard "Apri la tua attività" — a schermo intero
-  if(showBizWizard) return <W><BusinessWizard onDone={createBusiness} onCancel={()=>{ setShowBizWizard(false); if(accounts.length && activeId==="personal" && screen==="cl_home") setShowPicker(true); }}/></W>;
-  // Schermata selezione utenti (stile macOS) all'avvio
-  if(showPicker) return <W><AccountPicker accounts={[personalAccount(),...accounts]} onPick={activateAccount} onAdd={openBizWizard} onLogout={doLogout}/></W>;
 
   const render = () => {
     if(screen==="cl_home")       return <ClHome nav={nav} favorites={favorites} setFavorites={setFavorites} myAppts={myAppts} conversations={conversations} user={user} avatarConfig={avatarConfig} unreadChats={unreadChats} unseenNotifs={unseenNotifs}/>;
@@ -7413,13 +7117,13 @@ export default function App() {
         onSendMessage={sendMessage} onSendOffer={sendOffer} onEditOffer={editOffer} onAccept={acceptOffer} onDecline={declineOffer}
         onAcceptRequest={acceptRequest} onDeclineRequest={declineRequest}/>;
     }
-    if(screen==="cl_profilo")    return <ClProfilo user={user} onOpenBusiness={openBizWizard} onSwitchAccount={openSwitcher} nav={nav} feed={feed} setFeed={setFeed} onDeletePost={deletePost} onLikePost={toggleLikePost} onCommentPost={commentPost} onSaveAccount={saveAccount} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={doLogout} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig} photo={profilePhoto} onSavePhoto={(file)=>saveProfilePhoto(user?.uid,file)}/>;
+    if(screen==="cl_profilo")    return <ClProfilo user={user} onSwitch={switchMode} nav={nav} feed={feed} setFeed={setFeed} onDeletePost={deletePost} onLikePost={toggleLikePost} onCommentPost={commentPost} onSaveAccount={saveAccount} favorites={favorites} setFavorites={setFavorites} following={following} setFollowing={setFollowing} likedPosts={likedPosts} setLikedPosts={setLikedPosts} onLogout={doLogout} accent={accent} setAccent={setAccent} avatarConfig={avatarConfig} photo={profilePhoto} onSavePhoto={(file)=>saveProfilePhoto(user?.uid,file)}/>;
     if(screen==="pro_agenda")    return <ProAgenda appts={appts} setAppts={setAppts} clients={clients} setClients={setClients} services={services} staff={staff} hours={hours} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
     if(screen==="pro_clienti")   return <ProClienti clients={clients} setClients={setClients} appts={appts} services={services} nav={nav} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
     if(screen==="pro_cliente")   return <ProCliente client={sData} setClients={setClients} appts={appts} services={services} nav={nav}/>;
     if(screen==="pro_servizi")   return <ProServizi services={services} setServices={setServices} staff={staff} setStaff={setStaff} hours={hours} setHours={setHours} openAdd={pendingAdd} onConsumeAdd={()=>setPendingAdd(null)} onModalOpenChange={setProAddOpen}/>;
-    if(screen==="pro_stats")     return <ProStats appts={appts} clients={clients} services={services} staff={staff} onSwitchAccount={openSwitcher} nav={nav}/>;
-    if(screen==="pro_profilo")   return <ProProfilo user={user} account={activeAccount()} onEditBusiness={editActiveBusiness} onSwitchAccount={openSwitcher} onLogout={doLogout} accent={accent} setAccent={setAccent} nav={nav} photo={profilePhoto} onSavePhoto={(file)=>saveProfilePhoto(user?.uid,file)} onSaveAccount={saveAccount}/>;
+    if(screen==="pro_stats")     return <ProStats appts={appts} clients={clients} services={services} staff={staff} onSwitch={switchMode} nav={nav}/>;
+    if(screen==="pro_profilo")   return <ProProfilo user={user} onSwitch={switchMode} onLogout={doLogout} accent={accent} setAccent={setAccent} nav={nav} photo={profilePhoto} onSavePhoto={(file)=>saveProfilePhoto(user?.uid,file)} onSaveAccount={saveAccount}/>;
     if(screen==="pro_piani")     return <PianiScreen nav={nav}/>;
     return null;
   };
@@ -7428,15 +7132,10 @@ export default function App() {
 
   return (
     <W>
-      {!fullscreen && <TopBar account={activeAccount()} onOpenSwitcher={openSwitcher}/>}
+      {!fullscreen && <TopBar/>}
       <div style={{paddingTop: fullscreen ? 0 : 52}}>
         {render()}
       </div>
-      {showSwitcher && <AccountSwitcher accounts={[personalAccount(),...accounts]} activeId={activeId}
-        onPick={activateAccount} onAdd={openBizWizard} onManage={()=>{setShowSwitcher(false);setManageAccounts(true);}}
-        onLogout={doLogout} onClose={()=>setShowSwitcher(false)}/>}
-      {manageAccounts && <ManageAccounts accounts={accounts} onRename={renameAccount} onDelete={deleteAccount}
-        onClose={()=>setManageAccounts(false)}/>}
       {!fullscreen && mode==="pro" && !proAddOpen && screen!=="pro_piani" && screen!=="pro_stats" && <BetaBanner nav={nav}/>}
       {!fullscreen && mode==="pro" && !proAddOpen && <ProFab nav={nav} onAction={(scr,act)=>{ setPendingAdd(act); nav(scr); }}/>}
       {!fullscreen && (mode==="pro" ? <NavPro s={screen} nav={nav} dmDot={conversations.some(c=>c.messages.some(m=>m.from==="client"))}/> : <NavCl s={screen} nav={nav}/>)}
