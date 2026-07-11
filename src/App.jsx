@@ -4582,7 +4582,7 @@ function ClProfilo({user,onSwitch,nav,feed=FEED,setFeed,onDeletePost,onLikePost,
   );
 
   return (
-    <div style={{paddingBottom:90,background:"transparent",minHeight:"100dvh"}}>
+    <div style={{paddingBottom:170,background:"transparent",minHeight:"100dvh"}}>
       {/* Header profilo */}
       <div style={{background:T.white,padding:"50px 18px 0"}}>
         <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
@@ -5395,7 +5395,7 @@ function ProProfilo({user,onSwitch,onLogout,accent,setAccent,nav,photo:photoProp
   const plan = (()=>{ try{return localStorage.getItem("ba-pro-plan")||"Prova gratuita";}catch(e){return "Prova gratuita";} })();
 
   return (
-    <div style={{paddingBottom:100,background:"transparent",minHeight:"100dvh"}}>
+    <div style={{paddingBottom:170,background:"transparent",minHeight:"100dvh"}}>
       <div style={{background:T.white,padding:"50px 18px 18px"}}>
         <div style={{display:"flex",alignItems:"center",gap:16}}>
           <input ref={photoRef} type="file" accept="image/*" onChange={onPickPhoto} style={{display:"none"}}/>
@@ -6544,14 +6544,15 @@ export default function App() {
   const [mode,setMode] = useState("cliente");
   const [screen,setScreen] = useState("cl_home");
   const [sData,setSD] = useState(null);
-  const [appts,setAppts] = useState(APPTS0);
-  const [clients,setClients] = useState(CLIENTS0);
-  const [services,setServices] = useState(SVCS0);
-  const [staff,setStaff] = useState(STAFF0);
-  const [hours,setHours] = useState(HOURS0);
-  const [favorites,setFavorites] = useState(new Set([1,3]));
-  const [following,setFollowing] = useState(new Set([3,6]));
-  const [likedPosts,setLikedPosts] = useState(new Set([1,2,4]));
+  // Account nuovi: si parte PULITI, senza dati finti (niente clienti/appuntamenti/preferiti demo)
+  const [appts,setAppts] = useState([]);
+  const [clients,setClients] = useState([]);
+  const [services,setServices] = useState([]);
+  const [staff,setStaff] = useState([]);
+  const [hours,setHours] = useState(HOURS0); // orari di apertura di default (modificabili)
+  const [favorites,setFavorites] = useState(new Set());
+  const [following,setFollowing] = useState(new Set());
+  const [likedPosts,setLikedPosts] = useState(new Set());
   const [showBetaWelcome,setShowBetaWelcome] = useState(false);
   const [sharePost,setSharePost] = useState(null);   // post da inoltrare a un professionista
   const [pendingAdd,setPendingAdd] = useState(null); // azione FAB da aprire nella schermata pro
@@ -6561,8 +6562,8 @@ export default function App() {
   const [msgReads,setMsgReads] = useState({});       // convId -> n. messaggi già visti dal cliente
   const [notifSeenId,setNotifSeenId] = useState(0);  // id massimo notifica già vista
   const [showOnboarding,setShowOnboarding] = useState(false);
-  const [myAppts,setMyAppts] = useState(MY_APPTS0);
-  const [conversations,setConversations] = useState(CONVERSATIONS0);
+  const [myAppts,setMyAppts] = useState([]);
+  const [conversations,setConversations] = useState([]);
   const [savedPosts,setSavedPosts] = useState(new Set());
   // ── Notifiche like/commenti (stile Instagram) ──
   const [notifs,setNotifs] = useState(()=>{ try{return JSON.parse(localStorage.getItem("ba-notifs")||"[]");}catch(e){return [];} });
@@ -7100,8 +7101,9 @@ export default function App() {
       <div style={{paddingTop: fullscreen ? 0 : 52}}>
         {render()}
       </div>
-      {!fullscreen && mode==="pro" && !proAddOpen && screen!=="pro_piani" && screen!=="pro_stats" && <BetaBanner nav={nav}/>}
-      {!fullscreen && mode==="pro" && !proAddOpen && <ProFab nav={nav} onAction={(scr,act)=>{ setPendingAdd(act); nav(scr); }}/>}
+      {!fullscreen && mode==="pro" && !proAddOpen && screen!=="pro_piani" && screen!=="pro_stats" && screen!=="pro_profilo" && <BetaBanner nav={nav}/>}
+      {!fullscreen && mode==="pro" && !proAddOpen && screen!=="pro_profilo" && <ProFab nav={nav} onAction={(scr,act)=>{ setPendingAdd(act); nav(scr); }}/>}
+      {!fullscreen && (screen==="cl_profilo"||screen==="pro_profilo") && <ModeSwitchPill mode={mode} onSwitch={switchMode}/>}
       {!fullscreen && (mode==="pro" ? <NavPro s={screen} nav={nav} dmDot={conversations.some(c=>c.messages.some(m=>m.from==="client"))}/> : <NavCl s={screen} nav={nav}/>)}
       {showBetaWelcome && <BetaWelcome onClose={()=>setShowBetaWelcome(false)}/>}
       {sharePost && <SharePostSheet post={sharePost} onClose={()=>setSharePost(null)} onPick={(proId)=>sendPostToPro(sharePost,proId)}/>}
@@ -7111,6 +7113,18 @@ export default function App() {
         </div>
       )}
     </W>
+  );
+}
+
+/* Switch modalità flottante (stile Airbnb viaggio↔host) — sempre visibile sul profilo */
+function ModeSwitchPill({mode,onSwitch}) {
+  const toPro = mode==="cliente";
+  return createPortal(
+    <button onClick={onSwitch} style={{position:"fixed",left:"50%",bottom:"calc(94px + env(safe-area-inset-bottom,0px))",transform:"translateX(-50%)",zIndex:1200,display:"flex",alignItems:"center",gap:9,padding:"13px 22px",borderRadius:999,border:"none",cursor:"pointer",background:"#111111",color:"#fff",fontFamily:"inherit",fontSize:14.5,fontWeight:800,boxShadow:"0 10px 30px rgba(0,0,0,.38)",whiteSpace:"nowrap"}}>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+      {toPro ? "Passa a modalità Pro" : "Passa a modalità Cliente"}
+    </button>,
+    document.body
   );
 }
 
