@@ -6271,8 +6271,6 @@ function OfferModal({pro,initial,onClose,onSend,isBooked,proId}) {
   const [description,setDescription] = useState(initial?.description||"");
   const [price,setPrice] = useState(initial?.price!=null?String(initial.price):"");
   const [min,setMin] = useState(initial?.min!=null?String(initial.min):"60");
-  const [date,setDate] = useState(initial?.date||"");
-  const [slot,setSlot] = useState(initial?.slot||"");
   const [note,setNote] = useState(initial?.note||"");
   const valid = service.trim() && price && min;
 
@@ -6305,43 +6303,18 @@ function OfferModal({pro,initial,onClose,onSend,isBooked,proId}) {
           </div>
         </div>
 
-        {/* Giorno e orario — scelta a calendario, niente testo a mano */}
-        <label style={lbl}>Proponi giorno e orario <span style={{color:T.inkSoft,fontWeight:600}}>(facolt.)</span></label>
-        <div style={{display:"flex",gap:6,overflowX:"auto",scrollbarWidth:"none",marginBottom:12,paddingBottom:2}}>
-          {genDates(14).map(d=>{
-            const sel = date===d.label;
-            return (
-              <button key={d.label} type="button" onClick={()=>{ setDate(sel?"":d.label); setSlot(""); }} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",padding:"9px 13px",borderRadius:14,border:"none",cursor:"pointer",fontFamily:"inherit",touchAction:"manipulation",background:sel?T.brand:T.white,boxShadow:sel?"none":`0 0 0 1.5px ${T.line} inset`}}>
-                <span style={{fontSize:9,fontWeight:700,color:sel?"rgba(255,255,255,.75)":T.inkSoft,marginBottom:2}}>{d.dayName}</span>
-                <span style={{fontSize:16,fontWeight:800,color:sel?"#fff":T.ink}}>{d.day}</span>
-              </button>
-            );
-          })}
+        {/* Il giorno e l'orario NON li sceglie l'azienda: sarà il cliente a selezionarli
+            dal calendario quando accetta l'offerta. */}
+        <div style={{display:"flex",gap:9,alignItems:"flex-start",background:T.brandBg,borderRadius:12,padding:"11px 13px",marginBottom:14}}>
+          <span style={{fontSize:15,lineHeight:1}}>🗓️</span>
+          <p style={{fontSize:12,color:T.brandDeep,margin:0,lineHeight:1.45,fontWeight:600}}>Il cliente sceglierà giorno e orario dal calendario, in base alle tue disponibilità.</p>
         </div>
-        {date && (
-          <div style={{marginBottom:14}}>
-            <label style={lbl}>Orario <span style={{color:T.inkSoft,fontWeight:600}}>(gli occupati sono barrati)</span></label>
-            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-              {BOOKING_TIMES.map(t=>{
-                const isBusy = isBooked && date && isBooked(proId, date, t);
-                const isSel = slot===t;
-                return (
-                  <button key={t} type="button" disabled={isBusy} onClick={()=>!isBusy&&setSlot(isSel?"":t)} title={isBusy?"Occupato":""}
-                    style={{padding:"10px 15px",borderRadius:12,border:"none",cursor:isBusy?"not-allowed":"pointer",fontSize:15,fontWeight:700,fontFamily:"inherit",touchAction:"manipulation",
-                      background:isBusy?T.surface:isSel?T.brand:T.white,color:isBusy?T.inkSoft:isSel?"#fff":T.inkMid,
-                      textDecoration:isBusy?"line-through":"none",opacity:isBusy?.6:1,
-                      boxShadow:isSel?"none":`0 0 0 1.5px ${T.line} inset`}}>{t}</button>
-                );
-              })}
-            </div>
-          </div>
-        )}
 
         <label style={lbl}>Note <span style={{color:T.inkSoft,fontWeight:600}}>(facolt.)</span></label>
         <textarea value={note} onChange={e=>setNote(e.target.value)} rows={2} placeholder="Eventuali note per il cliente…"
           style={{...inp,marginBottom:22,resize:"none",lineHeight:1.4}}/>
 
-        <button onClick={()=>valid&&onSend({service:service.trim(),description:description.trim(),price:parseInt(price),min:parseInt(min)||60,date:date.trim(),slot:slot.trim(),note:note.trim()})} disabled={!valid}
+        <button onClick={()=>valid&&onSend({service:service.trim(),description:description.trim(),price:parseInt(price),min:parseInt(min)||60,date:"",slot:"",note:note.trim()})} disabled={!valid}
           style={{width:"100%",padding:"15px 0",borderRadius:14,border:"none",cursor:valid?"pointer":"default",fontSize:15,fontWeight:800,fontFamily:"inherit",
             background:valid?`linear-gradient(135deg,${T.brand},${T.brandDeep})`:T.line,color:valid?"#fff":T.inkSoft,boxShadow:valid?`0 4px 16px ${T.brand}55`:"none"}}>
           {editing?"Aggiorna offerta":"Invia offerta al cliente"}
