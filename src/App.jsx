@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef, Component } from "react";
 import { createPortal } from "react-dom";
+import { IT_COMUNI } from "./comuni.js";
 
 /* ErrorBoundary — mostra l'errore su schermo invece di pagina bianca */
 class AvatarErrorBoundary extends Component {
@@ -750,10 +751,23 @@ function CityPicker({value, onChange, placeholder="Seleziona città"}) {
     return ()=>{ cancelled=true; clearTimeout(t); };
   },[query,open]);
 
-  // Combina: match locali (istantanei, offline) + risultati mondiali, senza duplicati
-  const local = (query ? IT_CITIES.filter(c=>c.toLowerCase().includes(query.toLowerCase())) : IT_CITIES).slice(0,30);
+  // Match locali su TUTTI i comuni italiani (istantaneo, offline). Prima chi inizia con
+  // la query, poi chi la contiene. In coda i risultati mondiali (OpenStreetMap).
+  const ql = query.toLowerCase();
+  let local = [];
+  if(query.length>=1){
+    const starts=[], incl=[];
+    for(const [nome,prov] of IT_COMUNI){
+      const nl=nome.toLowerCase();
+      if(nl.startsWith(ql)) starts.push({name:nome,sub:prov?`${prov}, Italia`:"Italia"});
+      else if(nl.includes(ql)) incl.push({name:nome,sub:prov?`${prov}, Italia`:"Italia"});
+    }
+    local = [...starts, ...incl].slice(0,60);
+  } else {
+    local = IT_CITIES.slice(0,20).map(c=>({name:c,sub:"Italia"}));
+  }
   const seen = new Set(); const items = [];
-  local.forEach(c=>{ const k=c.toLowerCase(); if(!seen.has(k)){ seen.add(k); items.push({name:c,sub:""}); } });
+  local.forEach(c=>{ const k=c.name.toLowerCase(); if(!seen.has(k)){ seen.add(k); items.push(c); } });
   remote.forEach(r=>{ const k=r.name.toLowerCase(); if(!seen.has(k)){ seen.add(k); items.push(r); } });
 
   return (
