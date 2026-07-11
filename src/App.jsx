@@ -6096,11 +6096,11 @@ function ChatScreen({conv,role,nav,onSeen,isBooked,onSendMessage,onSendOffer,onE
       </div>
 
       {/* Modal crea offerta — solo pro */}
-      {showOffer && role==="pro" && <OfferModal pro={pro} onClose={()=>setShowOffer(false)}
+      {showOffer && role==="pro" && <OfferModal pro={pro} isBooked={isBooked} proId={conv.proId} onClose={()=>setShowOffer(false)}
         onSend={(offer)=>{const dedup=Date.now()+""+Math.random();onSendOffer(conv.id,{from:"pro",type:"offer",_dedup:dedup,offer:{...offer,status:"pending"}});setShowOffer(false);}}/>}
 
       {/* Modal modifica offerta — solo pro */}
-      {editMsg && role==="pro" && <OfferModal pro={pro} initial={editMsg.offer} onClose={()=>setEditMsg(null)}
+      {editMsg && role==="pro" && <OfferModal pro={pro} isBooked={isBooked} proId={conv.proId} initial={editMsg.offer} onClose={()=>setEditMsg(null)}
         onSend={(offer)=>{onEditOffer(conv.id,editMsg.id,offer);setEditMsg(null);}}/>}
 
       {/* Bottom-sheet scelta slot — solo cliente */}
@@ -6111,7 +6111,7 @@ function ChatScreen({conv,role,nav,onSeen,isBooked,onSendMessage,onSendOffer,onE
 }
 
 /* Modal per comporre / modificare un'offerta — solo per il PRO */
-function OfferModal({pro,initial,onClose,onSend}) {
+function OfferModal({pro,initial,onClose,onSend,isBooked,proId}) {
   const editing = !!initial;
   const [service,setService] = useState(initial?.service||"");
   const [description,setDescription] = useState(initial?.description||"");
@@ -6151,16 +6151,37 @@ function OfferModal({pro,initial,onClose,onSend}) {
           </div>
         </div>
 
-        <div style={{display:"flex",gap:10,marginBottom:14}}>
-          <div style={{flex:1.4}}>
-            <label style={lbl}>Data proposta <span style={{color:T.inkSoft,fontWeight:600}}>(facolt.)</span></label>
-            <input value={date} onChange={e=>setDate(e.target.value)} placeholder="Es. Sab 12 lug" style={inp}/>
-          </div>
-          <div style={{flex:1}}>
-            <label style={lbl}>Ora <span style={{color:T.inkSoft,fontWeight:600}}>(facolt.)</span></label>
-            <input value={slot} onChange={e=>setSlot(e.target.value)} placeholder="15:30" style={inp}/>
-          </div>
+        {/* Giorno e orario — scelta a calendario, niente testo a mano */}
+        <label style={lbl}>Proponi giorno e orario <span style={{color:T.inkSoft,fontWeight:600}}>(facolt.)</span></label>
+        <div style={{display:"flex",gap:6,overflowX:"auto",scrollbarWidth:"none",marginBottom:12,paddingBottom:2}}>
+          {genDates(14).map(d=>{
+            const sel = date===d.label;
+            return (
+              <button key={d.label} type="button" onClick={()=>{ setDate(sel?"":d.label); setSlot(""); }} style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",padding:"9px 13px",borderRadius:14,border:"none",cursor:"pointer",fontFamily:"inherit",touchAction:"manipulation",background:sel?T.brand:T.white,boxShadow:sel?"none":`0 0 0 1.5px ${T.line} inset`}}>
+                <span style={{fontSize:9,fontWeight:700,color:sel?"rgba(255,255,255,.75)":T.inkSoft,marginBottom:2}}>{d.dayName}</span>
+                <span style={{fontSize:16,fontWeight:800,color:sel?"#fff":T.ink}}>{d.day}</span>
+              </button>
+            );
+          })}
         </div>
+        {date && (
+          <div style={{marginBottom:14}}>
+            <label style={lbl}>Orario <span style={{color:T.inkSoft,fontWeight:600}}>(gli occupati sono barrati)</span></label>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              {BOOKING_TIMES.map(t=>{
+                const isBusy = isBooked && date && isBooked(proId, date, t);
+                const isSel = slot===t;
+                return (
+                  <button key={t} type="button" disabled={isBusy} onClick={()=>!isBusy&&setSlot(isSel?"":t)} title={isBusy?"Occupato":""}
+                    style={{padding:"10px 15px",borderRadius:12,border:"none",cursor:isBusy?"not-allowed":"pointer",fontSize:15,fontWeight:700,fontFamily:"inherit",touchAction:"manipulation",
+                      background:isBusy?T.surface:isSel?T.brand:T.white,color:isBusy?T.inkSoft:isSel?"#fff":T.inkMid,
+                      textDecoration:isBusy?"line-through":"none",opacity:isBusy?.6:1,
+                      boxShadow:isSel?"none":`0 0 0 1.5px ${T.line} inset`}}>{t}</button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <label style={lbl}>Note <span style={{color:T.inkSoft,fontWeight:600}}>(facolt.)</span></label>
         <textarea value={note} onChange={e=>setNote(e.target.value)} rows={2} placeholder="Eventuali note per il cliente…"
