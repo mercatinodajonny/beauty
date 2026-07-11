@@ -155,6 +155,29 @@ const searchPlaces = async (query) => {
   return data.filter(p => p.address?.country_code === "it");
 };
 
+// Ricerca CITTÀ in tutto il mondo (per il campo Città del profilo) — solo località reali.
+const searchCities = async (query) => {
+  try{
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(query)}&addressdetails=1&limit=15&accept-language=it`);
+    if(!res.ok) return [];
+    const data = await res.json();
+    const seen = new Set(); const out = [];
+    for(const p of data){
+      const a = p.address||{};
+      const isPlace = p.class==="place" && ["city","town","village","municipality","hamlet"].includes(p.type);
+      const isAdmin = p.class==="boundary" && p.type==="administrative";
+      if(!isPlace && !isAdmin) continue;
+      const name = a.city||a.town||a.village||a.municipality||a.hamlet||p.name||(p.display_name||"").split(",")[0];
+      if(!name) continue;
+      const sub = [a.state||a.region||a.county||"", a.country||""].filter(Boolean).join(", ");
+      const key = `${name.toLowerCase()}|${sub.toLowerCase()}`;
+      if(seen.has(key)) continue; seen.add(key);
+      out.push({name, sub});
+    }
+    return out.slice(0,12);
+  }catch(e){ return []; }
+};
+
 const toRad = d => (d*Math.PI)/180;
 const distanceKm = (lat1,lng1,lat2,lng2) => {
   const R = 6371;
@@ -706,39 +729,64 @@ function Modal({title,onClose,children}) {
   );
 }
 
-/* Selettore CITTÀ — solo città esistenti da elenco (niente testo libero).
-   Si apre come sheet con ricerca; il valore si imposta solo scegliendo dalla lista. */
+/* Selettore CITTÀ — solo città esistenti (niente testo libero).
+   Suggerimenti locali istantanei (Italia) + ricerca reale in tutto il mondo (OpenStreetMap).
+   Il valore si imposta solo scegliendo una città dai risultati. */
 function CityPicker({value, onChange, placeholder="Seleziona città"}) {
   const [open,setOpen] = useState(false);
   const [q,setQ] = useState("");
-  const query = q.trim().toLowerCase();
-  const results = (query ? IT_CITIES.filter(c=>c.toLowerCase().includes(query)) : IT_CITIES).slice(0,80);
+  const [remote,setRemote] = useState([]);
+  const [loading,setLoading] = useState(false);
+  const query = q.trim();
+
+  // Ricerca mondiale con debounce (parte da 2 caratteri)
+  useEffect(()=>{
+    if(!open || query.length<2){ setRemote([]); setLoading(false); return; }
+    let cancelled=false; setLoading(true);
+    const t=setTimeout(async()=>{
+      const r = await searchCities(query);
+      if(!cancelled){ setRemote(r); setLoading(false); }
+    }, 350);
+    return ()=>{ cancelled=true; clearTimeout(t); };
+  },[query,open]);
+
+  // Combina: match locali (istantanei, offline) + risultati mondiali, senza duplicati
+  const local = (query ? IT_CITIES.filter(c=>c.toLowerCase().includes(query.toLowerCase())) : IT_CITIES).slice(0,30);
+  const seen = new Set(); const items = [];
+  local.forEach(c=>{ const k=c.toLowerCase(); if(!seen.has(k)){ seen.add(k); items.push({name:c,sub:""}); } });
+  remote.forEach(r=>{ const k=r.name.toLowerCase(); if(!seen.has(k)){ seen.add(k); items.push(r); } });
+
   return (
     <>
-      <button type="button" onClick={()=>{setQ("");setOpen(true);}} style={{width:"100%",boxSizing:"border-box",display:"flex",alignItems:"center",gap:8,padding:"9px 11px",borderRadius:8,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
+      <button type="button" onClick={()=>{setQ("");setRemote([]);setOpen(true);}} style={{width:"100%",boxSizing:"border-box",display:"flex",alignItems:"center",gap:8,padding:"9px 11px",borderRadius:8,border:`1.5px solid ${T.line}`,background:T.white,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}}><path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
         <span style={{flex:1,fontSize:14,color:value?T.ink:T.inkSoft,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{value||placeholder}</span>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2.2" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
       {open && (
         <Modal title="Scegli città" onClose={()=>setOpen(false)}>
-          <div style={{display:"flex",alignItems:"center",gap:8,background:T.surface,borderRadius:12,padding:"11px 13px",marginBottom:12,border:`1.5px solid ${T.line}`}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,background:T.surface,borderRadius:12,padding:"11px 13px",marginBottom:10,border:`1.5px solid ${T.line}`}}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T.inkSoft} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0}}><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Cerca città…" style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:T.ink,fontFamily:"inherit"}}/>
+            <input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Cerca una città nel mondo…" style={{flex:1,border:"none",outline:"none",background:"none",fontSize:15,color:T.ink,fontFamily:"inherit"}}/>
             {q && <button onClick={()=>setQ("")} style={{background:"none",border:"none",cursor:"pointer",fontSize:16,color:T.inkSoft,padding:0}}>×</button>}
           </div>
-          {results.length===0
-            ? <div style={{textAlign:"center",padding:"28px 0"}}><p style={{fontSize:28,marginBottom:6}}>🔎</p><p style={{fontSize:13,color:T.inkSoft,margin:0}}>Nessuna città in elenco. Prova un altro nome.</p></div>
-            : results.map((c,i)=>{
-                const sel = value===c;
+          {loading && <p style={{fontSize:12,color:T.inkSoft,margin:"0 0 8px 4px"}}>Ricerca in corso…</p>}
+          {items.length===0 && !loading
+            ? <div style={{textAlign:"center",padding:"28px 0"}}><p style={{fontSize:28,marginBottom:6}}>🔎</p><p style={{fontSize:13,color:T.inkSoft,margin:0}}>{query.length<2?"Scrivi almeno 2 lettere":"Nessuna città trovata"}</p></div>
+            : items.map((c,i)=>{
+                const sel = value===c.name;
                 return (
-                  <button key={c} onClick={()=>{onChange(c);setOpen(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"13px 12px",borderRadius:12,border:"none",background:sel?T.brandBg:"transparent",cursor:"pointer",fontFamily:"inherit",textAlign:"left",marginBottom:2}}>
-                    <span style={{fontSize:16}}>📍</span>
-                    <span style={{flex:1,fontSize:15,fontWeight:sel?800:600,color:T.ink}}>{c}</span>
-                    {sel && <svg width="17" height="17" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
+                  <button key={c.name+i} onClick={()=>{onChange(c.name);setOpen(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:10,padding:"12px 12px",borderRadius:12,border:"none",background:sel?T.brandBg:"transparent",cursor:"pointer",fontFamily:"inherit",textAlign:"left",marginBottom:2}}>
+                    <span style={{fontSize:16,flexShrink:0}}>📍</span>
+                    <span style={{flex:1,minWidth:0}}>
+                      <span style={{display:"block",fontSize:15,fontWeight:sel?800:600,color:T.ink,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.name}</span>
+                      {c.sub && <span style={{display:"block",fontSize:11,color:T.inkSoft,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{c.sub}</span>}
+                    </span>
+                    {sel && <svg width="17" height="17" viewBox="0 0 24 24" style={{flexShrink:0}}><circle cx="12" cy="12" r="10" fill={T.brand}/><path d="M8 12l3 3 5-5" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" fill="none"/></svg>}
                   </button>
                 );
               })}
+          <p style={{fontSize:9,color:T.inkSoft,textAlign:"center",margin:"10px 0 0"}}>Ricerca fornita da OpenStreetMap</p>
         </Modal>
       )}
     </>
